@@ -1,22 +1,4 @@
-
-<div id="buscador" class="">
-    <div class="busqueda">
-            
-    </div>
-    <div class="gradient">
-            <div class="form-group">
-                <div style="padding-top: 20px">
-                    <span class="busqueda-titulo">Busca tus trámites</span>
-                </div>
-                <span  class="busqueda-sub">Puedes buscar por nombre de trámite, número de folio, nombre de solicitante, etc.</span>
-                <div style="padding-top: 20px">
-                    <input class="form-control  form-control-lg" style="height: 50px;" type="text" name="busqueda" id="busqueda"  placeholder="Ejemplo: Certificado de gravamen">
-                </div>
-            </div>
-    </div>
-</div>
-
-<div class="content d-flex flex-column flex-column-fluid contenido " id="kt_content">
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
     <div class="d-flex flex-column-fluid">
         <div class="container">
 
