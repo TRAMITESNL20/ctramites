@@ -123,6 +123,8 @@
                         divContenedorSecundario.append('<div id="pdfContenido"><iframe id="frame" src="http://egobierno.nl.gob.mx/egob/formatoRepositorio.php?Folio=258310" width="100%" height="600"></iframe></div>')
                     } else {
                         window.open(response.response.datos.recibo.url);
+
+
                     }
                 }).fail((rror)=> {
                     console.log( rror)
@@ -183,10 +185,7 @@
                     setTimeout(function(){ 
                         this.obteniendoPagoBancomer = false;
                         $("#formulariosBancomer").submit();
-
                     }, 3000);
-
-                    //https://prepro.adquiracloud.mx/clb/endpoint/gnl
 
                 }).catch((error)=> {
                     console.log(error)

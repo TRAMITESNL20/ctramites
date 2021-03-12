@@ -53,9 +53,26 @@
           </b-row>        
         </form>
         <transition name="slide-fade">
+          <div class="card" v-if="insumos" key="yes">
+            <div class="card-body">           
+              <h6 class="pt-3 pl-3">Datos Insumos</h6>
+              <hr>
+              <div class="overflow-auto" style="height:auto;" v-if="insumos && insumos.status">
+                Valor de Operación: {{insumos.data.valor_operacion | toNumber | toCurrency}}
+              </div>
+              <div class="overflow-auto" style="height:auto;" v-else-if="insumos && !insumos.status">
+                  {{insumos.msg || insumos.data }}
+              </div>
+            </div>
+          </div>
+          <div v-else-if="$v.form.expediente.$dirty && !$v.form.expediente.$invalid && !insumos" key="no">
+            Información Insumos no encontrada
+          </div>
+        </transition>
+        <transition name="slide-fade">
           <div class="card" v-if="direccion" key="yes">
             <div class="card-body">           
-              <h6 class="pt-3 pl-3">Datos</h6>
+              <h6 class="pt-3 pl-3">Datos Catastro</h6>
               <hr>
               <div class="overflow-auto" style="height:350px;">
                   <tree-component
@@ -86,6 +103,11 @@
   export default {
     components: { Multiselect },
     mixins: [validationMixin],
+    props:{
+      folio:{
+        type: String
+      }
+    },
     mounted(){
         this.titleModal = "Agregar";
         this.btnOkLabel = "Agregar";
@@ -105,7 +127,8 @@
         idModa:  uuid.v4(),
         btnIcon:'',titleModal:'', btnOkLabel:'', textBtnOpenModal:'',classBtn:'',
         estados:[], municipios:[], clave: "70",
-        desabilitarSelecEstados:true
+        desabilitarSelecEstados:true,
+        insumos:{}
       }
     },
     computed:{
@@ -148,6 +171,7 @@
         let expediente = this.form;
         expediente.direccion =  this.direccion;
         expediente.expediente = this.$v.form.expediente.$model;
+        expediente.insumos = this.insumos;
         this.$emit('addExpediente', expediente);
 
         // Hide the modal manually
@@ -159,12 +183,15 @@
       },
       openModal(porcentajeAsignado){
         this.direccion = {};
+        this.insumos = {};
 
         this.$bvModal.show(this.idModa)
       },
       async getDatosDomicilio(){
         if( !this.$v.form.expediente.$invalid ){         
           this.buscarDatosDomicilio( this.$v.form.expediente.$model );
+
+          this.valorOperacion( this.$v.form.expediente.$model );
         } else {
           this.rellenarForm();
         }
@@ -224,6 +251,26 @@
       setValMunicipio(){
         this.clave = this.$v.form.municipio.$model.clave;
         this.getDatosDomicilio();
+      },
+
+      async valorOperacion(nExpediente){
+        if(this.folio){
+          let url = process.env.TESORERIA_HOSTNAME + "/insumos-montos";
+          let params = {
+            expediente:this.clave + nExpediente.split("-").join(""),
+            folio:this.folio,
+            id_notaria: 9
+          }
+          let response = await axios.get(url , {params} );
+          if(response.data){
+            this.insumos = response.data;
+          } else {
+            this.insumos = false;
+          }
+        } else {
+          this.insumos.status = false;
+          this.insumos.msg = "Ingrese Folio";
+        }
       }
     }
   }
