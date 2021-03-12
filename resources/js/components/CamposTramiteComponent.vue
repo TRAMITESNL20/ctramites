@@ -45,7 +45,7 @@
 												</div>
 											</div>
 			 								<div v-for="(campo, j) in agrupacion.campos" :key="j" class="col-md-6 col-sm-6 col-xs-6"
-			 								:class="j == agrupacion.campos.length - 1 && agrupacion.campos.length % 2 != 0 || ['file', 'results', 'question','enajenante'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
+			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
 
 												<input-component
 													v-if="campo.tipo === 'input'" 
@@ -145,7 +145,7 @@
 													:campo="campo" 
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
-													@updateForm="updateForm"></listado-expedientes-5-i-s-r>
+													@updateForm="updateForm" :usuario="usuario"></listado-expedientes-5-i-s-r>
 
 												<div v-else-if="campo.tipo == 'question'">
 													¿Desea realizar el cobro por ?
@@ -224,7 +224,7 @@
                 };
             }
         },
-        props: ['tramite','formularioValido', 'comprobarEstadoFormularioCount', 'infoGuardada', 'declararEn0', 'notary'],
+        props: ['tramite','formularioValido', 'comprobarEstadoFormularioCount', 'infoGuardada', 'declararEn0', 'notary', 'usuario'],
         data() {
             return {
 				progress: '',
