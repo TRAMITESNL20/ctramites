@@ -534,7 +534,7 @@
             this.formatoMoneda('multaCorreccion');
             this.formatoMoneda('pagoProvisional');
 
-
+            this.curpEncontrada = true;
             this.maxProcentajePermitido = parseFloat(this.porcentajeVenta)  - (parseFloat(porcentajeAsignado) - parseFloat(this.form.porcentajeCompra) )  ;
           } else {
             this.maxProcentajePermitido = parseFloat(this.porcentajeVenta) - porcentajeAsignado ;

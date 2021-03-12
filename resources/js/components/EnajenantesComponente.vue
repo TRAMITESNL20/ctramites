@@ -154,10 +154,12 @@
 
             totalMontoOperacionDeEnajentantes(){
                 let eltotal = 0;
-                this.campo.valor.enajenantes.forEach( enajenante => {
-                    let total = Vue.filter('toNumber')(enajenante.datosParaDeterminarImpuesto.montoOperacion);
-                    eltotal = eltotal + total;
-                });
+                if(this.campo.valor){
+                    this.campo.valor.enajenantes.forEach( enajenante => {
+                        let total = Vue.filter('toNumber')(enajenante.datosParaDeterminarImpuesto.montoOperacion);
+                        eltotal = eltotal + total;
+                    });
+                }
                 return eltotal;
             }
         },
