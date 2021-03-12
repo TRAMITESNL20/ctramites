@@ -2,11 +2,12 @@
   <div>
     <b-row>
         <b-col cols="12" md="6">
-            <b-form-group label="Folio del aviso de enajenación" label-for="folio-input" >
+            <label for="folio-input">
+                Folio del aviso de enajenación
+            </label>
               <b-form-input
                 id="folio-input" name="folio" v-model="folio" style="background-color: #e5f2f5 !important" placeholder="Folio"
               ></b-form-input>
-            </b-form-group>
         </b-col>
     </b-row>
     <div   class="form-group fv-plugins-icon-container">
@@ -59,7 +60,7 @@
             </template>                                                          
         </b-table>
     </div>
-	<modal-expedientes-component @addExpediente="addExpediente" :folio="folio"></modal-expedientes-component>
+	<modal-expedientes-component @addExpediente="addExpediente" :folio="folio" :usuario="usuario"></modal-expedientes-component>
     </div>
 </template>
 <script>
@@ -83,6 +84,9 @@
           showMensajes:{
             default: false,
             type: Boolean
+          },
+          usuario:{
+            type:Object
           }
         },
 	    data(){

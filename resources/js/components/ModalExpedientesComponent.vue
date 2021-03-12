@@ -106,6 +106,9 @@
     props:{
       folio:{
         type: String
+      },
+      usuario:{
+        type:Object
       }
     },
     mounted(){
@@ -254,22 +257,26 @@
       },
 
       async valorOperacion(nExpediente){
-        if(this.folio){
-          let url = process.env.TESORERIA_HOSTNAME + "/insumos-montos";
-          let params = {
-            expediente:this.clave + nExpediente.split("-").join(""),
-            folio:this.folio,
-            id_notaria: 9
-          }
-          let response = await axios.get(url , {params} );
-          if(response.data){
-            this.insumos = response.data;
+        if( this.usuario && this.usuario.notary  ){
+          if(this.folio){
+            let url = process.env.TESORERIA_HOSTNAME + "/insumos-montos";
+            let params = {
+              expediente:this.clave + nExpediente.split("-").join(""),
+              folio:this.folio,
+              id_notaria: this.usuario.notary.notary_number
+            }
+            let response = await axios.get(url , {params} );
+            if(response.data){
+              this.insumos = response.data;
+            } else {
+              this.insumos = false;
+            }
           } else {
-            this.insumos = false;
+            this.insumos.status = false;
+            this.insumos.msg = "Ingrese Folio";
           }
         } else {
-          this.insumos.status = false;
-          this.insumos.msg = "Ingrese Folio";
+          console.warn("El usuario no tiene asignada una notaria")
         }
       }
     }
