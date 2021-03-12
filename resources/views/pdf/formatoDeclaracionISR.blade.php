@@ -240,9 +240,9 @@
 					<td class="columna">NO. FOLIO DE TESORERIA VIRTUAL</td>
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }}">
-					<td class="columna value">{{ 'oper_transacciones.OPER_TRANSACCION' }}</td>
-					<td class="columna value" colspan="2">{{ $control->operaciones->{'fecha_limite_referencia'} }}</td>
-					<td class="columna value">{{ $control->operaciones->{'id_transaccion_motor'} }}</td>
+					<td class="columna value">{{ $control->operaciones->{'estatus_tramite'} ?? "-" }}</td>
+					<td class="columna value" colspan="2">{{ $control->operaciones->{'fecha_limite_referencia'} ?? "-"}}</td>
+					<td class="columna value">{{ $control->operaciones->{'id_transaccion_motor'} ?? "-" }}</td> 
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }}">
 					<td class="columna">FECHA DE PAGO</td>
@@ -250,9 +250,9 @@
 					<td class="columna">REFERENCIA BANCARIA</td>
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }} last">
-					<td class="columna value">{{ $control->operaciones->{'fecha_pago'} }}</td>
-					<td class="columna value" colspan="2">{{ $control->operaciones->{'referencia'} }}</td>
-					<td class="columna value">{{  $control->operaciones->{'referencia'} }}</td>
+					<td class="columna value">{{ $control->operaciones->{'fecha_pago'} ?? "-" }}</td>
+					<td class="columna value" colspan="2">{{ $control->operaciones->{'operacion_interna'} ?? "-" }}</td>
+					<td class="columna value">{{  $control->operaciones->{'referencia'}  ?? "-"  }}</td>
 				</tr>
 			@if ($info->solicitudes[0]->info->{'tipoTramite'} === 'declaracionEn0')
 				<tr>
