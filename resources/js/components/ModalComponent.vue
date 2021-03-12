@@ -247,7 +247,7 @@
                     </b-form-group>
                   </b-col>
                   <b-col cols="12" md="6">
-                    <b-form-group label="MONTO DE OPERACIÓN (reportado en el aviso de enajenación)" label-for="monto-operacion-input" >
+                    <b-form-group label="MONTO DE OPERACIÓN DEL ENAJENANTE(reportado en el aviso de enajenación)" label-for="monto-operacion-input" >
                       <b-input-group  >
                         <template #prepend>
                           <b-input-group-text >$</b-input-group-text>

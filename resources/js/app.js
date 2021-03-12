@@ -105,6 +105,10 @@ Vue.filter('toCurrency', function (value) {
     return formatter.format(value);
 });
 
+Vue.filter('toNumber', function (value) {
+    return Number((value).replace(/[^0-9.-]+/g,""));   
+});
+
 const app = new Vue({
     el: '#app',
 });

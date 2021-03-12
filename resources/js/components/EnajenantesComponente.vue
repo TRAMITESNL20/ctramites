@@ -1,6 +1,6 @@
  <template>
-  <div class="col-md-6 col-sm-6 col-xs-6 col-md-12 col-sm-12 col-xs-12">
-        <b-row >
+  <div>
+        <b-row > 
           <b-col>
             <b-form-group label="Porcentaje que enajena" label-for="procentaje-venta-input" >
                 <b-form-input  id="procentaje-venta-input" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" @input="validar"  :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback" max="100" type="number"  style="background-color: #e5f2f5 !important"></b-form-input>
@@ -80,6 +80,14 @@
                 Porcentaje de venta asignado 
                 <b-progress :value="porcentajeTotalCompra" max="porcentajeVenta" show-value class="mb-3"></b-progress>
             </b-col>
+            <b-col v-if="totalMontoOperacionDeclarado != totalMontoOperacionDeEnajentantes && enajentantes.length > 0">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <strong>IMPORTANTE!</strong> El monto de operación declarado, no corresponde al ingresado en el Aviso de Enajenación
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+            </b-col>
             <b-col  cols="12" >
         	    <modal-component 
         		@addEnajentante="addEnajentante" v-if="porcentajeTotalCompra < $v.porcentajeVenta.$model" 
@@ -120,6 +128,38 @@
             listaCurps(){
                 return this.enajentantes.map( enajentante => enajentante.datosPersonales.curp );
             },
+
+            totalMontoOperacionDeclarado(){
+                let eltotal = 0;
+                let campoExpedientes = this.configCostos.campos.find(campo => campo.nombre == "Expedientes");
+                if(campoExpedientes && campoExpedientes.valor){
+                    if(campoExpedientes.valor.expedientes){
+                      if( campoExpedientes.valor.expedientes.length > 0){
+                        campoExpedientes.valor.expedientes.forEach( expediente => {
+                          
+                          if( expediente.insumos && expediente.insumos.data && expediente.insumos.data.valor_operacion){
+                            let total = Vue.filter('toNumber')(expediente.insumos.data.valor_operacion);
+                            eltotal = eltotal + total;
+                            return eltotal; 
+                          }
+                          
+                        });
+                      }
+                    } else {
+                      Command: toastr.error("Error!", "No se encontro configurado la seccion de expedientes, Consulte al administrador del sistema");
+                    }
+                }
+                return eltotal; 
+            },
+
+            totalMontoOperacionDeEnajentantes(){
+                let eltotal = 0;
+                this.campo.valor.enajenantes.forEach( enajenante => {
+                    let total = Vue.filter('toNumber')(enajenante.datosParaDeterminarImpuesto.montoOperacion);
+                    eltotal = eltotal + total;
+                });
+                return eltotal;
+            }
         },
 		mounted(){
             if(this.campo.valor && this.campo.valor.enajenantes && this.campo.valor.enajenantes.length > 0){
