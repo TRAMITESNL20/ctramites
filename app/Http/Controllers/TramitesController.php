@@ -606,12 +606,19 @@ class TramitesController extends Controller
 
         $estatus = $json['response']['datos']['estatus'];
         $statusChange = '0';
+        $url_recibo = null;
         if($estatus != 1){
           $statusChange = "15";
         }
+        if( isset( $json['response']["datos"]["url_recibo"]) ){
+          $url_recibo = $json['response']["datos"]["url_recibo"];
+        }
+        
         $responseCambioEstatus = Http::post( $urlTesoreria . '/solicitudes-update-status-tramite', [
             'id_transaccion_motor' => $id_transaccion_motor,
-            'status' => $statusChange
+            'status' => $statusChange,
+            'url_recibo' => $url_recibo
+
         ]);
         return $responseCambioEstatus->json() != null && $responseCambioEstatus->json()["Code"] != null ? $responseCambioEstatus->json()["Code"] : false;
       } else {

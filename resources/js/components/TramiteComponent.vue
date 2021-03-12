@@ -1,21 +1,29 @@
 <template>
     <div class="card list-item card-custom gutter-b col-lg-12" :class="cartComponent && !tramite.en_carrito ? 'd-none' : ''">
-        <div class="card-body" :class="group && cartComponent ? 'p-0' : ''">
+        <div class="card-body" :class="group ? 'p-0' : ''">
             <!--begin::Top-->
             <div class="d-flex">
                 <!--begin: Info-->
                 <div class="flex-grow-1">
                     <!--begin::Title-->
-                    <div class="d-flex align-items-center justify-content-between flex-wrap" :class="(!group && cartComponent) || !cartComponent ? 'mt-2' : ''">
-                        <div class="mr-7" v-if="!group && tramite.status && (tramite.status == 99 || tramite.status == 98) && !cartComponent"><input type="checkbox" :id="tramite.id" style="width:18px; height:18px;" v-on:change="processToCart(tramite, true)"></div>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap" :class="!group ? 'mt-2' : ''">
+                        <div class="mr-7" v-if="!group && tramite.status && (tramite.status == 99 || tramite.status == 98) && !cartComponent && ['notary_titular', 'notary_substitute'].includes(user.role_name)"><input type="checkbox" :id="tramite.id" style="width:18px; height:18px;" v-on:change="processToCart(tramite, true)"></div>
                         <!--begin::User-->
-                        <div class="mr-auto" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '40%' } ]">
+                        <div class="mr-auto" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '50%' } ]">
                             <!--begin::Name-->
                             <a v-on:click="goTo(tramite)" class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column">
-                                <strong v-if="(!group && cartComponent) || !cartComponent" class="text-uppercase text-truncate">{{ tramite.nombre_servicio && (tramite.titulo && tramite.nombre_servicio.toLowerCase() != tramite.titulo.toLowerCase()) ? `${tramite.nombre_servicio} - ` : '' }}{{ tramite.tramite || tramite.titulo | capitalize }}</strong>
-                                <span class="text-muted" v-if="type !== undefined && tramite.info && ((!group && cartComponent) || !cartComponent)">{{ tramite.id || '' }} - {{ tramite.clave }}</span>
-                                <span class="text-muted" v-if="type !== undefined && tramite.info && !cartComponent">{{ tramite.created_at }}</span>
-                                <span v-bind:style="[ (!group && cartComponent) || !cartComponent ? {} : { 'font-size' : '12px' } ]" :class="(!group && cartComponent) || !cartComponent ? 'mt-3' : ''" v-if="type !== undefined && solicitante">{{ solicitante.rfc || solicitante.curp || "" }} - {{ solicitante.tipoPersona == "pm" ? solicitante.razonSocial : `${solicitante.nombreSolicitante || solicitante.nombre} ${solicitante.apPat} ${solicitante.apMat}` }}</span>
+                                <strong v-if="!group && !cartComponent" class="text-uppercase text-truncate">{{ tramite.nombre_servicio && (tramite.titulo && tramite.nombre_servicio.toLowerCase() != tramite.titulo.toLowerCase()) ? `${tramite.nombre_servicio} - ` : '' }}{{ tramite.tramite || tramite.titulo | capitalize }}</strong>
+                                <span :class="group ? '' : 'text-muted'" v-if="type !== undefined && tramite.info && !group">
+                                    <span style="font-weight: normal;" v-if="tramite.tramites[0].id_transaccion_motor"><strong>FOLIO PAGO:</strong> {{ tramite.tramites[0].id_transaccion_motor ? `${tramite.tramites[0].id_transaccion_motor} -` : '' }}</span>
+                                    <span style="font-weight: normal;" v-if="tramite.id"><strong>FSE:</strong> {{ tramite.tramites[0].id || '' }}</span>
+                                </span>
+                                <span :class="group ? 'text-muted' : 'd-inline-group'" v-if="type !== undefined && tramite.info && ((!group && cartComponent) || !cartComponent)">
+                                    Tramite ID:  {{ tramite.id || '' }}
+                                </span>
+                                <span class="text-muted" v-if="!group && type !== undefined && tramite.info && !cartComponent">
+                                    {{ tramite.created_at }}
+                                </span>
+                                <span v-bind:style="[ (!group && cartComponent) || !cartComponent ? {} : { 'font-size' : '12px' } ]" :class="!group ? 'mt-3' : ''" v-if="type !== undefined && solicitante">{{ solicitante.rfc || solicitante.curp || "" }} - {{ solicitante.tipoPersona == "pm" ? solicitante.razonSocial : `${solicitante.nombreSolicitante || solicitante.nombre} ${solicitante.apPat} ${solicitante.apMat}` }}</span>
                             </a>
                             <!--end::Name-->
                         </div>
@@ -27,19 +35,15 @@
                                 <span v-if="tramite.loading"><i class="fas fa-spinner fa-spin"></i></span>
                                 <span v-if="!tramite.loading"><i :class="tramite.en_carrito == 1 ? (cartComponent ? 'fas fa-trash' : 'fas fa-check-circle') : 'fas fa-plus-circle'"></i> {{ tramite.en_carrito == 1 ? (cartComponent ? 'ELIMINAR' : 'QUITAR DEL CARRITO') : 'AGREGAR AL CARRITO' }}</span>
                             </button>
-                            <button v-on:click="addToSign(tramite)" v-if="!group && type == 'pendiente_firma'" type="button" class="btn btn-sm mt-2" :class="tramite.por_firmar ? 'btn-primary' : 'btn-outline-primary'">
+                            <button v-on:click="addToSign(tramite)" v-if="!group && type == 'pendiente_firma' && ['notary_titular', 'notary_substitute'].includes(user.role_name)" type="button" class="btn btn-sm mt-2" :class="tramite.por_firmar ? 'btn-primary' : 'btn-outline-primary'">
                                 <span v-if="tramite.loadingSign"><i class="fas fa-spinner fa-spin"></i></span>
                                 <span v-if="!tramite.loadingSign"><i :class="tramite.por_firmar == 1 ? 'fas fa-check-circle' : 'fas fa-plus-circle'"></i> {{ tramite.por_firmar == 1 ? 'DESELECCIONAR' : 'PREPARAR PARA FIRMAR' }}</span>
                             </button>
                             <a v-on:click="goTo(tramite)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="!tramite.info">
                                 INICIAR TRAMITE
                             </a>
-                            <a v-on:click="goTo(tramite.doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.doc_firmado && [2,3].includes(type)">
-                                VER DECLARACIÓN
-                            </a>
-                            <a v-on:click="goTo(tramite.tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.tramites && tramite.tramites[0].url_recibo && [2,3].includes(type)">
-                                VER RECIBO DE PAGO
-                            </a>
+                            <a v-on:click="goTo(tramite.doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.doc_firmado && [2,3].includes(type) && !group">VER DECLARACIÓN</a>
+                            <a v-on:click="goTo(tramite.tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.tramites && tramite.tramites[0].url_recibo && [2,3].includes(type) && !group">VER RECIBO DE PAGO</a>
                             <div class="btn-group mt-2" v-if="tramite.info && !cartComponent && type != 2">
                                 <a v-on:click="goTo(tramite)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="files.length == 0 ? 'rounded' : ''">
                                     <span class="text-white">VER DETALLES</span>

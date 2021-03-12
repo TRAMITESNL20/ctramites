@@ -1,3 +1,6 @@
+@php
+	// dd($user->notary->notary_number);
+@endphp
 <!DOCTYPE html>
 
 <html lang="en">
@@ -211,7 +214,7 @@
 									<div class="btn btn-icon btn-hover-transparent-dark w-auto d-flex align-items-center btn-lg px-2" id="kt_quick_user_toggle2" onclick="iehelper()">
 										<div class="d-flex flex-column text-right pr-3">
 											<span class="opacity-50 font-weight-bold font-size-sm d-none d-md-inline">{{ $user ? $user->name : "" }} {{ $user ? $user->fathers_surname : "" }} </span>
-											<span class="font-weight-bolder font-size-sm d-none d-md-inline">Frontend Dev</span>
+											<span class="font-weight-bolder font-size-sm d-none d-md-inline">{{ $user ? $user->role->description : "" }}</span>
 										</div>
 										<span class="symbol symbol-35">
 											<span class="symbol-label font-size-h5 font-weight-bold bg-dark-o-20">{{ $user ? $user->name[0].$user->fathers_surname[0] : "" }}</span>
@@ -220,34 +223,38 @@
 								</div>
 								<!--end::User-->
 								<!--begin::Notifications-->
-								<div class="dropdown mr-3 ml-2">
-									<!--begin::Toggle-->
-									<div class="btn btn-icon btn-hover-transparent-dark bg-secondary btn-dropdown btn-lg mr-1 pulse pulse-white">
-										<a href="{{ url()->route("tramite.cart") }}" class="topbar-item" id="notifications">
-											<span class="svg-icon svg-icon-xl">
-												<!--begin::Svg Icon | path:media/svg/icons/Code/Compiling.svg-->
-												<i class="flaticon2-shopping-cart-1"></i>
-												<span id="totalTramitesCarrito"  class="badge badge-danger">{{ session()->get("tramites") }}</span>
-											</span>
-										</a>
+								@if ($user && $user->role->name !== 'notary_capturist')
+									<div class="dropdown mr-3 ml-2">
+										<!--begin::Toggle-->
+										<div class="btn btn-icon btn-hover-transparent-dark bg-secondary btn-dropdown btn-lg mr-1 pulse pulse-white">
+											<a href="{{ url()->route("tramite.cart") }}" class="topbar-item" id="notifications">
+												<span class="svg-icon svg-icon-xl">
+													<!--begin::Svg Icon | path:media/svg/icons/Code/Compiling.svg-->
+													<i class="flaticon2-shopping-cart-1"></i>
+													<span id="totalTramitesCarrito"  class="badge badge-danger">{{ session()->get("tramites") }}</span>
+												</span>
+											</a>
+										</div>
+										<!--end::Toggle-->
 									</div>
-									<!--end::Toggle-->
-								</div>
+								@endif
+								@if ($user && in_array($user->role->name, ["notary_titular", "notary_substitute"]))
+									<div class="dropdown mr-3 ml-2">
+										<!--begin::Toggle-->
+										<div class="btn btn-icon btn-hover-transparent-dark bg-secondary btn-dropdown btn-lg mr-1 pulse pulse-white">
+											<a href="{{ url()->route("pendiente-firma") }}" class="topbar-item" id="notifications">
+												<span class="svg-icon svg-icon-xl">
+													<!--begin::Svg Icon | path:media/svg/icons/Code/Compiling.svg-->
+													<i class="flaticon2-pen"></i>
+													<span id="totalTramitesFirma"  class="badge badge-danger">{{ session()->get("tramitesFirma") }}</span>
+												</span>
+											</a>
+										</div>
+										<!--end::Toggle-->
+									</div>
+								@endif
 								<!--end::Notifications-->
 								<!--begin::Notifications-->
-								<div class="dropdown mr-3 ml-2">
-									<!--begin::Toggle-->
-									<div class="btn btn-icon btn-hover-transparent-dark bg-secondary btn-dropdown btn-lg mr-1 pulse pulse-white">
-										<a href="{{ url()->route("pendiente-firma") }}" class="topbar-item" id="notifications">
-											<span class="svg-icon svg-icon-xl">
-												<!--begin::Svg Icon | path:media/svg/icons/Code/Compiling.svg-->
-												<i class="flaticon2-pen"></i>
-												<span id="totalTramitesFirma"  class="badge badge-danger">{{ session()->get("tramitesFirma") }}</span>
-											</span>
-										</a>
-									</div>
-									<!--end::Toggle-->
-								</div>
 								<!--end::Notifications-->
 								<!--begin::Notifications-->
 								<div class="dropdown mr-3 ml-2">
@@ -611,7 +618,7 @@
 					</div>
 					<div class="d-flex flex-column">
 						<a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ $user ? $user->name : "" }} {{ $user ? $user->fathers_surname : "" }} </a>
-						{{-- <div class="text-muted mt-1">Frontend Development</div> --}}
+						<div class="text-muted mt-1">{{ $user ? $user->role->description : '' }}</div>
 						<div class="navi mt-2">
 							<a href="mailto:{{ $user ? $user->email : "" }}" class="navi-item">
 								<span class="navi-link p-0 pb-2">
@@ -868,7 +875,10 @@
 					</div>
 					<div class="d-flex flex-column">
 						<a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ $user ? $user->name : "" }} {{ $user ? $user->fathers_surname : "" }} </a>
-						{{-- <div class="text-muted mt-1">Frontend Development</div> --}}
+						<div class="text-muted mt-1">{{ $user ? $user->role->description : '' }}</div>
+						@if ($user && $user->notary)
+							<div class="text-muted">{{$user->notary ? "Notaría #" : ''}}{{ $user->notary->notary_number ?? '' }}</div>
+						@endif
 						<div class="navi mt-2">
 							<a href="mailto:{{ $user ? $user->email : "" }}" class="navi-item">
 								<span class="navi-link p-0 pb-2">
@@ -1606,11 +1616,12 @@
 				const APP_URL = '{{ getenv("APP_URL") }}';
 				window.user = <?= json_encode(session()->get("user"))?>;
 				function redirect(path, _blank=false) {
+					let newPath = path;
 					if (!(new RegExp('^(http(s)?[:]//)','i')).test(path)) {
 						newPath = APP_URL + (path.search(/\//) != 0 ? "/" : "") + path;
 					}
 					if(!_blank) window.location = newPath;
-					else windo.open(newPath, '_blank')
+					else window.open(newPath, '_blank')
 				}
 
 				$.ajaxSetup({

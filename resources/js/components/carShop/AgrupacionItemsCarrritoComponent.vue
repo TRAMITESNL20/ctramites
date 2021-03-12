@@ -13,7 +13,7 @@
                     {{ agrupacion.clave }}
                 </h5>
                 <span class="ml-3" style="font-size: 12px;"  v-if="totalItemInGroup  == 1 && agrupacion.items[0].datos_solicitante">
-                   {{ agrupacion.items[0].datos_solicitante.rfc || agrupacion.items[0].datos_solicitante.curp || "" }} - {{ agrupacion.items[0].datos_solicitante.tipoPersona == "pm" ? agrupacion.items[0].datos_solicitante.razonSocial : agrupacion.items[0].datos_solicitante.nombre + " " + agrupacion.items[0].datos_solicitante.apellido_paterno + " " + agrupacion.items[0].datos_solicitante.apellido_materno }}
+                   {{ agrupacion.items[0].datos_solicitante.rfc || agrupacion.items[0].datos_solicitante.curp || "" }} - {{ agrupacion.items[0].datos_solicitante.razon_social ? agrupacion.items[0].datos_solicitante.razon_social : agrupacion.items[0].datos_solicitante.nombre + " " + agrupacion.items[0].datos_solicitante.apellido_paterno + " " + agrupacion.items[0].datos_solicitante.apellido_materno }}
                 </span>
             </div>
             <div class="my-lg-0 my-1">
@@ -37,7 +37,7 @@
                          <div class="mr-auto" style="width: 60%;">
                             <a class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column">
                                 <span class="mt-3" style="font-size: 12px;"  v-if="item.datos_solicitante">
-                                   {{ item.datos_solicitante.rfc || item.datos_solicitante.curp || "" }} - {{ item.datos_solicitante.tipoPersona == "pm" ? item.datos_solicitante.razonSocial : item.datos_solicitante.nombre + " " + item.datos_solicitante.apellido_paterno + " " + item.datos_solicitante.apellido_materno }}
+                                   {{ item.datos_solicitante.rfc || item.datos_solicitante.curp || "" }} - {{ item.datos_solicitante.razon_social ? item.datos_solicitante.razon_social : item.datos_solicitante.nombre + " " + item.datos_solicitante.apellido_paterno + " " + item.datos_solicitante.apellido_materno }}
                                 </span>
                             </a>
                          </div>

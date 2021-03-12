@@ -14,7 +14,7 @@
                 </v-container>
                 <div v-if="!obteniendoTramites && items.length > 0">
                 <div class="card list-item card-custom gutter-b col-lg-12"  v-for="(item, index) in items" :key="index"  
-                v-bind:style="item.items.length > 1 ? 'background-color: rgb(217, 222, 226) !important;' : ''">
+                v-bind:style="item.items.length > 1 ? 'background-color: rgb(217, 222, 226) !important;' : ''" id="cart-container">
                   <agrupacion-items-carrrito-component :agrupacion="item" :index="index" :idUsuario="idUsuario"
                   @updatingParent="updateList" ></agrupacion-items-carrrito-component>
                 </div>
@@ -27,13 +27,13 @@
                       v-model="currentPage"
                       :total-rows="totalListTramites"
                       :per-page="porPage"
-                      aria-controls="itemList"
+                      aria-controls="cart-container"
                       align="center"></b-pagination>
                                 </div>
 
                                 <div class="d-flex align-items-center">
-                                    <select class="form-control form-control-sm text-primary font-weight-bold mr-4 border-0 bg-light-primary" style="width: 75px;" v-model="porPage">
-                                        <option value="5">5</option>
+                                    <select class="form-control form-control-sm text-primary font-weight-bold mr-4 border-0 bg-light-primary" style="width: 75px;" v-model="porPage"  v-on:change="chagenPorPage()">
+                                        <option value="5" >5</option>
                                         <option value="30">30</option>
                                     </select>
                                 </div>
@@ -84,20 +84,20 @@
       props: ['idUsuario'],
         computed:{
             totalListTramites(){
-                return this.items.length;
+                return this.tramitesAgrupados.length;
             },
             items(){
-              let tramitesAgrupados = [];
+              this.tramitesAgrupados = [];
               this.tramites.forEach( tramite => {
                 let item = { nombre: tramite.nombre, clave: tramite.calveTemp, items:[tramite], verDetalle:false };
-                let indice = tramitesAgrupados.findIndex( agrupado => agrupado.clave == tramite.calveTemp );
+                let indice = this.tramitesAgrupados.findIndex( agrupado => agrupado.clave == tramite.calveTemp );
                 if( indice < 0 ){
-                  tramitesAgrupados.push( item );
+                  this.tramitesAgrupados.push( item );
                 } else {
-                  tramitesAgrupados[indice].items.push( tramite )
+                  this.tramitesAgrupados[indice].items.push( tramite )
                 }
               });
-        return tramitesAgrupados.slice((this.currentPage - 1) * this.porPage,this.currentPage * this.porPage);        
+              return this.tramitesAgrupados.slice((this.currentPage - 1) * this.porPage,this.currentPage * this.porPage);        
             }
         },
         data() {
@@ -109,7 +109,7 @@
               obteniendoTramites:false,
               costosObtenidos:false,
               mostrarReciboPago0:false,
-              reciboPagoCeroURL:''
+              reciboPagoCeroURL:'', tramitesAgrupados:[]
             }
         },
   
@@ -147,7 +147,25 @@
             if(response.data.response.pago_cero){
               this.mostrarReciboPago0 = true;
               this.reciboPagoCeroURL = response.data.response.pago_cero;
-              //this.cambiarStatusTransaccion(0,response.data.response.folio);
+
+              let id_transaccion_motor = response.data.response.folio
+              let data = {
+                id_transaccion_motor,url_recibo:this.reciboPagoCeroURL
+              }
+
+              setTimeout(function(){ 
+                let urlADDURLRecivo = process.env.TESORERIA_HOSTNAME +  "/solicitudes-update-tramite"
+                axios.post(urlADDURLRecivo, data, {
+                     headers:{
+                        "Content-type":"application/json"
+                    }
+                } ).then(response => {
+                    console.log("guardando url recibo")
+                    console.log(response)
+                });
+              }, 1000);
+
+                     
             } else {
               this.infoMetodosPago = response.data.response;
               this.mostrarMetodos = true;         
@@ -279,6 +297,11 @@
         },
         iniciarTramite(){
           redirect("/nuevo-tramite");
+        },
+
+
+        chagenPorPage(){
+          this.currentPage = 1;
         }
     }
     }
