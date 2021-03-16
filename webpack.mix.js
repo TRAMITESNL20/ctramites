@@ -23,6 +23,8 @@ let dotenvplugin = new webpack.DefinePlugin({
 		TESORERIA_HOSTNAME: JSON.stringify(process.env.TESORERIA_HOSTNAME || null),
 		APP_PREFIX: JSON.stringify(process.env.APP_PREFIX || null),
 		INSUMOS_HOSTNAME: JSON.stringify(process.env.INSUMOS_HOSTNAME || null),
+		INSUMOS_USERNAME: JSON.stringify(process.env.INSUMOS_USERNAME || null),
+		INSUMOS_PASSWORD: JSON.stringify(process.env.INSUMOS_PASSWORD || null),
 	}
 })
 

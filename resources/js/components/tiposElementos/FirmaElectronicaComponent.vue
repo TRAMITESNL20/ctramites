@@ -138,7 +138,7 @@ export default {
          accesToken(){
             var self = this;
             let url =  process.env.INSUMOS_HOSTNAME + "/auth" ;  
-            var data = { 'username' : 'fun1' , 'password': 'prueba123' };
+            var data = { 'username' : process.env.INSUMOS_USERNAME , 'password':  process.env.INSUMOS_PASSWORD };
             //  axios.post(url, data)
             //     .then(response => {
             //         self.access_token = response.data.token;
