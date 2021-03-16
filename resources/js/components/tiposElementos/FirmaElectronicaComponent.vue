@@ -77,9 +77,9 @@ export default {
     		}
     	},
         encodeData(){
-            var urlDataGeneric = 'http://Insumos.test.nl.gob.mx/api/data_generic';
-            var url = "http://Insumos.test.nl.gob.mx/api/v2/signature/iframe?id=";
-            var rfc = 'GOFF951130TJ0';
+            var urlDataGeneric =  process.env.INSUMOS_HOSTNAME + '/data_generic';
+            var url =  process.env.INSUMOS_HOSTNAME + "/v2/signature/iframe?id=";
+            // var rfc = 'GOFF951130TJ0';
             
 
             var data = {
@@ -89,8 +89,8 @@ export default {
                 'llave' : this.llave,
                 'doc' : this.doc,
                 'folio' : this.folio,
-                'rfc' : rfc,
-                // 'rfc' : this.rfc,
+                // 'rfc' : rfc,
+                'rfc' : this.rfc,
                 'pagado' : 1,
               
             };
@@ -137,7 +137,7 @@ export default {
 
          accesToken(){
             var self = this;
-            let url = "http://Insumos.test.nl.gob.mx/api/auth" ;  
+            let url =  process.env.INSUMOS_HOSTNAME + "/auth" ;  
             var data = { 'username' : 'fun1' , 'password': 'prueba123' };
             //  axios.post(url, data)
             //     .then(response => {
