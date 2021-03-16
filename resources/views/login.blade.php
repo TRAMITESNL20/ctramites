@@ -1,6 +1,6 @@
 <div class="card bg-transparent border-0">
 	<div class="card-body justify-content-center align-items-center text-center">
-		<img src="{{ asset("images/logo.svg") }}" alt="" width="400">
+		<img src="{{ assets("images/logo.svg") }}" alt="" width="400">
 		<h1 class="mt-20"><strong>INICIA SESIÓN</strong></h1>
 		<p>Ingrese tus datos de acceso:</p>
 		<form class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate" id="kt_login_signin_form">
