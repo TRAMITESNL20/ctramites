@@ -203,7 +203,7 @@
 					<tr >
 						<td class="columna">TIPO DE DECLARACION</td>
 						<td class="columna" colspan="2">GANANCIA OBTENIDA</td>
-						<td class="columna">MONTO OBTENIDO CONFORME AL <br> ART 154 BIS DE LA LISR</td>
+						<td class="columna">MONTO OBTENIDO CONFORME AL <br> ART 127 BIS DE LA LISR</td>
 					</tr>
 					<tr >
 						<td class="columna value text-uppercase">{{ $info->solicitudes[0]->info->{'tipoTramite'} ?? '' }}</td>
@@ -211,7 +211,7 @@
 						<td class="columna value">MX${{ number_format($enajenante->detalle->Salidas->{'Monto obtenido conforme al art 127 LISR'} ?? 0,2) }}</td>
 					</tr>
 					<tr >
-						<td class="columna">PAGO PROVISIONAL CONFORME AL <br>	ART 154 BIS DE LISR</td>
+						<td class="columna">PAGO PROVISIONAL CONFORME AL <br>	ART 126 BIS DE LISR</td>
 						<td class=" columna" colspan="2">IMPUESTO CORRESPONDIENTE A LA <br> ENTIDAD FEDERATIVA</td>
 						<td class="columna">PARTE ACTUALZIADA DEL <br> IMPUESTO</td>
 					</tr>
@@ -241,7 +241,7 @@
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }}">
 					<td class="columna value">{{ $control->operaciones->{'estatus_tramite'} ?? "-" }}</td>
-					<td class="columna value" colspan="2">{{ $control->operaciones->{'fecha_limite_referencia'} ?? "-"}}</td>
+					<td class="columna value" colspan="2">{{ $enajenante->detalle->Salidas->{'Fecha vencimiento'} ?? "-"}}</td>
 					<td class="columna value">{{ $control->operaciones->{'id_transaccion_motor'} ?? "-" }}</td> 
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }}">

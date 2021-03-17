@@ -35,7 +35,6 @@ $('#kt_recovery_submit').on('click', function(e) {
                     "email": email,
                 },
                 success: function(res) {
-                    console.log(res);
                     swal.fire({
                         text: "Te hemos enviado un mensaje a tu correo electrónico (" + email + ") para continuar con el cambio de contraseña. Revisa tu bandeja de SPAM si es necesario ",
                         icon: "success",

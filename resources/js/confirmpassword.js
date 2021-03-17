@@ -69,7 +69,6 @@ $('#kt_recovery_submit_confirm').on('click', function(e) {
                     "password_confirmation": password_confirmation
                 },
                 success: function(res) {
-                    console.log(res);
                     swal.fire({
                         text: "Tu contraseña a sido actualizada",
                         icon: "success",

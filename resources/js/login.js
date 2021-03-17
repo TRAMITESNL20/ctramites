@@ -35,7 +35,6 @@ $('#kt_login_signin_submit').on('click', function(e) {
                     username
                 },
                 done : function (res) {
-                    console.log(res)
                     if(!$(this).find("i.fa-spinner").hasClass("d-none")){
                         $(this).removeAttr("disabled")
                         $(this).find("i.fa-spinner").addClass("d-none")
