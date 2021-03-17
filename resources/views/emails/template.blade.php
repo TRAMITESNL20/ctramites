@@ -5,14 +5,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>#_EMAIL_PREHEADER_#</title>
-	<link rel="stylesheet" href="{{ asset("css/app.css") }}">
+	<link rel="stylesheet" href="{{ assets("css/app.css") }}">
 </head>
 <body>
 <body id="nl-email-body">
 	<div class="preheader" style="display: block; opacity: 0; font-size: 0px; color: #F2F3F7;">#_EMAIL_PREHEADER_#</div>
 	<div id="nl-email">
 		<header>
-			<img src="{{ asset("images/logo.png") }}" alt="">
+			<img src="{{ assets("images/logo.png") }}" alt="">
 		</header>
 		<content>
 			<div class="card">

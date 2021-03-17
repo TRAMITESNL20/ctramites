@@ -1,7 +1,7 @@
 <div class="card bg-transparent border-0">
 	@if($valid_token === true)
 	<div   class="card-body justify-content-center align-items-center text-center" >
-		<img src="{{ asset("images/logo.svg") }}" alt="" width="400">
+		<img src="{{ assets("images/logo.svg") }}" alt="" width="400">
 		<h1 class="mt-20"><strong>RECUPERAR CONTRASEÑA</strong></h1>
 		<p>Ingrese su nueva contraseña :</p>
 		<form  class="form fv-plugins-bootstrap fv-plugins-framework pt-5" novalidate="novalidate" id="kt_confirm_password_form">

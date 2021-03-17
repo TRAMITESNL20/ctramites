@@ -50,7 +50,7 @@ export default {
 			}
 
 			this.idFirmado.push(solicitud.id);
-			this.urlFirmado.push(`http://insumos.test.nl.gob.mx/documentos/firmas/${this.usuario.tramite_id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
+			this.urlFirmado.push( `  ${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
 		})
 
         console.log("doc" +this.doc);
@@ -77,9 +77,9 @@ export default {
     		}
     	},
         encodeData(){
-            var urlDataGeneric = 'http://Insumos.test.nl.gob.mx/api/data_generic';
-            var url = "http://Insumos.test.nl.gob.mx/api/v2/signature/iframe?id=";
-            var rfc = 'GOFF951130TJ0';
+            var urlDataGeneric =  process.env.INSUMOS_API_HOSTNAME + '/data_generic';
+            var url =  process.env.INSUMOS_API_HOSTNAME + "/v2/signature/iframe?id=";
+            // var rfc = 'GOFF951130TJ0';
             
 
             var data = {
@@ -89,8 +89,8 @@ export default {
                 'llave' : this.llave,
                 'doc' : this.doc,
                 'folio' : this.folio,
-                'rfc' : rfc,
-                // 'rfc' : this.rfc,
+                // 'rfc' : rfc,
+                'rfc' : this.rfc,
                 'pagado' : 1,
               
             };
@@ -137,8 +137,8 @@ export default {
 
          accesToken(){
             var self = this;
-            let url = "http://Insumos.test.nl.gob.mx/api/auth" ;  
-            var data = { 'username' : 'fun1' , 'password': 'prueba123' };
+            let url =  process.env.INSUMOS_API_HOSTNAME + "/auth" ;  
+            var data = { 'username' : process.env.INSUMOS_USERNAME , 'password':  process.env.INSUMOS_PASSWORD };
             //  axios.post(url, data)
             //     .then(response => {
             //         self.access_token = response.data.token;
