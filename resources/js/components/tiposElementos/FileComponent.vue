@@ -97,8 +97,6 @@
           var fileInput = document.getElementById(this.campo.campo_id +  "-" + this.campo.relationship );
           if( fileInput && fileInput.files.length > 0  ){
             requeridoValido = true;
-            //console.log(fileInput.files[0].name)
-             console.log( "#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' )
             $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(   fileInput.files[0].name  );
           } else {
             requeridoValido = false;

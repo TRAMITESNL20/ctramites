@@ -161,7 +161,6 @@
                     }
                 } ).then(response => {
                     console.log("guardando url recibo")
-                    console.log(response)
                 });
               }, 1000);
 
@@ -183,7 +182,6 @@
                 }
             } ).then(response => {
                 console.log("cambiando estatus")
-                console.log(response)
             });
           },
           extraerDatosPersonalesSolicitante(solicitante){
