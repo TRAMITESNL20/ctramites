@@ -19,7 +19,7 @@
             }
         },
 
-        created(){ console.log('btnClass', this.btnClass) },
+        created(){  },
         extends: BtnGuardarTramiteParent, //heredamos del componente BtnGuardarTramiteParent!
         
         methods:{

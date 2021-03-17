@@ -93,7 +93,6 @@
                 else this.tramitesCart = this.tramitesCart.filter((ele, ind) => index != ind)
             },
             addToCart(status){
-                console.log(user, window.user);
                 let ids = this.tramitesCart.map(ele => ele.id);
                 let onCart = parseInt($('#totalTramitesCarrito').text());
                 fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {

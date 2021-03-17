@@ -48,7 +48,6 @@
 		},
 		watch : {
 			rows: function(newVal, oldVal) {
-				console.log('newVal', newVal);
 				this.rows = newVal;
 			},
 			info: function(newVal, oldVal) {

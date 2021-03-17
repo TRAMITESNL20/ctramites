@@ -514,15 +514,11 @@ export default {
             },
             saveEdit(){
                 //todo
-                console.log('rowselected' ,this.rowSelected);
                 let porcentajeProp = this.modalx.porcentajePropiedad/100;
-                console.log('progress:', this.progress , '||' , 'porcentaje en registro' , this.campos[0].registros[this.rowSelected].porcentajeVenta);
                 this.progress == 0 ? this.progress  : this.progress =  (this.progress -  parseInt(this.campos[0].registros[this.rowSelected].porcentajeVenta));
-                console.log('progress:', this.progress , '||' , 'modalx.porcentaheventa' , this.modalx.porcentajeVenta, '|||' , 'prop: ' , porcentajeProp);
 
                 let aux =  parseInt(this.progress) + (parseInt(this.modalx.porcentajeVenta) * porcentajeProp);
                 this.validateModal();
-                console.log('aux : ' ,aux);
                 if(this.validado == true){
 
                     if(  ( aux ) <= 100 ){
@@ -537,7 +533,6 @@ export default {
                                                                         curp: this.modalx.curp , 
                         }    
                         this.progress = this.progress + aux;
-                        console.log('progres al ternimar: ' ,this.progress);
                         $( '#' +  this.propietario).modal('hide');
                     }else{
                         alert('el porcentaje de venta no puede ser mayor a 100')
@@ -653,9 +648,7 @@ export default {
     },
     watch: {
         progress: function() {
-            console.log('-----');
             if (this.progress != 0 && this.propietario == 1) {
-                console.log('-----', this.progress);
                 this.campo.valido = true;
                 this.$emit('updateForm', this.campo);
                 this.$emit('porcentaje', this.progress)
