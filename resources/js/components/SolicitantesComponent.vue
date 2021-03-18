@@ -19,7 +19,7 @@
                            <strong>RFC:</strong> <i class="ni location_pin mr-2"></i>{{ sol.rfc }}
                         </div>
                         <div class="h5 mt-4">
-                          <strong>Curp:</strong> <i class="ni business_briefcase-24 mr-2"></i>{{ sol.curp }}
+                          <strong>CURP:</strong> <i class="ni business_briefcase-24 mr-2"></i>{{ sol.curp }}
                         </div>
                     </div>
                     <!--

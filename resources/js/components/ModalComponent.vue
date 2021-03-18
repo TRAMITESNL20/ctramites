@@ -247,7 +247,7 @@
                     </b-form-group>
                   </b-col>
                   <b-col cols="12" md="6">
-                    <b-form-group label="MONTO DE OPERACIÓN DEL ENAJENANTE(reportado en el aviso de enajenación)" label-for="monto-operacion-input" >
+                    <b-form-group label="MONTO DE OPERACIÓN (proporcional conforme al % de venta)" label-for="monto-operacion-input" >
                       <b-input-group  >
                         <template #prepend>
                           <b-input-group-text >$</b-input-group-text>
@@ -256,7 +256,7 @@
                           id="monto-operacion-input" name="montoOperacion" v-model="$v.form.datosParaDeterminarImpuesto.montoOperacion.$model"  
                           @change="formatoMoneda('montoOperacion')"
                           :state="$v.form.datosParaDeterminarImpuesto.montoOperacion.$dirty ? !$v.form.datosParaDeterminarImpuesto.montoOperacion.$error : null"  
-                          aria-describedby="montoOperacion-input-feedback" :disabled="configCostos.declararEn0"
+                          aria-describedby="montoOperacion-input-feedback"
                         ></b-form-input>
                       </b-input-group>
                       <b-form-invalid-feedback id="montoOperacion-input-feedback">

@@ -150,6 +150,11 @@
             const parsed = JSON.stringify(this.tramite);
             localStorage.setItem('tramite', parsed);
 
+            const datosFormulario = localStorage.getItem('datosFormulario') && JSON.parse(localStorage.getItem('datosFormulario')) ;
+            if(datosFormulario){
+              this.tipoTramite = datosFormulario.tipoTramite
+            }
+            
             if( this.clave ){
                this.obtenerCamposTemporales();
             } else {
@@ -298,6 +303,9 @@
             
             cambioRadio(valor){
               this.tipoTramite = valor;
+              const datosFormulario = localStorage.getItem('datosFormulario') && JSON.parse(localStorage.getItem('datosFormulario')) ;
+              datosFormulario.tipoTramite = valor;
+              localStorage.setItem('datosFormulario', JSON.stringify(datosFormulario)); 
             },
 
 

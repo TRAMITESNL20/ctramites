@@ -33,7 +33,7 @@
                     value:'declaracionEn0',
                     name:'declaracionEn0',
                     id:'checkTipoTramite0',
-                    label:'Declarar en 0',
+                    label:'Declarar en Cero',
                     disabled: 'declaracionEn0' == this.disabledDefault
                 }],
                 modelo:null
