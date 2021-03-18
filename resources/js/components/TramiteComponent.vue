@@ -101,7 +101,7 @@
                 }
             }
 
-            this.solicitante = {};
+            this.solicitante = null;
             if(this.tramite.info){
                 if(this.tramite.info.enajenante){
                     this.solicitante = this.tramite.info.enajenante.datosPersonales;
@@ -113,6 +113,7 @@
                     this.solicitante.tipoPersona = this.tramite.info.tipoPersona;
                 }
             }
+            // console.log('solicitante', Object.entries(this.solicitante).length);
         },
         methods:{
             goTo(tramite, _blank=false){
