@@ -146,7 +146,7 @@
                             tramite.en_carrito = status;
                             if(status === null && this.cartComponent)
                                 this.$emit('processDelete', tramite);
-                            $('#totalTramitesCarrito').text(onCart);
+                            $('#totalTramitesCarrito').text(res.count);
                         }
                         tramite.loading = false;
                     });
@@ -169,7 +169,7 @@
                     .then(res => {
                         if(res.code === 200){
                             tramite.por_firmar = status;
-                            $('#totalTramitesFirma').text(onSign);
+                            $('#totalTramitesFirma').text(res.count);
                         }
                         tramite.loadingSign = false;
                     });
