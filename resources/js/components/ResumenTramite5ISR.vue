@@ -14,7 +14,7 @@
                             <div>CURP: {{usuario.curp}}</div>
                             <div>RFC: {{usuario.rfc}}</div>
                             <div>Email: {{usuario.email}}</div>
-                            <div>Phone: {{usuario.phone}}</div>
+                            <div>Teléfono: {{usuario.phone}}</div>
                         </div>
                     </b-row>                                      
                     <b-row>
@@ -74,19 +74,7 @@
                                 </template>                                                          
                             </b-table>
                         </div>
-                    </b-row>      
-                    <b-row>
-                        <div class="col-sm-12">
-                            <h2 class="border-bottom my-3">Expedientes</h2>
-                        </div>
-                        <div class="col-sm-12">
-                            <b-table responsive  hover :items="listaExpedientes" :fields="camposExpedientes">
-                                <template #cell(direccion)="data">
-                                    {{ data.item.direccion.datos_direccion[0].calle }}
-                                </template>
-                            </b-table>
-                        </div>
-                    </b-row>   
+                    </b-row>        
                     <b-row>
                         <div class="col-sm-12">
                             <h2 class="border-bottom my-3">Archivos</h2>
@@ -133,7 +121,6 @@
                     { key: 'tipoPersona', label: 'Tipo Persona' },
                     { key: 'detalle', label: 'Total' },
                     { key: 'status', label:"Acciones" }
-
             ];
         },
 

@@ -1,44 +1,44 @@
 <template>
   <div>
-    <b-row>
-        <b-col cols="12" md="6">
-            <label for="folio-input">
-                Folio del aviso de enajenación
-            </label>
-              <b-form-input
-                id="folio-input" name="folio" v-model="folio" style="background-color: #e5f2f5 !important" placeholder="Folio"
-              ></b-form-input>
-        </b-col>
-    </b-row>
     <div   class="form-group fv-plugins-icon-container">
         <b-table responsive striped hover :items="expedientes" :fields="camposExpedientes" ref="table"  class="text-center">
             <template #cell(municipio)="data">
                 <i class="fa fa-times" id="iconBtnEliminar"  @click="eliminar(data.item)" style="cursor: pointer; color: red;" title="Quitar"></i> 
                 {{ data.item.municipio.clave }}-{{ data.item.expediente }}
             </template>
-            <template #cell(direccion)="data">
-                {{ data.item.direccion.datos_direccion[0].calle }}
-            </template>
-            <template #cell(insumos)="data" >
-                <div class="text-left" v-if="data.item.insumos.data">
-                    <span v-if="data.item.insumos.data.folio_informativo">  
-                        Folio Informativo: <span class="text-muted"> {{  data.item.insumos.data.folio_informativo }} </span> <br> 
+
+            <template #cell(direccion)="data" >
+                <div class="text-left" v-if=" data.item.direccion && data.item.direccion.datos_direccion[0]">
+                    <span v-if="data.item.direccion.datos_direccion[0].calle">  
+                        CALLE: <span class="text-muted"> {{ data.item.direccion.datos_direccion[0].calle }}</span> <br> 
                     </span>
-                    <span v-if="data.item.insumos.data.valor_operacion">  
-                        Monto operación: <span class="text-muted">{{ data.item.insumos.data.valor_operacion| toNumber | toCurrency }}</span> <br> 
+                    <span v-if="data.item.direccion.datos_direccion[0].num_ext">  
+                        N°: <span class="text-muted">{{data.item.direccion.datos_direccion[0].num_ext}}</span> <br> 
                     </span>
                      
-                    <span v-if="data.item.insumos.data.folio_aviso">  
-                        Folio Aviso:  <span class="text-muted"> {{ data.item.insumos.data.folio_aviso }}</span><br> 
+                    <span v-if="data.item.direccion.datos_direccion[0].manzana">  
+                       MANZANA:  <span class="text-muted">  {{data.item.direccion.datos_direccion[0].manzana}}</span><br> 
                     </span>
-                    <span v-if="data.item.insumos.data.fecha">  
-                        Fecha:  <span class="text-muted"> {{ data.item.insumos.data.fecha }}</span><br> 
+
+                    <span v-if="data.item.direccion.datos_direccion[0].cp">  
+                        CP:  <span class="text-muted"> {{data.item.direccion.datos_direccion[0].cp}}</span><br> 
+                    </span>
+                    <span v-if="data.item.direccion.datos_direccion[0].lote">  
+                        LOTE:  <span class="text-muted"> {{data.item.direccion.datos_direccion[0].lote}}</span><br> 
+                    </span>
+                    <span v-if="data.item.direccion.datos_direccion[0].colonia">  
+                        COLONIA:  <span class="text-muted"> {{data.item.direccion.datos_direccion[0].colonia}}</span><br> 
+                    </span>
+                    <span v-if="data.item.direccion.datos_direccion[0].nombre_loc">  
+                        LOCALIDAD:  <span class="text-muted">  {{data.item.direccion.datos_direccion[0].nombre_loc}}</span><br> 
                     </span>
                 </div>
-                <div class="text-center" v-if="!data.item.insumos.data">
+                <div class="text-center" v-if="!data.item.direccion">
                     <span class="text-muted"> No se encontro información </span>
                 </div>
             </template>
+
+
             <template #cell(acciones)="data">
                 <div>
                     <b-link title="Click para ver detalles" @click="data.toggleDetails" class="mr-2 btn btn-link">
@@ -60,7 +60,7 @@
             </template>                                                          
         </b-table>
     </div>
-	<modal-expedientes-component @addExpediente="addExpediente" :folio="folio" :usuario="usuario"></modal-expedientes-component>
+	<modal-expedientes-component @addExpediente="addExpediente" :usuario="usuario"></modal-expedientes-component>
     </div>
 </template>
 <script>
@@ -68,7 +68,6 @@
 		mounted(){
             if(this.campo.valor && this.campo.valor.expedientes && this.campo.valor.expedientes.length > 0){
                 this.expedientes = this.campo.valor.expedientes;
-                this.folio = this.campo.valor.folio;
             }
             this.validar();
 		},
@@ -94,11 +93,9 @@
 	            expedientes: [],
                 camposExpedientes :[
                     { key: 'municipio', label: 'Expediente Catastral' },
-                    { key: 'direccion', label: 'Direccion' },
-                    { key: 'insumos', label: 'Insumos' },
-                    { key: 'acciones', label: 'Aciones' }
-                ],
-                folio:''
+                    { key: 'direccion', label: 'Dirección' },
+                    { key: 'acciones', label: 'Acciones' }
+                ]
 	        }
 	    },
 		methods : {
@@ -119,7 +116,7 @@
 
             validar(){
                 this.campo.valido =  this.expedientes && this.expedientes.length > 0;
-                this.campo.valor = {expedientes:this.expedientes, folio:this.folio};
+                this.campo.valor = {expedientes:this.expedientes};
                 this.$emit('updateForm', this.campo);
           
             }

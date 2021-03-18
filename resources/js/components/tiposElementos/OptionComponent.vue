@@ -1,5 +1,6 @@
 <template>
   	<div>
+      <label> {{ campo.nombre }}</label>
   		<div class="" :class="campos_count ? 'd-inline-block mr-3' : ''" v-for="opcion in campo.caracteristicas.opciones">
   			<input type="radio" class=" "    
   				:id="[[campo.campo_id]]"
