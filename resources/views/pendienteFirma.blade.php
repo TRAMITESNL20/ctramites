@@ -20,9 +20,17 @@
 										<div class="col-lg-12 col-sm-12">
 											<div class="container">
                                             <div class="pt-10 pl-10 pr-10">
-                                                    <div v-for="idTramite in {{$idTramites}}">
+                                                    
+                                                    <div v-if="1 === 1">
+                                                        <div >
+                                                            <p> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div  v-if="1 === 1" v-for="idTramite in {{$idTramites}}">
                                                         <firma-electronica-component :usuario="idTramite"   :user="{{$user}}" ></firma-electronica-component>
                                                     </div>
+
                                                 </div>
 									    	</div> 
 										</div>
