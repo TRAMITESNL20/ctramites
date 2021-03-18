@@ -76,7 +76,7 @@
         data() {
             return {
                 type : null,
-                tramites: [], loading:true, porPage : 10, pages:[0], currentPage :1, strBusqueda:"", totalTramites:0, tramitesFiltrados:[], tramitesCart : [],
+                tramites: [], loading:true, porPage : 30, pages:[0], currentPage :1, strBusqueda:"", totalTramites:0, tramitesFiltrados:[], tramitesCart : [],
                 ...this.$attrs
             }
         },
@@ -109,7 +109,7 @@
                         })
 
                         this.tramitesCart = [];
-                        $('#totalTramitesCarrito').text(onCart);
+                        $('#totalTramitesCarrito').text(res.count);
                     }
                 });
             },

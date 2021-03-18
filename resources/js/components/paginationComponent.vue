@@ -91,7 +91,7 @@
 			if(!attrs.pages) attrs.pages = 0;
 			if(!attrs.index) attrs.index = 1;
 			if(!attrs.tramitesPaginados) attrs.tramitesPaginados = [];
-			attrs.limit = 10;
+			attrs.limit = 30;
 			attrs.totalItems = 0;
             attrs.user = window.user;
 			if(!attrs.message) attrs.message = null;
