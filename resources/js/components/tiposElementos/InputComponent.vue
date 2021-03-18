@@ -90,6 +90,10 @@
                 });
             }
           }
+
+          if(caracteristicas.formato == 'manzana'){
+           this.campo.valor =  this.padLeft(this.campo.valor, 3);  
+          }
           this.$forceUpdate();
         },
 
@@ -146,6 +150,11 @@
           this.formatear();
           this.$emit('updateForm', this.campo);
           
+        },
+
+        padLeft(value, length) {
+            return (value.toString().length < length) ? this.padLeft("0" + value, length) : 
+            value;
         }
       }
     }
