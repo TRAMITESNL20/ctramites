@@ -1,4 +1,5 @@
 <?php
+    $info = isset($tramite->info->campos->Escritura) ? $tramite->info->campos->Escritura : ( isset($tramite->info->campos->Expediente) ? $tramite->info->campos->Expediente : null );
     // function getFields ($campos) {
         // $fields = "";
         // foreach($campos as $key => $val){
@@ -81,15 +82,15 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <span class="text-muted">Expediente</span>
-                                    <p><strong>{{ $tramite->info->campos->Expedientes->expedientes[0]->expediente }}</strong></p>
+                                    <p><strong>{{ $info->expedientes[0]->expediente }}</strong></p>
                                 </div>
                                 <div class="col-md-6">
                                     <span class="text-muted">Estado</span>
-                                    <p><strong>{{ $tramite->info->campos->Expedientes->expedientes[0]->estado->nombre }}</strong></p>
+                                    <p><strong>{{ $info->expedientes[0]->estado->nombre }}</strong></p>
                                 </div>
                                 <div class="col-md-6">
                                     <span class="text-muted">Municipio</span>
-                                    <p><strong>{{ $tramite->info->campos->Expedientes->expedientes[0]->municipio->nombre }}</strong></p>
+                                    <p><strong>{{ $info->expedientes[0]->municipio->nombre }}</strong></p>
                                 </div>
                             </div>
                         </div>
@@ -98,7 +99,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <?php
-                                    foreach($tramite->info->campos->Expedientes->expedientes[0]->direccion as $key => $val){
+                                    foreach($info->expedientes[0]->direccion as $key => $val){
                                         if(gettype($val) == 'array' && count($val) == 1){
                                             echo "</div>
                                             </div>
