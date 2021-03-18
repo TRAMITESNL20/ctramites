@@ -197,7 +197,7 @@
 		 										<div class="text-right">
 													<strong>Nota:</strong>
 													<small class="">
-														De no anexar los documentos obligatorios, no podrá Imprimir su declaración fiscal, mismos que podrán ser requeridos por la autoridad.
+														De no anexar el documento obligatorio, no podrá Imprimir su declaración fiscal, mismo que podra ser requerido por la Autoridad.
 													</small>
 												</div>
 											</div>

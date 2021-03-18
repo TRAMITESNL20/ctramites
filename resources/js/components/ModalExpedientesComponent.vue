@@ -11,6 +11,19 @@
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <b-row>
             <b-col cols="12" md="4" >
+              <b-form-group label="Folio del aviso de enajenación" label-for="folio-input" >
+                <b-input-group size="lg"> 
+                  <b-form-input
+                    id="folio-input" name="folio" v-model="$v.form.folio.$model"  :state="$v.form.folio.$dirty ? !$v.form.folio.$error : null"  aria-describedby="folio-input-feedback"></b-form-input>
+                </b-input-group>
+                <b-form-invalid-feedback id="folio-input-feedback">
+                  <span v-if="!$v.form.folio.required"  class="form-text text-danger">
+                    El Folio es requerido.
+                  </span>
+                </b-form-invalid-feedback>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12" md="4" >
               <b-form-group label="Estado" label-for="estado-select" >
                 <multiselect id="estado-select" v-model="$v.form.estado.$model" :options="estados" label="nombre" track-by="clave" 
                 :searchable="true" @input="getMunicipios" :state="$v.form.estado.$dirty ? !$v.form.estado.$error : null"  aria-describedby="estado-select-feedback" 
@@ -53,23 +66,6 @@
           </b-row>        
         </form>
         <transition name="slide-fade">
-          <div class="card" v-if="insumos" key="yes">
-            <div class="card-body">           
-              <h6 class="pt-3 pl-3">Datos Insumos</h6>
-              <hr>
-              <div class="overflow-auto" style="height:auto;" v-if="insumos && insumos.status">
-                Valor de Operación: {{insumos.data.valor_operacion | toNumber | toCurrency}}
-              </div>
-              <div class="overflow-auto" style="height:auto;" v-else-if="insumos && !insumos.status">
-                  {{insumos.msg || insumos.data }}
-              </div>
-            </div>
-          </div>
-          <div v-else-if="$v.form.expediente.$dirty && !$v.form.expediente.$invalid && !insumos" key="no">
-            Información Insumos no encontrada
-          </div>
-        </transition>
-        <transition name="slide-fade">
           <div class="card" v-if="direccion" key="yes">
             <div class="card-body">           
               <h6 class="pt-3 pl-3">Datos Catastro</h6>
@@ -104,9 +100,6 @@
     components: { Multiselect },
     mixins: [validationMixin],
     props:{
-      folio:{
-        type: String
-      },
       usuario:{
         type:Object
       }
@@ -125,7 +118,7 @@
       return {
         direccion:{},
         form: {
-          expediente:'', estado:{ "clave": "19", "nombre": "NUEVO LEÓN" }, municipio:{ "clave": "70", "nombre": "Monterrey", "claveEstado": "19" }
+          expediente:'', estado:{ "clave": "19", "nombre": "NUEVO LEÓN" }, municipio:{ "clave": "70", "nombre": "Monterrey", "claveEstado": "19" }, folio:''
         },
         idModa:  uuid.v4(),
         btnIcon:'',titleModal:'', btnOkLabel:'', textBtnOpenModal:'',classBtn:'',
@@ -138,7 +131,7 @@
         rules(){
           return {
             expediente: { required },
-            estado: { required }, municipio: { required },
+            estado: { required }, municipio: { required },folio:{required}
           }
       
         }
@@ -152,7 +145,7 @@
       resetModal() {
         
         this.form = { 
-            expediente:'', estado:{ "clave": "19", "nombre": "NUEVO LEÓN" }, municipio:{ "clave": "70", "nombre": "Monterrey", "claveEstado": "19" }
+            expediente:'', estado:{ "clave": "19", "nombre": "NUEVO LEÓN" }, municipio:{ "clave": "70", "nombre": "Monterrey", "claveEstado": "19" }, folio:''
         }
         this.clave = this.$v.form.municipio.$model.clave;
       },
@@ -175,6 +168,7 @@
         expediente.direccion =  this.direccion;
         expediente.expediente = this.$v.form.expediente.$model;
         expediente.insumos = this.insumos;
+        //expediente.folio = this.$v.form.folio.$model;
         this.$emit('addExpediente', expediente);
 
         // Hide the modal manually
@@ -258,11 +252,11 @@
 
       async valorOperacion(nExpediente){
         if( this.usuario && this.usuario.notary  ){
-          if(this.folio){
+          if(this.$v.form.folio.$model){
             let url = process.env.TESORERIA_HOSTNAME + "/insumos-montos";
             let params = {
               expediente:this.clave + nExpediente.split("-").join(""),
-              folio:this.folio,
+              folio:this.$v.form.folio.$model,
               id_notaria: this.usuario.notary.notary_number
             }
             let response = await axios.get(url , {params} );
