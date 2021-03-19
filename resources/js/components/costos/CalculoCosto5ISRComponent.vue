@@ -9,9 +9,10 @@
 
     export default {
         name: 'CalculoCosto5ISRComponent',
-        props: ['datosParaDeterminarImpuesto', 'campos', 'tramite', 'tipoPersona', 'index'],
+        props: ['datosParaDeterminarImpuesto', 'campos', 'tramite', 'tipoPersona', 'index', 'updateInfo'],
         mounted() {
-
+            this.updateCostos();
+/*
             let paramsCosto = {};
             let multaCorreccion            = this.datosParaDeterminarImpuesto.multaCorreccion;
 
@@ -34,10 +35,23 @@
                 paramsCosto.divisa = campoDivisas.valor.clave;
             }
 
-            this.getCosto(paramsCosto)
+            this.getCosto(paramsCosto)*/
         },
 
-
+        watch: {
+          updateInfo:{
+            handler: function (val, oldVal) {
+              this.$emit('obteniendoCostos', {calculandoCostos:true});
+              this.updateCostos();
+            },
+          },
+          tipoPersona:{
+            handler: function (val, oldVal) {
+              this.$emit('obteniendoCostos', {calculandoCostos:true});
+              this.updateCostos();
+            }
+          },
+        },
   
         methods: {
 
@@ -51,8 +65,37 @@
                 return valor;
             },
 
+
+            updateCostos(){
+                console.log("calcular costos")
+                let paramsCosto = {};
+                let multaCorreccion            = this.datosParaDeterminarImpuesto.multaCorreccion;
+
+
+                paramsCosto.monto_operacion     = this.formatoNumero(this.datosParaDeterminarImpuesto.montoOperacion);
+                paramsCosto.pago_provisional_lisr    = this.formatoNumero(this.datosParaDeterminarImpuesto.pagoProvisional);
+                paramsCosto.ganancia_obtenida   = this.formatoNumero(this.datosParaDeterminarImpuesto.gananciaObtenida);
+                let campoEscritura = this.getCampoByName(CAMPO_FECHA_DE_ESCRITURA_O_MINUTA);
+                if(campoEscritura && campoEscritura.valor){
+                    paramsCosto.fecha_escritura   = campoEscritura.valor.split("-").map(dato => Number(dato)).join("-");
+                } else {
+                    //alert("seleccione fecha")
+                    return false;
+                }
+                let campoDivisas               = this.getCampoByName(CAMPO_DIVISAS);
+                if( multaCorreccion ){
+                    paramsCosto.multa_correccion_fiscal = this.formatoNumero(multaCorreccion);
+                }
+                if( campoDivisas ){
+                    paramsCosto.divisa = campoDivisas.valor.clave;
+                }
+
+                this.getCosto(paramsCosto);
+            },
+
             async getCosto(params){
  
+                
                 params.id_seguimiento = this.tramite.id_seguimiento,
                 params.tramite_id = this.tramite.id_tramite,
                 params.tipoPersona = this.tipoPersona

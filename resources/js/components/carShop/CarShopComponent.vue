@@ -240,7 +240,7 @@
             
             let tramitesJson = {};
             tramitesJson.nombre = tramiteInarray.tramite;
-            tramitesJson.id_seguimiento = tramiteInarray.tramite_id;
+            tramitesJson.id_seguimiento = tramiteInarray.tramite_id + "";
             tramitesJson.id_tipo_servicio = tramiteInarray.tramite_id;//397;//
             tramitesJson.idSolicitante = soliciante.id; 
             tramitesJson.id_tramite = soliciante.id;//soliciante.clave;
