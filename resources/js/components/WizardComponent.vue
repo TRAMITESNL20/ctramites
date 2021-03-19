@@ -152,7 +152,7 @@
 
             const datosFormulario = localStorage.getItem('datosFormulario') && JSON.parse(localStorage.getItem('datosFormulario')) ;
             if(datosFormulario){
-              this.tipoTramite = datosFormulario.tipoTramite;
+              this.tipoTramite = datosFormulario.tipoTramite || 'normal';
             } else {
               this.tipoTramite == 'normal';
               localStorage.setItem('datosFormulario', JSON.stringify(datosFormulario)); 
