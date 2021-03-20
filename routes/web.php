@@ -26,7 +26,7 @@ Route::get("/ssl-proxy", function(){
 
 Route::post("/ssl-proxy", function(){
 	$url = Request::query('url');
-	$data = Request::json();
+	$data = Request::toArray();
 	$response = curlSendRequest('POST', $url, $data);
     return json_encode($response);
 });
