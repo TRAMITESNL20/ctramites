@@ -20,7 +20,7 @@ Route::get("/", function(){
 });
 
 Route::get("/ssl-proxy", function(){
-	Request::query('url');
+	$url = Request::query('url');
 	return file_get_contents($url);
 });
 
