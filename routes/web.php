@@ -19,6 +19,10 @@ Route::get("/", function(){
 	return redirect()->route("dashboard");
 });
 
+Route::get("/ssl-proxy", function(){
+	$url = Request::query('url');
+	return file_get_contents($url);
+});
 
 Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
