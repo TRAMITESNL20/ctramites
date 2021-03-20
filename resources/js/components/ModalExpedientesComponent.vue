@@ -221,6 +221,7 @@
 
       async getEstados(){
           let url = process.env.TESORERIA_HOSTNAME + "/obtener-estados" ; 
+          console.log(url);
           let options = await this.obtenerOptions(url);
           this.estados = options; 
           this.getMunicipios();
