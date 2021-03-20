@@ -20,8 +20,14 @@ Route::get("/", function(){
 });
 
 Route::get("/ssl-proxy", function(){
-	$url = Request::query('url');
+	Request::query('url');
 	return file_get_contents($url);
+});
+
+Route::post("/ssl-proxy", function(){
+	$url = Request::query('url');
+	$data = Request::toArray();
+	return curlSendRequest('post', $url, $data);
 });
 
 Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
