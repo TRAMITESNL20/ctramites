@@ -49,7 +49,7 @@ export default {
 			}
 
 			this.idFirmado.push(solicitud.id);
-			this.urlFirmado.push( `  ${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
+			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
 		})
 
 		this.rfc = this.user.rfc;
