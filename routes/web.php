@@ -26,8 +26,9 @@ Route::get("/ssl-proxy", function(){
 
 Route::post("/ssl-proxy", function(){
 	$url = Request::query('url');
-	$data = Request::toArray();
-	return curlSendRequest('post', $url, $data);
+	$data = Request::json();
+	$response = curlSendRequest('POST', $url, $data);
+    return json_encode($response);
 });
 
 Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
