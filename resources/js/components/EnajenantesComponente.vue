@@ -151,17 +151,6 @@
                 }
                 return eltotal; 
             },
-
-            totalMontoOperacionDeEnajentantes(){
-                let eltotal = 0;
-                if(this.campo.valor){
-                    this.campo.valor.enajenantes.forEach( enajenante => {
-                        let total = Vue.filter('toNumber')(enajenante.datosParaDeterminarImpuesto.montoOperacion);
-                        eltotal = eltotal + total;
-                    });
-                }
-                return eltotal;
-            }
         },
 		mounted(){
             if(this.campo.valor && this.campo.valor.enajenantes && this.campo.valor.enajenantes.length > 0){
@@ -169,6 +158,7 @@
                 this.$v.porcentajeVenta.$model  = this.campo.valor.porcentajeVenta;
                 this.motivo = this.campo.valor.motivo;
                 this.calcularTotalPorcentaje();
+                this.calcularTotalMontoOperacionDeEnajentantes();
             }
             this.validar();
 		},
@@ -195,18 +185,22 @@
 	            enajentantes: [],
                 porcentajeTotalCompra: 0,
                 porcentajeVenta:100,
-                motivo:''
+                motivo:'',
+                totalMontoOperacionDeEnajentantes:null
 	        }
 	    },
 		methods : {
             eliminar( index ){
                 this.enajentantes.splice(index, 1);
                 this.calcularTotalPorcentaje();
+                this.calcularTotalMontoOperacionDeEnajentantes();
             },
 
            	addEnajentante(enajentante){
            		this.enajentantes.push(enajentante);
+                //this.$forceUpdate();
                 this.calcularTotalPorcentaje();
+                this.calcularTotalMontoOperacionDeEnajentantes();
            	},
 
             editaEnajentante(response){
@@ -223,12 +217,14 @@
                     delete response.enajenante.ife;
                 }
             	this.enajentantes[response.index] = response.enajenante;
-                this.$forceUpdate();
+                
                 this.calcularTotalPorcentaje();
+                this.calcularTotalMontoOperacionDeEnajentantes();
 
            	},
 
             calcularTotalPorcentaje(){
+                
                 this.$v.$touch()
                 var total = 0;
                 this.enajentantes.forEach(enajentante => {
@@ -236,6 +232,7 @@
                 });
                 this.porcentajeTotalCompra = total;
                 this.validar();
+                this.$forceUpdate();
             },
 
             validar(){
@@ -247,6 +244,17 @@
                 this.campo.valor = valor;
                 this.$emit('updateForm', this.campo);
           
+            },
+
+            calcularTotalMontoOperacionDeEnajentantes(){
+                let eltotal = 0;
+                if(this.enajentantes && this.enajentantes.length > 0){
+                    this.enajentantes.forEach( enajenante => {
+                        let total = Vue.filter('toNumber')(enajenante.datosParaDeterminarImpuesto.montoOperacion);
+                        eltotal = eltotal + total;
+                    });
+                }
+                this.totalMontoOperacionDeEnajentantes = eltotal;
             }
 		},
 
