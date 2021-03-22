@@ -91,7 +91,7 @@
                         "url_retorno": "url",
                         "importe_transaccion":  this.calcularTotal, //"4687",
                         "id_transaccion":  this.idSeguimiento,//uuid.v4(),//"BMU8605134I82915082020",rellenar con 0
-                        "entidad": 9,
+                        "entidad": process.env.ENTIDAD_REPOSITORIO,
                         "url_confirma_pago": "url",
                         "es_referencia": "1",
                         "tramite": tramitesAEnviar
