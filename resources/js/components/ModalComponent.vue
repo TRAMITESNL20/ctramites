@@ -8,6 +8,7 @@
     <b-modal size="xl" :id="idModa" ref="modal" :title="titleModal" @show="resetModal" @hidden="resetModal" @ok="handleOk" 
     :ok-title = "btnOkLabel"   no-close-on-backdrop  :ok-disabled="calculandoCostos" :cancel-disabled="calculandoCostos">  
       <b-container fluid>
+        
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <v-expansion-panels v-model="panel" multiple>
             <v-expansion-panel>
@@ -567,20 +568,33 @@
           
       async buscarCurp(curp) {
         this.buscandoCurp = true;
+        let response = null;
+
         let url = process.env.TESORERIA_HOSTNAME + "/consultar-curp";
-        let response = await axios.get(url + '/' + curp);
-        this.buscandoCurp = false;
-        if(response.data){
-          if(response.data.status == 'error'){
-            Command: toastr.error("Error!", response.data.msg);
+
+        try {
+          response = await axios.get(url + '/' + curp, {timeout: 5000});
+          this.buscandoCurp = false;
+          if(response.data){
+            if(response.data.status == 'error'){
+              Command: toastr.error("Error!", response.data.msg);
+              this.rellenarForm();
+            } else{
+              
+              this.rellenarForm(response.data);
+            }
+          } else {
             this.rellenarForm();
-          } else{
-            
-            this.rellenarForm(response.data);
           }
-        } else {
+        } catch (err) {
+          Command: toastr.error("Error!", err.message);
+          this.buscandoCurp = false;
           this.rellenarForm();
+          throw new Error(err.message);
+          
         }
+
+
 
       },
 
