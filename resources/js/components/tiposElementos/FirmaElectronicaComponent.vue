@@ -32,7 +32,6 @@ export default {
 		this.usuario.solicitudes.map((solicitud, ind) => {
 			this.multiple = this.usuario.solicitudes.length > 1;
 			let doc = `${process.env.APP_URL}/formato-declaracion/${solicitud.id}`;
-			console.log(doc);
 			if(this.multiple){
 				if(typeof this.doc === 'string') this.doc = [];
 				this.doc.push(doc)
@@ -50,12 +49,9 @@ export default {
 			}
 
 			this.idFirmado.push(solicitud.id);
-			this.urlFirmado.push( `  ${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
+			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
 		})
 
-        console.log("doc" +this.doc);
-        console.log ("folio" +this.folio);
-        console.log("llave" +this.llave);
 		this.rfc = this.user.rfc;
 		this.accesToken();
 		this.encodeData();
@@ -63,7 +59,6 @@ export default {
     methods: {
     	validateSigned (evt) {
     		this.coutnLoad++;
-            console.log(this.coutnLoad);
     		if(this.coutnLoad == 3){
     			fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
                     method : 'POST',
@@ -71,7 +66,7 @@ export default {
                 })
                 .then(res => res.json())
                 .then(res => {
-                    if(res.code === 200) console.log('Great Job!');
+                    if(res.code === 200) console.log('Firmado');
                     else console.log('Something goes wrong!', res);
                 });
     		}
@@ -123,7 +118,7 @@ export default {
                         console.log('error: ', error);
                     },
                     complete:function(){
-                        console.log('id a consultar en insumos: ', self.resultId);
+                        // console.log('id a consultar en insumos: ', self.resultId);
                     }
                 });
          
@@ -160,7 +155,7 @@ export default {
                     console.log(error);
                 },
                 complete:function(){
-                    console.log('accestoken generado', self.access_token);
+                    // console.log('accestoken generado', self.access_token);
                 }
             });
         },

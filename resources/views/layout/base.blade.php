@@ -1593,7 +1593,6 @@
 				function iehelper() {
 					var isAtLeastIE11 = !!(navigator.userAgent.match(/Trident/) && !navigator.userAgent.match(/MSIE/));
 					if (isAtLeastIE11) {
-						// console.log('xxx estas en IE11  D:');
 						document.getElementById('iehelper').style.display ="block";
 						var div = document.createElement('div');
 						div.style.background = "rgba(0, 0, 0, 0.1)";
@@ -1657,7 +1656,7 @@
 			<script src="{{ assets("js/jquery.dataTables.min.js") }}"></script>
 			<script src="{{ assets("js/dataTables.bootstrap4.min.js") }}"></script>
 
-			<script src="{{ mix("js/bundle.js") }}"></script>
+			<script src="{{ assets("js/bundle.js") }}"></script>
 		</body>
 	<!--end::Body-->
 </html>

@@ -76,7 +76,7 @@
         data() {
             return {
                 type : null,
-                tramites: [], loading:true, porPage : 10, pages:[0], currentPage :1, strBusqueda:"", totalTramites:0, tramitesFiltrados:[], tramitesCart : [],
+                tramites: [], loading:true, porPage : 30, pages:[0], currentPage :1, strBusqueda:"", totalTramites:0, tramitesFiltrados:[], tramitesCart : [],
                 ...this.$attrs
             }
         },
@@ -93,7 +93,6 @@
                 else this.tramitesCart = this.tramitesCart.filter((ele, ind) => index != ind)
             },
             addToCart(status){
-                console.log(user, window.user);
                 let ids = this.tramitesCart.map(ele => ele.id);
                 let onCart = parseInt($('#totalTramitesCarrito').text());
                 fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
@@ -110,7 +109,7 @@
                         })
 
                         this.tramitesCart = [];
-                        $('#totalTramitesCarrito').text(onCart);
+                        $('#totalTramitesCarrito').text(res.count);
                     }
                 });
             },

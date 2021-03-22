@@ -89,10 +89,8 @@
       validar(){
         let requeridoValido = false;
         var file = document.getElementById(this.campo.campo_id );
-          // console.log(file)
           if (file != null ) {
               file =file.files[0];
-              console.log('file..' + file);
             if(file){
               var fileReader = new FileReader();
               fileReader.readAsBinaryString(file);
@@ -140,7 +138,6 @@
 
                   var index = Object.keys(rowObject[0]).indexOf(trueExp);
                   index != -1 ? tipoValidacion  = '1' : tipoValidacion = '2';
-                  // console.log('tipo de validacion: ' +tipoValidacion);
                   
                   //cuando el usuario añada los expedientes bajo una unica columna de expediente catastral 
                   if (tipoValidacion == 1 ) {
@@ -154,9 +151,7 @@
                           break;
                         }
                     }
-                    // console.log('file : ' + file);
-                    //this.files.push( {valor:file, nombre:file});
-                    //this.$emit('updatingFiles', this.files);
+                  
                     
                   }else if(tipoValidacion == 2){
 
@@ -199,10 +194,7 @@
                           break;
                         }
                       }
-                    // console.log('file validacion 2: ' + file);
-                    // console.log(file);
-                    //this.files.push( {valor:file, nombre:file});
-                      //this.$emit('updatingFiles', this.files);    
+                   
                   }
                 })
               }.bind(this);

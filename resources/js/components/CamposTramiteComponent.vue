@@ -256,11 +256,9 @@
 			if (localStorage.getItem('datosFormulario')) {
               	try {
                 	let datosFormulario = JSON.parse(localStorage.getItem('datosFormulario'));
-                	console.log('datosformulario : ' , datosFormulario);
                 	if(datosFormulario.tramite.tramite === 'INFORMATIVO VALOR CATASTRAL'){
                 		this.panel = [0];
                 		this.disabled = [1,2,3,4,5];
-                		console.log(this.disabled);
                 	}
 
                 	if( datosFormulario.tramite.id_tramite  == this.tramite.id_tramite){
@@ -325,11 +323,9 @@
 								self.rows = data;
 							},
 							error:function(error){
-								console.log(error);
-								console.log('errorrr');
+								console.log('error');
 							},
 							complete:function(){
-								console.log('ya quedo');
 							}
 						});
 				}
@@ -566,7 +562,6 @@
 							])
 						}
 
-						console.log(rows);
 
 						const noValido = this.response.filter(ele => ele.cta_valida === '0');
 						const bloqueados = this.response.filter(ele => ele.bloqueado && ele.bloqueado !== '0');
@@ -627,7 +622,6 @@
 						final = this.campos.map((ele, ind) => ele.nombre === 'Manzana Final' ? ind : null).filter(ele => ele).toString()
 						inicial = this.campos.map((ele, ind) => ele.nombre === 'Manzana Inicial' ? ind : null).filter(ele => ele).toString()
 						unico = this.campos.map((ele, ind) => ele.nombre === 'Manzana Unica' ? ele.valor : null).filter(ele => ele).toString()
-						console.log(final, inicial, unico === 'true');
 						if(unico === 'true'){
 							this.campos[final].valor = this.campos[inicial].valor || 0;
 						}else{
@@ -641,7 +635,6 @@
 						final = this.campos.map((ele, ind) => ele.nombre === 'Lote Final' ? ind : null).filter(ele => ele).toString()
 						inicial = this.campos.map((ele, ind) => ele.nombre === 'Lote Inicial' ? ind : null).filter(ele => ele).toString()
 						unico = this.campos.map((ele, ind) => ele.nombre === 'Lote Unico' ? ele.valor : null).filter(ele => ele).toString()
-						console.log(final, inicial, unico === 'true');
 						if(unico === 'true'){
 							this.campos[final].valor = this.campos[inicial].valor || 0;
 						}else{
@@ -673,7 +666,6 @@
 				}
 			},
 			async processGrupal({response, exp}){
-				console.log('hello');
 				let rows = [];
 				this.response.push(response.data);
 				if(response.data.resultado) rows = [exp, response.data.resultado]
@@ -729,7 +721,6 @@
 			}
 		 },
 		 mounted(){
-			 console.log('agrupacion ==', this.agrupaciones);
 		 }
 	}
 

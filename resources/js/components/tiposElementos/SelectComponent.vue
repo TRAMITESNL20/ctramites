@@ -49,6 +49,7 @@
         async setOpciones(){
           if( this.campo.nombre == 'Estado'){
             let url = process.env.TESORERIA_HOSTNAME + "/obtener-estados" ; 
+            console.log(url);
             let options = await this.obtenerOptions(url);
             this.options = options; 
           }

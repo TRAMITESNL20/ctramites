@@ -137,7 +137,6 @@
                     });
                 }).catch((error)=> {
                     console.log("transaccion")
-                    console.log( error )
                     //this.mostrarMetodos = false;
                 }).finally(() => {
                     this.consultandoMetodos = false;
@@ -162,7 +161,6 @@
                     }
                 } ).then(response => {
                     console.log("guardando transaccion motor")
-                    console.log(response)
                 });
             }
         },
