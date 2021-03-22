@@ -1,8 +1,8 @@
 name: TEST VPN
 on:
   push:
-    branches-ignore: 
-      dev
+    branches: 
+      - dev
 
 jobs:
   connect-open-vpn:
