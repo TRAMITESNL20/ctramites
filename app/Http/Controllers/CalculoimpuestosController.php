@@ -814,7 +814,7 @@ class CalculoimpuestosController extends Controller
         while ($dias <= 15) {
             $finDeSemana = date("w",strtotime($comienzo));
             //Si la fecha es sabado o domingo O la fecha existe en los inhabil
-            if (in_array($comienzo,$inhabil)|| ($finDeSemana == 0 || $finDeSemana == 6)  ) {
+            if (($finDeSemana == 0 || $finDeSemana == 6) || in_array($comienzo,$inhabil)) {
                 $comienzo = date("Y-m-d",strtotime($comienzo.' +1 days'));
             }else{
 
