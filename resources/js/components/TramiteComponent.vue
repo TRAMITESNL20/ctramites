@@ -11,11 +11,11 @@
                         <!--begin::User-->
                         <div class="mr-auto" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '50%' } ]">
                             <!--begin::Name-->
-                            <a v-on:click="goTo(tramite)" class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column">
+                            <a v-on:click="goTo(tramite)" class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column" v-if="">
                                 <strong v-if="!group && !cartComponent" class="text-uppercase text-truncate">{{ tramite.nombre_servicio && (tramite.titulo && tramite.nombre_servicio.toLowerCase() != tramite.titulo.toLowerCase()) ? `${tramite.nombre_servicio} - ` : '' }}{{ tramite.tramite || tramite.titulo | capitalize }}</strong>
                                 <span :class="group ? '' : 'text-muted'" v-if="type !== undefined && tramite.info && !group">
-                                    <span style="font-weight: normal;" v-if="tramite.tramites[0].id_transaccion_motor"><strong>FOLIO PAGO:</strong> {{ tramite.tramites[0].id_transaccion_motor ? `${tramite.tramites[0].id_transaccion_motor} -` : '' }}</span>
-                                    <span style="font-weight: normal;" v-if="tramite.id"><strong>FSE:</strong> {{ tramite.tramites[0].id || '' }}</span>
+                                    <span style="font-weight: normal;" v-if="tramite.tramites && tramite.tramites[0] && tramite.tramites[0].id_transaccion_motor"><strong>FOLIO PAGO:</strong> {{ `${tramite.tramites[0].id_transaccion_motor} -` }}</span>
+                                    <span style="font-weight: normal;" v-if="tramite.tramites && tramite.tramites[0] && tramite.tramites[0].id"><strong>FSE:</strong> {{ tramite.tramites[0].id }}</span>
                                 </span>
                                 <span :class="group ? 'text-muted' : 'd-inline-group'" v-if="type !== undefined && tramite.info && ((!group && cartComponent) || !cartComponent)">
                                     Tramite ID:  {{ tramite.id || '' }}
@@ -42,8 +42,9 @@
                             <a v-on:click="goTo(tramite)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="!tramite.info">
                                 INICIAR TRAMITE
                             </a>
+                            <a v-on:click="goTo(tramite.recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.recibo_referencia && [5].includes(type) && !group">VER REFERENCIA</a>
                             <a v-on:click="goTo(tramite.doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.doc_firmado && [2,3].includes(type) && !group">VER DECLARACIÓN</a>
-                            <a v-on:click="goTo(tramite.tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.tramites && tramite.tramites[0].url_recibo && [2,3].includes(type) && !group">VER RECIBO DE PAGO</a>
+                            <a v-on:click="goTo(tramite.tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.tramites && tramite.tramites[0] && tramite.tramites[0].url_recibo && [2,3].includes(type) && !group">VER RECIBO DE PAGO</a>
                             <div class="btn-group mt-2" v-if="tramite.info && !cartComponent && type != 2">
                                 <a v-on:click="goTo(tramite)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="files.length == 0 ? 'rounded' : ''">
                                     <span class="text-white">VER DETALLES</span>
@@ -94,14 +95,14 @@
             if(this.tramite.doc_firmado) this.files.push({ name : 'Declaración', href : this.tramite.doc_firmado })
             // if(this.tramite.doc_firmado) this.files.push({ name : 'Declaración', href : this.tramite.doc_firmado })
             this.tramite.loading = false;
-            if(this.tramite.info.enajenante){
+            if(this.tramite.info && this.tramite.info.enajenante){
                 this.tramite.info = {
                     ...this.tramite.info,
                     ...this.tramite.info.enajenante
                 }
             }
 
-            this.solicitante = {};
+            this.solicitante = null;
             if(this.tramite.info){
                 if(this.tramite.info.enajenante){
                     this.solicitante = this.tramite.info.enajenante.datosPersonales;
@@ -113,6 +114,7 @@
                     this.solicitante.tipoPersona = this.tramite.info.tipoPersona;
                 }
             }
+            // console.log('solicitante', Object.entries(this.solicitante).length);
         },
         methods:{
             goTo(tramite, _blank=false){
@@ -145,7 +147,7 @@
                             tramite.en_carrito = status;
                             if(status === null && this.cartComponent)
                                 this.$emit('processDelete', tramite);
-                            $('#totalTramitesCarrito').text(onCart);
+                            $('#totalTramitesCarrito').text(res.count);
                         }
                         tramite.loading = false;
                     });
@@ -168,7 +170,7 @@
                     .then(res => {
                         if(res.code === 200){
                             tramite.por_firmar = status;
-                            $('#totalTramitesFirma').text(onSign);
+                            $('#totalTramitesFirma').text(res.count);
                         }
                         tramite.loadingSign = false;
                     });

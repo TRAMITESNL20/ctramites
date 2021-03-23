@@ -1,13 +1,14 @@
 <template>
   <div>
-    <b-button style="color:white" @click="openModal(porcentajeAsignado)" :class="classBtn">
+    <b-button style="color:white" @click="openModal(porcentajeAsignado)" :class="classBtn" >
       <i :class="btnIcon" style="color:white"></i> 
       {{textBtnOpenModal}}
     </b-button>
 
     <b-modal size="xl" :id="idModa" ref="modal" :title="titleModal" @show="resetModal" @hidden="resetModal" @ok="handleOk" 
-    :ok-title = "btnOkLabel">
+    :ok-title = "btnOkLabel"   no-close-on-backdrop  :ok-disabled="calculandoCostos" :cancel-disabled="calculandoCostos">  
       <b-container fluid>
+        
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <v-expansion-panels v-model="panel" multiple>
             <v-expansion-panel>
@@ -225,7 +226,20 @@
                         </span>
                       </b-form-invalid-feedback>
                     </b-form-group>
-                  </b-col>          
+                  </b-col>
+                  <b-col cols="12" md="6">
+                    <b-form-group label="MONTO OBTENIDO CONFORME AL ART 127 LISR" label-for="monto-obtenido-conforme-isr-input" >
+                      <b-input-group  >
+                        <template #prepend>
+                          <b-input-group-text >$</b-input-group-text>
+                        </template>
+                        <b-form-input
+                          id="monto-obtenido-conforme-isr-input" name="montoObtenidoConformeISR" @change="formatoMoneda('pagoProvisional')" 
+                          :disabled="true" :value="datosCostos && datosCostos.Salidas  ? currencyFormat('Monto obtenido conforme al art 127 LISR',  datosCostos.Salidas['Monto obtenido conforme al art 127 LISR']) : ''"
+                        ></b-form-input>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>        
                 </b-row>
 
                 <b-row>
@@ -268,19 +282,17 @@
                   </b-col>          
                 </b-row>
                 <b-row>
-
-                  <b-col cols="12" md="12" v-if="!$v.form.$anyError && actualizandoDatos">
-                       <b-spinner type="grow" label="Spinning"></b-spinner>
-                  </b-col>
-                  <b-col cols="12" md="12" v-if="!$v.form.$anyError && !actualizandoDatos"> 
                     <calculo-costo-tramite-5-isr-component 
                                           :datosParaDeterminarImpuesto="$v.form.datosParaDeterminarImpuesto.$model" 
                                           :campos="configCostos.campos"
                                           :tramite="configCostos.tramite" 
-                                          :tipoPersona="configCostos.tipoPersona" 
-                                          @costosObtenidos="costosObtenidos">
+                                          :tipoPersona="enajenante.tipoPersona" 
+                                          @costosObtenidos="costosObtenidos" @obteniendoCostos="obteniendoCostos" :updateInfo="updateInfo">
                                           </calculo-costo-tramite-5-isr-component>
-
+                  <b-col cols="12" md="12" v-if="calculandoCostos">
+                       <b-spinner type="grow" label="Spinning"></b-spinner>
+                  </b-col>
+                  <b-col cols="12" md="12" v-if="!$v.form.$anyError && !calculandoCostos">
                      <div class="text-center" v-if="datosCostos">
                           <b-button title="Click para ver detalles" variant="primary" @click="verDetalle =  !verDetalle" class="mr-2 btn btn-block">
                             {{!verDetalle? "Ver detalle " : "Ocultar detalle "}}   
@@ -385,8 +397,11 @@
         idModa:  uuid.v4(),
         btnIcon:'',titleModal:'', btnOkLabel:'', textBtnOpenModal:'',classBtn:'',
         maxProcentajePermitido:100,
-        panel: [0,1], curpEncontrada:false, buscandoCurp:false,
-        datosCostos:false, verDetalle:false, actualizandoDatos:false
+        panel: [0,1], curpEncontrada:false, 
+        buscandoCurp:false,
+        datosCostos:false, verDetalle:false, 
+        calculandoCostos:false,
+        updateInfo:0
 
       }
     },
@@ -460,6 +475,7 @@
         }
       },
       handleOk(bvModalEvt) {
+        //console.log(JSON.parse(JSON.stringify(this.datosCostos)))
         // Prevent modal from closing
         bvModalEvt.preventDefault()
         // Trigger submit handler
@@ -551,20 +567,33 @@
           
       async buscarCurp(curp) {
         this.buscandoCurp = true;
+        let response = null;
+
         let url = process.env.TESORERIA_HOSTNAME + "/consultar-curp";
-        let response = await axios.get(url + '/' + curp);
-        this.buscandoCurp = false;
-        if(response.data){
-          if(response.data.status == 'error'){
-            Command: toastr.error("Error!", response.data.msg);
+
+        try {
+          response = await axios.get(url + '/' + curp, {timeout: 5000});
+          this.buscandoCurp = false;
+          if(response.data){
+            if(response.data.status == 'error'){
+              Command: toastr.error("Error!", response.data.msg);
+              this.rellenarForm();
+            } else{
+              
+              this.rellenarForm(response.data);
+            }
+          } else {
             this.rellenarForm();
-          } else{
-            
-            this.rellenarForm(response.data);
           }
-        } else {
+        } catch (err) {
+          Command: toastr.error("Error!", err.message);
+          this.buscandoCurp = false;
           this.rellenarForm();
+          throw new Error(err.message);
+          
         }
+
+
 
       },
 
@@ -594,15 +623,11 @@
       },
 
       formatoMoneda(name){
-        this.actualizandoDatos = true;
         let self = this;
         if(this.$v.form.datosParaDeterminarImpuesto[name].$model){
           let numero = this.formatoNumero(this.$v.form.datosParaDeterminarImpuesto[name].$model);
           this.$v.form.datosParaDeterminarImpuesto[name].$model =  this.formatter(numero);
-          
-          setTimeout(function(){
-            self.actualizandoDatos = false; 
-          }, 1000);
+          this.updateInfo = this.updateInfo+1;
         } else{
           return null;
         }
@@ -614,13 +639,18 @@
       },
 
       costosObtenidos(res){
+        this.calculandoCostos = false;
         this.datosCostos = false;
-        
         if(res.success){
           this.datosCostos = res.respuestaCosto;
         } else {
            Command: toastr.error("Error!", "No fue posible obtener información del impuesto");
         }
+        
+      },
+
+      obteniendoCostos(res){
+        this.calculandoCostos = res.calculandoCostos;
         
       },
 

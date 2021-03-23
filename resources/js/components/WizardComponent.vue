@@ -34,7 +34,7 @@
                                         <!--begin: Wizard Form-->
                                             <!--begin: Wizard Step 1 Campos tramite-->
                                             <div class="pb-5 c" data-wizard-type="step-content" data-wizard-state="current" id="step1">
-                                              <div v-if="tramite.tramite == nombtreTamite5IS5 && camposGuardadosObtenidos">
+                                              <div v-if="tramite.id_tramite == TRAMITE_5_ISR && camposGuardadosObtenidos">
                                                 <radio-option-component
                                                   :default="tipoTramite"
                                                   @valueRadio="cambioRadio"
@@ -60,7 +60,7 @@
                                             <!--end: Wizard Step 2-->
                                             <!--begin: Wizard Step 3-->
                                             <div class="pb-5" data-wizard-type="step-content" id="step3" >
-                                                <div v-if="tramite.tramite == nombtreTamite5IS5  && tipoTramite != 'complementaria'">
+                                                <div v-if="tramite.id_tramite == TRAMITE_5_ISR  && tipoTramite != 'complementaria'">
                                                   <resumen-tramite-5-isr-component v-if="currentStep == 3"
                                                   :tipoTramite="tipoTramite" 
                                                   :datosComplementaria="datosComplementaria" 
@@ -144,7 +144,6 @@
             }
         },
         mounted() {
-
             this.tramite.id_seguimiento = this.clave ? this.clave : uuid.v4();
             $("#tramite-name span").text(this.tramite.tramite.toUpperCase())
             const parsed = JSON.stringify(this.tramite);
@@ -152,9 +151,12 @@
 
             const datosFormulario = localStorage.getItem('datosFormulario') && JSON.parse(localStorage.getItem('datosFormulario')) ;
             if(datosFormulario){
-              this.tipoTramite = datosFormulario.tipoTramite
+              this.tipoTramite = datosFormulario.tipoTramite || 'normal';
+            } else {
+              this.tipoTramite == 'normal';
+              localStorage.setItem('datosFormulario', JSON.stringify(datosFormulario)); 
             }
-            
+
             if( this.clave ){
                this.obtenerCamposTemporales();
             } else {
@@ -201,33 +203,40 @@
                   wizardTitle:'Finalizar',
                   wizardDesc:'Revisar y completar',
                 }],
-                nombtreTamite5IS5:'ISR 5% POR ENAJENACIÓN DE INMUEBLES'
+                TRAMITE_5_ISR:process.env.TRAMITE_5_ISR
                 //declararEn0:false
             }
         },
 
         methods: {
           tramiteAgregadoEvent(data){
-            if(data.respuesta){
-              let totalAgregados = data.response ? 1 : data.responses.length;
-              let totalCarritoActual = parseInt( $("#totalTramitesCarrito" ).text( ));
-              $("#totalTramitesCarrito" ).text( totalCarritoActual + totalAgregados  );
 
-           
-                Command: toastr.success("Listo !", "El trámite ha sido agregado");
-              
-              if( data.type == "finalizar" ){
-                redirect("/cart");
-              } if(data.type=="temporal"){
-                redirect("/tramites/borradores/80");
-              }else {
-                localStorage.removeItem('listaSolicitantes');
-                localStorage.removeItem('datosFormulario');
-                delete this.tramite.detalle;
-                this.tramite.id_seguimiento = uuid.v4();
-                const parsed = JSON.stringify(this.tramite);
-                localStorage.setItem('tramite', parsed);
-                if(!['finalizar', 'temporal'].includes(data.type)) redirect("/nuevo-tramite");
+            if(data.respuesta){
+              if( data.response.data && data.response.data.Code && data.response.data.Code == '200' ){
+                let totalAgregados = data.response ? 1 : data.responses.length;
+                let totalCarritoActual = parseInt( $("#totalTramitesCarrito" ).text( ));
+                $("#totalTramitesCarrito" ).text( totalCarritoActual + totalAgregados  );
+
+             
+                  Command: toastr.success("Listo !", "El trámite ha sido agregado");
+                
+                if( data.type == "finalizar" ){
+                  redirect("/cart");
+                } if(data.type=="temporal"){
+                  redirect("/tramites/borradores/80");
+                }else {
+                  localStorage.removeItem('listaSolicitantes');
+                  localStorage.removeItem('datosFormulario');
+                  delete this.tramite.detalle;
+                  this.tramite.id_seguimiento = uuid.v4();
+                  const parsed = JSON.stringify(this.tramite);
+                  localStorage.setItem('tramite', parsed);
+                  if(!['finalizar', 'temporal'].includes(data.type)) redirect("/nuevo-tramite");
+                }
+              } else {
+                console.log(JSON.parse(JSON.stringify(data)));
+
+                Command: toastr.success("Eroor !", data.response.data.Message || "Error al tratar de guardar la solicitud");
               }
             }
 

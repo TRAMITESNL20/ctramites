@@ -88,11 +88,11 @@
   
         methods: {
 
-            cambiarStatusTransaccion(status){
-                let data ={
+            cambiarStatusTransaccion(data /*status*/){
+                /*let data ={
                     id_transaccion_motor:this.folio,
                     status
-                }
+                }*/
                 let url = process.env.TESORERIA_HOSTNAME + "/solicitudes-update-status-tramite";
                 axios.post(url, data, {
                      headers:{
@@ -118,7 +118,12 @@
                         "Content-type":"application/json"
                     }
                 }).done((response) => {
-                    this.cambiarStatusTransaccion( 60 );
+                    let params = {
+                        recibo_referencia:response.response.datos.recibo.url,
+                        status:60,
+                        id_transaccion_motor:this.folio
+                    }
+                    this.cambiarStatusTransaccion( params/*60*/ );
                     if(response.response.datos.recibo.pdf ) {
                         divContenedorSecundario.append('<div id="pdfContenido"><iframe id="frame" src="http://egobierno.nl.gob.mx/egob/formatoRepositorio.php?Folio=258310" width="100%" height="600"></iframe></div>')
                     } else {
@@ -149,7 +154,11 @@
                     },
                 } )
                 .then(response => {
-                    this.cambiarStatusTransaccion( 70 );
+                    let params = {
+                        status:70,
+                        id_transaccion_motor:this.folio
+                    }
+                    this.cambiarStatusTransaccion( params/*70*/ );
 
                     this.urlNetPay = response.data.response.url_response;
                     this.JWT= response.data.response.datos.jwt;
@@ -180,7 +189,12 @@
                 .then(response => {
                     this.urlBancomer = response.data.response.url_response;
                     this.datos = response.data.response.datos;
-                    this.cambiarStatusTransaccion( 70 );
+
+                    let params = {
+                        status:70,
+                        id_transaccion_motor:this.folio
+                    }
+                    this.cambiarStatusTransaccion( params/*70*/ );
    
                     setTimeout(function(){ 
                         this.obteniendoPagoBancomer = false;

@@ -70,16 +70,26 @@
                 if( this.tipoTramite == 'normal'|| this.tipoTramite == 'declaracionEn0' ){
                   datosFormulario.campos.forEach( campo =>  {
                     //if( campo.valido ){
-                      camposObj[campo.campo_id] = campo.valor;
+                      camposObj[campo.campo_id] = campo.valor ||  "";
                     //}
                   });
                   informacion.campos=camposObj;
+                  informacion.camposConfigurados = datosFormulario.campos;
                   informacion.tipoPersona=datosFormulario.tipoPersona,
                   //informacion.declararEn0 = this.declararEn0,
                   informacion.motivoDeclaracion0 = datosFormulario.motivoDeclaracion0,
                   informacion.tipo_costo_obj = datosFormulario.tipo_costo_obj
                 } else {
                   informacion.camposComplementaria = this.datosComplementaria;
+                }
+                if(informacion.camposConfigurados){
+                  informacion.camposConfigurados = informacion.camposConfigurados.map(campo => { 
+                    if(campo.tipo == 'file' ){
+                      let elfile = this.files.find( file => file.nombre == campo.nombre);
+                      campo.archivoCargado = !!elfile.valor;
+                    }
+                    return campo;
+                  });
                 }
                 return informacion;
             },
@@ -111,6 +121,20 @@
               if(  idEdicion  ){
                 formData.append('id', idEdicion );
               }
+
+              let archivosCargados = true;
+              informacion.camposConfigurados.forEach(campo => { 
+                if(campo.tipo == 'file' ){
+                  archivosCargados = archivosCargados && campo.archivoCargado;
+                }
+              });
+              if(archivosCargados){
+                formData.append('required_docs', 1);  
+              } else {
+                formData.append('required_docs', 0);  
+              }
+              
+              
               return formData;
             },
 
