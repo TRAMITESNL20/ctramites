@@ -14,16 +14,29 @@
                         <div  class="col-md-6 col-sm-6 col-xs-6">
                             <div class=" fv-plugins-icon-container" id="fechaElement">
                                 <label>Fecha Escritura</label>
-                                <b-form-datepicker id="fecha"  v-model="datos.fecha_escritura"        
+                                
+
+                                <b-input-group >
+                                  <b-form-input
+                                    type="text"
+                                    placeholder="YYYY-MM-DD"
+                                    autocomplete="off" id="fecha"  v-model="datos.fecha_escritura"        
                                       @change="cambioModelo" style="background-color: #e5f2f5 !important"
-                                    @focus="cambioModelo" @input="cambioModelo" :show-decade-nav="showDecadeNav">
-                                </b-form-datepicker>
+                                    @focus="cambioModelo" @input="cambioModelo"
+                                  ></b-form-input>
+                                  <b-input-group-append>
+                                    <b-form-datepicker   id="datepickerfecha" name="datepickerfecha"  v-model="datos.fecha_escritura"        
+                                     @change="cambioModelo" style="background-color: #e5f2f5 !important"
+                                    @focus="cambioModelo" @input="cambioModelo"  button-only right aria-controls="fecha"  :show-decade-nav="showDecadeNav">
+                                    </b-form-datepicker>
+                                  </b-input-group-append>
+                                </b-input-group>
                             </div>
                         </div>
                         <div  class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group fv-plugins-icon-container"  >
                                 <label>Monto Operación</label>
-                                <input  type="text" class="form-control form-control-solid form-control-lg"  placeholder="Monto Operación" id="fecha" v-model="datos.monto_operacion" @change="formatoMoneda('monto_operacion')"/>
+                                <input  type="text" class="form-control form-control-solid form-control-lg"  placeholder="Monto Operación" id="montoOper" v-model="datos.monto_operacion" @change="formatoMoneda('monto_operacion')"/>
                             </div>
                         </div>
                         <div  class="col-md-6 col-sm-6 col-xs-6">

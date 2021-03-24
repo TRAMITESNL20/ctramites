@@ -118,6 +118,7 @@
                         "Content-type":"application/json"
                     }
                 }).done((response) => {
+                    if(typeof response === 'string') response = JSON.parse(response);
                     let params = {
                         recibo_referencia:response.response.datos.recibo.url,
                         status:60,
