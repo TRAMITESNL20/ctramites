@@ -817,11 +817,15 @@ class CalculoimpuestosController extends Controller
             if (($finDeSemana == 0 || $finDeSemana == 6) || in_array($comienzo,$inhabil)) {
                 $comienzo = date("Y-m-d",strtotime($comienzo.' +1 days'));
             }else{
-                $fechaTermino = date("Y-m-d",strtotime($comienzo));
+
                 $comienzo = date("Y-m-d",strtotime($comienzo.' +1 days'));
+                $fechaTermino = date("Y-m-d",strtotime($comienzo));
                 $dias++;
+                $test[]= $fechaTermino;
             }
+            //$com[]= $comienzo;
         }
+        //dd($test);
         return $fechaTermino;
 	}
 }

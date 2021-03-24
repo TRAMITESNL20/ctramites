@@ -19,17 +19,17 @@ Route::get("/", function(){
 	return redirect()->route("dashboard");
 });
 
-Route::get("/ssl-proxy", function(){
-	$url = Request::query('url');
-	return file_get_contents($url);
-});
+// Route::get("/ssl-proxy", function(){
+// 	$url = Request::query('url');
+// 	return file_get_contents($url);
+// });
 
-Route::post("/ssl-proxy", function(){
-	$url = Request::query('url');
-	$data = Request::toArray();
-	$response = curlSendRequest('POST', $url, $data);
-    return json_encode($response);
-});
+// Route::post("/ssl-proxy", function(){
+// 	$url = Request::query('url');
+// 	$data = Request::toArray();
+// 	$response = curlSendRequest('POST', $url, $data);
+//     return json_encode($response);
+// });
 
 Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
