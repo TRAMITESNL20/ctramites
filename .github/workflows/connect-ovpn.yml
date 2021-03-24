@@ -13,11 +13,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@master
 
-    - name: Update apt-get
-      run: sudo apt-get update
-
     - name: Install Open VPN
-      run: apt-get install openvpn
+      run: sudo apt-get install openvpn
 
     - name: Connect VPN
       uses: golfzaptw/action-connect-ovpn@master
