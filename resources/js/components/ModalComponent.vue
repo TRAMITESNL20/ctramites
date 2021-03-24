@@ -8,7 +8,6 @@
     <b-modal size="xl" :id="idModa" ref="modal" :title="titleModal" @show="resetModal" @hidden="resetModal" @ok="handleOk" 
     :ok-title = "btnOkLabel"   no-close-on-backdrop  :ok-disabled="calculandoCostos" :cancel-disabled="calculandoCostos">  
       <b-container fluid>
-        
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <v-expansion-panels v-model="panel" multiple>
             <v-expansion-panel>
@@ -563,9 +562,9 @@
             this.formatoMoneda('pagoProvisional');
 
             this.curpEncontrada = true;
-            this.maxProcentajePermitido = parseFloat(this.porcentajeVenta)  - (parseFloat(porcentajeAsignado) - parseFloat(this.form.porcentajeCompra) )  ;
+            this.maxProcentajePermitido =  Number( Number(Number(this.porcentajeVenta)  - (Number(porcentajeAsignado) - Number(this.form.porcentajeCompra))  ).toFixed(this.$const.PRECISION)) ;
           } else {
-            this.maxProcentajePermitido = parseFloat(this.porcentajeVenta) - porcentajeAsignado ;
+            this.maxProcentajePermitido = Number(Number(Number(this.porcentajeVenta) - Number(porcentajeAsignado)).toFixed(this.$const.PRECISION));
           }
         this.$bvModal.show(this.idModa);
       },
