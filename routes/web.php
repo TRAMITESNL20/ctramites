@@ -25,9 +25,15 @@ Route::get("/ssl-proxy", function(){
 });
 
 Route::post("/ssl-proxy", function(){
+	$headers = [];
+	foreach(Request::header() as $key => $val){
+		if(!in_array(strtolower($key), ["authorization", "content-type"])) continue;
+		if(isset($val[0])) $val = $val[0];
+		array_push($headers, "{$key}: {$val}");
+	}
 	$url = Request::query('url');
 	$data = Request::toArray();
-	$response = curlSendRequest('POST', $url, $data);
+	$response = curlSendRequest('POST', $url, $data, $headers);
     return json_encode($response);
 });
 

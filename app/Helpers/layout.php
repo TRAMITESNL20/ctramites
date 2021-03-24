@@ -49,7 +49,8 @@ if(!function_exists("curlSendRequest")){
 	function curlSendRequest ($method, $endpoint, $data = [], $headers = [], $timeout = null) {
 		if(!$timeout) $timeout = env("WS_TIMEOUT");
 		$req = curl_init();
-		// $data = json_encode($data);
+
+		if(in_array(gettype($data), ["object", "array"])) $data = json_encode($data);
 		curl_setopt($req, CURLOPT_URL, $endpoint);
 		curl_setopt($req, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($req, CURLOPT_RETURNTRANSFER, 1);
@@ -57,8 +58,24 @@ if(!function_exists("curlSendRequest")){
 		curl_setopt($req, CURLOPT_CUSTOMREQUEST, $method);
 		curl_setopt($req, CURLOPT_TIMEOUT, $timeout * 1000);
 		$response = curl_exec($req);
+		if(in_array(gettype($response), ["object", "array"])) $response = json_encode($response);
 		curl_close($req);
 		return json_decode($response);
+	}
+}
+
+if(!function_exists("build_post_fields")){
+	function build_post_fields( $data,$existingKeys='',&$returnArray=[]){
+	    if(($data instanceof CURLFile) or !(is_array($data) or is_object($data))){
+	        $returnArray[$existingKeys]=$data;
+	        return $returnArray;
+	    }
+	    else{
+	        foreach ($data as $key => $item) {
+	            build_post_fields($item,$existingKeys?$existingKeys."[$key]":$key,$returnArray);
+	        }
+	        return $returnArray;
+	    }
 	}
 }
 
