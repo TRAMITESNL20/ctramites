@@ -78,7 +78,7 @@
                     </table>
                 </div>
                 Porcentaje de venta asignado 
-                <b-progress :value="porcentajeTotalCompra" max="porcentajeVenta" show-value class="mb-3"></b-progress>
+                <b-progress :value="porcentajeTotalCompra" max="porcentajeVenta" show-value class="mb-3" :precision="$const.PRECISION"></b-progress>
             </b-col>
             <b-col v-if="totalMontoOperacionDeclarado != totalMontoOperacionDeEnajentantes && enajentantes.length > 0">
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -227,8 +227,9 @@
                 
                 this.$v.$touch()
                 var total = 0;
+
                 this.enajentantes.forEach(enajentante => {
-                    total = parseFloat(total) + parseFloat(enajentante.porcentajeCompra);
+                    total = Number(Number(Number(total) + Number(enajentante.porcentajeCompra)).toFixed(this.$const.PRECISION));
                 });
                 this.porcentajeTotalCompra = total;
                 this.validar();
