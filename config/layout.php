@@ -57,10 +57,10 @@ return [
 			"options" => ["pendiente-de-pago", 99]
 		],
 		[
-			"name" => "Pendiente de pago por referencia",
+			"name" => "Pendiente de pago con referencia",
 			"icon" => "fas fa-file-invoice",
 			"path" => "tramites",
-			"options" => ["pendiente-de-pago-por-referencia", 5]
+			"options" => ["pendiente-de-pago-con-referencia", 5]
 		],
 		[
 			"name" => "En espera de atención",
