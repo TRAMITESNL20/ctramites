@@ -132,14 +132,26 @@
                     <b-form-group label="Fecha de Nacimiento" label-for="fechaNacimiento-input" >
 
                       <b-input-group class="mt-3" id="loadingcurp">
-                        <template #append v-if="buscandoCurp">
+                        <template #prepend v-if="buscandoCurp">
                           <b-input-group-text >
                             <strong class="loadingcurp">
                              <b-spinner label="Loading..." small ></b-spinner>
                             </strong>
                           </b-input-group-text>
                         </template>
-                        <b-form-datepicker  class="mb-2" id="fechaNacimiento-input" name="fechaNacimiento"  v-model="$v.form.datosPersonales.fechaNacimiento.$model" :state="$v.form.datosPersonales.fechaNacimiento.$dirty ? !$v.form.datosPersonales.fechaNacimiento.$error : null" aria-describedby="fechaNacimiento-input-feedback" :disabled="curpEncontrada || buscandoCurp"></b-form-datepicker>
+                        <b-form-input
+                          id="fechanac-input"
+                          v-model="$v.form.datosPersonales.fechaNacimiento.$model"
+                          type="text"
+                          placeholder="YYYY-MM-DD"
+                          autocomplete="off"
+                          :disabled="curpEncontrada">
+                          
+                        </b-form-input>
+                        <b-input-group-append>
+                          <b-form-datepicker  class="mb-2" id="fechaNacimiento-input" name="fechaNacimiento"  v-model="$v.form.datosPersonales.fechaNacimiento.$model" :state="$v.form.datosPersonales.fechaNacimiento.$dirty ? !$v.form.datosPersonales.fechaNacimiento.$error : null" aria-describedby="fechaNacimiento-input-feedback" :disabled="curpEncontrada || buscandoCurp"
+                            button-only right aria-controls="fechanac-input"></b-form-datepicker>
+                        </b-input-group-append>
                       </b-input-group>
                       <b-form-invalid-feedback id="fechaNacimiento-input-feedback">
                         <span v-if="!$v.form.datosPersonales.fechaNacimiento.required" class="form-text text-danger">

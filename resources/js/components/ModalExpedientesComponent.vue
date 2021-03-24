@@ -267,7 +267,7 @@
             let params = {
               expediente:this.clave + nExpediente.split("-").join(""),
               folio:this.$v.form.folio.$model,
-              id_notaria: 143//this.usuario.notary.notary_number
+              id_notaria: this.usuario.notary.notary_number
             }
             let response = await axios.get(url , {params} );
             if(response.data){
