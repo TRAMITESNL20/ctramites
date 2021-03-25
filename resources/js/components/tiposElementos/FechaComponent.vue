@@ -20,12 +20,11 @@
             </b-form-datepicker>
           </b-input-group-append>
         </b-input-group>
-
-        <small  v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)">
-	        <span v-for="mensaje in campo.mensajes" class="form-text text-danger">
-	          {{ mensaje.mensajeStr }}
-	        </span>
-    	</small>
+      <small  v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
+          <p v-for="mensaje in campo.mensajes" class="form-text text-danger">
+            {{ mensaje.mensajeStr }}
+          </p>
+      </small>
     </div>
 </template>
 
@@ -78,8 +77,13 @@
         },
 
         isValidDate(fecha) {
-          let date = new Date(fecha);
-          return date && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date);
+          var regex = /\d{4}-\d{2}-\d{2}/;
+          if(regex.test(fecha)){
+            let date = new Date(fecha);
+            return date && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date);
+          } else {
+            return false;
+          }
         },
 
         getCaracteristicas(){

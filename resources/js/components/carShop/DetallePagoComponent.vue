@@ -135,7 +135,7 @@
                         console.log("transaccion 0")
                         console.log(JSON.parse(JSON.stringify(error)))
                         //this.mostrarMetodos = false;
-                        Command: toastr.error("Error!", error.message || "Ocurrió un error al guardar");
+                        Command: toastr.warning("Error!", error.message || "Ocurrió un error al guardar");
                         $("#metodoPagoBtn").fadeIn();
                     }).finally(() => {
                         this.consultandoMetodos = false;
@@ -144,7 +144,7 @@
                     console.log("transaccion 1")
                     console.log(JSON.parse(JSON.stringify(error)))
                     //this.mostrarMetodos = false;
-                    Command: toastr.error("Error!", error.message || "Ocurrió un error al guardar");
+                    Command: toastr.warning("Error!", error.message || "Ocurrió un error al guardar");
                     $("#metodoPagoBtn").fadeIn();
                 }).finally(() => {
                     this.consultandoMetodos = false;
