@@ -30,6 +30,9 @@ jobs:
     - name: Check Connect VPN
       run: echo ${{ steps.connect_vpn.outputs.STATUS }} && expect -c 'spawn ssh -o "StrictHostKeyChecking no" raymundo-salazar@10.153.144.219 "ls -lha"; expect "password:"; send "RaymundoSalser07?\r"; interact;'
 
+    - name: list
+      run: ls -lha
+
     - name: kill vpn
       if: always()
       run: sudo killall openvpn
