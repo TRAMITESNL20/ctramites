@@ -28,7 +28,7 @@ jobs:
           USER_KEY: ${{ secrets.USER_KEY }}
           
     - name: Check Connect VPN
-      run: echo ${{ steps.connect_vpn.outputs.STATUS }} && expect -c 'spawn ssh -o "StrictHostKeyChecking no" adminmo@10.153.144.218; expect "password:"; send "RaymundoSalser07?\r"; interact;' && ls -lha
+      run: echo ${{ steps.connect_vpn.outputs.STATUS }} && expect -c 'spawn ssh -o "StrictHostKeyChecking no" adminmo@10.153.144.218; expect "password:"; send "RaymundoSalser07?\r"; ls -lha; interact;'
 
     - name: build action
       run: tramites
