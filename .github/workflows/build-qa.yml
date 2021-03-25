@@ -27,8 +27,13 @@ jobs:
           USER_CRT: ${{ secrets.USER_CRT }}
           USER_KEY: ${{ secrets.USER_KEY }}
           
-    - name: Check Connect VPN
-      run: echo ${{ steps.connect_vpn.outputs.STATUS }} && expect -c 'spawn ssh -o "StrictHostKeyChecking no" adminmo@10.153.144.218; expect "password:"; send "RaymundoSalser07?\r"; interact; ls -lha;'
+    - name: ssh deploy
+        uses: easingthemes/ssh-deploy@v2.1.4
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+          SOURCE: "github-test/"
 
     - name: build action
       run: tramites
