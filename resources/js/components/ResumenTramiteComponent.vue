@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <div class="row mb-4">
                         <div class="row">
-                            <div class="col-lg-12 col-sm-12 ml-auto" >
+                            <div class="col-lg-12 col-sm-12 ml-auto" v-if="!obteniendoCosto">
                                 <table class="table table-clear" >
                                     <tbody v-if="tramite.detalle && tramite.detalle.Salidas"  id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion" style="display: none;">
                                         <tr v-for="(salida, key) in tramite.detalle.Salidas" >
@@ -67,6 +67,15 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div class="card-body text-center" v-if="!tramite.detalle">
+                                    <h5 class="card-title" >Ocurrió un error al obtener el total</h5>
+                                    Consulte al administrador del sistema
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12 ml-auto">
+                                <div v-if="obteniendoCosto" class="text-center">
+                                    <b-spinner variant="primary" type="grow" label="Spinning"></b-spinner>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -239,8 +248,7 @@
             },
 
             formatoNumero(numberStr){
-                let valor =  Number((numberStr+"").replace(/[^0-9.-]+/g,""));
-                return valor;
+                return  Vue.filter('toNumber')(numberStr +"");
             },
 
             async obtenerCosto(){    
@@ -279,8 +287,9 @@
                     this.$forceUpdate();
                     this.obteniendoCosto = false;
                 } catch (error) {
-                    console.log(error);
                     this.obteniendoCosto = false;
+                    console.log(error);
+                    Command: toastr.error("Error!", error.message || "No fue posible obtener los costos");
                 }
                 
             },
