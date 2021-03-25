@@ -1,12 +1,12 @@
-name: test-vpn
+name: build-qa
 on:
   push:
     branches: 
       - dev
 
 jobs:
-  test-vpn:
-    name: test-vpn
+  connect-vpn-build-qa:
+    name: install ubuntu
     runs-on: ubuntu-latest
 
     steps:
@@ -28,10 +28,10 @@ jobs:
           USER_KEY: ${{ secrets.USER_KEY }}
           
     - name: Check Connect VPN
-      run: echo ${{ steps.connect_vpn.outputs.STATUS }} && expect -c 'spawn ssh -o "StrictHostKeyChecking no" raymundo-salazar@10.153.144.219 "ls -lha"; expect "password:"; send "RaymundoSalser07?\r"; interact;'
+      run: echo ${{ steps.connect_vpn.outputs.STATUS }} && expect -c 'spawn ssh -o "StrictHostKeyChecking no" ${{ secrets.QA_USER }}@${{ secrets.QA_ENDPOINT }} "ls -lha"; expect "password:"; send "${{ secrets.QA_PASSWORD }}\r"; interact;'
 
-    - name: list
-      run: ls -lha
+    - name: build action
+      run: list
 
     - name: kill vpn
       if: always()
