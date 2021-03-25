@@ -57,6 +57,8 @@ if(!function_exists("curlSendRequest")){
 		curl_setopt($req, CURLOPT_POSTFIELDS, $data);
 		curl_setopt($req, CURLOPT_CUSTOMREQUEST, $method);
 		curl_setopt($req, CURLOPT_TIMEOUT, $timeout * 1000);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
 		$response = curl_exec($req);
 		if(in_array(gettype($response), ["object", "array"])) $response = json_encode($response);
 		curl_close($req);
