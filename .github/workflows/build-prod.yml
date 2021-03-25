@@ -28,7 +28,7 @@ jobs:
           USER_CRT: ${{ secrets.USER_CRT }}
           USER_KEY: ${{ secrets.USER_KEY }}
           
-    - name: executing remote ssh commands using password
+    - name: Connect to SSH and build
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.PROD_ENDPOINT }}
