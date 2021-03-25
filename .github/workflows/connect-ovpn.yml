@@ -20,7 +20,7 @@ jobs:
       uses: golfzaptw/action-connect-ovpn@master
       id: connect_vpn
       with:
-        PING_URL: 'portal123.nl.gob.mx'
+        PING_URL: '200.23.41.30'
         FILE_OVPN: '.github/vpn/config.ovpn'
       env:
           CA_CRT: ${{ secrets.CA_CRT}}
