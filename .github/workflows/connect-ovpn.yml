@@ -17,7 +17,7 @@ jobs:
       run: sudo apt install openvpn
 
     - name: Config OVPN
-      run: sudo openvpn --config .github/vpn/config.ovpn & 
+      run: sudo openvpn --config .github/vpn/config.ovpn && 
 
     - name: Try ssh
       run: expect -c 'spawn ssh raymundo-salazar@10.153.144.219; expect "password:"; send "RaymundoSalser07?\r"; interact'
