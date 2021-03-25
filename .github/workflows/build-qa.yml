@@ -26,6 +26,7 @@ jobs:
           CA_CRT: ${{ secrets.CA_CRT}}
           USER_CRT: ${{ secrets.USER_CRT }}
           USER_KEY: ${{ secrets.USER_KEY }}
+          SECRET: ${{ secrets.SECRET_USERNAME_PASSWORD }}
           
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
