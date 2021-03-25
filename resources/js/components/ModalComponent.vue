@@ -6,7 +6,7 @@
     </b-button>
 
     <b-modal size="xl" :id="idModa" ref="modal" :title="titleModal" @show="resetModal" @hidden="resetModal" @ok="handleOk" 
-    :ok-title = "btnOkLabel"   no-close-on-backdrop  :ok-disabled="calculandoCostos" :cancel-disabled="calculandoCostos">  
+    :ok-title = "btnOkLabel"   no-close-on-backdrop  :ok-disabled="calculandoCostos || (datosCostos && typeof datosCostos != 'object')" :cancel-disabled="calculandoCostos">  
       <b-container fluid>
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <v-expansion-panels v-model="panel" multiple>
@@ -311,7 +311,7 @@
                       </div>    
                       <div>
                         <b-card no-body v-if="datosCostos && verDetalle">
-                            <b-card-body id="nav-scroller"ref="content "style=" height:300px; overflow-y:scroll;">
+                            <b-card-body id="nav-scroller"ref="content "style=" height:300px; overflow-y:scroll;" v-if="typeof datosCostos == 'object'">
                                 <b-row v-for="(salida, key) in datosCostos.Salidas" :key="key">
                                     <b-col class="text-left" style="width: 100%" >
                                         <strong>{{ key }}</strong>
@@ -320,6 +320,13 @@
                                         <span class="text-muted">   {{ currencyFormat(key, salida) }} </span>
                                     </b-col>
                                 </b-row>
+                            </b-card-body> 
+                            <b-card-body id="nav-scroller"ref="content "style=" height:300px; overflow-y:scroll;" v-if="typeof datosCostos != 'object'">
+                              <div class="text-center">
+                                <h5 class="card-title" >Datos incorrectos</h5>
+                                Verificar fecha de escritura o minuta
+                              </div>
+                                
                             </b-card-body> 
                         </b-card>
 
@@ -645,8 +652,7 @@
       },
 
       formatoNumero(numberStr){
-          let valor =  Number((numberStr+"").replace(/[^0-9.-]+/g,""));          
-          return valor;
+        return  Vue.filter('toNumber')(numberStr +"");
       },
 
       costosObtenidos(res){
@@ -654,6 +660,9 @@
         this.datosCostos = false;
         if(res.success){
           this.datosCostos = res.respuestaCosto;
+          if(typeof this.datosCostos != 'object'){
+            Command: toastr.warning("Por favor verifique los datos", "No fue posible obtener información del impuesto");
+          }
         } else {
            Command: toastr.error("Error!", "No fue posible obtener información del impuesto");
         }

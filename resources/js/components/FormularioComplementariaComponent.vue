@@ -54,7 +54,8 @@
                         <div  class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group fv-plugins-icon-container"  >
                                 <label>Multa Corrección Fiscal</label>
-                                <input  type="text" class="form-control form-control-solid form-control-lg"  placeholder="Multa Corrección Fiscal" id="fecha" v-model="datos.multa_correccion_fiscal" @change="formatoMoneda('multa_correccion_fiscal')"/>
+                                <input  type="text" class="form-control form-control-solid form-control-lg"  placeholder="Multa Corrección Fiscal" id="fecha" v-model="datos.multa_correccion_fiscal" @change="formatoMoneda('multa_correccion_fiscal')"
+                                />
                             </div>
                         </div>
                     </div>
@@ -65,21 +66,33 @@
 </template>
 
 <script>
+    import Vue from 'vue';
     export default {
         props: ['infoGuardada'],
         data() {
             return {
                 datos:{
-                    folio_anterior:'',fecha_escritura:'', monto_operacion:'', ganancia_obtenida:'', multa_correccion_fiscal:'', pago_provisional_lisr:''
+                    folio_anterior:'',
+                    fecha_escritura:'', 
+                    monto_operacion: this.formatter('0'), 
+                    ganancia_obtenida:this.formatter('0'), 
+                    multa_correccion_fiscal:this.formatter('0'), 
+                    pago_provisional_lisr:this.formatter('0')
                 },
                 showDecadeNav:true
             }
         },
-        mounted() {
-        },
 
-        created() {
+
+
+        mounted() {
            this.datos = this.infoGuardada && this.infoGuardada.camposComplementaria ? this.infoGuardada.camposComplementaria : this.datos;
+           if(this.datos){
+               this.formatoMoneda('monto_operacion');
+               this.formatoMoneda('ganancia_obtenida');
+               this.formatoMoneda('pago_provisional_lisr');
+               this.formatoMoneda('multa_correccion_fiscal');
+           }
            if(this.infoGuardada && this.infoGuardada.camposComplementaria){
                 this.cambioModelo();
            }
@@ -112,17 +125,11 @@
             },
 
             formatoNumero(numberStr){
-                let valor =  Number((numberStr+"").replace(/[^0-9.-]+/g,""));          
-                return valor;
+                return  Vue.filter('toNumber')(numberStr +""); 
             },
 
             formatter(value){
-                const formatter  = new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'MXN',
-                  minimumFractionDigits: 2
-                });
-                return formatter.format(value);
+                return  Vue.filter('toCurrency')(value +"");
             },
         }
     }
