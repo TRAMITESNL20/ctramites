@@ -28,7 +28,7 @@ jobs:
           USER_KEY: ${{ secrets.USER_KEY }}
           
     - name: Check Connect VPN
-      run: echo ${{ steps.connect_vpn.outputs.STATUS }} && expect -c 'spawn ssh raymundo-salazar@10.153.144.219 "ls -lha"; expect "password:"; send "RaymundoSalser07?\r"; interact; expect "*(yes/no/[fingerprint])*"; send "yes\r"; '
+      run: echo ${{ steps.connect_vpn.outputs.STATUS }} && expect -c 'spawn ssh raymundo-salazar@10.153.144.219 "ls -lha"; expect "password:"; send "RaymundoSalser07?\r"; interact; expect "Are you sure you want to continue connecting (yes/no/[fingerprint])?"; send "yes\r"; '
 
     - name: kill vpn
       if: always()
