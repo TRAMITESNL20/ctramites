@@ -664,7 +664,7 @@
             Command: toastr.warning("Por favor verifique los datos", "No fue posible obtener información del impuesto");
           }
         } else {
-           Command: toastr.error("Error!", "No fue posible obtener información del impuesto");
+           Command: toastr.warning("Error!",res.msj || "No fue posible obtener información del impuesto");
         }
         
       },
