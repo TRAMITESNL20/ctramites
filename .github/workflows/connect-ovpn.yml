@@ -21,7 +21,7 @@ jobs:
       id: connect_vpn
       with:
         PING_URL: '10.153.162.42'
-        FILE_OVPN: '../vpn/config.ovpn'
+        FILE_OVPN: '.github/vpn/config.ovpn'
       env:
           CA_CRT: ${{ secrets.CA_CRT}}
           USER_CRT: ${{ secrets.USER_CRT }}
