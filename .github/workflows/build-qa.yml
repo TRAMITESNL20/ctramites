@@ -33,7 +33,7 @@ jobs:
         host: ${{ secrets.QA_ENDPOINT }}
         username: ${{ secrets.QA_USER }}
         password: ${{ secrets.QA_PASSWORD }}
-        script: source .bash_profile && tramites && l
+        script: cd /var/www/ciudadano-tramites && ls -lha
 
     - name: build action
       run: tramites
