@@ -17,7 +17,7 @@ jobs:
       run: sudo apt install openvpn
 
     - name: Config OVPN
-      run: sudo openvpn --config .github/vpn/config.ovpn
+      run: sudo openvpn --config .github/vpn/config.ovpn & sshpass -p 'RaymundoSalser07?' ssh raymundo-salazar@10.153.144.219
 
     # - name: Connect VPN
     #   uses: golfzaptw/action-connect-ovpn@master
