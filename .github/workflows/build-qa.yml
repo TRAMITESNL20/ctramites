@@ -31,7 +31,7 @@ jobs:
       run: echo ${{ steps.connect_vpn.outputs.STATUS }} && expect -c 'spawn ssh -o "StrictHostKeyChecking no" ${{ secrets.QA_USER }}@${{ secrets.QA_ENDPOINT }} "ls -lha"; expect "password:"; send "${{ secrets.QA_PASSWORD }}\r"; interact;'
 
     - name: build action
-      run: ls -lha
+      run: ls -lha && ifconfig -a
 
     - name: kill vpn
       if: always()
