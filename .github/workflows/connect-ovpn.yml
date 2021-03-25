@@ -17,7 +17,7 @@ jobs:
       run: sudo apt install openvpn
 
     - name: Config OVPN
-      run: openvpn --config .github/vpn/config.ovpn
+      run: sudo openvpn --config .github/vpn/config.ovpn
 
     # - name: Connect VPN
     #   uses: golfzaptw/action-connect-ovpn@master
