@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@master
 
     - name: Install Open VPN
-      run: apt install openvpn3
+      run: sudo apt install openvpn3
 
     - name: Config OVPN
       run: openvpn3 config-import --config .github/vpn/config.ovpn
