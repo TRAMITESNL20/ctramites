@@ -14,33 +14,21 @@ jobs:
       uses: actions/checkout@master
 
     - name: Install Open VPN
-      run: sudo apt install openvpn
+      run: sudo apt install openvpn -y
 
-    - name: Config OVPN
-      run: sudo openvpn --config .github/vpn/config.ovpn && 
-
-    - name: Try ssh
-      run: expect -c 'spawn ssh raymundo-salazar@10.153.144.219; expect "password:"; send "RaymundoSalser07?\r"; interact'
-
-    - name: list all
-      run: ls -lha
-
-    - name: close
-      run: exit
-
-    # - name: Connect VPN
-    #   uses: golfzaptw/action-connect-ovpn@master
-    #   id: connect_vpn
-    #   with:
-    #     PING_URL: '127.0.0.1'
-    #     FILE_OVPN: '.github/vpn/config.ovpn'
-    #   env:
-    #       CA_CRT: ${{ secrets.CA_CRT}}
-    #       USER_CRT: ${{ secrets.USER_CRT }}
-    #       USER_KEY: ${{ secrets.USER_KEY }}
+    - name: Connect VPN
+      uses: golfzaptw/action-connect-ovpn@master
+      id: connect_vpn
+      with:
+        PING_URL: '127.0.0.1'
+        FILE_OVPN: '.github/vpn/config.ovpn'
+      env:
+          CA_CRT: ${{ secrets.CA_CRT}}
+          USER_CRT: ${{ secrets.USER_CRT }}
+          USER_KEY: ${{ secrets.USER_KEY }}
           
-    # - name: Check Connect VPN
-    #   run: echo ${{ steps.connect_vpn.outputs.STATUS }}
+    - name: Check Connect VPN
+      run: echo ${{ steps.connect_vpn.outputs.STATUS }}
 
     - name: kill vpn
       if: always()
