@@ -40,7 +40,7 @@
                                             {{currencyFormat('Importe total', data.item.detalle.Salidas['Importe total'])}}
                                         </div>                          
                                     </div>
-                                    <div v-else-if="!data.item.detalle">
+                                    <div v-else-if="!data.item.detalle || typeof data.item.detalle != 'object'">
                                         <div class="text-center text-danger">
                                           No fue posible obtener información <br>   
                                           <span class="text-muted text-danger">    
@@ -50,7 +50,7 @@
                                     </div>
                                 </template>
                                 <template #cell(status)="data">
-                                    <div v-if="data.item.detalle">
+                                    <div v-if="data.item.detalle && typeof data.item.detalle == 'object'">
                                         <b-link title="Click para ver detalles" @click="data.toggleDetails" class="mr-2 btn btn-link">
                                             {{!data.detailsShowing ? "Ver detalle " : "Ocultar detalle "}}
                                         </b-link>

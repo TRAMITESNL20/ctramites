@@ -12,6 +12,7 @@
 		<meta name="description" content="{{ $description ?? "" }}" />
 		<meta name="keywords" content="{{ $keywords ?? "" }}">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no" />
+		<meta http-equiv="Content-Security-Policy" content="prefetch-src '{{ getenv('TESORERIA_HOSTNAME') }}'">
 		<!--begin::Fonts-->
 		{{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" /> --}}
 		<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,300;0,400;0,600;0,900;1,700&display=swap" rel="stylesheet">
