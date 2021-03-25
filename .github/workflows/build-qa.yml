@@ -27,13 +27,13 @@ jobs:
           USER_CRT: ${{ secrets.USER_CRT }}
           USER_KEY: ${{ secrets.USER_KEY }}
           
-    - name: ssh deploy
-      uses: easingthemes/ssh-deploy@v2.1.4
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-        REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
-        REMOTE_USER: ${{ secrets.DEPLOY_USER }}
-        SOURCE: "github-test/"
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.QA_ENDPOINT }}
+        username: ${{ secrets.QA_USER }}
+        password: ${{ secrets.QA_PASSWORD }}
+        script: whoami
 
     - name: build action
       run: tramites
