@@ -14,10 +14,10 @@ jobs:
       uses: actions/checkout@master
 
     - name: Install Open VPN
-      run: sudo apt update && sudo apt install openvpn3
+      run: sudo apt install openvpn
 
     - name: Config OVPN
-      run: openvpn3 config-import --config .github/vpn/config.ovpn
+      run: openvpn --config .github/vpn/config.ovpn
 
     # - name: Connect VPN
     #   uses: golfzaptw/action-connect-ovpn@master
