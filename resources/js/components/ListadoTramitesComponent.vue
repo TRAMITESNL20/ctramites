@@ -126,40 +126,6 @@
                           </div>
                     </div>                    
                 </div>
-                    <!--
-                
-                <div class="card card-custom">
-                    <div class="card-body py-7">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap">
-                            <div class="d-flex flex-wrap mr-3" >
-                                <a  class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" v-if="currentPage !== 1"  v-on:click="goto(1)">
-                                    <i class="ki ki-bold-double-arrow-back icon-xs"></i> {{ index }}
-                                </a>
-                                <a  class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" v-if="currentPage !== 1" v-on:click="goto(currentPage - 1)">
-                                    <i class="ki ki-bold-arrow-back icon-xs"></i>
-                                </a>
-                                <a class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1" v-for="(r) in pages"
-                                v-bind:class="[ currentPage === r ? 'active' : '']" v-on:click="goto(r)">
-                                   {{ r }}
-                                </a>
-                                <a  class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" v-if="currentPage !== (pages.length)"  v-on:click="goto(currentPage + 1)">
-                                    <i class="ki ki-bold-arrow-next icon-xs"></i>
-                                </a>
-                                <a  class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" v-if="currentPage !== (pages.length)" v-on:click="goto(pages[pages.length - 1])">
-                                    <i class="ki ki-bold-double-arrow-next icon-xs"></i>
-                                </a>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <select class="form-control form-control-sm text-primary font-weight-bold mr-4 border-0 bg-light-primary" style="width: 75px;" v-model="porPage" @change="calcularPage">
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="30">30</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
-
             </div>
         </div>
     </div>
@@ -168,7 +134,7 @@
 <script>
 
 export default {
-
+        props: ['usuario'],
         data() {
             return {
                 tramites: [], loading:true, porPage : 10, pages:[0], currentPage :1, strBusqueda:"", tramitesFiltrados:[],
@@ -180,7 +146,6 @@ export default {
             localStorage.removeItem('listaSolicitantes');
             localStorage.removeItem('tramite');
             this.obtenerTramites();
-            
         },
 
         computed:{
@@ -203,7 +168,6 @@ export default {
                         }   
 
                     });
-                
                     
                 return totalPorCategoria.length;
                 
@@ -221,25 +185,23 @@ export default {
             },
 
             async obtenerTramites(){
-                let url = process.env.APP_URL + "/allTramites";
-                try {
-                    let response = await axios.get(url);
-                    this.tramites = response.data;
-                    
-                    this.agruparCategorias( this.tramites  );
-                    this.obtenerCategorias();
-/*
-                    this.tramitesFiltrados = this.tramites;
-                    
-                    let pagesTotal = Math.ceil( this.tramitesFiltrados.length / this.porPage);
-                    let pages = [];
-
-                    for (var i = 0; i < pagesTotal; i++) {
-                        pages.push( i + 1 );
+                if(this.usuario && this.usuario.config_id !== undefined ){
+                    let url = process.env.APP_URL + "/allTramites";
+                    try {
+                        let response = await axios.get(url, {
+                            params:{
+                                config_id: this.usuario.config_id
+                            }
+                        });
+                        this.tramites = response.data;
+                        
+                        this.agruparCategorias( this.tramites  );
+                        this.obtenerCategorias();
+                    } catch (error) {
+                        console.log(error);
                     }
-                    this.pages = pages;*/
-                } catch (error) {
-                    console.log(error);
+                } else {
+                    console.log("no se encontro usuario")
                 }
 
                 //this.pagination(1);
@@ -304,41 +266,6 @@ export default {
                 this.search();
             }
 
-            /*
-
-            calcularPage(){
-                let pages = [];
-                let pagesTotal = Math.ceil( this.tramitesFiltrados.length  / this.porPage);
-                for (var i = 0; i < pagesTotal; i++) {
-                    pages.push( i + 1 );
-                }
-                this.pages = pages;
-
-
-                this.goto(1);
-            },
-
-            pagination( page ){
-                let porPageInt = parseInt(this.porPage);
-                let indiceInicial = (page - 1 ) * porPageInt;
-                let indiceFinal =   ( (page - 1 ) * porPageInt  )  + porPageInt;
-
-                this.tramitesFiltrados = this.tramites.filter( tramite => tramite.tramite.toLocaleLowerCase().includes(this.strBusqueda.toLocaleLowerCase()) ) ;
-              
-                this.tramitesPaginados = this.tramitesFiltrados.slice( indiceInicial,  indiceFinal );
-                this.totalTramites = this.tramitesPaginados.length;
-            },
-
-            goto( page ){
-                this.pagination( page );
-                this.currentPage = page;
-            },
-
-            search(){
-                this.calcularPage()
-                this.currentPage = 1;
-                this.pagination(1);
-            }*/
 
         }
 
