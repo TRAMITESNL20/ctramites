@@ -24,6 +24,7 @@ use App\Repositories\PortaltramitecategoriaRepositoryEloquent;
 use App\Repositories\PortaltramitecategoriarelacionRepositoryEloquent;
 use App\Repositories\PortaltramitedivisasRepositoryEloquent;
 use App\Repositories\DivisasRepositoryEloquent;
+use App\Repositories\RolesRepositoryEloquent;
 
 class SolicitudesController extends Controller
 {
@@ -38,6 +39,7 @@ class SolicitudesController extends Controller
   protected $relcat;
   protected $reldivisas;
   protected $divisas;
+  protected $roles;
 
 // agregar catalogos
   protected $catalogo_campos;
@@ -56,7 +58,8 @@ class SolicitudesController extends Controller
     PortaltramitecategoriaRepositoryEloquent $cat_tramite,
     PortaltramitecategoriarelacionRepositoryEloquent $relcat,
     PortaltramitedivisasRepositoryEloquent $reldivisas,
-    DivisasRepositoryEloquent $divisas
+    DivisasRepositoryEloquent $divisas,
+    RolesRepositoryEloquent $roles
     )
     {
       parent::__construct();
@@ -85,6 +88,7 @@ class SolicitudesController extends Controller
 
       $this->divisas = $divisas;
 
+      $this->roles  = $roles;
       // creamos los catalogos iniciales
 
       $this->loadInfo();
@@ -140,7 +144,8 @@ class SolicitudesController extends Controller
    * @returns an json object
    */
 
-  public function getTramites(){
+  public function getTramites(Request $request){
+    $com = $request->config_id; //Obtenemos la comunidad a la que pertenece el usuario
 
     $tramites = $this->relationship->all();
 
@@ -156,14 +161,23 @@ class SolicitudesController extends Controller
 
       }
     }
-
+    //Se valida que existan los tramites dentro de la comunidad
+    $tram = $this->roles->where('id', $com)->get('tramites');
+    foreach ($tram as $tm) {
+      $arr = json_decode($tm->tramites);
+      $ids = array();
+      foreach ($arr as $a) {
+        $ids []= $a;
+      }
+    }
     // obtengo la descripcion y id de los tramites
-    $servicios = $this->tiposer->findWhereIn('Tipo_Code',$t);
+    $servicios = $this->tiposer->findWhereIn('Tipo_Code',$t)->where('estatus',1);
 
     $tmts = array();
 
     foreach($servicios as $s)
     {
+      if(in_array($s->Tipo_Code,$ids)){
       $category = $this->relcat->findWhere(['tramite_id'=> $s->Tipo_Code] );
 
       $tmts []=array(
@@ -172,6 +186,7 @@ class SolicitudesController extends Controller
           'partidas' => $this->getPartidasTramites($s->Tipo_Code), // aqui mando los datos de la partida
           'category' => $this->getCategoryTramite($s->Tipo_Code),
         );
+      }
     }
 
     return json_encode($tmts);
