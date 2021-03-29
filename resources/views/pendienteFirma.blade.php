@@ -21,10 +21,10 @@
 											<div class="container">
                                             <div class="pt-10 pl-10 pr-10">
                                                     
-                                                    <div class="pt-10 pl-10 pr-10"  v-if=" {{  $tramitesDoc }} == null">
+                                                    <div class="pt-10 pl-10 pr-10"  v-if=" {{$tramitesDoc}} != null">
                                                         <div >
                                                             <p> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
-                                                            <modal-document-component :tramitesdoc="{{$tramitesDoc}}" :idtramites="{{$idTramites}}" ></modal-document-component>
+                                                            <modal-document-component :tramitesdoc="{{$tramitesDoc}}" ></modal-document-component>
                                                         </div>
                                                     </div>
 

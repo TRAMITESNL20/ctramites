@@ -12,9 +12,9 @@
                     </button>
                     <h4 class="modal-title">Ingresa los documentos correspondientes</h4>
                 </div>
-                <div  v-for="tramiteDoc in tramitesdoc" class="modal-body">
+                <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body">
                 
-                    <h3>Tramite id: {{tramiteDoc.id }}</h3>
+                    <h3>Tramite id: {{tramiteDoc.id}}  {{index}}</h3>
 
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -23,53 +23,39 @@
                             </span>
                         </div>
                         <div class="custom-file">
-                            <input
-                            id="126"
-                            name="documento126"
-                            type="file"
-                            class="custom-file-input"
-                            style="background-color: rgb(229, 242, 245) !important"
-                            @change ="refreshFiles(event, tramiteDoc.id)"
-                            />
+                            <input 
+                            type="file" 
+                            :id="tramiteDoc.id" 
+                            ref="myFiles" 
+                            class="custom-file-input" 
+                            accept=".pdf"
+                            @change="previewFiles(tramiteDoc.id , index)" >
+
                             <label for="documento126" class="custom-file-label"
                             ><span id="documento126-namefile">
-                                Seleccione archivo
-                            </span></label
-                            >
+                                {{  "Seleccione archivo" }}
+                            </span></label>
                         </div>
                     </div>
-                    <div class="input-group pt-10">
-                         <div class="input-group-prepend">
-                            <span id="inputGroupFileAddon01" class="input-group-text">
-                            documento del SAT
-                            </span>
-                        </div>
-                        <div class="custom-file">
-                            <input
-                            id="sat"
-                            name="docSat"
-                            type="file"
-                            class="custom-file-input"
-                            style="background-color: rgb(229, 242, 245) !important"
-                            />
-                            <label for="docSat" class="custom-file-label"
-                            ><span id="docSat-namefile"> Seleccione archivo </span></label
-                            >
-                        </div>
-                    </div>
+
+                 
+                   
                 </div>
+                
+                <code> {{ fileById}}</code>
+                <code> {{files}}</code>
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal">
-                    Enviar
-                    </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                     Close
                     </button>
+                    <button v-on:click="enviarDocumentos()" type="button" class="btn btn-success" data-dismiss="modal">
+                    Enviar
+                    </button>
                 </div>
                 </div>
         </div>
         </div>
-        <!-- <code> {{tramitesdoc}}</code> -->
 
     </div>
 </template>
@@ -80,13 +66,15 @@ export default {
     data(){
         return{
             files : [],
+            fileById: '',
+            filesx: ''
         }
     },
     methods:{
         enviarDocumentos(){
-                url =  process.env.TESORERIA_HOSTNAME + "/save-files";
+                var url =  process.env.TESORERIA_HOSTNAME + "/save-files";
                 axios.post(url, this.files).then(response => {
-                    
+                    console.log(response);
                 }).catch(error => {
                     console.log("error al enviar los documentos");
                     console.log(error)
@@ -94,9 +82,37 @@ export default {
                    
                 });
         },
-        refreshFiles(event, id){
-            this.files.push({"ticket_id" : id ,"mensaje" : ""  , "file" : event.target.files});
-        }
+        previewFiles(id, index){
+
+            function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+            }
+
+            this.fileById = document.getElementById(id).files[0];
+            getBase64(this.fileById).then(data =>{
+              console.log(data);
+                this.filesx = {"ticket_id" : id  ,"mensaje" : ""  , "file" : data };
+                  var indexFile = this.files.findIndex(x => x.ticket_id === id);
+            
+                if( indexFile != -1 ){
+                    console.log('este es el mismo id actualizacion buscar id en array');
+                    this.files[indexFile] = this.filesx;
+                }else{
+                    console.log('este es añadido nuevo');
+                    this.files.push(this.filesx);
+                }
+            
+            });
+
+          
+        },
+
+     
     }
 
 
