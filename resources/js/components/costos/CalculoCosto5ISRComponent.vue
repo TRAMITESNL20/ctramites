@@ -12,30 +12,6 @@
         props: ['datosParaDeterminarImpuesto', 'campos', 'tramite', 'tipoPersona', 'index', 'updateInfo'],
         mounted() {
             this.updateCostos();
-/*
-            let paramsCosto = {};
-            let multaCorreccion            = this.datosParaDeterminarImpuesto.multaCorreccion;
-
-
-            paramsCosto.monto_operacion     = this.formatoNumero(this.datosParaDeterminarImpuesto.montoOperacion);
-            paramsCosto.pago_provisional_lisr    = this.formatoNumero(this.datosParaDeterminarImpuesto.pagoProvisional);
-            paramsCosto.ganancia_obtenida   = this.formatoNumero(this.datosParaDeterminarImpuesto.gananciaObtenida);
-            let campoEscritura = this.getCampoByName(CAMPO_FECHA_DE_ESCRITURA_O_MINUTA);
-            if(campoEscritura && campoEscritura.valor){
-                paramsCosto.fecha_escritura   = campoEscritura.valor.split("-").map(dato => Number(dato)).join("-");
-            } else {
-                //alert("seleccione fecha")
-                return false;
-            }
-            let campoDivisas               = this.getCampoByName(CAMPO_DIVISAS);
-            if( multaCorreccion ){
-                paramsCosto.multa_correccion_fiscal = this.formatoNumero(multaCorreccion);
-            }
-            if( campoDivisas ){
-                paramsCosto.divisa = campoDivisas.valor.clave;
-            }
-
-            this.getCosto(paramsCosto)*/
         },
 
         watch: {
@@ -61,41 +37,48 @@
 
 
             formatoNumero(numberStr){
-                let valor =  Number((numberStr+"").replace(/[^0-9.-]+/g,""));
-                return valor;
+                return  Vue.filter('toNumber')(numberStr +""); 
             },
 
 
             updateCostos(){
-                console.log("calcular costos")
+
+
                 let paramsCosto = {};
                 let multaCorreccion            = this.datosParaDeterminarImpuesto.multaCorreccion;
-
 
                 paramsCosto.monto_operacion     = this.formatoNumero(this.datosParaDeterminarImpuesto.montoOperacion);
                 paramsCosto.pago_provisional_lisr    = this.formatoNumero(this.datosParaDeterminarImpuesto.pagoProvisional);
                 paramsCosto.ganancia_obtenida   = this.formatoNumero(this.datosParaDeterminarImpuesto.gananciaObtenida);
                 let campoEscritura = this.getCampoByName(CAMPO_FECHA_DE_ESCRITURA_O_MINUTA);
-                if(campoEscritura && campoEscritura.valor){
-                    paramsCosto.fecha_escritura   = campoEscritura.valor.split("-").map(dato => Number(dato)).join("-");
+
+                if(this.isValidDate(campoEscritura.valor)){
+                    if(campoEscritura && campoEscritura.valor){
+                        paramsCosto.fecha_escritura   = campoEscritura.valor.split("-").map(dato => Number(dato)).join("-");
+                        let campoDivisas               = this.getCampoByName(CAMPO_DIVISAS);
+                        if( multaCorreccion ){
+                            paramsCosto.multa_correccion_fiscal = this.formatoNumero(multaCorreccion);
+                        }
+                        if( campoDivisas ){
+                            paramsCosto.divisa = campoDivisas.valor.clave;
+                        }
+                        this.getCosto(paramsCosto);
+                    } else {
+                        this.$emit('costosObtenidos', {respuestaCosto:false, indice:this.index, success:false ,msj:"Fecha de escritura o minuta inválida"});
+                        return false;
+                    }
+                    
                 } else {
-                    //alert("seleccione fecha")
+                    this.$emit('costosObtenidos', {respuestaCosto:false, indice:this.index, success:false ,msj:"Fecha de escritura o minuta inválida"});
                     return false;
                 }
-                let campoDivisas               = this.getCampoByName(CAMPO_DIVISAS);
-                if( multaCorreccion ){
-                    paramsCosto.multa_correccion_fiscal = this.formatoNumero(multaCorreccion);
-                }
-                if( campoDivisas ){
-                    paramsCosto.divisa = campoDivisas.valor.clave;
-                }
 
-                this.getCosto(paramsCosto);
+
+
+
             },
 
             async getCosto(params){
- 
-                
                 params.id_seguimiento = this.tramite.id_seguimiento,
                 params.tramite_id = this.tramite.id_tramite,
                 params.tipoPersona = this.tipoPersona
@@ -108,6 +91,16 @@
                 } catch (error) {
                     console.log(error);
                     this.$emit('costosObtenidos', {respuestaCosto:error, indice:this.index, success:false});
+                }
+            },
+
+            isValidDate(fecha) {
+                var regex = /\d{4}-\d{2}-\d{2}/;
+                if(regex.test(fecha)){
+                    let date = new Date(fecha);
+                    return date && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date);
+                } else {
+                    return false;
                 }
             },
         }

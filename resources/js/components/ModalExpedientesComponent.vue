@@ -66,20 +66,25 @@
           </b-row>        
         </form>
         <transition name="slide-fade">
-          <div class="card" v-if="direccion" key="yes">
-            <div class="card-body">           
-              <h6 class="pt-3 pl-3">Datos Catastro</h6>
-              <hr>
-              <div class="overflow-auto" style="height:350px;">
-                  <tree-component
-                    class="item"
-                    :item="direccion"
-                  ></tree-component>
+          <div v-if="!buscandoDatosDomicilio">
+            <div class="card" v-if="direccion" key="yes">
+              <div class="card-body">           
+                <h6 class="pt-3 pl-3">Datos Catastro</h6>
+                <hr>
+                <div class="overflow-auto" style="height:350px;">
+                    <tree-component
+                      class="item"
+                      :item="direccion"
+                    ></tree-component>
+                </div>
               </div>
             </div>
+            <div v-else-if="$v.form.expediente.$dirty && !$v.form.expediente.$invalid && !(direccion && direccion.datos_direccion)" key="no">
+              Ubicación No encontrada
+            </div>
           </div>
-          <div v-else-if="$v.form.expediente.$dirty && !$v.form.expediente.$invalid && !(direccion && direccion.datos_direccion)" key="no">
-            Ubicación No encontrada
+          <div v-if="buscandoDatosDomicilio" class="text-center">
+            <b-spinner variant="primary" type="grow" label="Spinning"></b-spinner>
           </div>
         </transition>
       </b-container>
@@ -124,7 +129,8 @@
         btnIcon:'',titleModal:'', btnOkLabel:'', textBtnOpenModal:'',classBtn:'',
         estados:[], municipios:[], clave: "70",
         desabilitarSelecEstados:true,
-        insumos:{}
+        insumos:{},
+        buscandoDatosDomicilio:false
       }
     },
     computed:{
@@ -185,12 +191,15 @@
         this.$bvModal.show(this.idModa)
       },
       async getDatosDomicilio(){
+        this.buscandoDatosDomicilio = true;
         if( !this.$v.form.expediente.$invalid ){         
           this.buscarDatosDomicilio( this.$v.form.expediente.$model );
 
           this.valorOperacion( this.$v.form.expediente.$model );
         } else {
+          this.buscandoDatosDomicilio = false;
           this.rellenarForm();
+
         }
       },
 
@@ -202,6 +211,7 @@
         } else {
           this.rellenarForm();
         }
+        this.buscandoDatosDomicilio = false;
       },
 
       rellenarForm(data){
