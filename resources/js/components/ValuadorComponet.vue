@@ -123,7 +123,6 @@
 
         },
         validar(){
-          console.log("datos avaluod invalido:")
           this.campo.valido =  !this.$v.form.$invalid;
           let valor = { isValuable:this.isValuable};
 
