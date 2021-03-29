@@ -9,7 +9,7 @@
 			<form id="formularioDinamico">
 				<div class="panel panel-default" >
  					<div class="panel-heading">
- 						<div class="row">
+ 						<div class="row">			
 							<v-expansion-panels accordion multiple hover style="z-index: inherit" v-model="panel">
 							    <v-expansion-panel v-for="(agrupacion, i) in agrupaciones" :key="i" close :disabled=" disabled.includes(i) ">
 							      	<v-expansion-panel-header >
@@ -46,7 +46,6 @@
 											</div>
 			 								<div v-for="(campo, j) in agrupacion.campos" :key="j" class="col-md-6 col-sm-6 col-xs-6"
 			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
-
 												<input-component
 													v-if="campo.tipo === 'input'" 
 													:campo="campo" 
@@ -192,6 +191,12 @@
 														</div>
 													</div>
 												</div>
+			 									<valuador-component v-if="campo.tipo === 'valuador'" 
+			 										:campo="campo" 
+													:showMensajes="showMensajes" 
+													:estadoFormulario="comprobarEstadoFormularioCount"
+													@updateForm="updateForm">
+			 									</valuador-component>
 			 								</div>
 		 									<div v-if="agrupacion.tieneSeccionDocumentos" class="col-md-12 col-lg-12">
 		 										<div class="text-right">
