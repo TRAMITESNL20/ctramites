@@ -62,6 +62,7 @@ Vue.component("expediente-excel-component" , () => import ( /* webpackChunkName:
 Vue.component("file-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/file-component" */ './components/tiposElementos/FileComponent.vue' ));
 Vue.component("results-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ResultsComponent.vue' ));
 Vue.component("firma-electronica-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/FirmaElectronicaComponent.vue' ));
+Vue.component("modal-document-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ModalDocumentComponent.vue' ));
 
 Vue.component("btn-guardar-tramite-parent" , () => import ( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-parent" */ './components/generales/BtnGuardarTramiteParent.vue' ));
 
@@ -81,6 +82,8 @@ Vue.component('tree-component', () => import(/* webpackChunkName: "js/components
 
 
 Vue.component('agrupacion-items-carrrito-component', () => import(/* webpackChunkName: "js/components/generales/agrupacion-items-carrrito-component" */ './components/carShop/AgrupacionItemsCarrritoComponent.vue'));
+Vue.component("valuador-component" , () => import ( /* webpackChunkName: "js/components/valuador-component" */ './components/ValuadorComponet.vue' ));
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

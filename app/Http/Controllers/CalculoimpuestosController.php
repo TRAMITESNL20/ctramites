@@ -108,9 +108,9 @@ class CalculoimpuestosController extends Controller
     	$multa_correccion_fiscal	= $request->multa_correccion_fiscal;
 
 
-    	$this->a 					= $ganancia_obtenida;
-    	$this->c 					= $pago_provisional_lisr;
-    	$this->g 					= $multa_correccion_fiscal;
+    	$this->a 					= $this->redondeo($ganancia_obtenida);
+    	$this->c 					= $this->redondeo($pago_provisional_lisr);
+    	$this->g 					= $this->redondeo($multa_correccion_fiscal);
     	$this->fecha_escritura		= $fecha_escritura;
 
       // obtener los dias inhabiles del año en curso
@@ -151,7 +151,7 @@ class CalculoimpuestosController extends Controller
 	    		"Parte actualizada del impuesto" => $this->e,
 	    		"Recargos" => $this->f,
 	    		"Multa corrección fiscal" => $this->g,
-	    		"Importe total" => $this->redondeo($this->h),
+	    		"Importe total" => $this->h,
     			),
 
     	);
@@ -255,6 +255,7 @@ class CalculoimpuestosController extends Controller
 
       $this->a          = $ganancia_obtenida;
       $this->c          = $pago_provisional_lisr;
+      $this->c       = $this->redondeo($this->c);
       $this->g          = $multa_correccion_fiscal;
       $this->fecha_escritura    = $fecha_escritura;
 
@@ -339,17 +340,17 @@ class CalculoimpuestosController extends Controller
     private function calculo()
     {
     	// obtener b monto obtenido conforme al articulo 127 LISR
-    	$this->b = $this->a * .05;
+    	$this->b = $this->redondeo($this->a * .05);
 
     	// impuesto correspondiente a la entidad federativa
     	($this->b >= $this->c) ? $this->d = $this->c : $this->d = $this->b;
 
     	// parte actualizada del impuesto
     	$this->e = ($this->d * $this->factor_actualizacion) - $this->d;
-
+      $this->e = $this->redondeo($this->e);
     	// obtener los recargos
     	$this->f = ($this->d + $this->e) * $this->porcentaje_recargos;
-
+      $this->f = $this->redondeo($this->f);
     	// importe total
     	$this->h =  $this->d + $this->e + $this->f + $this->g ;
 
@@ -363,7 +364,7 @@ class CalculoimpuestosController extends Controller
     	// obtener el indice de la fecha de vencimiento
     	$factor = (bcdiv(($this->inpc_reciente/$this->inpc_periodo),1,4) < 1 ) ? 1 : bcdiv(($this->inpc_reciente/$this->inpc_periodo),1,4);
 
-		return $factor;
+		  return $factor;
 
     }
 
@@ -803,8 +804,8 @@ class CalculoimpuestosController extends Controller
      * en caso de ser festivo o sabado o domingo se determina el dia habil siguiente
     */
     public function prueba(){
-		$fecha = $this->fecha_escritura;
-		$inhabil = $this->inhabiles;
+    		$fecha = $this->fecha_escritura;
+    		$inhabil = $this->inhabiles;
         $dias=0;
         $fechaTermino = '';
         $hora = date("H",strtotime($fecha));
