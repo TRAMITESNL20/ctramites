@@ -50,7 +50,7 @@
                 let detallesComplete = true;
        
                 enajenantes.forEach( enajenante => {
-                  detallesComplete = detallesComplete && !!enajenante.detalle; 
+                  detallesComplete = detallesComplete && !!enajenante.detalle && typeof enajenante.detalle == 'object'; 
                 });
 
                 

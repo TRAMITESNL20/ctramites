@@ -82,6 +82,8 @@ Vue.component('tree-component', () => import(/* webpackChunkName: "js/components
 
 
 Vue.component('agrupacion-items-carrrito-component', () => import(/* webpackChunkName: "js/components/generales/agrupacion-items-carrrito-component" */ './components/carShop/AgrupacionItemsCarrritoComponent.vue'));
+Vue.component("valuador-component" , () => import ( /* webpackChunkName: "js/components/valuador-component" */ './components/ValuadorComponet.vue' ));
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -109,6 +111,10 @@ Vue.filter('toCurrency', function (value) {
 Vue.filter('toNumber', function (value) {
     return Number((value).replace(/[^0-9.-]+/g,""));   
 });
+
+Vue.prototype.$const = {
+   PRECISION: 3
+}
 
 const app = new Vue({
     el: '#app',
