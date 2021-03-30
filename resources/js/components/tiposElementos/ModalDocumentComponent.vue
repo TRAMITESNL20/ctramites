@@ -14,7 +14,7 @@
                 </div>
                 <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body">
                 
-                    <h3>Tramite id: {{tramiteDoc.id}}  {{index}}</h3>
+                    <h3>Tramite id: {{tramiteDoc.id}} </h3>
 
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -36,14 +36,9 @@
                                 {{  "Seleccione archivo" }}
                             </span></label>
                         </div>
-                    </div>
-
-                 
-                   
+                    </div>      
                 </div>
-                
-                <code> {{ fileById}}</code>
-                <code> {{files}}</code>
+             
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
