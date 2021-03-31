@@ -70,18 +70,49 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		$request = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:egobws">
 		   <soapenv:Header/>
 		   <soapenv:Body>
-		      <urn:ConsultaTransaccion soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+		      <urn:'.$type.' soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
 		         <trans xsi:type="egob:transT1" xmlns:egob="http://localhost/egobierno/">
-		            <!--You may enter the following 7 items in any order-->
-		            <reference xsi:type="xsd:string">'.$data['reference'].'</reference>
-		            <bank xsi:type="xsd:string">'.$data['bank'].'</bank>
-		            <date xsi:type="xsd:string">'.$data['date'].'</date>
-		            <string xsi:type="xsd:string">'.$data['string'].'</string>
-		            <user xsi:type="xsd:string">'.$data['user'].'</user>
-		            <password xsi:type="xsd:string">'.$data['password'].'</password>
-		            <branch xsi:type="xsd:string">'.$data['branch'].'</branch>
+		         	';
+		         	if ($type == 'ConsultaTransaccion'){
+		         		$request .= '
+							<reference xsi:type="xsd:string">'.$data['reference'].'</reference>
+							<bank xsi:type="xsd:string">'.$data['bank'].'</bank>
+							<date xsi:type="xsd:string">'.$data['date'].'</date>
+							<string xsi:type="xsd:string">'.$data['string'].'</string>
+							<user xsi:type="xsd:string">'.$data['user'].'</user>
+							<password xsi:type="xsd:string">'.$data['password'].'</password>
+							<branch xsi:type="xsd:string">'.$data['branch'].'</branch>
+		         		';
+		         	} else if ($type == 'NotificarPago') {
+						$request .= '
+							<reference xsi:type="xsd:string">'.$data['reference'].'</reference>
+							<bank xsi:type="xsd:string">'.$data['bank'].'</bank>
+							<date xsi:type="xsd:string">'.$data['date'].'</date>
+							<string xsi:type="xsd:string">'.$data['string'].'</string>
+							<user xsi:type="xsd:string">'.$data['user'].'</user>
+							<password xsi:type="xsd:string">'.$data['password'].'</password>
+							<amount xsi:type="xsd:string">'.$data['amount'].'</amount>
+							<paymentType xsi:type="xsd:string">'.$data['paymentType'].'</paymentType>
+							<paymentId xsi:type="xsd:string">'.$data['paymentId'].'</paymentId>
+							<branch xsi:type="xsd:string">'.$data['branch'].'</branch>
+							<account xsi:type="xsd:string">'.$data['account'].'</account>
+						';
+		         	} else if ($type == 'ReversoPago') {
+		         		$request .= '
+							<reference xsi:type="xsd:string">'.$data['reference'].'</reference>
+							<bank xsi:type="xsd:string">'.$data['bank'].'</bank>
+							<date xsi:type="xsd:string">'.$data['date'].'</date>
+							<string xsi:type="xsd:string">'.$data['string'].'</string>
+							<user xsi:type="xsd:string">'.$data['user'].'</user>
+							<password xsi:type="xsd:string">'.$data['password'].'</password>
+							<amount xsi:type="xsd:string">'.$data['amount'].'</amount>
+							<paymentId xsi:type="xsd:string">'.$data['paymentId'].'</paymentId>
+							<branch xsi:type="xsd:string">'.$data['branch'].'</branch>
+						';
+		         	}
+					$request .= '
 		         </trans>
-		      </urn:ConsultaTransaccion>
+		      </urn:'.$type.'>
 		   </soapenv:Body>
 		</soapenv:Envelope>
 		';
@@ -104,78 +135,50 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		$result = curl_exec($ch);
 		curl_close($ch);
 		$response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $result);
+		dd($result);
 
 		$doc = new DOMDocument('1.0', 'utf-8');
 		$doc->loadXML($response);
 		
-		$amount = $doc->getElementsByTagName("amount")->item(0)->nodeValue;
-		$error = $doc->getElementsByTagName("error")->item(0)->nodeValue;
-		$message = $doc->getElementsByTagName("message")->item(0)->nodeValue;
-		$clientInformation = $doc->getElementsByTagName("clientInformation")->item(0)->nodeValue;
+		if($type == 'ConsultaTransaccion'){
+			$amount = $doc->getElementsByTagName("amount")->item(0)->nodeValue;
+			$error = $doc->getElementsByTagName("error")->item(0)->nodeValue;
+			$message = $doc->getElementsByTagName("message")->item(0)->nodeValue;
+			$clientInformation = $doc->getElementsByTagName("clientInformation")->item(0)->nodeValue;
 
-		dd(
-			$amount,
-			$error,
-			$message,
-			$clientInformation
-		);
+			$response = [
+				"amount" => $amount,
+				"error" => $error,
+				"message" => $message,
+				"clientInformation" => $clientInformation
+			];
+		} else if ($type == 'NotificarPago') {
+			$amount = $doc->getElementsByTagName("amount")->item(0)->nodeValue;
+			$error = $doc->getElementsByTagName("error")->item(0)->nodeValue;
+			$message = $doc->getElementsByTagName("message")->item(0)->nodeValue;
+			$clientInformation = $doc->getElementsByTagName("clientInformation")->item(0)->nodeValue;
 
-		// $xml = new SimpleXMLElement($result);
-		// dd($xml);
-		// $body = $xml->xpath('//soapBody')[0];
-		// $array = json_decode(json_encode((array)$body), TRUE);
-		// dd($array);
+			$response = [
+				"amount" => $amount,
+				"error" => $error,
+				"message" => $message,
+				"clientInformation" => $clientInformation
+			];
+		} else if ($type == 'ReversoPago') {
+			$amount = $doc->getElementsByTagName("amount")->item(0)->nodeValue;
+			$error = $doc->getElementsByTagName("error")->item(0)->nodeValue;
+			$message = $doc->getElementsByTagName("message")->item(0)->nodeValue;
+			$clientInformation = $doc->getElementsByTagName("clientInformation")->item(0)->nodeValue;
 
-		// $request_json= array(
-		// 	'token' => $token,
-		// 	'importe_transaccion' =>$sumMonto,
-		// 	'id_transaccion' =>$id_trans,
-		// 	'url_retorno' =>'www.prueba.com',
-		// 	'entidad' =>$entidad,
-		// 	'tramite' =>$tramite
-		// );
+			$response = [
+				"amount" => $amount,
+				"error" => $error,
+				"message" => $message,
+				"clientInformation" => $clientInformation
+			];
+		}
 
-		// $data = [
-		// 	"reference" => "119974116120000246840330687248",
-		// 	"bank" => "LOCAL",
-		// 	"date" => "2021-03-31",
-		// 	"string" => "uno",
-		// 	"user" => "LOCAL",
-		// 	"password" => "LOCAL",
-		// 	"branch" => "123"
-		// ];
-
-		// $repuesta;
-		// $datos;
-		// $json=json_encode($data);
-		// try {
-		// 	$parameters=['json'=>$json];
-		// 	$server = new \SoapClient($wsdl, [
-		// 		'encoding' => 'UTF-8',
-		// 		'verifypeer'=>false,
-		// 		'trace' => true,
-		// 		'authorization' => 'Basic '.base64_encode($usr.":".$pass)
-		// 	]);
-		// 	dd("server", $server->ConsultaTransaccion($parameters)->ConsultaTransaccion);
-		// 	$datos =$server->GeneraReferencia($parameters)->GeneraReferenciaResult;
-		// 	$json_d =json_decode($datos);
-		// }catch(Exception $err){
-		// 	dd("error", $err->getMessage());
-		// }
-
-		$client = new nusoap_client($wsdl, "wsdl");
-		$client->setCredentials($usr, $pass);
-		$client->soap_defencoding = 'UTF-8';
-		$client->decode_utf8 = FALSE;
-		$response = $client->call($type, $data);
-
-		return dd(
-			$data,
-			$wsdl,
-			$response,
-			htmlspecialchars($client->request, ENT_QUOTES),
-			htmlspecialchars($client->response, ENT_QUOTES)
-		);
+		return json_decode($response);
 	});
 
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
