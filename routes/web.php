@@ -102,9 +102,9 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 
 		$result = curl_exec($ch);
 		curl_close($ch);
+		dd($result);
 		$response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $result);
 		$xml = new SimpleXMLElement($response);
-		dd($xml);
 		$body = $xml->xpath('//soapBody')[0];
 		$array = json_decode(json_encode((array)$body), TRUE);
 		dd($array);
