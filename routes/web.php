@@ -67,7 +67,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 			'Password' => $pass
 		);
 
-		$client = new nusoap_client($wsdl);
+		$client = new nusoap_client($wsdl, true);
 		$client->setCredentials($usr, $pass);
         $response = $client->call($type, $data);
 
