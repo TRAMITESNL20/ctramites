@@ -37,7 +37,30 @@ Route::post("/ssl-proxy", function(){
     return json_encode($response);
 });
 
+
 Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
+	Route::get('/pago-referencia', function(){
+		return view('pay-reference');
+	});
+
+	Route::post('/pago-referencia', function(){
+		list($usr, $pass) = explode("|", getenv("BANK_WS_CREDENTIALS"));
+		$data = Request::all();
+        $data['date'] = date("Y-m-d");
+        $data['string'] = "blablabla";
+        $data['user'] = $usr;
+        $data['password'] = $pass;
+        $data['paymentType'] = 00;
+        $data['paymentId'] = 00;
+        $data['branch'] = 00;
+        $data['account'] = 0000;
+
+		$client = new SoapClient(getenv("BANK_WS_HOSTNAME")."/wsbancos/egobws.php?wsdl");
+        $response = $client->__soapCall("NotificarPago", array($data));
+
+		return dd($response);
+	});
+
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
 	Route::get("/email/template", "EmailController@index");
 	Route::middleware(["validate_session", "validate_rol"])->group(function(){
