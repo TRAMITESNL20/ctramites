@@ -135,48 +135,28 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		$result = curl_exec($ch);
 		curl_close($ch);
 		$response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $result);
-		dd($result);
 
 		$doc = new DOMDocument('1.0', 'utf-8');
 		$doc->loadXML($response);
+		$error = $doc->getElementsByTagName("error")->item(0)->nodeValue;
+		$message = $doc->getElementsByTagName("message")->item(0)->nodeValue;
 		
 		if($type == 'ConsultaTransaccion'){
 			$amount = $doc->getElementsByTagName("amount")->item(0)->nodeValue;
-			$error = $doc->getElementsByTagName("error")->item(0)->nodeValue;
-			$message = $doc->getElementsByTagName("message")->item(0)->nodeValue;
 			$clientInformation = $doc->getElementsByTagName("clientInformation")->item(0)->nodeValue;
-
 			$response = [
 				"amount" => $amount,
-				"error" => $error,
-				"message" => $message,
 				"clientInformation" => $clientInformation
 			];
-		} else if ($type == 'NotificarPago') {
-			$amount = $doc->getElementsByTagName("amount")->item(0)->nodeValue;
-			$error = $doc->getElementsByTagName("error")->item(0)->nodeValue;
-			$message = $doc->getElementsByTagName("message")->item(0)->nodeValue;
-			$clientInformation = $doc->getElementsByTagName("clientInformation")->item(0)->nodeValue;
-
+		} else {
+			$paymentId = $doc->getElementsByTagName("paymentId")->item(0)->nodeValue;
 			$response = [
-				"amount" => $amount,
-				"error" => $error,
-				"message" => $message,
-				"clientInformation" => $clientInformation
-			];
-		} else if ($type == 'ReversoPago') {
-			$amount = $doc->getElementsByTagName("amount")->item(0)->nodeValue;
-			$error = $doc->getElementsByTagName("error")->item(0)->nodeValue;
-			$message = $doc->getElementsByTagName("message")->item(0)->nodeValue;
-			$clientInformation = $doc->getElementsByTagName("clientInformation")->item(0)->nodeValue;
-
-			$response = [
-				"amount" => $amount,
-				"error" => $error,
-				"message" => $message,
-				"clientInformation" => $clientInformation
+				"paymentId" => $paymentId
 			];
 		}
+
+		$response['error'] = $error;
+		$response['message'] = $message;
 
 		return json_decode($response);
 	});
