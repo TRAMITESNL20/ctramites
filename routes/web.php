@@ -56,6 +56,8 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
         $data['account'] = 0000;
 
 		$client = new SoapClient(getenv("BANK_WS_HOSTNAME")."/wsbancos/egobws.php?wsdl");
+		$header =  new SoapHeader("NotificarPago", "Authentication", "Basic ".base64_encode($usr.":".$pass), false);
+		$client->__setSoapHeaders($header);
         $response = $client->__soapCall("NotificarPago", array($data));
 
 		return dd($response);
