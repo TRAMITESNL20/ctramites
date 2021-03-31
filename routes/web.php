@@ -44,6 +44,8 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 	});
 
 	Route::post('/pago-referencia', function(){
+		ini_set("soap.wsdl_cache_enabled", 0);
+
 		list($usr, $pass) = explode("|", getenv("BANK_WS_CREDENTIALS"));
 		$data = Request::all();
         $data['date'] = date("Y-m-d");
