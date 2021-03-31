@@ -3,7 +3,7 @@
 		<option value="ConsultaTransaccion">Consulta Transacción</option>
 		<option value="NotificarPago">Notificar Pago</option>
 		<option value="ReversoPago">Reverso Pago</option>
-	</select>
+	</select><br>
 	<input type="text" placeholder="reference" name="reference"><br>
 	<input type="text" placeholder="bank" name="bank"><br>
 	<input type="text" placeholder="amount" name="amount"><br>
