@@ -90,6 +90,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 			'Content-type: text/xml;charset="utf-8"',
 			'Accept: text/xml',
 			'Cache-Control: no-cache',
+			'Authorization: Basic '.base64_encode($usr.":".$pass)
 		];
 
 		$ch = curl_init();
