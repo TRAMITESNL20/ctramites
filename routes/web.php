@@ -55,6 +55,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
         $data['string'] = "uno";
         $data['user'] = "LOCAL";
         $data['password'] = "LOCAL";
+        $data['bank'] = "LOCAL";
         if(in_array($type, ["NotificarPago"])) $data['paymentType'] = "0";
         if(in_array($type, ["NotificarPago", "ReversoPago"])) $data['paymentId'] = "0";
         $data['branch'] = "123";
@@ -157,6 +158,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 
 		$response['error'] = $error;
 		$response['message'] = $message;
+		$response['reference'] = $data["reference"];
 
 		echo json_encode($response)."\n\n";
 		echo '<a href="'.url()->route("pago-referencia").'"><-- Regresar</a>';
