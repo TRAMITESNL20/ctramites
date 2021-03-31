@@ -104,7 +104,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		// 	dd("error", $err->getMessage());
 		// }
 
-		$client = new nusoap_client($wsdl, true);
+		$client = new nusoap_client($wsdl);
 		$client->setCredentials($usr, $pass);
 		$response = $client->call($type, $data);
 
