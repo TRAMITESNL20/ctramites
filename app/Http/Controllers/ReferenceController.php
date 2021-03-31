@@ -42,7 +42,7 @@ class ReferenceController extends Controller {
 		->where('id', $reference->{'solicitudes_tramite-id'})
 		->update([
 			'solicitudes_tramite.estatus' => $request->has('dev') ? 0 : $reference->{'oper_transacciones-estatus'},
-			'solicitudes_tramite.url_recibo' => getenv('FORMATO_RECIBO').$reference->{'oper_transacciones-referencia'},
+			'solicitudes_tramite.url_recibo' => getenv('FORMATO_RECIBO').$reference->{'solicitudes_tramite-id_transaccion_motor'},
 		]);
 
 		if($update){
