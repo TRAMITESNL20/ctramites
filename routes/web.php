@@ -76,6 +76,16 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		// 	'tramite' =>$tramite
 		// );
 
+		$data = [
+			"reference" => "119974116120000246840330687248",
+			"bank" => "LOCAL",
+			"date" => "2021-03-31",
+			"string" => "uno",
+			"user" => "LOCAL",
+			"password" => "LOCAL",
+			"branch" => "123"
+		];
+
 		$repuesta;
 		$datos;
 		$json=json_encode($data);
