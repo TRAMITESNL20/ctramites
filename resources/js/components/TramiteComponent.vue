@@ -44,6 +44,7 @@
                             </a>
                             <a v-on:click="goTo(tramite.recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.recibo_referencia && [5].includes(type) && !group">VER REFERENCIA</a>
                             <a v-on:click="goTo(tramite.doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.doc_firmado && [2,3].includes(type) && !group">VER DECLARACIÓN</a>
+                            <modal-document-component  v-if="tramite.doc_firmado && [2,3].includes(type) && !group"  ></modal-document-component>
                             <a v-on:click="goTo(tramite.tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.tramites && tramite.tramites[0] && tramite.tramites[0].url_recibo && [2,3].includes(type) && !group">VER RECIBO DE PAGO</a>
                             <div class="btn-group mt-2" v-if="tramite.info && !cartComponent && type != 2">
                                 <a v-on:click="goTo(tramite)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="files.length == 0 ? 'rounded' : ''">
@@ -70,7 +71,9 @@
 </template>
 
 <script>
+import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue';
     export default {
+  components: { ModalDocumentComponent },
         data() {
             return {
                 files : [],

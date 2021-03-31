@@ -1,10 +1,10 @@
 <template>
-    <div class="container"> 
-        <button type="button" class="btn btn-success font-weight-bolder text-uppercase px-9 py-4" data-toggle="modal" data-target="#myModal">Ingresar documentos </button>
+    <div> 
+        <button type="button" class="btn btn-sm  btn-success font-weight-bolder text-uppercase text-white mt-2" data-toggle="modal" data-target="#modalDocument">Ingresar documentos </button>
 
 
-            <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog modal-xl">
+            <div class="modal fade" id="modalDocument" role="dialog">
+            <div class="modal-dialog  modal-dialog-centered   modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
@@ -44,9 +44,11 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                     Close
                     </button>
-                    <button v-on:click="enviarDocumentos()" type="button" class="btn btn-success" data-dismiss="modal">
-                    Enviar
+                    <button v-on:click="enviarDocumentos()"  type="button" class="btn btn-success">
+                   <span id="saveDocument" role="status" aria-hidden="true"></span>
+                    Guardar
                     </button>
+                  
                 </div>
                 </div>
         </div>
@@ -67,15 +69,20 @@ export default {
     },
     methods:{
         enviarDocumentos(){
-                var url =  process.env.TESORERIA_HOSTNAME + "/save-files";
+            $('#saveDocument').addClass('spinner-border spinner-border-sm text-light');
+
+            var url =  process.env.TESORERIA_HOSTNAME + "/save-files";
                 axios.post(url, this.files).then(response => {
                     console.log(response);
+                    $('#modalDocument').modal('hide');
                 }).catch(error => {
                     console.log("error al enviar los documentos");
                     console.log(error)
                 }).finally( () => {
-                   
+                    $('#saveDocument').removeClass('spinner-border spinner-border-sm text-light');
                 });
+
+
         },
         previewFiles(id, index){
 
