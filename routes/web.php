@@ -41,7 +41,7 @@ Route::post("/ssl-proxy", function(){
 Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 	Route::get('/pago-referencia', function(){
 		return view('pay-reference');
-	});
+	})->name("pago-referencia");
 
 	Route::post('/pago-referencia', function(){
 		ini_set("soap.wsdl_cache_enabled", 0);
@@ -158,7 +158,9 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		$response['error'] = $error;
 		$response['message'] = $message;
 
-		return json_decode($response);
+		echo json_encode($response)."\n\n";
+		echo '<a href="'.url()->route("pago-referencia").'"><-- Regresar</a>';
+		return true;
 	});
 
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
