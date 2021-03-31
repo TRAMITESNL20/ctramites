@@ -108,8 +108,8 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		$doc = new DOMDocument('1.0', 'utf-8');
 		$doc->loadXML($response);
 		$XMLresults = $doc->getElementsByTagName("ns1ConsultaTransaccionResponse");
-		dd($XMLresults);
-		// $output = $XMLresults->item(0)->nodeValue;
+		$output = $XMLresults->item(0)->nodeValue;
+		dd($output);
 
 		// $xml = new SimpleXMLElement($result);
 		// dd($xml);
