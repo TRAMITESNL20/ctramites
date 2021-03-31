@@ -47,6 +47,8 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		ini_set("soap.wsdl_cache_enabled", 0);
 
 		list($usr, $pass) = explode("|", getenv("BANK_WS_CREDENTIALS"));
+		$type = $data['type'];
+		unset($data['type']);
 		$data = Request::all();
         $data['date'] = date("Y-m-d");
         $data['string'] = "blablabla";
@@ -56,7 +58,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
         $data['paymentId'] = 0;
         $data['branch'] = "00";
         $data['account'] = "0000";
-        $wsdl = getenv("BANK_WS_HOSTNAME")."/wsbancos/egobws.php";
+        $wsdl = getenv("BANK_WS_HOSTNAME")."/wsbancos/egobws.php?wsdl";
 
         $auth = array(
 			'Username' => $usr,
@@ -65,7 +67,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 
 		$client = new nusoap_client($wsdl, true);
 		$client->setCredentials($usr, $pass);
-        $response = $client->call("NotificarPago", $data);
+        $response = $client->call($type, $data);
 
 		return dd($data, $wsdl, $response);
 	});
