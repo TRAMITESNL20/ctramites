@@ -71,7 +71,13 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		$client->setCredentials($usr, $pass);
         $response = $client->call($type, $data);
 
-		return dd($data, $wsdl, $response);
+		return dd(
+			$data,
+			$wsdl,
+			$response,
+			htmlspecialchars($client->request, ENT_QUOTES),
+			htmlspecialchars($client->response, ENT_QUOTES)
+		);
 	});
 
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
