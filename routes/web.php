@@ -50,15 +50,17 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		$data = Request::all();
 		$type = $data['type'];
 		unset($data['type']);
+
         $data['date'] = date("Y-m-d");
-        $data['string'] = "blablabla";
-        $data['user'] = $usr;
-        $data['password'] = $pass;
-        $data['paymentType'] = 0;
-        $data['paymentId'] = 0;
-        $data['branch'] = "00";
-        $data['account'] = "0000";
+        $data['string'] = "uno";
+        $data['user'] = "LOCAL";
+        $data['password'] = "LOCAL";
+        if(in_array($type, ["NotificarPago"])) $data['paymentType'] = 0;
+        if(in_array($type, ["NotificarPago", "ReversoPago"])) $data['paymentId'] = 0;
+        $data['branch'] = 123;
+        if(in_array($type, ["NotificarPago"])) $data['account'] = "0000";
         $wsdl = getenv("BANK_WS_HOSTNAME")."/wsbancos/egobws.php?wsdl";
+        if(in_array($type, ["ConsultaTransaccion"])) unset($data["amount"]);
 
         $auth = array(
 			'Username' => $usr,
