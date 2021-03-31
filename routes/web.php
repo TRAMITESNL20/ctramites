@@ -65,7 +65,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		$client->setCredentials($usr, $pass);
         $response = $client->call("NotificarPago", $data);
 
-		return dd($data, $response);
+		return dd($data, $wsdl, $response);
 	});
 
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
