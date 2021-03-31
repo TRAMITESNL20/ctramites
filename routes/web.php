@@ -67,17 +67,44 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 			'Password' => $pass
 		);
 
-		$client = new nusoap_client($wsdl, true);
-		$client->setCredentials($usr, $pass);
-        $response = $client->call($type, $data);
+		// $request_json= array(
+		// 	'token' => $token,
+		// 	'importe_transaccion' =>$sumMonto,
+		// 	'id_transaccion' =>$id_trans,
+		// 	'url_retorno' =>'www.prueba.com',
+		// 	'entidad' =>$entidad,
+		// 	'tramite' =>$tramite
+		// );
 
-		return dd(
-			$data,
-			$wsdl,
-			$response,
-			htmlspecialchars($client->request, ENT_QUOTES),
-			htmlspecialchars($client->response, ENT_QUOTES)
-		);
+		$repuesta;
+		$datos;
+		$json=json_encode($data);
+		try {
+			$parameters=['json'=>$json];
+			$server = new \SoapClient($wsdl, [
+				'encoding' => 'UTF-8',
+				'verifypeer'=>false,
+				'trace' => true,
+				'authorization' => 'Basic '.base64_encode($usr.":".$pass)
+			]);
+			dd($server);
+			$datos =$server->GeneraReferencia($parameters)->GeneraReferenciaResult;
+			$json_d =json_decode($datos);
+		}catch($err){
+			dd($err->getMessage());
+		}
+
+		// $client = new nusoap_client($wsdl, true);
+		// $client->setCredentials($usr, $pass);
+  //       $response = $client->call($type, $data);
+
+		// return dd(
+		// 	$data,
+		// 	$wsdl,
+		// 	$response,
+		// 	htmlspecialchars($client->request, ENT_QUOTES),
+		// 	htmlspecialchars($client->response, ENT_QUOTES)
+		// );
 	});
 
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
