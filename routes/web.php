@@ -62,9 +62,9 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		);
 
 		$client = new SoapClient($wsdl);
-		$header = new SOAPHeader($wsdl, 'UserIdentifierSoapHeaderIn', $auth);        
+		$header = new SOAPHeader($wsdl, 'Authorization', "Basic ".base64_encode($usr.":".$pass));
 		$client->__setSoapHeaders($header);
-        $response = $client->__soapCall("NotificarPago", array($data));
+        $response = $client->__soapCall("NotificarPago", $data);
 
 		return dd($response);
 	});
