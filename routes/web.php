@@ -61,10 +61,9 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 			'Password' => $pass
 		);
 
-		$client = new SoapClient($wsdl);
-		$header = new SOAPHeader($wsdl, 'Authorization', "Basic ".base64_encode($usr.":".$pass));
-		$client->__setSoapHeaders($header);
-        $response = $client->__soapCall("NotificarPago", $data);
+		$client = new nusoap_client($wsdl, true);
+		$client->setCredentials($usr, $pass);
+        $response = $client->call("NotificarPago", $data);
 
 		return dd("response", $response);
 	});
