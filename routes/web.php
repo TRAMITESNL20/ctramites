@@ -87,7 +87,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 				'trace' => true,
 				'authorization' => 'Basic '.base64_encode($usr.":".$pass)
 			]);
-			dd("server", $server[$type]($parameters));
+			dd("server", $server->{$type}($parameters));
 			$datos =$server->GeneraReferencia($parameters)->GeneraReferenciaResult;
 			$json_d =json_decode($datos);
 		}catch(Exception $err){
