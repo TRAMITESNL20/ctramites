@@ -90,7 +90,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 			dd($server);
 			$datos =$server->GeneraReferencia($parameters)->GeneraReferenciaResult;
 			$json_d =json_decode($datos);
-		}catch($err){
+		}catch(Exception $err){
 			dd($err->getMessage());
 		}
 
