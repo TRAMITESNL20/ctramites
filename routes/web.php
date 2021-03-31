@@ -56,7 +56,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
         $data['paymentId'] = 0;
         $data['branch'] = "00";
         $data['account'] = "0000";
-        $wsdl = getenv("BANK_WS_HOSTNAME")."/wsbancos/egobws.php?wsdl";
+        $wsdl = getenv("BANK_WS_HOSTNAME")."/wsbancos/egobws.php";
 
         $auth = array(
 			'Username' => $usr,
