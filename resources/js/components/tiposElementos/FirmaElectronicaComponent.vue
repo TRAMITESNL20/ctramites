@@ -5,9 +5,11 @@
 </template>
 
 <script>
+var md5 = require('md5');
 
 
 export default {
+    
 	props: ['datosComplementaria', 'tipoTramite','usuario', 'pago', 'id', 'user'],
 	data(){
 		return{
@@ -40,16 +42,17 @@ export default {
 				this.llave.push(`${solicitud.id}`)
 				 
 				if(typeof this.folio === 'string') this.folio = [];
-				this.folio.push(`${ind}`)
+				this.folio.push(`${  ind}`)
 			
 			}else{
 				this.doc = doc;
 				this.llave = `${solicitud.id}`;
-				this.folio = `${ind}`;
+				this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
 			}
 
 			this.idFirmado.push(solicitud.id);
 			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
+            console.log(this.folio);
 		})
 
 		this.rfc = this.user.rfc;
@@ -87,6 +90,7 @@ export default {
                 // 'rfc' : rfc,
                 'rfc' : this.rfc,
                 'pagado' : 1,
+                'descargable': false,
               
             };
 

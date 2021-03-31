@@ -37,7 +37,86 @@ Route::post("/ssl-proxy", function(){
     return json_encode($response);
 });
 
+
 Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
+	Route::get('/pago-referencia', function(){
+		return view('pay-reference');
+	});
+
+	Route::post('/pago-referencia', function(){
+		ini_set("soap.wsdl_cache_enabled", 0);
+
+		list($usr, $pass) = explode("|", getenv("BANK_WS_CREDENTIALS"));
+		$data = Request::all();
+		$type = $data['type'];
+		unset($data['type']);
+
+        $data['date'] = date("Y-m-d");
+        $data['string'] = "uno";
+        $data['user'] = "LOCAL";
+        $data['password'] = "LOCAL";
+        if(in_array($type, ["NotificarPago"])) $data['paymentType'] = "0";
+        if(in_array($type, ["NotificarPago", "ReversoPago"])) $data['paymentId'] = "0";
+        $data['branch'] = "123";
+        if(in_array($type, ["NotificarPago"])) $data['account'] = "0000";
+        $wsdl = getenv("BANK_WS_HOSTNAME")."/wsbancos/egobws.php?wsdl";
+        if(in_array($type, ["ConsultaTransaccion"])) unset($data["amount"]);
+
+        $auth = array(
+			'Username' => $usr,
+			'Password' => $pass
+		);
+
+		// $request_json= array(
+		// 	'token' => $token,
+		// 	'importe_transaccion' =>$sumMonto,
+		// 	'id_transaccion' =>$id_trans,
+		// 	'url_retorno' =>'www.prueba.com',
+		// 	'entidad' =>$entidad,
+		// 	'tramite' =>$tramite
+		// );
+
+		$data = [
+			"reference" => "119974116120000246840330687248",
+			"bank" => "LOCAL",
+			"date" => "2021-03-31",
+			"string" => "uno",
+			"user" => "LOCAL",
+			"password" => "LOCAL",
+			"branch" => "123"
+		];
+
+		// $repuesta;
+		// $datos;
+		// $json=json_encode($data);
+		// try {
+		// 	$parameters=['json'=>$json];
+		// 	$server = new \SoapClient($wsdl, [
+		// 		'encoding' => 'UTF-8',
+		// 		'verifypeer'=>false,
+		// 		'trace' => true,
+		// 		'authorization' => 'Basic '.base64_encode($usr.":".$pass)
+		// 	]);
+		// 	dd("server", $server->ConsultaTransaccion($parameters)->ConsultaTransaccion);
+		// 	$datos =$server->GeneraReferencia($parameters)->GeneraReferenciaResult;
+		// 	$json_d =json_decode($datos);
+		// }catch(Exception $err){
+		// 	dd("error", $err->getMessage());
+		// }
+
+		$client = new nusoap_client($wsdl, true);
+		$client->setCredentials($usr, $pass);
+		$response = $client->call($type, $data);
+
+		return dd(
+			$data,
+			$wsdl,
+			$response,
+			htmlspecialchars($client->request, ENT_QUOTES),
+			htmlspecialchars($client->response, ENT_QUOTES)
+		);
+	});
+
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
 	Route::get("/email/template", "EmailController@index");
 	Route::middleware(["validate_session", "validate_rol"])->group(function(){

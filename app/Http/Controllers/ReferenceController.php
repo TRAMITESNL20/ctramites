@@ -101,15 +101,14 @@ class ReferenceController extends Controller {
 		->where('id_transaccion', $reference->{'solicitudes_tramite-id'})
 		->get();
 
-		if($reference->{'oper_transacciones-estatus'} != 0 && !$request->has('dev'))
+		if($reference->{'oper_transacciones-estatus'} != 99 && !$request->has('dev'))
 			abort(409, 'El estatus actual de la referencia es diferente de cancelado (60) o devuelto (X).');
 
 		$update = DB::connection('db_portal')
 		->table('solicitudes_tramite')
 		->where('id', $reference->{'solicitudes_tramite-id'})
 		->update([
-			'solicitudes_tramite.estatus' => $request->has('dev') ? 20 : $reference->{'oper_transacciones-estatus'},
-			'solicitudes_tramite.url_recibo' => NULL,
+			'solicitudes_tramite.estatus' => $request->has('dev') ? 99 : $reference->{'oper_transacciones-estatus'}
 		]);
 
 		if($update){
@@ -118,9 +117,7 @@ class ReferenceController extends Controller {
 				->table('solicitudes_ticket')
 				->where('id', $solicitud->id)
 				->update([
-					'solicitudes_ticket.status' => 99,
-					'solicitudes_ticket.recibo_referencia' => NULL,
-					'solicitudes_ticket.id_transaccion' => NULL
+					'solicitudes_ticket.status' => 5
 				]);
 
 				if($update){
