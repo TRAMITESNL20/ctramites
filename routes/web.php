@@ -66,7 +66,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		$client->__setSoapHeaders($header);
         $response = $client->__soapCall("NotificarPago", $data);
 
-		return dd($response);
+		return dd("response", $response);
 	});
 
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
