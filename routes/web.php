@@ -103,12 +103,19 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 
 		$result = curl_exec($ch);
 		curl_close($ch);
-		// $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $result);
-		$xml = new SimpleXMLElement($response);
-		dd($xml);
-		$body = $xml->xpath('//soapBody')[0];
-		$array = json_decode(json_encode((array)$body), TRUE);
-		dd($array);
+		$response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $result);
+
+		$doc = new DOMDocument('1.0', 'utf-8');
+		$doc->loadXML($response);
+		$XMLresults = $doc->getElementsByTagName("ns1ConsultaTransaccionResponse");
+		dd($XMLresults);
+		// $output = $XMLresults->item(0)->nodeValue;
+
+		// $xml = new SimpleXMLElement($result);
+		// dd($xml);
+		// $body = $xml->xpath('//soapBody')[0];
+		// $array = json_decode(json_encode((array)$body), TRUE);
+		// dd($array);
 
 		// $request_json= array(
 		// 	'token' => $token,
