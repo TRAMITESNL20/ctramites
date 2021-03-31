@@ -448,7 +448,7 @@ class CalculoimpuestosController extends Controller
    			$yf = $fe[0];  // año de inicio
 
         if($yf != $year){//Si son diferentes se obtienen los días inhabiles desde el año de escritura hasta el actual
-          $fechas = $this->diasferiados->findWhereBetween('Ano', [ $yf,$year ] );
+          $fechas = $this->diasferiados->findWhereBetween('Ano', [ $yf,$year ] )->where('tipo', 'F');
       		if($fechas->count() > 0)
       		{
       			$dates = array();
@@ -463,7 +463,7 @@ class CalculoimpuestosController extends Controller
 
         }else{ //Si son el mismo año se obtienen solo los del año en curso
 
-      		$fechas = $this->diasferiados->findWhere( [ "Ano" => $year ] );
+      		$fechas = $this->diasferiados->findWhere( [ "Ano" => $year ] )->where('tipo', 'F');
       		if($fechas->count() > 0)
       		{
       			$dates = array();
@@ -477,7 +477,7 @@ class CalculoimpuestosController extends Controller
       		}
 
         }
-
+        
     		return $dates;
 
     	}catch( \Exception $e ){
