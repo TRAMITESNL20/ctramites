@@ -10,8 +10,8 @@
             v-model="campo.valor"
             type="text"
             placeholder="YYYY-MM-DD"
-            autocomplete="off" style="background-color: #e5f2f5 !important"
-            size="lg" @focus="validar" @input="validar"
+            autocomplete="off" style="background-color: #e5f2f5 !important" 
+            @focus="validar" @change="cahngeEvent" 
           ></b-form-input>
           <b-input-group-append>
             <b-form-datepicker   :id="campo.campo_id + ''" :name="campo.nombre"  v-model="campo.valor"        
@@ -45,6 +45,10 @@
       methods: {
         onContext(ctx) {
           this.formatted = ctx.selectedFormatted
+        },
+        cahngeEvent(){
+          this.estadoFormulario = this.estadoFormulario + 1;
+          this.validar();
         },
         validar(){
        		this.campo.mensajes = [];
