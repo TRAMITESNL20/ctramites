@@ -30,7 +30,9 @@
                   <b-col v-if="enajenante.tipoPersona == 'pf'" cols="12" md="6">
                     <b-form-group label="CURP" label-for="curp-input" >
                       <b-form-input id="curp-input" name="curp" v-model="$v.form.datosPersonales.curp.$model" aria-describedby="curp-input-feedback" 
-                         :state="$v.form.datosPersonales.curp.$dirty ? !$v.form.datosPersonales.curp.$error : null" @change="updateCurp">></b-form-input>
+                         :state="$v.form.datosPersonales.curp.$dirty ? !$v.form.datosPersonales.curp.$error : null" @change="updateCurp" v-uppercase>
+                           
+                         </b-form-input>
                       <b-form-invalid-feedback id="curp-input-feedback">
                         <span v-if="!$v.form.datosPersonales.curp.required"  class="form-text text-danger">
                           CURP es requerida.
@@ -48,7 +50,7 @@
                   <b-col cols="12" md="6">
                     <b-form-group label="RFC" label-for="rfc-input" >
                       <b-form-input
-                        id="rfc-input" name="rfc" v-model="$v.form.datosPersonales.rfc.$model"  :state="$v.form.datosPersonales.rfc.$dirty ? !$v.form.datosPersonales.rfc.$error : null"  aria-describedby="rfc-input-feedback" 
+                        id="rfc-input" name="rfc" v-model="$v.form.datosPersonales.rfc.$model"  :state="$v.form.datosPersonales.rfc.$dirty ? !$v.form.datosPersonales.rfc.$error : null"  aria-describedby="rfc-input-feedback" v-uppercase
                       ></b-form-input>
                       <b-form-invalid-feedback id="rfc-input-feedback">
                         <span v-if="!$v.form.datosPersonales.rfc.required"  class="form-text text-danger">
@@ -129,7 +131,6 @@
                   </b-col> 
                   <b-col  cols="12" md="6">
                     <b-form-group label="Fecha de Nacimiento" label-for="fechaNacimiento-input" >
-
                       <b-input-group class="mt-3" id="loadingcurp">
                         <template #prepend v-if="buscandoCurp">
                           <b-input-group-text >
@@ -179,9 +180,10 @@
                         <template #append>
                           <b-input-group-text >{{porcentajeVenta}}</b-input-group-text>
                         </template>
-                        <b-form-input  id="procentaje-compra-range" name="procentaje-compra"  v-model="$v.form.porcentajeCompra.$model" :state="$v.form.porcentajeCompra.$dirty ? !$v.form.porcentajeCompra.$error : null" aria-describedby="porcentajeCompra-input-feedback" type="range" :max="porcentajeVenta"></b-form-input>
+                        <b-form-input  id="procentaje-compra-range" name="procentaje-compra"  v-model="$v.form.porcentajeCompra.$model" :state="$v.form.porcentajeCompra.$dirty ? !$v.form.porcentajeCompra.$error : null" aria-describedby="porcentajeCompra-input-feedback" type="range" :max="porcentajeVenta" @change="calcularMontoOperacion($v.form.porcentajeCompra.$model)"></b-form-input>
                       </b-input-group>
-                      <b-form-input  id="procentaje-compra-input" name="procentaje-compra"  v-model="$v.form.porcentajeCompra.$model" :state="$v.form.porcentajeCompra.$dirty ? !$v.form.porcentajeCompra.$error : null" aria-describedby="porcentajeCompra-input-feedback" ></b-form-input>
+                      <b-form-input  id="procentaje-compra-input" name="procentaje-compra"  v-model="$v.form.porcentajeCompra.$model" :state="$v.form.porcentajeCompra.$dirty ? !$v.form.porcentajeCompra.$error : null" aria-describedby="porcentajeCompra-input-feedback" 
+                      @change="calcularMontoOperacion($v.form.porcentajeCompra.$model)"></b-form-input>
                       <b-form-invalid-feedback id="porcentajeCompra-input-feedback">
                         <span v-if="!$v.form.porcentajeCompra.required" class="form-text text-danger">
                           Valor requerido
@@ -250,10 +252,11 @@
                         ></b-form-input>
                       </b-input-group>
                     </b-form-group>
-                  </b-col>        
+                  </b-col> 
+                  <!--       
                 </b-row>
 
-                <b-row>
+                <b-row>-->
                   <b-col cols="12" md="6">
                     <b-form-group label="MULTA POR CORRECCION FISCAL" label-for="multa-correccion-fiscal-input" >
                       
@@ -271,7 +274,8 @@
                       </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
-                  <b-col cols="12" md="6">
+                  <!--
+                  <b-col cols="12" md="6" >
                     <b-form-group label="MONTO DE OPERACIÓN (proporcional conforme al % de venta)" label-for="monto-operacion-input" >
                       <b-input-group  >
                         <template #prepend>
@@ -281,7 +285,7 @@
                           id="monto-operacion-input" name="montoOperacion" v-model="$v.form.datosParaDeterminarImpuesto.montoOperacion.$model"  
                           @change="formatoMoneda('montoOperacion')"
                           :state="$v.form.datosParaDeterminarImpuesto.montoOperacion.$dirty ? !$v.form.datosParaDeterminarImpuesto.montoOperacion.$error : null"  
-                          aria-describedby="montoOperacion-input-feedback"
+                          aria-describedby="montoOperacion-input-feedback" :disabled="true"
                         ></b-form-input>
                       </b-input-group>
                       <b-form-invalid-feedback id="montoOperacion-input-feedback">
@@ -290,7 +294,7 @@
                         </span>
                       </b-form-invalid-feedback>
                     </b-form-group>
-                  </b-col>          
+                  </b-col>  -->        
                 </b-row>
                 <b-row>
                     <calculo-costo-tramite-5-isr-component 
@@ -378,6 +382,9 @@
       },
       configCostos:{
         type: Object
+      },
+      montoOperacionGbl:{
+        type: [Number, String],
       }
     },
 
@@ -409,7 +416,10 @@
             curp:'',rfc:'', nombre:'', apPat:'', fechaNacimiento:'',razonSocial:'',apMat:'', claveIne:''
           },
           datosParaDeterminarImpuesto:{
-            gananciaObtenida:this.formatter('0'),pagoProvisional:this.formatter('0'), multaCorreccion:this.formatter('0'), montoOperacion:this.formatter('0'),
+            gananciaObtenida: Vue.filter('formatoMoneda')("0"),
+            pagoProvisional: Vue.filter('formatoMoneda')("0"),
+            multaCorreccion: Vue.filter('formatoMoneda')("0"), 
+            montoOperacion: Vue.filter('formatoMoneda')("0")
           }
         },
         idModa:  uuid.v4(),
@@ -424,6 +434,7 @@
       }
     },
     computed:{
+
         rules(){
             if(this.enajenante.nacionalidad == 'mexicano' && this.enajenante.tipoPersona == 'pf'){
               return {
@@ -487,7 +498,10 @@
               curp:'',rfc:'', nombre:'', apPat:'', fechaNacimiento:'', razonSocial:'',apMat:'',claveIne:''
             },                
             datosParaDeterminarImpuesto:{
-              gananciaObtenida:this.formatter('0'),pagoProvisional:this.formatter('0'), multaCorreccion:this.formatter('0'), montoOperacion:this.formatter('0'),
+              gananciaObtenida: Vue.filter('formatoMoneda')("0"),
+              pagoProvisional: Vue.filter('formatoMoneda')("0"),
+              multaCorreccion: Vue.filter('formatoMoneda')("0"),
+              montoOperacion: Vue.filter('formatoMoneda')("0")
             }
           }
         }
@@ -573,6 +587,7 @@
           } else {
             this.maxProcentajePermitido = Number(Number(Number(this.porcentajeVenta) - Number(porcentajeAsignado)).toFixed(this.$const.PRECISION));
           }
+          this.calcularMontoOperacion(this.form.porcentajeCompra);
         this.$bvModal.show(this.idModa);
       },
       async updateCurp(){
@@ -630,7 +645,7 @@
           this.form.datosPersonales.fechaNacimiento = "";
         }
       },
-
+/*
       formatter(value){
         const formatter  = new Intl.NumberFormat('en-US', {
           style: 'currency',
@@ -638,22 +653,24 @@
           minimumFractionDigits: 2
         });
         return formatter.format(value);
-      },
+      },*/
 
       formatoMoneda(name){
         let self = this;
         if(this.$v.form.datosParaDeterminarImpuesto[name].$model){
-          let numero = this.formatoNumero(this.$v.form.datosParaDeterminarImpuesto[name].$model);
-          this.$v.form.datosParaDeterminarImpuesto[name].$model =  this.formatter(numero);
+          //let numero = this.formatoNumero(this.$v.form.datosParaDeterminarImpuesto[name].$model);
+          //this.$v.form.datosParaDeterminarImpuesto[name].$model =  this.formatter(numero);
+          this.$v.form.datosParaDeterminarImpuesto[name].$model = Vue.filter('formatoMoneda')(this.$v.form.datosParaDeterminarImpuesto[name].$model)
           this.updateInfo = this.updateInfo+1;
+
         } else{
           return null;
         }
       },
-
+/*
       formatoNumero(numberStr){
         return  Vue.filter('toNumber')(numberStr +"");
-      },
+      },*/
 
       costosObtenidos(res){
         this.calculandoCostos = false;
@@ -684,6 +701,13 @@
           } else{
               return salida;
           }
+      },
+
+      calcularMontoOperacion(val){
+          let procenttaje = (val / 100);
+          let montoOperacionGbl =  Vue.filter('toNumber')(this.montoOperacionGbl);          
+          let montoCorrespondiente =  montoOperacionGbl * (val / 100);
+          this.$v.form.datosParaDeterminarImpuesto.montoOperacion.$model = Vue.filter('formatoMoneda')( montoCorrespondiente );      
       }
     },
     watch: {
@@ -698,6 +722,7 @@
         deep: true
 
       }
+
     }
   }
 </script>

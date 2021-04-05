@@ -39,15 +39,15 @@
         </b-col> 
         <b-col cols="12" md="6">
           <b-form-group label="RFC" label-for="rfc-input" >
-            <b-form-input id="rfc-input" name="rfc" v-model="$v.form.datosValuo.valuador.rfc.$model" style="background-color: #e5f2f5 !important" placeholder="RFC" @change="validar" 
+            <b-form-input  v-uppercase id="rfc-input" name="rfc" v-model="$v.form.datosValuo.valuador.rfc.$model" style="background-color: #e5f2f5 !important" placeholder="RFC" @change="validar" 
              :state="$v.form.datosValuo.valuador.rfc.$dirty ? !$v.form.datosValuo.valuador.rfc.$error : null"  aria-describedby="rfc-input-feedback"></b-form-input>
               <small id="rfc-input-feedback"  class="position-absolute">
-                        <span v-if="!$v.form.datosValuo.valuador.rfc.required"  class="form-text text-danger">
-                          El RFC es requerido.
-                        </span>
-                        <span v-if="!$v.form.datosValuo.valuador.rfc.rfcPattern"  class="form-text text-danger">
-                          El RFC no cumple con la regla de validación.
-                        </span>
+                <span v-if="!$v.form.datosValuo.valuador.rfc.required"  class="form-text text-danger">
+                  El RFC es requerido.
+                </span>
+                <span v-if="!$v.form.datosValuo.valuador.rfc.rfcPattern"  class="form-text text-danger">
+                  El RFC no cumple con la regla de validación.
+                </span>
               </small>
           </b-form-group>
         </b-col>          

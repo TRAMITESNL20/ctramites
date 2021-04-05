@@ -116,6 +116,25 @@ Vue.prototype.$const = {
    PRECISION: 3
 }
 
+Vue.filter('toNumber', function (value) {
+    return Number((value).replace(/[^0-9.-]+/g,""));   
+});
+
+Vue.filter('formatoMoneda', function (value) {
+    let numero = Vue.filter('toNumber')(value +"");
+    return Vue.filter('toCurrency')(numero +""); 
+});
+
+Vue.directive('uppercase',
+  {
+    inserted: function(el, _, vnode) {
+      el.addEventListener('input', async function(e) {
+        e.target.value = e.target.value.toUpperCase()
+        vnode.componentInstance.$emit('input', e.target.value.toUpperCase())
+      })
+    }
+  })
+
 const app = new Vue({
     el: '#app',
 });
