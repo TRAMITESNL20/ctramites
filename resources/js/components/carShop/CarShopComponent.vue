@@ -261,31 +261,63 @@
             if( info.camposComplementaria && info.detalle && info.detalle.Complementaria){
               tramitesJson.importe_tramite = info.detalle.Complementaria['Cantidad a cargo'] ;
             } else {
-              
-                      tramitesJson.importe_tramite = info.detalle && info.detalle.Salidas ?  info.detalle.Salidas['Importe total'] : info.costo_final ;
+              tramitesJson.importe_tramite = info.detalle && info.detalle.Salidas ?  info.detalle.Salidas['Importe total'] : info.costo_final ;
             }
             tramitesJson.detalle = [];
-            tramitesJson.detalle[0] = { 
-              concepto : info.partidas ? info.partidas[0].descripcion : tramitesJson.nombre,//ponere nombre tramite
-              partida: info.partidas ? info.partidas[0].id_partida : null,
-              importe_concepto:tramitesJson.importe_tramite         
-            }
-            let descuentosAplicados = [];
-            if(info.detalle && info.detalle.descuentos && Array.isArray(info.detalle.descuentos )  && info.detalle.descuentos.length > 0  ){
-              let losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "No aplica" );   
-              losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "El numero de oficio no coincide con el trámite" );    
-              if( losdescuentos && losdescuentos.length > 0 ){
-                info.detalle.descuentos.forEach( descuento => {
-                  let descuentoAplicado =  {
-                          concepto_descuento: descuento.concepto_descuento,
-                          importe_descuento: descuento.importe_subsidio,
-                          partida_descuento: descuento.partida_descuento
-                        }
-                        descuentosAplicados.push( descuentoAplicado )
-                });
-                tramitesJson.detalle[0].descuentos = descuentosAplicados;               
+
+            if(info && info.detalle && info.detalle.Salidas){
+              
+
+              
+              tramitesJson.detalle[0] = {
+                concepto : 'Impuesto correspondiente a la entidad federativa',
+                partida: 56754,
+                importe_concepto: Number(Number(info.detalle.Salidas['Impuesto correspondiente a la entidad federativa']).toFixed(this.$const.PRECISION))      
+              }
+              tramitesJson.detalle[1] = {
+                concepto : 'Parte actualizada del impuesto',
+                partida: 57910,
+                importe_concepto:  Number(Number(info.detalle.Salidas['Parte actualizada del impuesto']).toFixed(this.$const.PRECISION))  
+              }
+
+              tramitesJson.detalle[2] = {
+                concepto : 'Recargos',
+                partida: 57612,
+                importe_concepto: Number(Number(info.detalle.Salidas['Recargos']).toFixed(this.$const.PRECISION))  
+              }
+               tramitesJson.detalle[3] = {
+                concepto : 'Multa corrección fiscal',
+                partida: 4,
+                importe_concepto: Number(Number(info.detalle.Salidas['Multa corrección fiscal']).toFixed(this.$const.PRECISION))     
+              }
+            } else {
+              tramitesJson.detalle[0] = { 
+                concepto : info.partidas ? info.partidas[0].descripcion : tramitesJson.nombre,//ponere nombre tramite
+                partida: info.partidas ? info.partidas[0].id_partida : null,
+                importe_concepto:tramitesJson.importe_tramite         
+              }
+
+              let descuentosAplicados = [];
+              if(info.detalle && info.detalle.descuentos && Array.isArray(info.detalle.descuentos )  && info.detalle.descuentos.length > 0  ){
+                let losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "No aplica" );   
+                losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "El numero de oficio no coincide con el trámite" );    
+                if( losdescuentos && losdescuentos.length > 0 ){
+                  info.detalle.descuentos.forEach( descuento => {
+                    let descuentoAplicado =  {
+                            concepto_descuento: descuento.concepto_descuento,
+                            importe_descuento: descuento.importe_subsidio,
+                            partida_descuento: descuento.partida_descuento
+                          }
+                          descuentosAplicados.push( descuentoAplicado )
+                  });
+                  tramitesJson.detalle[0].descuentos = descuentosAplicados;               
+                }
               }
             }
+
+            console.log(JSON.parse(JSON.stringify(tramitesJson)))
+
+ 
             listadoTramites.push( tramitesJson );
           });
           });
