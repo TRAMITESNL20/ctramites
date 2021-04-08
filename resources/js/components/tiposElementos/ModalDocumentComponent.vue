@@ -13,10 +13,16 @@
                     <h4 class="modal-title">Ingresa los documentos correspondientes</h4>
                 </div>
                 <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body">
-                
+                    
                     <h3>Tramite id: {{tramiteDoc.id}} </h3>
 
                     <div class="input-group">
+                        
+                        <div id="docAlert" class="w-100">
+                            <div role="alert" class="alert alert-warning alert-dismissible fade show ">Ocurrio un error al guardar el documento intente nuevamente 
+                            <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true">×</span></button></div>
+                        </div>
+
                         <div class="input-group-prepend">
                             <span id="inputGroupFileAddon01" class="input-group-text">
                             CALCULO DEL ISR CONFORME AL 126 LISR
@@ -31,10 +37,12 @@
                             accept=".pdf"
                             @change="previewFiles(tramiteDoc.id , index)" >
 
-                            <label for="documento126" class="custom-file-label"
-                            ><span id="documento126-namefile">
-                                {{  "Seleccione archivo" }}
-                            </span></label>
+                            <label class="custom-file-label"
+                            ><span>
+                                {{ fileName }}
+                            </span>
+                            </label>
+                      
                         </div>
                     </div>      
                 </div>
@@ -64,17 +72,26 @@ export default {
         return{
             files : [],
             fileById: '',
-            filesx: ''
+            filesx: '',
+            fileName: 'Seleccione archivo',
+            showAlert: 0
         }
+    },
+    mounted(){
+        $('#modalDocument').appendTo("body");
+         $("#docAlert").hide();
     },
     methods:{
         enviarDocumentos(){
             $('#saveDocument').addClass('spinner-border spinner-border-sm text-light');
-
             var url =  process.env.TESORERIA_HOSTNAME + "/save-files";
-                axios.post(url, this.files).then(response => {
-                    console.log(response);
-                    $('#modalDocument').modal('hide');
+                axios.post(url, this.files).then(response => {                    
+                    if (response.data.code === 200) {
+                        $('#modalDocument').modal('hide');                        
+                    }else{
+                        $("#docAlert").show();
+                    }
+                    
                 }).catch(error => {
                     console.log("error al enviar los documentos");
                     console.log(error)
@@ -85,6 +102,13 @@ export default {
 
         },
         previewFiles(id, index){
+            
+
+
+                console.log('/////');
+                var i = $(this).prev('label').clone();
+                var auxName = $('#'+id)[0].files[0].name;
+                this.fileName =auxName;      
 
             function getBase64(file) {
             return new Promise((resolve, reject) => {
