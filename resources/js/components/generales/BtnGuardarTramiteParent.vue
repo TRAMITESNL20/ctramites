@@ -123,11 +123,13 @@
               }
 
               let archivosCargados = true;
-              informacion.camposConfigurados.forEach(campo => { 
-                if(campo.tipo == 'file' ){
-                  archivosCargados = archivosCargados && campo.archivoCargado;
-                }
-              });
+              if(informacion.camposConfigurados){
+                informacion.camposConfigurados.forEach(campo => { 
+                  if(campo.tipo == 'file' ){
+                    archivosCargados = archivosCargados && campo.archivoCargado;
+                  }
+                });
+              }
               if(archivosCargados){
                 formData.append('required_docs', 1);  
               } else {

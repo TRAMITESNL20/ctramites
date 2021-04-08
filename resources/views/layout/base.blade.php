@@ -877,7 +877,7 @@
 					<div class="d-flex flex-column">
 						<a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ $user ? $user->name : "" }} {{ $user ? $user->fathers_surname : "" }} </a>
 						<div class="text-muted mt-1">{{ $user ? $user->role->description : '' }}</div>
-						@if ($user && $user->notary)
+						@if ($user && isset($user->notary))
 							<div class="text-muted">{{$user->notary ? "Notaría #" : ''}}{{ $user->notary->notary_number ?? '' }}</div>
 						@endif
 						<div class="navi mt-2">

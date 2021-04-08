@@ -123,9 +123,9 @@
 					<td class="columna">FECHA DE ESCRITURA PÚBLICA O MINUTA</td>
 				</tr>
 				<tr>
-					<td class="columna value" style="width: 33%;">{{ $info->solicitudes[0]->info->campos->{'Escritura'} }}</td>
+					<td class="columna value" style="width: 33%;">{{ $info->solicitudes[0]->info->campos->{'Escritura'} ?? '' }}</td>
 					<td class="columna value" style="width: auto;" colspan="2"></td>
-					<td class="columna value" style="width: 33%;">{{ $info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'} }}</td>
+					<td class="columna value" style="width: 33%;">{{ $info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'} ?? ''}}</td>
 				</tr>
 				<tr>
 					<td class="columna" style="width: 1%">MUNICIPIO</td>
@@ -133,9 +133,9 @@
 					<td class="columna" style="width: 1%" >DOMICILIO DE UBICACIÓN DEL INMUEBLE</td>
 				</tr>			
 				<tr>
-					<td class="columna value" >{{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->municipio->{'nombre'} }}</td>
-					<td class="columna value" colspan="2">{{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->{'expediente'} }}</td>
-					<td class="columna value" >{{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->direccion->datos_direccion[0]->{'calle'} }} </td>
+					<td class="columna value" >{{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->municipio->{'nombre'}  ?? ''}}</td>
+					<td class="columna value" colspan="2">{{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->{'expediente'} ?? '' }}</td>
+					<td class="columna value" >{{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->direccion->datos_direccion[0]->{'calle'} ?? '' }} </td>
 				</tr>
 			<tr >
 				<td class="titulo1" colspan="4"> <strong> DATOS DEL ENAJENANTE </strong></td>
