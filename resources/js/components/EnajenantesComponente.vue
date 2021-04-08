@@ -1,6 +1,6 @@
  <template>
     <div>
-
+<!--
         <b-row>
             <b-col cols="12" md="6">
                 <b-form-group label="MONTO DE OPERACIÓN" label-for="monto-operacion-gral-input" >
@@ -14,7 +14,7 @@
                   </b-input-group>
                 </b-form-group>
             </b-col>
-        </b-row>      
+        </b-row> -->     
         <b-row > 
             <b-col>
                 <b-form-group label="Porcentaje que enajena" label-for="procentaje-venta-input" >
@@ -40,7 +40,6 @@
         <b-row >
             <b-col  cols="12" >
                 <div class="table-responsive">
-
                     <table class="table  table-striped">
                         <thead style="border-bottom: solid;">
                             <tr>
@@ -153,8 +152,9 @@
                 return this.enajentantes.map( enajentante => enajentante.datosPersonales.curp );
             },
 
-            totalMontoOperacionDeclarado(){
+/*            totalMontoOperacionDeclarado(){
                 let eltotal = 0;
+                debugger;
                 let campoExpedientes = this.configCostos.campos.find(campo => campo.nombre == "Expedientes");
                 if(campoExpedientes && campoExpedientes.valor){
                     if(campoExpedientes.valor.expedientes){
@@ -173,12 +173,13 @@
                       Command: toastr.error("Error!", "No se encontro configurado la seccion de expedientes, Consulte al administrador del sistema");
                     }
                 }
-                return eltotal; 
-            },
 
+                return eltotal; 
+            },*/
+/*
             totalMontoOperacionDeEnajentantes(){
                 return Vue.filter('toNumber')(this.montoOperacion);
-            }
+            }*/
         },
 		mounted(){
             if(this.campo.valor){
@@ -190,7 +191,7 @@
                 this.motivo = this.campo.valor.motivo;
                 
                 this.calcularTotalPorcentaje();
-                //this.calcularTotalMontoOperacionDeEnajentantes();
+                this.calcularTotalMontoOperacionDeEnajentantes();
             }
             this.validar();
 		},
@@ -218,22 +219,23 @@
                 porcentajeTotalCompra: 0,
                 porcentajeVenta:100,
                 motivo:'',
-                //totalMontoOperacionDeEnajentantes:null,
-                montoOperacion:Vue.filter('formatoMoneda')("0")
+                totalMontoOperacionDeEnajentantes:null,
+                montoOperacion:Vue.filter('formatoMoneda')("0"),
+                totalMontoOperacionDeclarado:null
 	        }
 	    },
 		methods : {
             eliminar( index ){
                 this.enajentantes.splice(index, 1);
                 this.calcularTotalPorcentaje();
-                //this.calcularTotalMontoOperacionDeEnajentantes();
+                this.calcularTotalMontoOperacionDeEnajentantes();
             },
 
            	addEnajentante(enajentante){
            		this.enajentantes.push(enajentante);
                 //this.$forceUpdate();
                 this.calcularTotalPorcentaje();
-                //this.calcularTotalMontoOperacionDeEnajentantes();
+                this.calcularTotalMontoOperacionDeEnajentantes();
            	},
 
             editaEnajentante(response){
@@ -252,7 +254,7 @@
             	this.enajentantes[response.index] = response.enajenante;
                 
                 this.calcularTotalPorcentaje();
-                //this.calcularTotalMontoOperacionDeEnajentantes();
+                this.calcularTotalMontoOperacionDeEnajentantes();
 
            	},
 
@@ -301,7 +303,46 @@
                     return enaj;
                 });
                 this.validar();                
+            },
+
+            calcularTotalMontoOperacionDeEnajentantes(){
+                let eltotal = 0;
+                if(this.enajentantes && this.enajentantes.length > 0){
+                    this.enajentantes.forEach( enajenante => {
+                        let total = Vue.filter('toNumber')(enajenante.datosParaDeterminarImpuesto.montoOperacion);
+                        eltotal = eltotal + total;
+                    });
+                }
+                this.totalMontoOperacionDeEnajentantes = eltotal;
+                this.calcularTotalMontoOperacionDeclarado();
+            },
+
+            calcularTotalMontoOperacionDeclarado(){
+                let eltotal = 0;
+                
+                let campoExpedientes = this.configCostos.campos.find(campo => campo.nombre == "Expedientes");
+                console.log(JSON.parse(JSON.stringify(campoExpedientes)))
+                if(campoExpedientes && campoExpedientes.valor){
+                    if(campoExpedientes.valor.expedientes){
+                      if( campoExpedientes.valor.expedientes.length > 0){
+                        campoExpedientes.valor.expedientes.forEach( expediente => {
+                          
+                          if( expediente.insumos && expediente.insumos.data && expediente.insumos.data.valor_operacion){
+                            let total = Vue.filter('toNumber')(expediente.insumos.data.valor_operacion);
+                            eltotal = eltotal + total;
+                            return eltotal; 
+                          }
+                          
+                        });
+                      }
+                    } else {
+                      Command: toastr.error("Error!", "No se encontro configurado la seccion de expedientes, Consulte al administrador del sistema");
+                    }
+                }
+                this.totalMontoOperacionDeclarado = eltotal;
+                //return eltotal; 
             }
+
 		},
 
         watch: {

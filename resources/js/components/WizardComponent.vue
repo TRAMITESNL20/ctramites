@@ -1,134 +1,148 @@
 <template>
-    <div class="card card-custom card-transparent">
-                <div class="card-body p-0">
-                    <!--begin: Wizard-->
-                    <div class="wizard wizard-4" id="kt_wizard" data-wizard-state="first" data-wizard-clickable="true" >
-                        <!--begin: Wizard Nav-->
-                        <div class="wizard-nav">
-                            <div class="wizard-steps">
-                                <!--begin::Wizard StepS Nav-->
-                                <div v-for="(step, i) in steps" class="wizard-step" data-wizard-type="step" :data-wizard-state="step.state" :id="step.id" v-on:click="goTo(step.clickGotTo)">
-                                    <div class="wizard-wrapper">
-                                        <div class="wizard-number">
-                                          {{ step.wizardNumber}}
-                                        </div>
-                                        <div class="wizard-label">
-                                            <div class="wizard-title">
-                                              {{ step.wizardTitle}}
-                                            </div>
-                                            <div class="wizard-desc">
-                                                {{ step.wizardDesc}}
-                                            </div>
-                                        </div>
-                                    </div>
+    <div class="card card-custom card-transparent" >
+        <div class="card-body p-0" >
+            <!--begin: Wizard-->
+            <div class="wizard wizard-4" id="kt_wizard" data-wizard-state="first" data-wizard-clickable="true" >
+                <!--begin: Wizard Nav-->
+                <div class="wizard-nav">
+                    <div class="wizard-steps">
+                        <!--begin::Wizard StepS Nav-->
+                        <div v-for="(step, i) in steps" class="wizard-step" data-wizard-type="step" :data-wizard-state="step.state" :id="step.id" v-on:click="goTo(step.clickGotTo)">
+                            <div class="wizard-wrapper">
+                                <div class="wizard-number">
+                                  {{ step.wizardNumber}}
                                 </div>
-                                <!--end::Wizard StepS Nav-->
-                            </div>
-                        </div>
-                        <!--end: Wizard Nav-->
-                        <!--begin: Wizard Body-->
-                        <div class="card card-custom card-shadowless rounded-top-0">
-                            <div class="card-body p-0">
-                                <div class="row justify-content-center py-8 px-8 py-lg-15 px-lg-10">
-                                    <div class="col-xl-12 col-xxl-12">
-                                        <!--begin: Wizard Form-->
-                                            <!--begin: Wizard Step 1 Campos tramite-->
-                                            <div class="pb-5 c" data-wizard-type="step-content" data-wizard-state="current" id="step1">
-                                              <div v-if="tramite.id_tramite == TRAMITE_5_ISR && camposGuardadosObtenidos">
-                                                <radio-option-component
-                                                  :default="tipoTramite"
-                                                  @valueRadio="cambioRadio"
-                                                  :disabledDefault='tipoTramiteDisabled'></radio-option-component>
-                                              </div>
-                                              <div v-if="(tipoTramite == 'normal' || tipoTramite == 'declaracionEn0') && camposGuardadosObtenidos" >
-                                                <campos-tramite-component :tramite="tramite" v-if="currentStep == 1"
-                                                :formularioValido="formularioValido" @updatingScore="updateScore" :comprobarEstadoFormularioCount="comprobarEstadoFormularioCount" @updatingFiles="updatingFiles" :infoGuardada="infoGuardada" :declararEn0="declararEn0" :usuario="usuario">
-
-                                                </campos-tramite-component>
-                                              </div>
-                                              <div v-else-if="tipoTramite == 'complementaria' && camposGuardadosObtenidos">
-                                                  <formulario-complementaria-component @updatingScore="updateScore"
-                                                  @sendData="setDatosComplementaria" :infoGuardada="infoGuardada">
-                                                  </formulario-complementaria-component>
-                                              </div>
-                                            </div>
-                                            <!--end: Wizard Step 1-->
-                                            <!--begin: Wizard Step 2-->
-                                            <div class="pb-5" data-wizard-type="step-content" id="step2" >
-                                              <solicitantes-component v-if="currentStep == 2 && camposGuardadosObtenidos" @updatingSolicitante="updateSolicitante" :solicitantesGuardados="solicitantesGuardados" :usuario="usuario"></solicitantes-component>
-                                            </div>
-                                            <!--end: Wizard Step 2-->
-                                            <!--begin: Wizard Step 3-->
-                                            <div class="pb-5" data-wizard-type="step-content" id="step3" >
-                                                <div v-if="tramite.id_tramite == TRAMITE_5_ISR  && tipoTramite != 'complementaria'">
-                                                  <resumen-tramite-5-isr-component v-if="currentStep == 3"
-                                                  :tipoTramite="tipoTramite" 
-                                                  :datosComplementaria="datosComplementaria" 
-                                                  :files="files" 
-                                                  :usuario="usuario">
-                                                  </resumen-tramite-5-isr-component>
-                                                </div>
-                                                <div v-else>
-                                                  <resumen-tramite-component v-if="currentStep == 3" 
-                                                  :tipoTramite="tipoTramite" 
-                                                  :datosComplementaria="datosComplementaria" 
-                                                  ></resumen-tramite-component>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-between border-top mt-5 pt-10">
-                                                <div class="mr-2">
-                                                    <button type="button" class="btn btn-light-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-prev">Previous</button>
-                                                </div>
-                                                <div >
-                                                  <div class="btn-group" role="group" aria-label="Basic example">
-                                                     <btn-guardar-tramite-component
-                                                      type="temporal"
-                                                      :tipoTramite="tipoTramite"
-                                                      :files="files"
-                                                      :datosComplementaria="datosComplementaria"
-                                                      :idUsuario="idUsuario"
-                                                      :infoGuardadaFull="infoGuardadaFull" v-if="currentStep != 3" labelBtn="Guardar y Continuar después "
-                                                      @tramiteAgregadoEvent="tramiteAgregadoEvent"
-                                                      ></btn-guardar-tramite-component>
-
-                                                    <btn-guardar-tramite-component
-                                                      :btnClass="['notary_titular', 'notary_substitute', 'notary_payments', 'notary_capturist_payments'].includes(user.role_name) ? 'btn btn-secondary font-weight-bolder text-uppercase px-9 py-4' : null"
-                                                      :tipoTramite="tipoTramite"
-                                                      :files="files"
-                                                      :datosComplementaria="datosComplementaria"
-                                                      :idUsuario="idUsuario"
-                                                      :infoGuardadaFull="infoGuardadaFull"
-                                                      v-if="currentStep == 3" 
-                                                      :labelBtn="['notary_titular', 'notary_substitute', 'notary_payments', 'notary_capturist_payments'].includes(user.role_name) ? 'Iniciar Nuevo Tramite' : 'Finalizar'"
-                                                      @tramiteAgregadoEvent="tramiteAgregadoEvent"
-                                                      ></btn-guardar-tramite-component>
-                                                    <btn-guardar-tramite-component
-                                                      type="finalizar"
-                                                      :tipoTramite="tipoTramite"
-                                                      :files="files"
-                                                      :datosComplementaria="datosComplementaria"
-                                                      :idUsuario="idUsuario"
-                                                      :infoGuardadaFull="infoGuardadaFull"
-                                                      v-if="currentStep == 3 && ['notary_titular', 'notary_substitute', 'notary_payments', 'notary_capturist_payments'].includes(user.role_name)"
-                                                      labelBtn="Pagar"
-                                                      @tramiteAgregadoEvent="tramiteAgregadoEvent"
-                                                      ></btn-guardar-tramite-component>
-                                                    <button type="button" id="btnWizard" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-next" v-on:click="next()" v-if="currentStep != 3">
-                                                        Siguiente
-                                                    </button>
-                                                  </div>
-                                                </div>
-                                            </div>
-                                            <!--end: Wizard Actions-->
-                                        <!--end: Wizard Form-->
+                                <div class="wizard-label">
+                                    <div class="wizard-title">
+                                      {{ step.wizardTitle}}
+                                    </div>
+                                    <div class="wizard-desc">
+                                        {{ step.wizardDesc}}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!--end: Wizard Bpdy-->
+                        <!--end::Wizard StepS Nav-->
                     </div>
-                    <!--end: Wizard-->
                 </div>
+                <!--end: Wizard Nav-->
+                <!--begin: Wizard Body-->
+                <div class="card card-custom card-shadowless rounded-top-0">
+                    <div class="card-body p-0">
+                        <div class="row justify-content-center py-8 px-8 py-lg-15 px-lg-10">
+                            <div class="col-xl-12 col-xxl-12">
+                                <!--begin: Wizard Form-->
+                                    <!--begin: Wizard Step 1 Campos tramite-->
+                                    <div class="pb-5 c" data-wizard-type="step-content" data-wizard-state="current" id="step1">
+                                      <div v-if="tramite.id_tramite == TRAMITE_5_ISR && camposGuardadosObtenidos">
+                                        <radio-option-component
+                                          :default="tipoTramite"
+                                          @valueRadio="cambioRadio"
+                                          :disabledDefault='tipoTramiteDisabled'></radio-option-component>
+                                      </div>
+                                      <div v-if="(tipoTramite == 'normal' || tipoTramite == 'declaracionEn0') && camposGuardadosObtenidos" >
+                                        <campos-tramite-component :tramite="tramite" v-if="currentStep == 1"
+                                        :formularioValido="formularioValido" @updatingScore="updateScore" :comprobarEstadoFormularioCount="comprobarEstadoFormularioCount" @updatingFiles="updatingFiles" :infoGuardada="infoGuardada" :declararEn0="declararEn0" :usuario="usuario">
+
+                                        </campos-tramite-component>
+                                      </div>
+                                      <div v-else-if="tipoTramite == 'complementaria' && camposGuardadosObtenidos">
+                                          <formulario-complementaria-component @updatingScore="updateScore"
+                                          @sendData="setDatosComplementaria" :infoGuardada="infoGuardada">
+                                          </formulario-complementaria-component>
+                                      </div>
+                                    </div>
+                                    <!--end: Wizard Step 1-->
+                                    <!--begin: Wizard Step 2-->
+                                    <div class="pb-5" data-wizard-type="step-content" id="step2" >
+                                      <solicitantes-component v-if="currentStep == 2 && camposGuardadosObtenidos" @updatingSolicitante="updateSolicitante" :solicitantesGuardados="solicitantesGuardados" :usuario="usuario"></solicitantes-component>
+                                    </div>
+                                    <!--end: Wizard Step 2-->
+                                    <!--begin: Wizard Step 3-->
+                                    <div class="pb-5" data-wizard-type="step-content" id="step3" >
+                                        <div v-if="tramite.id_tramite == TRAMITE_5_ISR  && tipoTramite != 'complementaria'">
+                                          <resumen-tramite-5-isr-component v-if="currentStep == 3"
+                                          :tipoTramite="tipoTramite" 
+                                          :datosComplementaria="datosComplementaria" 
+                                          :files="files" 
+                                          :usuario="usuario">
+                                          </resumen-tramite-5-isr-component>
+                                        </div>
+                                        <div v-else>
+                                          <resumen-tramite-component v-if="currentStep == 3" 
+                                          :tipoTramite="tipoTramite" 
+                                          :datosComplementaria="datosComplementaria" 
+                                          ></resumen-tramite-component>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between border-top mt-5 pt-10">
+                                        <div class="mr-2">
+                                            <button type="button" class="btn btn-light-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-prev">Previous</button>
+                                        </div>
+                                        <div >
+                                          <div class="btn-group" role="group" aria-label="Basic example">
+                                             <btn-guardar-tramite-component
+                                              type="temporal"
+                                              :tipoTramite="tipoTramite"
+                                              :files="files"
+                                              :datosComplementaria="datosComplementaria"
+                                              :idUsuario="idUsuario"
+                                              :infoGuardadaFull="infoGuardadaFull" v-if="currentStep != 3" labelBtn="Guardar y Continuar después "
+                                              @tramiteAgregadoEvent="tramiteAgregadoEvent"
+                                              ></btn-guardar-tramite-component>
+
+                                            <btn-guardar-tramite-component
+                                              :btnClass="['notary_titular', 'notary_substitute', 'notary_payments', 'notary_capturist_payments'].includes(user.role_name) ? 'btn btn-secondary font-weight-bolder text-uppercase px-9 py-4' : null"
+                                              :tipoTramite="tipoTramite"
+                                              :files="files"
+                                              :datosComplementaria="datosComplementaria"
+                                              :idUsuario="idUsuario"
+                                              :infoGuardadaFull="infoGuardadaFull"
+                                              v-if="currentStep == 3" 
+                                              :labelBtn="['notary_titular', 'notary_substitute', 'notary_payments', 'notary_capturist_payments'].includes(user.role_name) ? 'Iniciar Nuevo Tramite' : 'Finalizar'"
+                                              @tramiteAgregadoEvent="tramiteAgregadoEvent"
+                                              ></btn-guardar-tramite-component>
+                                            <btn-guardar-tramite-component
+                                              type="finalizar"
+                                              :tipoTramite="tipoTramite"
+                                              :files="files"
+                                              :datosComplementaria="datosComplementaria"
+                                              :idUsuario="idUsuario"
+                                              :infoGuardadaFull="infoGuardadaFull"
+                                              v-if="currentStep == 3 && ['notary_titular', 'notary_substitute', 'notary_payments', 'notary_capturist_payments'].includes(user.role_name)"
+                                              labelBtn="Pagar"
+                                              @tramiteAgregadoEvent="tramiteAgregadoEvent"
+                                              ></btn-guardar-tramite-component>
+                                            <button type="button" id="btnWizard" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-next" v-on:click="next()" v-if="currentStep != 3">
+                                                Siguiente
+                                            </button>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <!--end: Wizard Actions-->
+                                <!--end: Wizard Form-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end: Wizard Bpdy-->
+            </div>
+            <!--end: Wizard-->
+
+            <div class="card card-custom card-shadowless rounded-top-0" style="display: none;" id="redirecLoad">
+                  <div class="card-body p-0">
+                    <div class="row justify-content-center py-8 px-8 py-lg-15 px-lg-10">
+                      <div class="col-xl-12 col-xxl-12">
+                        <div class="text-center">
+                          <b-spinner variant="success"  style="width: 3rem; height: 3rem;" label="Large Spinner" type="grow"></b-spinner>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+
+        </div>
+
     </div>
 </template>
 
@@ -213,6 +227,10 @@
 
             if(data.respuesta){
               if( data.response.data && data.response.data.Code && data.response.data.Code == '200' ){
+                $("#kt_wizard").fadeOut('slow', ()=> {
+                  
+                  $("#redirecLoad").fadeIn();
+                })
                 let totalAgregados = data.response ? 1 : data.responses.length;
                 let totalCarritoActual = parseInt( $("#totalTramitesCarrito" ).text( ));
                 $("#totalTramitesCarrito" ).text( totalCarritoActual + totalAgregados  );
