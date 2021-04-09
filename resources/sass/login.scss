@@ -1,0 +1,35 @@
+#kt_login_signin_form, #kt_login_recovery_form{
+	img{
+		margin: 0px 50px;
+	}
+
+	.form-control{
+		border-radius: 40px;
+		color: white!important;
+		background-color: #CCC !important;
+		border: 1px solid #CCC;
+		font-size: 17px;
+
+		&::placeholder{
+			color: white!important;
+		}
+
+		&:focus{
+			color: #000 !important;
+			background-color: white !important;
+		}
+	}
+
+	.btn{
+		background-color: #666666;
+		border: 1px solid #666666;
+		color: white !important;
+		border-radius: 40px !important;
+		font-size: 17px !important;
+
+		&:hover{
+			color: #000 !important;
+			background-color: white !important;
+		}
+	}
+}

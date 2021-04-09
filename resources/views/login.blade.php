@@ -34,9 +34,9 @@
 				<div class="fv-plugins-message-container"></div>
 			</div>
 			<!--begin::Action-->
-			<div class="form-group d-flex flex-wrap justify-content-between align-items-center">
+			<div class="form-group d-flex flex-wrap justify-content-between align-items-center flex-column">
+				<button type="submit" id="kt_login_signin_submit" class="btn font-weight-bold px-9 py-4 my-3"><i class="fas fa-spinner fa-spin mr-2 d-none"></i> Ingresar</button>
 				<a href="{{ url()->route("password/recovery") }}" class="text-dark-50 text-hover-primary my-3 mr-2" id="kt_login_forgot">¿Olvidaste tu contraseña?</a>
-				<button type="submit" id="kt_login_signin_submit" class="btn btn-primary font-weight-bold px-9 py-4 my-3"><i class="fas fa-spinner fa-spin mr-2 d-none"></i> Inicar sesión</button>
 			</div>
 			<!--end::Action-->
 		</form> 
