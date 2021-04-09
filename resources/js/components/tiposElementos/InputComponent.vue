@@ -7,7 +7,7 @@
       <input
         :name="campo.nombre"
         type="text"
-        class="form-control  form-control-lg "
+        class="form-control"
         style="background-color: #e5f2f5 !important"
         :placeholder="[[campo.nombre]]"
         :id="[[campo.campo_id]]"

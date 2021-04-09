@@ -12,6 +12,7 @@ class LoginController extends Controller
 			"subtitle" => "Inicia Sesión",
 			"empty_layout" => true,
 			"background_content" => "#ffffff",
+			"fluid_container" => true,
 			"script" => [
 				// asset("js/login.js")
 			]

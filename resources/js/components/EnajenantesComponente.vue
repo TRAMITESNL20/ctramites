@@ -1,31 +1,45 @@
  <template>
-  <div>
+    <div>
+<!--
+        <b-row>
+            <b-col cols="12" md="6">
+                <b-form-group label="MONTO DE OPERACIÓN" label-for="monto-operacion-gral-input" >
+                  <b-input-group  >
+                    <template #prepend>
+                      <b-input-group-text >$</b-input-group-text>
+                    </template>
+                    <b-form-input
+                      id="monto-operacion-gral-input" name="montoOperacionGral" v-model="montoOperacion" style="background-color: #e5f2f5 !important"
+                       @change="cambioMontoOperacionGBL()"></b-form-input>
+                  </b-input-group>
+                </b-form-group>
+            </b-col>
+        </b-row> -->     
         <b-row > 
-          <b-col>
-            <b-form-group label="Porcentaje que enajena" label-for="procentaje-venta-input" >
-                <b-form-input  id="procentaje-venta-input" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" @input="validar"  :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback" max="100" type="number"  style="background-color: #e5f2f5 !important"></b-form-input>
-                <b-input-group prepend="0" append="100" >
-                    <b-form-input  id="procentaje-venta-rango" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" type="range" max="100" @input="validar" :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback"></b-form-input>
-                </b-input-group>
-                <b-form-invalid-feedback id="porcentajeVenta-input-feedback">
-                    <span v-if="!$v.porcentajeVenta.isMayorQuePorcentajeAsignado"  class="form-text text-danger">
-                       La suma de los porcentajes individuales es mayor al porcentaje de enajenación.
-                    </span>
-                    <span v-if="!$v.porcentajeVenta.isPorcentajeComplete"  class="form-text text-danger">
-                       El porcentaje de venta debe ser de {{$v.porcentajeVenta.$model}}
-                    </span>
-                    <span v-if="!$v.porcentajeVenta.maxValue"  class="form-text text-danger">
-                       El porcentaje de venta debe ser menor o igual a 100
-                    </span>
+            <b-col>
+                <b-form-group label="Porcentaje que enajena" label-for="procentaje-venta-input" >
+                    <b-form-input  id="procentaje-venta-input" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" @input="validar"  :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback" max="100" type="number"  style="background-color: #e5f2f5 !important"></b-form-input>
+                    <b-input-group prepend="0" append="100" >
+                        <b-form-input  id="procentaje-venta-rango" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" type="range" max="100" @input="validar" :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback"></b-form-input>
+                    </b-input-group>
+                    <b-form-invalid-feedback id="porcentajeVenta-input-feedback">
+                        <span v-if="!$v.porcentajeVenta.isMayorQuePorcentajeAsignado"  class="form-text text-danger">
+                           La suma de los porcentajes individuales es mayor al porcentaje de enajenación.
+                        </span>
+                        <span v-if="!$v.porcentajeVenta.isPorcentajeComplete"  class="form-text text-danger">
+                           El porcentaje de venta debe ser de {{$v.porcentajeVenta.$model}}
+                        </span>
+                        <span v-if="!$v.porcentajeVenta.maxValue"  class="form-text text-danger">
+                           El porcentaje de venta debe ser menor o igual a 100
+                        </span>
 
-                </b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>         
+                    </b-form-invalid-feedback>
+                </b-form-group>
+            </b-col>         
         </b-row>
-         <b-row >
+        <b-row >
             <b-col  cols="12" >
                 <div class="table-responsive">
-
                     <table class="table  table-striped">
                         <thead style="border-bottom: solid;">
                             <tr>
@@ -69,8 +83,14 @@
                                 </td>		
                                 <td>
                                     <modal-component 
-                                		@editaEnajentante="editaEnajentante"  :enajenanteEditado="registro" :porcentajeAsignado="porcentajeTotalCompra" :indexEnajenanteEditado="key"
-                                        :porcentajeVenta="$v.porcentajeVenta.$model" :listaCurps="listaCurps" :configCostos="configCostos">
+                                		@editaEnajentante="editaEnajentante"  
+                                        :enajenanteEditado="registro" 
+                                        :porcentajeAsignado="porcentajeTotalCompra" 
+                                        :indexEnajenanteEditado="key"
+                                        :porcentajeVenta="$v.porcentajeVenta.$model" 
+                                        :listaCurps="listaCurps" 
+                                        :configCostos="configCostos"
+                                        :montoOperacionGbl="montoOperacion">
                                 	</modal-component>                    	
                                 </td>
                             </tr>
@@ -92,7 +112,10 @@
         	    <modal-component 
         		@addEnajentante="addEnajentante" v-if="porcentajeTotalCompra < $v.porcentajeVenta.$model" 
                     :porcentajeAsignado="porcentajeTotalCompra" 
-                    :porcentajeVenta="$v.porcentajeVenta.$model" :listaCurps="listaCurps" :configCostos="configCostos">
+                    :porcentajeVenta="$v.porcentajeVenta.$model" 
+                    :listaCurps="listaCurps" 
+                    :configCostos="configCostos"
+                    :montoOperacionGbl="montoOperacion">
         	   </modal-component>
            </b-col>
         </b-row> 
@@ -129,8 +152,9 @@
                 return this.enajentantes.map( enajentante => enajentante.datosPersonales.curp );
             },
 
-            totalMontoOperacionDeclarado(){
+/*            totalMontoOperacionDeclarado(){
                 let eltotal = 0;
+                debugger;
                 let campoExpedientes = this.configCostos.campos.find(campo => campo.nombre == "Expedientes");
                 if(campoExpedientes && campoExpedientes.valor){
                     if(campoExpedientes.valor.expedientes){
@@ -149,14 +173,23 @@
                       Command: toastr.error("Error!", "No se encontro configurado la seccion de expedientes, Consulte al administrador del sistema");
                     }
                 }
+
                 return eltotal; 
-            },
+            },*/
+/*
+            totalMontoOperacionDeEnajentantes(){
+                return Vue.filter('toNumber')(this.montoOperacion);
+            }*/
         },
 		mounted(){
+            if(this.campo.valor){
+                this.montoOperacion =  Vue.filter('formatoMoneda')(this.campo.valor.montoOperacion);
+            }
             if(this.campo.valor && this.campo.valor.enajenantes && this.campo.valor.enajenantes.length > 0){
                 this.enajentantes = this.campo.valor.enajenantes;
                 this.$v.porcentajeVenta.$model  = this.campo.valor.porcentajeVenta;
                 this.motivo = this.campo.valor.motivo;
+                
                 this.calcularTotalPorcentaje();
                 this.calcularTotalMontoOperacionDeEnajentantes();
             }
@@ -186,7 +219,9 @@
                 porcentajeTotalCompra: 0,
                 porcentajeVenta:100,
                 motivo:'',
-                totalMontoOperacionDeEnajentantes:null
+                totalMontoOperacionDeEnajentantes:null,
+                montoOperacion:Vue.filter('formatoMoneda')("0"),
+                totalMontoOperacionDeclarado:null
 	        }
 	    },
 		methods : {
@@ -238,13 +273,36 @@
 
             validar(){
                 this.campo.valido =  this.porcentajeTotalCompra == this.$v.porcentajeVenta.$model;
+
                 let valor = {enajenantes:this.enajentantes, porcentajeVenta:this.$v.porcentajeVenta.$model};
+                valor.montoOperacion = this.montoOperacion;
                 if(this.configCostos.declararEn0){
                     valor.motivo = this.motivo;
                 }
                 this.campo.valor = valor;
                 this.$emit('updateForm', this.campo);
           
+            },
+
+            cambioMontoOperacionGBL(){
+                this.formatoMoneda();
+                this.calcularPorcentajePorEnajenantes();
+            },
+
+            formatoMoneda(){
+                this.montoOperacion = Vue.filter('formatoMoneda')(this.montoOperacion +"");
+                this.validar();
+            },
+
+            calcularPorcentajePorEnajenantes(){
+                this.enajentantes = this.enajentantes.map(enaj => {
+                    let procenttaje = (enaj.porcentajeCompra / 100);
+                    let montoOperacionGbl =  Vue.filter('toNumber')(this.montoOperacion);          
+                    let montoCorrespondiente =  montoOperacionGbl * procenttaje;
+                    enaj.datosParaDeterminarImpuesto.montoOperacion = Vue.filter('formatoMoneda')( montoCorrespondiente ); 
+                    return enaj;
+                });
+                this.validar();                
             },
 
             calcularTotalMontoOperacionDeEnajentantes(){
@@ -256,7 +314,35 @@
                     });
                 }
                 this.totalMontoOperacionDeEnajentantes = eltotal;
+                this.calcularTotalMontoOperacionDeclarado();
+            },
+
+            calcularTotalMontoOperacionDeclarado(){
+                let eltotal = 0;
+                
+                let campoExpedientes = this.configCostos.campos.find(campo => campo.nombre == "Expedientes");
+                console.log(JSON.parse(JSON.stringify(campoExpedientes)))
+                if(campoExpedientes && campoExpedientes.valor){
+                    if(campoExpedientes.valor.expedientes){
+                      if( campoExpedientes.valor.expedientes.length > 0){
+                        campoExpedientes.valor.expedientes.forEach( expediente => {
+                          
+                          if( expediente.insumos && expediente.insumos.data && expediente.insumos.data.valor_operacion){
+                            let total = Vue.filter('toNumber')(expediente.insumos.data.valor_operacion);
+                            eltotal = eltotal + total;
+                            return eltotal; 
+                          }
+                          
+                        });
+                      }
+                    } else {
+                      Command: toastr.error("Error!", "No se encontro configurado la seccion de expedientes, Consulte al administrador del sistema");
+                    }
+                }
+                this.totalMontoOperacionDeclarado = eltotal;
+                //return eltotal; 
             }
+
 		},
 
         watch: {
