@@ -34,7 +34,10 @@ let dotenvplugin = new webpack.DefinePlugin({
 mix.webpackConfig({
 	plugins: [
 		dotenvplugin,
-	]
+	],
+	output : {
+		chunkFilename : "[name].[chunkhash].js"
+	}
 })
 
 mix.js([
