@@ -196,7 +196,9 @@
                       responses = responses.filter(Boolean);
                       responses.forEach( res =>{
                         let indexSolicitud = tramites[res.config.headers.indexTramite].solicitudes.findIndex( solicitud => solicitud.id === res.config.headers.idSolicitud );
+
                         if(tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.enajenante){
+                          tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.detalle = res.data;
                           tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.enajenante.detalle = res.data;
                         } else if( tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.costo_final ){
                           tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.costo_final = res.data[0].costo_final;

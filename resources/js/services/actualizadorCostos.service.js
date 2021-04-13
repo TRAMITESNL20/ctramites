@@ -19,7 +19,7 @@ class ActualizadorCostos {
         monto_operacion: datosParaDeterminarImpuesto.montoOperacion,
         pago_provisional_lisr: datosParaDeterminarImpuesto.pagoProvisional,
         ganancia_obtenida: datosParaDeterminarImpuesto.gananciaObtenida ,
-        fecha_escritura: solicitud.info.campos['Fecha de escritura o minuta']
+        fecha_escritura: solicitud.info.campos['Fecha de escritura o minuta'] || solicitud.info.enajenante.detalle.Entradas.fecha_escritura
       }
 
       let headers = {
