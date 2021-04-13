@@ -1,9 +1,19 @@
 <template>                  
     <div class="container-fluid">
+    <div class="row" v-if="informacion.length > 0">
+      <div class="col-lg-12">
+        <div class="text-center">
+            <b-alert show variant="secondary">
+              {{informacion}}
+            </b-alert>
+          </div>
+      </div>
+    </div>
     <div class="row">
         <!--Grid column-->
         <div class="col-lg-8">
             <!-- Card -->
+            
             <div v-if="!mostrarMetodos && !mostrarReciboPago0">
               <v-container v-if="obteniendoTramites">
                     <v-row>
@@ -80,6 +90,9 @@
     </div>
 </template>
 <script>
+  //import costosApi from '../../services/costosApi.services.js';
+  import actualizadorCostos from '../../services/actualizadorCostos.service.js';
+
     export default {
       props: ['idUsuario'],
         computed:{
@@ -109,7 +122,8 @@
               obteniendoTramites:false,
               costosObtenidos:false,
               mostrarReciboPago0:false,
-              reciboPagoCeroURL:'', tramitesAgrupados:[]
+              reciboPagoCeroURL:'', tramitesAgrupados:[],
+              informacion:''
             }
         },
   
@@ -133,16 +147,68 @@
               this.obteniendoTramites = true;
                 let url = process.env.TESORERIA_HOSTNAME + "/solicitudes-info/" + this.idUsuario;
                 try {
+                  this.informacion = "Obteniendo tramites";
                     let response = await axios.get(url);
-                    let notary_offices = response.data.notary_offices;
+                    //let notary_offices = response.data.notary_offices;
                     let tramites =  response.data.tramites ;
-                    this.construirJSONTramites( tramites );
+                    let arrayPromesasActualizacionDeCostos = [];
+
+                    tramites.forEach(  (tramite, indexTramite) => {
+                      tramite.solicitudes.forEach(  (solicitud) => {
+                         arrayPromesasActualizacionDeCostos.push(actualizadorCostos.getRequestCosto(solicitud, indexTramite, tramite.tramite_id));
+                      });
+                    });
+                    this.informacion = "Actualizando tramites";
+                    axios.all(arrayPromesasActualizacionDeCostos).then(axios.spread((...responses) => {
+                      let updateSolicitudes = [];
+                      responses = responses.filter(Boolean);
+                      responses.forEach( res =>{
+                        let indexSolicitud = tramites[res.config.headers.indexTramite].solicitudes.findIndex( solicitud => solicitud.id === res.config.headers.idSolicitud );
+                        if(tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.enajenante){
+                          tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.enajenante.detalle = res.data;
+                        } else if( tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.costo_final ){
+                          tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.costo_final = res.data[0].costo_final;
+                          tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.detalle = res.data[0];
+                        }
+
+                        let solicitudUpdate = {
+                          id:res.config.headers.idSolicitud,
+                          info:tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info
+                        }
+                        updateSolicitudes.push(solicitudUpdate);
+                      });
+
+                      this.informacion = "Guardando cambios tramites";
+                      
+                      if(updateSolicitudes.length > 0){
+                        let url = process.env.TESORERIA_HOSTNAME + "/edit-solicitudes-info";
+                        axios.post(url, {data:updateSolicitudes}, {
+                             headers:{
+                                "Content-type":"application/json"
+                            }
+                        }).then(response => {
+                          this.construirJSONTramites( tramites );
+                        }).catch(errors => {
+                          Command: toastr.error("Error!", error.message || "No fue posible guardar los cambios");
+                        }).finally(() => {
+                          this.informacion = "";
+                        });
+                      } else {
+                        this.construirJSONTramites( tramites );
+                      }
+                      
+                    })).catch(errors => {
+                      this.informacion = "";
+                      //this.obteniendoTramites = false;
+                    })
+                    
                     
                 } catch (error) {
-                    console.log(error);
-                    this.obteniendoTramites = false;
+                  this.informacion = "";
+                  this.obteniendoTramites = false;
                 }
           },
+
           recibirMetodosPago( response ){
             if(response.data.response.pago_cero){
               this.mostrarReciboPago0 = true;
@@ -315,7 +381,7 @@
               }
             }
 
-            console.log(JSON.parse(JSON.stringify(tramitesJson)))
+            //console.log(JSON.parse(JSON.stringify(tramitesJson)))
 
  
             listadoTramites.push( tramitesJson );
