@@ -50,6 +50,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        // dd($exception);
         if($request->route() && $request->route()->getPrefix() == (getenv("APP_PREFIX") ? getenv("APP_PREFIX")."/" : "").'api') return response()->json([
             "response" => "error",
             "code" => $exception->getStatusCode(),
