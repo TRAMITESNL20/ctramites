@@ -43,18 +43,19 @@
                     </div>
                 </div>
 
-              <div v-else-if="!obteniendoTramites && items.length == 0">
-                <div class="card" style="width: 100%;">
-              <div class="card-body text-center">
-                <h5 class="card-title" >Aún no haz iniciado algún trámite</h5>
-                Para continuar da click <a  class="card-link"  v-on:click="iniciarTramite()"> <span style="cursor: pointer;"> aquí </span> </a>
-              </div>
-            </div>
+                <div v-else-if="!obteniendoTramites && items.length == 0">
+                  <div class="card" style="width: 100%;">
+                    <div class="card-body text-center">
+                      <h5 class="card-title" >Aún no haz iniciado algún trámite</h5>
+                        Para continuar da click <a  class="card-link"  v-on:click="iniciarTramite()"> <span style="cursor: pointer;"> aquí </span> </a>
+                    </div>
+                  </div>
               </div>
             </div>
             <!-- Card -->
+            <transition name="slide-fade" appear>
               <metodos-pago-component :infoMetodosPago="infoMetodosPago" v-if="mostrarMetodos"></metodos-pago-component>
-
+            </transition>
             <b-row v-if="mostrarReciboPago0" >
               <iframe width="100%" height="880" :src="reciboPagoCeroURL"></iframe>
             </b-row>
@@ -63,16 +64,33 @@
         <!--Grid column-->
         <div class="col-lg-4" >
             <v-container v-if="obteniendoTramites">
-                    <v-row>
-                        <v-col cols="12" md="12">
-                            <v-skeleton-loader v-bind:key="i" type="list-item" v-for="(r,i) in [1]" height="150px" style="margin-bottom: 8px;"></v-skeleton-loader>
-                        </v-col>
-                    </v-row>
-                </v-container>
+              <v-row>
+                  <v-col cols="12" md="12">
+                      <v-skeleton-loader v-bind:key="i" type="list-item" v-for="(r,i) in [1]" height="150px" style="margin-bottom: 8px;"></v-skeleton-loader>
+                  </v-col>
+              </v-row>
+            </v-container>
             <detalle-pago-component v-if="tramites.length > 0" 
               :tramites="tramites" 
               :obtenidoCostos="costosObtenidos" @updatingParent="recibirMetodosPago"  @cancelarPago="cancelarPago" >
             </detalle-pago-component>
+            <transition name="slide-fade" appear>
+              <div class="mb-3 shadow-sm p-3 bg-white rounded" v-if="mostrarMetodos">  
+                <div class="pt-4">
+                  <b-table responsive  striped hover :items="tramites" :fields="camposTablaTramites">
+                    <template #cell(nombre)="data">
+                      {{ data.item.nombre }}
+                    </template>
+                    <template #cell(importe_tramite)="data">
+                      <div style="text-align: right;"  >
+                        {{ data.item.importe_tramite | toCurrency }}
+                      </div>
+                      
+                    </template>
+                  </b-table>
+                </div>
+              </div>
+             </transition>
         </div>
         <!--Grid column-->
     </div>
@@ -109,7 +127,12 @@
               obteniendoTramites:false,
               costosObtenidos:false,
               mostrarReciboPago0:false,
-              reciboPagoCeroURL:'', tramitesAgrupados:[]
+              reciboPagoCeroURL:'', tramitesAgrupados:[],
+              informacion:'',
+              camposTablaTramites:[
+                    { key: 'nombre', label: 'Nombre' },
+                    { key: 'importe_tramite', label: 'Importe' },
+              ]
             }
         },
   
@@ -134,9 +157,73 @@
                 let url = process.env.TESORERIA_HOSTNAME + "/solicitudes-info/" + this.idUsuario;
                 try {
                     let response = await axios.get(url);
-                    let notary_offices = response.data.notary_offices;
+
                     let tramites =  response.data.tramites ;
-                    this.construirJSONTramites( tramites );
+                   
+                    let arrayPromesasActualizacionDeCostos = [];
+
+                    tramites.forEach(  (tramite, indexTramite) => {
+                      tramite.solicitudes.forEach(  (solicitud) => {
+                         arrayPromesasActualizacionDeCostos.push(actualizadorCostos.getRequestCosto(solicitud, indexTramite, tramite.tramite_id));
+                      });
+                    });
+
+                    this.informacion = "Sus tramites han cambiado de costo, estamos actualizando los costos.";
+                    let showMessageTimeOut = null;
+                    let showMessageInterval = setInterval( () =>{ 
+                      this.informacion = 'Espere un momento..';
+                      showMessageTimeOut = setTimeout(() => {
+                        this.informacion = 'Sus tramites han cambiado de costo, estamos actualizando los costos.';
+                      }, 1000);
+                       
+                    }, 3000);
+                    axios.all(arrayPromesasActualizacionDeCostos).then(axios.spread((...responses) => {
+                      let updateSolicitudes = [];
+                      responses = responses.filter(Boolean);
+                      responses.forEach( res =>{
+                        let indexSolicitud = tramites[res.config.headers.indexTramite].solicitudes.findIndex( solicitud => solicitud.id === res.config.headers.idSolicitud );
+                        if(tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.enajenante){
+                          tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.enajenante.detalle = res.data;
+                        } else if( tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.costo_final ){
+                          tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.costo_final = res.data[0].costo_final;
+                          tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info.detalle = res.data[0];
+                        }
+
+                        let solicitudUpdate = {
+                          id:res.config.headers.idSolicitud,
+                          info:tramites[res.config.headers.indexTramite].solicitudes[indexSolicitud].info
+                        }
+                        updateSolicitudes.push(solicitudUpdate);
+                      });
+
+                      this.informacion = "Guardando cambios tramites";
+                      
+                      if(updateSolicitudes.length > 0){
+                        let url = process.env.TESORERIA_HOSTNAME + "/edit-solicitudes-info";
+                        axios.post(url, {data:updateSolicitudes}, {
+                             headers:{
+                                "Content-type":"application/json"
+                            }
+                        }).then(response => {
+                          this.construirJSONTramites( tramites );
+                        }).catch(errors => {
+                          Command: toastr.error("Error!", error.message || "No fue posible guardar los cambios");
+                        }).finally(() => {
+                          this.informacion = "";
+                        });
+                      } else {
+                        this.construirJSONTramites( tramites );
+                      }
+                      
+                    })).catch(errors => {
+                      this.informacion = "";
+                      //this.obteniendoTramites = false;
+                    }).finally(() => {
+
+                      clearInterval( showMessageInterval );
+                      clearTimeout( showMessageTimeOut )
+                      this.informacion = "";
+                    });
                     
                 } catch (error) {
                     console.log(error);
