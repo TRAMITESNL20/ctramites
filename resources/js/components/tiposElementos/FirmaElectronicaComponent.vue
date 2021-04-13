@@ -52,6 +52,7 @@ export default {
 
 			this.idFirmado.push(solicitud.id);
 			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
+             this.$emit('urlFirmado', this.urlFirmado);
             console.log(this.folio);
 		})
 
@@ -72,6 +73,9 @@ export default {
                     if(res.code === 200) console.log('Firmado');
                     else console.log('Something goes wrong!', res);
                 });
+                this.$emit('docFirmado', 1);
+                this.$emit('urlFirmado', this.urlFirmado);
+
     		}
     	},
         encodeData(){

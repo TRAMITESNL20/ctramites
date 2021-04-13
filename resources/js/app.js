@@ -63,6 +63,8 @@ Vue.component("file-component" , () => import ( /* webpackChunkName: "js/compone
 Vue.component("results-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ResultsComponent.vue' ));
 Vue.component("firma-electronica-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/FirmaElectronicaComponent.vue' ));
 Vue.component("modal-document-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ModalDocumentComponent.vue' ));
+Vue.component("vue-pdf-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/VuePdfcomponent.vue' ));
+Vue.component("aux-firmado-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/AuxFirmadoComponent.vue' ));
 
 Vue.component("btn-guardar-tramite-parent" , () => import ( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-parent" */ './components/generales/BtnGuardarTramiteParent.vue' ));
 

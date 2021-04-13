@@ -30,6 +30,7 @@
         "moment": "^2.29.1",
         "v-mask": "^2.2.4",
         "vue-multiselect": "^2.1.6",
+        "vue-pdf": "^4.2.0",
         "vue-uuid": "^2.0.2",
         "vuelidate": "^0.7.6",
         "vuetify": "^2.3.15",
