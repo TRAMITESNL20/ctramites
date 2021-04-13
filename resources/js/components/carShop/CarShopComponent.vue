@@ -53,18 +53,19 @@
                     </div>
                 </div>
 
-              <div v-else-if="!obteniendoTramites && items.length == 0">
-                <div class="card" style="width: 100%;">
-              <div class="card-body text-center">
-                <h5 class="card-title" >Aún no haz iniciado algún trámite</h5>
-                Para continuar da click <a  class="card-link"  v-on:click="iniciarTramite()"> <span style="cursor: pointer;"> aquí </span> </a>
-              </div>
-            </div>
+                <div v-else-if="!obteniendoTramites && items.length == 0">
+                  <div class="card" style="width: 100%;">
+                    <div class="card-body text-center">
+                      <h5 class="card-title" >Aún no haz iniciado algún trámite</h5>
+                        Para continuar da click <a  class="card-link"  v-on:click="iniciarTramite()"> <span style="cursor: pointer;"> aquí </span> </a>
+                    </div>
+                  </div>
               </div>
             </div>
             <!-- Card -->
+            <transition name="slide-fade" appear>
               <metodos-pago-component :infoMetodosPago="infoMetodosPago" v-if="mostrarMetodos"></metodos-pago-component>
-
+            </transition>
             <b-row v-if="mostrarReciboPago0" >
               <iframe width="100%" height="880" :src="reciboPagoCeroURL"></iframe>
             </b-row>
@@ -73,16 +74,33 @@
         <!--Grid column-->
         <div class="col-lg-4" >
             <v-container v-if="obteniendoTramites">
-                    <v-row>
-                        <v-col cols="12" md="12">
-                            <v-skeleton-loader v-bind:key="i" type="list-item" v-for="(r,i) in [1]" height="150px" style="margin-bottom: 8px;"></v-skeleton-loader>
-                        </v-col>
-                    </v-row>
-                </v-container>
+              <v-row>
+                  <v-col cols="12" md="12">
+                      <v-skeleton-loader v-bind:key="i" type="list-item" v-for="(r,i) in [1]" height="150px" style="margin-bottom: 8px;"></v-skeleton-loader>
+                  </v-col>
+              </v-row>
+            </v-container>
             <detalle-pago-component v-if="tramites.length > 0" 
               :tramites="tramites" 
               :obtenidoCostos="costosObtenidos" @updatingParent="recibirMetodosPago"  @cancelarPago="cancelarPago" >
             </detalle-pago-component>
+            <transition name="slide-fade" appear>
+              <div class="mb-3 shadow-sm p-3 bg-white rounded" v-if="mostrarMetodos">  
+                <div class="pt-4">
+                  <b-table responsive  striped hover :items="tramites" :fields="camposTablaTramites">
+                    <template #cell(nombre)="data">
+                      {{ data.item.nombre }}
+                    </template>
+                    <template #cell(importe_tramite)="data">
+                      <div style="text-align: right;"  >
+                        {{ data.item.importe_tramite | toCurrency }}
+                      </div>
+                      
+                    </template>
+                  </b-table>
+                </div>
+              </div>
+             </transition>
         </div>
         <!--Grid column-->
     </div>
@@ -123,7 +141,11 @@
               costosObtenidos:false,
               mostrarReciboPago0:false,
               reciboPagoCeroURL:'', tramitesAgrupados:[],
-              informacion:''
+              informacion:'',
+              camposTablaTramites:[
+                    { key: 'nombre', label: 'Nombre' },
+                    { key: 'importe_tramite', label: 'Importe' },
+              ]
             }
         },
   
@@ -149,8 +171,9 @@
                 try {
                   this.informacion = "Obteniendo tramites";
                     let response = await axios.get(url);
-                    //let notary_offices = response.data.notary_offices;
+
                     let tramites =  response.data.tramites ;
+                   
                     let arrayPromesasActualizacionDeCostos = [];
 
                     tramites.forEach(  (tramite, indexTramite) => {
@@ -158,7 +181,16 @@
                          arrayPromesasActualizacionDeCostos.push(actualizadorCostos.getRequestCosto(solicitud, indexTramite, tramite.tramite_id));
                       });
                     });
-                    this.informacion = "Actualizando tramites";
+
+                    this.informacion = "Sus tramites han cambiado de costo, estamos actualizando los costos.";
+                    let showMessageTimeOut = null;
+                    let showMessageInterval = setInterval( () =>{ 
+                      this.informacion = 'Espere un momento..';
+                      showMessageTimeOut = setTimeout(() => {
+                        this.informacion = 'Sus tramites han cambiado de costo, estamos actualizando los costos.';
+                      }, 1000);
+                       
+                    }, 3000);
                     axios.all(arrayPromesasActualizacionDeCostos).then(axios.spread((...responses) => {
                       let updateSolicitudes = [];
                       responses = responses.filter(Boolean);
@@ -200,8 +232,12 @@
                     })).catch(errors => {
                       this.informacion = "";
                       //this.obteniendoTramites = false;
-                    })
-                    
+                    }).finally(() => {
+
+                      clearInterval( showMessageInterval );
+                      clearTimeout( showMessageTimeOut )
+                      this.informacion = "";
+                    });
                     
                 } catch (error) {
                   this.informacion = "";
