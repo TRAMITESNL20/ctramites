@@ -477,7 +477,7 @@ class CalculoimpuestosController extends Controller
       		}
 
         }
-        
+
     		return $dates;
 
     	}catch( \Exception $e ){
@@ -730,9 +730,11 @@ class CalculoimpuestosController extends Controller
   			$fa = explode("-",$this->fecha_actual);
   			$yi = $fa[0];  // año de inicio
   			$mi = $fa[1];  // mes de inicio
+        $di = $fa[2];
    			$fe = explode("-",$this->fecha_vencimiento);
    			$yf = $fe[0];  // año de inicio
   			$mf = $fe[1];  // mes de inicio
+        $df = $fe[2];
         //Se considera vencido a partir de la fecha de vencimiento
 
   			if(strlen((string)$mi) == 1){
@@ -750,11 +752,32 @@ class CalculoimpuestosController extends Controller
   			}
   			$f = (integer)$f;
   			//$count = 0;
+        //$datafechas = array();
   			foreach($this->porcentajes_values as $p => $data)
   			{
+
   				if($p <= $i && $p >= $f)
   				{
-  					$total += $data["requerido"];
+            if($p == $f){
+
+              if($di >= $df){ //si el día actual es mayor o igual al vencimiento se continua el flujo normal
+
+              }else{ //Si es menor entonces se quita 1 mes de la suma de recargos para solo contar hasta el día en curso
+                $total = $total - $data["requerido"];
+
+              }
+            }
+
+            $total += $data["requerido"];
+            // $datafechas []= array(
+            //   'fecha en valores' => $p,
+            //   'fechaactual' => $i,
+            //   'fechavencimiento' => $f,
+            //   'fecha actual' => $this->fecha_actual,
+            //   'fecha ven' => $this->fecha_vencimiento,
+            //   'dias actual -ven' => $di.'-'.$df,
+            //   'total' => $total
+            // );
   				}
       /*
   				else{
@@ -777,7 +800,7 @@ class CalculoimpuestosController extends Controller
 
   				}*/
   			}
-
+        //dd($datafechas);
   			return $total / 100;
   		}
     }

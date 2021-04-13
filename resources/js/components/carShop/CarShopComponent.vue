@@ -287,7 +287,7 @@
               }
                tramitesJson.detalle[3] = {
                 concepto : 'Multa corrección fiscal',
-                partida: 4,
+                partida: 57505,
                 importe_concepto: Number(Number(info.detalle.Salidas['Multa corrección fiscal']).toFixed(this.$const.PRECISION))     
               }
             } else {
