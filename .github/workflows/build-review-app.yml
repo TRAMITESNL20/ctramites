@@ -1,0 +1,17 @@
+name: build-review-app
+on:
+  pull_request
+
+jobs:
+  connect-vpn-build-qa:
+    name: install ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@master
+
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
