@@ -46,7 +46,7 @@ export default {
 				this.llave.push(`${solicitud.id}`)
 				 
 				if(typeof this.folio === 'string') this.folio = [];
-				this.folio.push(`${  ind}`)
+				this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
 			
 			}else{
 				this.doc = doc;
