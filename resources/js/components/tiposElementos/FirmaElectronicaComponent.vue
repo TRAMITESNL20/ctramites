@@ -33,7 +33,7 @@ export default {
 		let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
 		this.usuario.solicitudes.map((solicitud, ind) => {
 			this.multiple = this.usuario.solicitudes.length > 1;
-        var auxEnv = process.env.APP_URL;
+            var auxEnv = process.env.APP_URL;
             if ( auxEnv == "https://tramites.nl.gob.mx") {
                 auxEnv = "http://tramites.nl.gob.mx";
             }
@@ -55,8 +55,8 @@ export default {
 			}
 
 			this.idFirmado.push(solicitud.id);
-			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
-            console.log(this.folio);
+			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
+            // console.log(this.urlFirmado);
 		})
 
 		this.rfc = this.user.rfc;
@@ -87,7 +87,7 @@ export default {
             var data = {
                 'perfil' : 'EI',
                 'multiple' : this.multiple,
-                'tramite' : this.usuario.tramite_id,
+                'tramite' :  this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id,
                 'llave' : this.llave,
                 'doc' : this.doc,
                 'folio' : this.folio,
@@ -112,7 +112,6 @@ export default {
             //         console.log(error)
             //     })
             //     .finally(() => console.log('listo'))
-           
                 $.ajax({
                     type: "POST",
                     data: {"tramite_id" : this.usuario.tramite_id, "value": JSON.stringify(data), "access_token" : this.access_token},
