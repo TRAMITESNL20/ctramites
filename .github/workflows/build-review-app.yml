@@ -1,6 +1,9 @@
 name: build-review-app
 on:
-  pull_request
+  push:
+    branches:
+      - '!master'
+      - '!dev'
 
 jobs:
   connect-vpn-build-qa:
