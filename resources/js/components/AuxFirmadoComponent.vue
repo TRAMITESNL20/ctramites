@@ -9,7 +9,9 @@
             </div>
         </div>
 
-        <div>
+        <div 
+
+        >
             <vue-pdf-component :urlSource="urlFirmado" >  
             
             </vue-pdf-component>
@@ -20,7 +22,7 @@
             <firma-electronica-component 
                 :usuario="idTramite"   
                 :user="user"  
-                @docFirmado="docFirmado"
+                @docFirmado="docFirmadoMethod"
                 @urlFirmado="urlFirmadoMethod">
             </firma-electronica-component>
         </div>
@@ -35,11 +37,15 @@ export default {
     data(){
         return {
             urlFirmado: [],
+            docFirmado:'',
         }
     },
     methods: {
         urlFirmadoMethod(urlArray) {
            this.urlFirmado = urlArray; 
+        },
+        docFirmadoMethod(firmado){
+            this.docFirmado =  firmado;
         }
     }
 

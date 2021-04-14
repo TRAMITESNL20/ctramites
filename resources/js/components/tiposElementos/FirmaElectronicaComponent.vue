@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <iframe id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height:500px;" frameborder="0"> </iframe>
+    <div >
+        <iframe v-if="coutnLoad != 3" id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height:500px;" frameborder="0"> </iframe>
     </div>
 </template>
 
@@ -32,8 +32,10 @@ export default {
 	mounted() {
 		let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
 		this.usuario.solicitudes.map((solicitud, ind) => {
+            console.log(solicitud);
 			this.multiple = this.usuario.solicitudes.length > 1;
-			let doc = `${process.env.APP_URL}/formato-declaracion/${solicitud.id}`;
+			let doc = `${APP_URL}/formato-declaracion/${solicitud.id}`;
+            console.log('multiple?', this.multiple);
 			if(this.multiple){
 				if(typeof this.doc === 'string') this.doc = [];
 				this.doc.push(doc)
@@ -52,7 +54,7 @@ export default {
 
 			this.idFirmado.push(solicitud.id);
 			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
-             this.$emit('urlFirmado', this.urlFirmado);
+            this.$emit('urlFirmado', this.urlFirmado);
             console.log(this.folio);
 		})
 
@@ -70,7 +72,9 @@ export default {
                 })
                 .then(res => res.json())
                 .then(res => {
-                    if(res.code === 200) console.log('Firmado');
+                    if(res.code === 200){
+                        console.log('Firmado');    
+                    }
                     else console.log('Something goes wrong!', res);
                 });
                 this.$emit('docFirmado', 1);
