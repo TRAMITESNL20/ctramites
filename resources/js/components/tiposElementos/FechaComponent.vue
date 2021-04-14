@@ -7,16 +7,27 @@
         <b-input-group >
           <b-form-input
             id="example-input"
-            v-model="campo.valor"
+            v-model="campo.show"
             type="text"
-            placeholder="YYYY-MM-DD"
+            placeholder="DD-MM-AAAA"
             autocomplete="off" style="background-color: #e5f2f5 !important" 
-            @focus="validar" @change="cahngeEvent" 
+            @focus="validar"
+            @change="cahngeEvent" 
           ></b-form-input>
           <b-input-group-append>
-            <b-form-datepicker   :id="campo.campo_id + ''" :name="campo.nombre"  v-model="campo.valor"        
+            <b-form-datepicker
+              :id="campo.campo_id + ''"
+              :name="campo.nombre"
+              v-model="campo.valor"        
               @change="validar"
-              @focus="validar" @input="validar" :show-decade-nav="showDecadeNav" button-only right aria-controls="example-input" @context="onContext">
+              @focus="validar"
+              @input="validar"
+              :show-decade-nav="showDecadeNav"
+              button-only
+              right
+              aria-controls="example-input"
+              @context="onContext"
+            >
             </b-form-datepicker>
           </b-input-group-append>
         </b-input-group>
@@ -51,6 +62,12 @@
           this.validar();
         },
         validar(){
+          let format = true;
+          if(/\d{2}-\d{2}-\d{4}/.test(this.campo.show)){
+            let date = this.campo.show.split('-');
+            if(date[2]) this.campo.valor = `${date[2]}-${date[1]}-${date[0]}`;
+          }else format = false;
+
        		this.campo.mensajes = [];
           let requeridoValido = true;
           let validDate = false;
@@ -66,8 +83,8 @@
             }
           }
 
-            validDate =  this.isValidDate(this.campo.valor);
-            if( !validDate ){
+            validDate = this.isValidDate(this.campo.valor);
+            if( !validDate || !format ){
               let mensaje = { 
                 tipo:'required',
                 mensajeStr: "El campo " + this.campo.nombre.toLocaleLowerCase() + " no es valido"
