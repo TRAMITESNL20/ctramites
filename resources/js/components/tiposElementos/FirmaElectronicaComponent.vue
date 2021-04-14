@@ -33,7 +33,11 @@ export default {
 		let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
 		this.usuario.solicitudes.map((solicitud, ind) => {
 			this.multiple = this.usuario.solicitudes.length > 1;
-			let doc = `${process.env.APP_URL}/formato-declaracion/${solicitud.id}`;
+        var auxEnv = process.env.APP_URL;
+            if ( auxEnv == "https://tramites.nl.gob.mx") {
+                auxEnv = "http://tramites.nl.gob.mx";
+            }
+			let doc = `${auxEnv}/formato-declaracion/${solicitud.id}`;
 			if(this.multiple){
 				if(typeof this.doc === 'string') this.doc = [];
 				this.doc.push(doc)
