@@ -113,7 +113,15 @@ Vue.filter('toNumber', function (value) {
 });
 
 Vue.prototype.$const = {
-   PRECISION: 3
+    PRECISION: 3,
+    NOMBRES_CAMPOS:{
+        CAMPO_DIVISAS: "Cambio de divisas",
+        CAMPO_LOTE: "Lote",
+        CAMPO_HOJA: "Hoja",
+        CAMPO_SUBSIDIO: "Subsidio",
+        CAMPO_VALOR_CATASTRAL: "Valor catastral",
+        CAMPO_VALOR_OPERACION: "Valor de operacion"
+    }
 }
 
 Vue.filter('toNumber', function (value) {
