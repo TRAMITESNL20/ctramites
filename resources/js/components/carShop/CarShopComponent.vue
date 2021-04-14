@@ -1,6 +1,6 @@
 <template>                  
     <div class="container-fluid">
-    <div class="row" v-if="informacion.length > 0">
+    <div class="row" v-if="informacion.length > 0 && false">
       <div class="col-lg-12">
         <div class="text-center">
             <b-alert show variant="secondary">
@@ -173,7 +173,8 @@
                     let response = await axios.get(url);
 
                     let tramites =  response.data.tramites ;
-                   
+                    this.construirJSONTramites( tramites );
+                   /*
                     let arrayPromesasActualizacionDeCostos = [];
 
                     tramites.forEach(  (tramite, indexTramite) => {
@@ -240,7 +241,7 @@
                       clearTimeout( showMessageTimeOut )
                       this.informacion = "";
                     });
-                    
+                    */
                 } catch (error) {
                   this.informacion = "";
                   this.obteniendoTramites = false;
