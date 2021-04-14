@@ -2,6 +2,7 @@ name: build-review-app
 on:
   push:
     branches:
+      - '*'
       - '!master'
       - '!dev'
 
