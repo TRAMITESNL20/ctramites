@@ -14,7 +14,8 @@
               <b-form-group label="Folio del aviso de enajenación" label-for="folio-input" >
                 <b-input-group size="lg"> 
                   <b-form-input
-                    id="folio-input" name="folio" v-model="$v.form.folio.$model"  :state="$v.form.folio.$dirty ? !$v.form.folio.$error : null"  aria-describedby="folio-input-feedback"></b-form-input>
+                    id="folio-input" name="folio" v-model="$v.form.folio.$model"  :state="$v.form.folio.$dirty ? !$v.form.folio.$error : null"  aria-describedby="folio-input-feedback"
+                    @change="getMontoOperacion"></b-form-input>
                 </b-input-group>
                 <b-form-invalid-feedback id="folio-input-feedback">
                   <span v-if="!$v.form.folio.required"  class="form-text text-danger">
@@ -195,12 +196,16 @@
         if( !this.$v.form.expediente.$invalid ){         
           this.buscarDatosDomicilio( this.$v.form.expediente.$model );
 
-          this.valorOperacion( this.$v.form.expediente.$model );
+          this.getMontoOperacion();
         } else {
           this.buscandoDatosDomicilio = false;
           this.rellenarForm();
 
         }
+      },
+
+      async getMontoOperacion(){
+        this.valorOperacion( this.$v.form.expediente.$model );
       },
 
       async buscarDatosDomicilio(nExpediente) {
