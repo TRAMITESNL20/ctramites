@@ -143,11 +143,11 @@ class ReferenceController extends Controller {
     	return view('pay-reference');
     }
 
-    public function bankWs () {
+    public function bankWs (Request $request) {
     	ini_set("soap.wsdl_cache_enabled", 0);
 
 		list($usr, $pass) = explode("|", getenv("BANK_WS_CREDENTIALS"));
-		$data = Request::all();
+		$data = $request->all();
 		$type = $data['type'];
 		unset($data['type']);
 
@@ -237,7 +237,7 @@ class ReferenceController extends Controller {
 		curl_close($ch);
 		$response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $result);
 
-		$doc = new DOMDocument('1.0', 'utf-8');
+		$doc = new \DOMDocument('1.0', 'utf-8');
 		$doc->loadXML($response);
 		$error = $doc->getElementsByTagName("error")->item(0)->nodeValue;
 		$message = $doc->getElementsByTagName("message")->item(0)->nodeValue;
