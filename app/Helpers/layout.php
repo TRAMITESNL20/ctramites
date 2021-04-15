@@ -46,11 +46,11 @@ if(!function_exists("to_object")){
 }
 
 if(!function_exists("curlSendRequest")){
-	function curlSendRequest ($method, $endpoint, $data = [], $headers = [], $timeout = null) {
+	function curlSendRequest ($method, $endpoint, $data = [], $headers = [], $timeout = null, $encode = false) {
 		if(!$timeout) $timeout = env("WS_TIMEOUT");
 		$req = curl_init();
 
-		if(in_array(gettype($data), ["object", "array"])) $data = json_encode($data);
+		if($encode && in_array(gettype($data), ["object", "array"])) $data = json_encode($data);
 		curl_setopt($req, CURLOPT_URL, $endpoint);
 		curl_setopt($req, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($req, CURLOPT_RETURNTRANSFER, 1);
@@ -60,7 +60,7 @@ if(!function_exists("curlSendRequest")){
 		curl_setopt($req, CURLOPT_SSL_VERIFYHOST, FALSE);
 		curl_setopt($req, CURLOPT_SSL_VERIFYPEER, FALSE);
 		$response = curl_exec($req);
-		if(in_array(gettype($response), ["object", "array"])) $response = json_encode($response);
+		if($encode && in_array(gettype($response), ["object", "array"])) $response = json_encode($response);
 		curl_close($req);
 		return json_decode($response);
 	}
