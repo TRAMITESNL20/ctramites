@@ -30,27 +30,27 @@ document.getElementById("close-header").addEventListener("click", () => {
     }
 })
 
-Vue.component('listado-tramites-component', () => import ( /* webpackChunkName: "js/components/listado-tramites-component" */ './components/ListadoTramitesComponent.vue'));
-Vue.component('tramite-component', () => import ( /* webpackChunkName: "js/components/tramite-component" */ './components/TramiteComponent.vue'));
-Vue.component('wizard-component', () => import ( /* webpackChunkName: "js/components/wizard-component" */ './components/WizardComponent.vue?v=1.0.0'));
+Vue.component('listado-tramites-component', () => import( /* webpackChunkName: "js/components/listado-tramites-component" */ './components/ListadoTramitesComponent.vue'));
+Vue.component('tramite-component', () => import( /* webpackChunkName: "js/components/tramite-component" */ './components/TramiteComponent.vue'));
+Vue.component('wizard-component', () => import( /* webpackChunkName: "js/components/wizard-component" */ './components/WizardComponent.vue?v=1.0.0'));
 
 
-Vue.component('campos-tramite-component', () => import(/* webpackChunkName: "js/components/campos-tramite-component" */ './components/CamposTramiteComponent.vue'));
-Vue.component('solicitantes-component', () => import(/* webpackChunkName: "js/components/solicitantes-component" */ './components/SolicitantesComponent.vue'));
-Vue.component('resumen-tramite-component', () => import(/* webpackChunkName: "js/components/resumen-tramite-component" */ './components/ResumenTramiteComponent.vue'));
+Vue.component('campos-tramite-component', () => import( /* webpackChunkName: "js/components/campos-tramite-component" */ './components/CamposTramiteComponent.vue'));
+Vue.component('solicitantes-component', () => import( /* webpackChunkName: "js/components/solicitantes-component" */ './components/SolicitantesComponent.vue'));
+Vue.component('resumen-tramite-component', () => import( /* webpackChunkName: "js/components/resumen-tramite-component" */ './components/ResumenTramiteComponent.vue'));
 
-Vue.component('car-shop-component', () => import ( /* webpackChunkName: "js/components/car-shop-component" */ './components/carShop/CarShopComponent.vue?v=1.0.0'));
-Vue.component('metodos-pago-component', () => import ( /* webpackChunkName: "js/components/metodos-pago-component" */ './components/carShop/MetodosDePagoComponent.vue'));
+Vue.component('car-shop-component', () => import( /* webpackChunkName: "js/components/car-shop-component" */ './components/carShop/CarShopComponent.vue?v=1.0.0'));
+Vue.component('metodos-pago-component', () => import( /* webpackChunkName: "js/components/metodos-pago-component" */ './components/carShop/MetodosDePagoComponent.vue'));
 
-Vue.component('item-solictud-carshop-component', () => import ( /* webpackChunkName: "js/components/item-solictud-carshop-component" */ './components/carShop/ItemSolicitudCarShopComponent.vue'));
-Vue.component("detalle-pago-component", () => import ( /* webpackChunkName: "js/components/detalle-pago-component" */ './components/carShop/DetallePagoComponent.vue'));
-Vue.component("usuarios-component", () => import ( /* webpackChunkName: "js/components/usuarios-component" */ './components/Usuarios.vue'));
-Vue.component("listado-tramites", () => import ( /* webpackChunkName: "js/components/listado-tramites" */ './components/listadoTramites.vue' ))
-Vue.component("pagination-component", () => import ( /* webpackChunkName: "js/components/pagination-component" */ './components/paginationComponent.vue' ));
-Vue.component("table-component", () => import ( /* webpackChunkName: "js/components/pagination-component" */ './components/TableComponent.vue' ));
+Vue.component('item-solictud-carshop-component', () => import( /* webpackChunkName: "js/components/item-solictud-carshop-component" */ './components/carShop/ItemSolicitudCarShopComponent.vue'));
+Vue.component("detalle-pago-component", () => import( /* webpackChunkName: "js/components/detalle-pago-component" */ './components/carShop/DetallePagoComponent.vue'));
+Vue.component("usuarios-component", () => import( /* webpackChunkName: "js/components/usuarios-component" */ './components/Usuarios.vue'));
+Vue.component("listado-tramites", () => import( /* webpackChunkName: "js/components/listado-tramites" */ './components/listadoTramites.vue' ))
+Vue.component("pagination-component", () => import( /* webpackChunkName: "js/components/pagination-component" */ './components/paginationComponent.vue' ));
+Vue.component("table-component", () => import( /* webpackChunkName: "js/components/pagination-component" */ './components/TableComponent.vue' ));
 
-Vue.component("radio-option-component", () => import ( /* webpackChunkName: "js/components/generales/radio-option-component" */ './components/generales/radioOptionComponent.vue' ));
-Vue.component("formulario-complementaria-component" , () => import ( /* webpackChunkName: "js/components/formulario-complementaria-component" */ './components/FormularioComplementariaComponent.vue' ));
+Vue.component("radio-option-component", () => import( /* webpackChunkName: "js/components/generales/radio-option-component" */ './components/generales/radioOptionComponent.vue' ));
+Vue.component("formulario-complementaria-component" , () => import( /* webpackChunkName: "js/components/formulario-complementaria-component" */ './components/FormularioComplementariaComponent.vue' ));
 
 
 Vue.component("input-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/input-component" */ './components/tiposElementos/InputComponent.vue' ));
@@ -66,25 +66,25 @@ Vue.component("modal-document-component" , () => import ( /* webpackChunkName: "
 Vue.component("vue-pdf-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/VuePdfcomponent.vue' ));
 Vue.component("aux-firmado-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/AuxFirmadoComponent.vue' ));
 
-Vue.component("btn-guardar-tramite-parent" , () => import ( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-parent" */ './components/generales/BtnGuardarTramiteParent.vue' ));
+Vue.component("btn-guardar-tramite-parent" , () => import( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-parent" */ './components/generales/BtnGuardarTramiteParent.vue' ));
 
-Vue.component("btn-guardar-tramite-component" , () => import ( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-component" */ './components/generales/BtnGuardarTramiteComponent.vue' ));
-Vue.component("fecha-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/fecha-component" */ './components/tiposElementos/FechaComponent.vue' ));
-Vue.component("enajenantes-component" , () => import ( /* webpackChunkName: "js/components/enajenantes-component" */ './components/EnajenantesComponente.vue' ));
+Vue.component("btn-guardar-tramite-component" , () => import( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-component" */ './components/generales/BtnGuardarTramiteComponent.vue' ));
+Vue.component("fecha-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/fecha-component" */ './components/tiposElementos/FechaComponent.vue' ));
+Vue.component("enajenantes-component" , () => import( /* webpackChunkName: "js/components/enajenantes-component" */ './components/EnajenantesComponente.vue' ));
 
-Vue.component("modal-component" , () => import ( /* webpackChunkName: "js/components/modal-component" */ './components/ModalComponent.vue' ));
-Vue.component("listado-expedientes-5-i-s-r" , () => import ( /* webpackChunkName: "js/components/listado-expedientes-5-i-s-r" */ './components/ListadoExpedientes5ISR.vue' ));
-Vue.component("modal-expedientes-component" , () => import ( /* webpackChunkName: "js/components/modal-expedientes-component" */ './components/ModalExpedientesComponent.vue' ));
-Vue.component('resumen-tramite-5-isr-component', () => import(/* webpackChunkName: "js/components/resumen-tramite-5-isr-component" */ './components/ResumenTramite5ISR.vue'));
+Vue.component("modal-component" , () => import( /* webpackChunkName: "js/components/modal-component" */ './components/ModalComponent.vue' ));
+Vue.component("listado-expedientes-5-i-s-r" , () => import( /* webpackChunkName: "js/components/listado-expedientes-5-i-s-r" */ './components/ListadoExpedientes5ISR.vue' ));
+Vue.component("modal-expedientes-component" , () => import( /* webpackChunkName: "js/components/modal-expedientes-component" */ './components/ModalExpedientesComponent.vue' ));
+Vue.component('resumen-tramite-5-isr-component', () => import( /* webpackChunkName: "js/components/resumen-tramite-5-isr-component" */ './components/ResumenTramite5ISR.vue'));
 
-Vue.component('calculo-costo-tramite-5-isr-component', () => import(/* webpackChunkName: "js/components/calculo-costo-tramite-5-isr-component" */ './components/costos/CalculoCosto5ISRComponent.vue'));
+Vue.component('calculo-costo-tramite-5-isr-component', () => import( /* webpackChunkName: "js/components/calculo-costo-tramite-5-isr-component" */ './components/costos/CalculoCosto5ISRComponent.vue'));
 
-Vue.component('template-datos-personales-component', () => import(/* webpackChunkName: "js/components/template-datos-personales-component" */ './components/generales/TemplateDatosPersonalesComponent.vue'))
-Vue.component('tree-component', () => import(/* webpackChunkName: "js/components/generales/tree-component" */ './components/generales/TreeComponent.vue'));
+Vue.component('template-datos-personales-component', () => import( /* webpackChunkName: "js/components/template-datos-personales-component" */ './components/generales/TemplateDatosPersonalesComponent.vue'))
+Vue.component('tree-component', () => import( /* webpackChunkName: "js/components/generales/tree-component" */ './components/generales/TreeComponent.vue'));
 
 
-Vue.component('agrupacion-items-carrrito-component', () => import(/* webpackChunkName: "js/components/generales/agrupacion-items-carrrito-component" */ './components/carShop/AgrupacionItemsCarrritoComponent.vue'));
-Vue.component("valuador-component" , () => import ( /* webpackChunkName: "js/components/valuador-component" */ './components/ValuadorComponet.vue' ));
+Vue.component('agrupacion-items-carrrito-component', () => import( /* webpackChunkName: "js/components/generales/agrupacion-items-carrrito-component" */ './components/carShop/AgrupacionItemsCarrritoComponent.vue'));
+Vue.component("valuador-component" , () => import( /* webpackChunkName: "js/components/valuador-component" */ './components/ValuadorComponet.vue' ));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -115,7 +115,15 @@ Vue.filter('toNumber', function (value) {
 });
 
 Vue.prototype.$const = {
-   PRECISION: 3
+    PRECISION: 3,
+    NOMBRES_CAMPOS:{
+        CAMPO_DIVISAS: "Cambio de divisas",
+        CAMPO_LOTE: "Lote",
+        CAMPO_HOJA: "Hoja",
+        CAMPO_SUBSIDIO: "Subsidio",
+        CAMPO_VALOR_CATASTRAL: "Valor catastral",
+        CAMPO_VALOR_OPERACION: "Valor de operacion"
+    }
 }
 
 Vue.filter('toNumber', function (value) {

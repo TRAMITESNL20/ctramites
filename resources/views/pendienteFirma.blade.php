@@ -14,7 +14,6 @@
 								<div class="card-header">
                                     TRAMITES POR FIRMAR:
 								</div>
-
 								<div class="card-body">
 									<div class="row" >
 										<div class="col-lg-12 col-sm-12">
@@ -29,7 +28,7 @@
                                                             <p> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
                                                             <modal-document-component :tramitesdoc="{{$tramitesDoc}}" ></modal-document-component>
                                                         </div>
-                                                    </div>
+                                                    </div> 
 
                                                     <div>
                                                         <vue-pdf-component @docFirmado="docFirmado">  </vue-pdf-component>

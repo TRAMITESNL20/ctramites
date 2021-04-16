@@ -513,7 +513,7 @@
 					</div>
 					<!--end::Header-->
 					<!--begin::Content-->
-					<div class="content col-12  @if($empty_layout === false) col-lg-11 col-xl-10 @endif d-flex flex-column flex-column-fluid pt-0" @if(isset($background_content)) style="background-color: {{$background_content}}" @endif id="kt_content">
+					<div class="content col-12  @if($empty_layout === false) col-lg-11 col-xl-10 @endif d-flex flex-column flex-column-fluid py-0" @if(isset($background_content)) style="background-color: {{$background_content}}" @endif id="kt_content">
 						<!--begin::Entry-->
 							<div id="app" class="d-flex flex-column-fluid justify-content-center {{ $fluid_container ? '' : 'container-xl' }}  @if($empty_layout === true) align-items-center @endif">
 								<?= view($viewPath, $args) ?>

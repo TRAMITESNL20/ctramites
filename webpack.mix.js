@@ -34,8 +34,12 @@ let dotenvplugin = new webpack.DefinePlugin({
 mix.webpackConfig({
 	plugins: [
 		dotenvplugin,
-	]
-})
+	],
+	output : {
+		chunkFilename : "[name].[chunkhash].js"
+	},
+	devtool: 'source-map'
+}).sourceMaps();
 
 mix.js([
 	"resources/js/app.js",

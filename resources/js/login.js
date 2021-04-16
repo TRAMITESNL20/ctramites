@@ -16,10 +16,11 @@ document.addEventListener('DOMContentLoaded', function(e) {
 
 $('#kt_login_signin_submit').on('click', function(e) {
     e.preventDefault();
+    var spinner = $(this).find("i.fa-spinner")
 
-    if($(this).find("i.fa-spinner").hasClass("d-none")){
+    if(spinner.hasClass("d-none")){
         $(this).attr("disabled")
-        $(this).find("i.fa-spinner").removeClass("d-none")
+        spinner.removeClass("d-none")
     }
 
     var password = $(document).find('input[name="password"]').val();
@@ -35,25 +36,29 @@ $('#kt_login_signin_submit').on('click', function(e) {
                     username
                 },
                 done : function (res) {
-                    if(!$(this).find("i.fa-spinner").hasClass("d-none")){
+                    if(!spinner.hasClass("d-none")){
                         $(this).removeAttr("disabled")
-                        $(this).find("i.fa-spinner").addClass("d-none")
+                        spinner.addClass("d-none")
                     }
                 },
                 success: function(res) {
-                    swal.fire({
-                        text: "All is cool! Now you submit this form",
-                        icon: "success",
-                        buttonsStyling: false,
-                        confirmButtonText: "Ok, got it!",
-                        customClass: {
-                            confirmButton: "btn font-weight-bold btn-light-primary"
-                        }
-                    }).then(function() {
-                        redirect("/dashboard");
-                    });
+                    redirect("/dashboard");
+                    // swal.fire({
+                    //     text: "All is cool! Now you submit this form",
+                    //     icon: "success",
+                    //     buttonsStyling: false,
+                    //     confirmButtonText: "Ok, got it!",
+                    //     customClass: {
+                    //         confirmButton: "btn font-weight-bold btn-light-primary"
+                    //     }
+                    // }).then(function() {
+                    // });
                 },
                 error: function(res) {
+                    if(!spinner.hasClass("d-none")){
+                        $(this).removeAttr("disabled")
+                        spinner.addClass("d-none")
+                    }
                     swal.fire({
                         text: "Sorry, looks like there are some errors detected, please try again.",
                         icon: "error",
@@ -62,8 +67,6 @@ $('#kt_login_signin_submit').on('click', function(e) {
                         customClass: {
                             confirmButton: "btn font-weight-bold btn-light-primary"
                         }
-                    }).then(function() {
-                        redirect("/login");
                     });
                 }
             });

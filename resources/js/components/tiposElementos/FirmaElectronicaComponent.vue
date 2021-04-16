@@ -34,8 +34,11 @@ export default {
 		this.usuario.solicitudes.map((solicitud, ind) => {
             console.log(solicitud);
 			this.multiple = this.usuario.solicitudes.length > 1;
-			let doc = `${APP_URL}/formato-declaracion/${solicitud.id}`;
-            console.log('multiple?', this.multiple);
+        var auxEnv = process.env.APP_URL;
+            if ( auxEnv == "https://tramites.nl.gob.mx") {
+                auxEnv = "http://tramites.nl.gob.mx";
+            }
+			let doc = `${auxEnv}/formato-declaracion/${solicitud.id}`;
 			if(this.multiple){
 				if(typeof this.doc === 'string') this.doc = [];
 				this.doc.push(doc)

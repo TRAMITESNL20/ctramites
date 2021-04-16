@@ -109,7 +109,7 @@
 	<table style="width: 100%; margin-top:0px" border="0" >
 		<thead class="border_bottom" >
 			<tr class="header">
-				<th colspan="3" valign="middle" class="text-uppercase text-left"> <strong> DECLARACION DEL {{ $info->tramite }} <br> REALIZADAS EN EL ESTADO DE NUEVO LEÓN </strong> </th>
+				<th colspan="3" valign="middle" class="text-uppercase text-left"> <strong> DECLARACIÓN DEL {{ $info->tramite }} <br> REALIZADAS EN EL ESTADO DE NUEVO LEÓN </strong> </th>
 				<th class="" valign="middle"><img src="{{ public_path('images/escudo-de-armas-veda-color.jpg') }}" width="200"></th>
 			</tr>
 		</thead>
@@ -201,7 +201,7 @@
 					<td class="titulo1" colspan="4"> <strong> DATOS PARA DETERMINAR EL IMPUESTO DE LA ENTIDAD FEDERATIVA </strong></td>
 				</tr>
 					<tr >
-						<td class="columna">TIPO DE DECLARACION</td>
+						<td class="columna">TIPO DE DECLARACIÓN</td>
 						<td class="columna" colspan="2">GANANCIA OBTENIDA</td>
 						<td class="columna">MONTO OBTENIDO CONFORME AL <br> ART 127 BIS DE LA LISR</td>
 					</tr>
@@ -246,7 +246,7 @@
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }}">
 					<td class="columna">FECHA DE PAGO</td>
-					<td class=" columna" colspan="2">NO. DE OPERACION INTERNA</td>
+					<td class=" columna" colspan="2">NO. DE OPERACIÓN INTERNA</td>
 					<td class="columna">REFERENCIA BANCARIA</td>
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }} last">
@@ -283,7 +283,7 @@
 			</tr>
 		</table>
 		<div style="position:fixed;left:0px;bottom:0px;"> 
-			<p >BAJO PROTESTA DE DECIR VERDAD MANIFIESTO QUE TODOS Y CADA UNO DE LOS DATOS PROPORCIONADOS EN ESTA DECLARACION SON CIERTOS.<p>
+			<p >BAJO PROTESTA DE DECIR VERDAD MANIFIESTO QUE TODOS Y CADA UNO DE LOS DATOS PROPORCIONADOS EN ESTA DECLARACIÓN SON CIERTOS.<p>
 		</div>
  	 </div>
 </body>
