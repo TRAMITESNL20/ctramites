@@ -10,17 +10,25 @@ class DashboardController extends Controller
     	$user = \Session::get('user');
     	if(isset($user->notary)) $notary = $user->notary->id;
 
-    	$counts = curlSendRequest('POST', getenv("TESORERIA_HOSTNAME")."/solicitudes-filtrar/count", [
+    	$solicitudes = curlSendRequest('POST', getenv("TESORERIA_HOSTNAME")."/solicitudes-filtrar/count", [
     		"data" => [
     			[ "estatus" => 80, "id_usuario" => (int)$user->id ],
     			[ "estatus" => 99, "id_usuario" => (int)$user->id ],
+    			[ "estatus" => 5, "id_usuario" => (int)$user->id ],
     			[ "estatus" => 3, "id_usuario" => (int)$user->id ],
-    			[ "estatus" => 1, "id_usuario" => (int)$user->id ]
+    			[ "estatus" => 1, "id_usuario" => (int)$user->id ],
+    			[ "estatus" => 98, "id_usuario" => (int)$user->id ],
+    			[ "estatus" => 2, "id_usuario" => (int)$user->id ]
     		]
     	]);
-    	$pendingPayment = curlSendRequest('POST', getenv("TESORERIA_HOSTNAME")."/solicitudes-filtrar", [ "estatus" => 99, (isset($notary) ? "notary_id" : "id_usuario") => (int)(isset($notary) ? $notary : $user->id) ]);
-    	$waiting = curlSendRequest('POST', getenv("TESORERIA_HOSTNAME")."/solicitudes-filtrar", [ "estatus" => 3, (isset($notary) ? "notary_id" : "id_usuario") => (int)(isset($notary) ? $notary : $user->id) ]);
-    	$progress = curlSendRequest('POST', getenv("TESORERIA_HOSTNAME")."/solicitudes-filtrar", [ "estatus" => 1, (isset($notary) ? "notary_id" : "id_usuario") => (int)(isset($notary) ? $notary : $user->id) ]);
+
+		$draft = $solicitudes[0];
+		$pendingPayment = $solicitudes[1];
+		$pendingPaymentReference = $solicitudes[2];
+		$waiting = $solicitudes[3];
+		$progress = $solicitudes[4];
+		$toSign = $solicitudes[5];
+		$closed = $solicitudes[6];
     	$total = 5;
 
 		set_layout_arg([
@@ -37,13 +45,19 @@ class DashboardController extends Controller
 			"totals" => [
 				"draft" => count($draft),
 				"pendingPayment" => count($pendingPayment),
+				"pendingPaymentReference" => count($pendingPaymentReference),
 				"waiting" => count($waiting),
 				"progress" => count($progress),
+				"toSign" => count($toSign),
+				"closed" => count($closed)
 			],
 			"draft" => array_splice($draft, 0, $total),
 			"pendingPayment" => array_splice($pendingPayment, 0, $total),
+			"pendingPaymentReference" => array_splice($pendingPaymentReference, 0, $total),
 			"waiting" => array_splice($waiting, 0, $total),
-			"progress" => array_splice($progress, 0, $total)
+			"progress" => array_splice($progress, 0, $total),
+			"toSign" => array_splice($toSign, 0, $total),
+			"closed" => array_splice($closed, 0, $total)
 		]);
     }
 }
