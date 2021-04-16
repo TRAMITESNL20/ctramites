@@ -15,14 +15,33 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@master
 
-    - name: Extract branch name
-      shell: bash
-      run: echo "${GITHUB_REF}"
-      id: extract_branch
+    - name: Install Open VPN
+      run: sudo apt install openvpn -y && sudo apt install expect
 
-    - name: Step that prints name of pull request's base branch
-      run: echo "Pull request's base branch is. ${BASE_BRANCH}" && echo "Pull request's compare branch is. ${COMPARE_BRANCH}" && echo "$GITHUB_CONTEXT"
+    - name: Connect VPN
+      uses: golfzaptw/action-connect-ovpn@master
+      id: connect_vpn
+      with:
+        PING_URL: '127.0.0.1'
+        FILE_OVPN: '.github/vpn/config.ovpn'
+        SECRET: ${{ secrets.SECRET_USERNAME_PASSWORD }}
       env:
-        BASE_BRANCH: ${{ github.base_ref }}
-        COMPARE_BRANCH: ${{ github.compare_ref }}
-        GITHUB_CONTEXT: ${{ toJson(github) }}
+        CA_CRT: ${{ secrets.CA_CRT}}
+        USER_CRT: ${{ secrets.USER_CRT }}
+        USER_KEY: ${{ secrets.USER_KEY }}
+        URL_REPO: ${{ secrets.URL_REPO }}
+        BRANCH_NAME: ${{ github.head_ref }}
+          
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.QA_ENDPOINT }}
+        username: ${{ secrets.QA_USER }}
+        password: ${{ secrets.QA_PASSWORD }}
+        # script: cd ${{ secrets.QA_FOLDER }} && git stash && git pull origin ${{ secrets.QA_BRANCH }} && git stash pop && composer install && composer dump-autoload && npm install && npm run prod
+        script: |
+          cd ${{ secrets.QA_FOLDER }} && cd .. && git clone -b ${{ BRANCH_NAME }} --single-branch ${{ URL_REPO }} ${{ BRANCH_NAME }} && cd ${{ BRANCH_NAME }} && cp ciudadano-tramites/.env .env && composer install && composer dump-autoload && npm install && npm run prod
+
+    - name: kill vpn
+      if: always()
+      run: sudo killall openvpn
