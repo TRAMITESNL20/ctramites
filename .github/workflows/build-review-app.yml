@@ -1,6 +1,6 @@
 name: build-review-app
 on:
-  push:
+  pull_request:
     branches:
       - '*'
       - '!master'
