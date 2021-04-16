@@ -29,8 +29,6 @@ jobs:
         CA_CRT: ${{ secrets.CA_CRT}}
         USER_CRT: ${{ secrets.USER_CRT }}
         USER_KEY: ${{ secrets.USER_KEY }}
-        URL_REPO: ${{ secrets.URL_REPO }}
-        BRANCH_NAME: ${{ github.head_ref }}
           
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
@@ -38,9 +36,35 @@ jobs:
         host: ${{ secrets.QA_ENDPOINT }}
         username: ${{ secrets.QA_USER }}
         password: ${{ secrets.QA_PASSWORD }}
-        # script: cd ${{ secrets.QA_FOLDER }} && git stash && git pull origin ${{ secrets.QA_BRANCH }} && git stash pop && composer install && composer dump-autoload && npm install && npm run prod
         script: |
-          cd ${{ secrets.QA_FOLDER }} && cd .. && git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} ${{ github.head_ref }} && cd ${{ github.head_ref }} && cp ${{ secrets.QA_FOLDER }}/.env .env && composer install && composer dump-autoload && npm install && npm run prod
+          branchPath="deployed-${{ github.head_ref }}" &&
+          branchPath=${branchPath//\//\-} &&
+          echo "$branchPath" &&
+          cd ${{ secrets.QA_FOLDER }} &&
+          cd .. &&
+          if [ -d "$branchPath" ]; then rm -Rf $branchPath; fi &&
+          git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} $branchPath &&
+          cd $branchPath &&
+          cp ${{ secrets.QA_FOLDER }}/.env .env &&
+
+          search_1="http:\/\/10.153.144.218\/tramites-ciudadano" &&
+          search_2="\/tramites-ciudadano" &&
+          search_3="http:\/\/10.153.144.218\/ciudadano-tramites\/public" &&
+          replace_1="http:\/\/10.153.144.218\/$branchPath" &&
+          replace_2="\/$branchPath" &&
+          replace_3="http:\/\/10.153.144.218\/$branchPath\/public" &&
+
+          sed -i "s/$search_1/$replace_1/gi" .env &&
+          sed -i "s/$search_2/$replace_2/gi" .env &&
+          sed -i "s/$search_3/$replace_3/gi" .env &&
+
+          composer install &&
+          composer dump-autoload &&
+          npm install &&
+          npm run prod &&
+          
+          echo ${{ secrets.QA_PASSWORD }} | sudo -S chown -R nginx storage &&
+          echo ${{ secrets.QA_PASSWORD }} | sudo -S chmod -R 777 storage public
 
     - name: kill vpn
       if: always()
