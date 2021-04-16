@@ -40,7 +40,7 @@ jobs:
         password: ${{ secrets.QA_PASSWORD }}
         # script: cd ${{ secrets.QA_FOLDER }} && git stash && git pull origin ${{ secrets.QA_BRANCH }} && git stash pop && composer install && composer dump-autoload && npm install && npm run prod
         script: |
-          cd ${{ secrets.QA_FOLDER }} && cd .. && git clone -b ${ BRANCH_NAME } --single-branch ${ URL_REPO } ${ BRANCH_NAME } && cd ${ BRANCH_NAME } && cp ciudadano-tramites/.env .env && composer install && composer dump-autoload && npm install && npm run prod
+          cd ${{ secrets.QA_FOLDER }} && cd .. && git clone -b ${{ env.BRANCH_NAME }} --single-branch ${{ env.URL_REPO }} ${{ env.BRANCH_NAME }} && cd ${{ env.BRANCH_NAME }} && cp ciudadano-tramites/.env .env && composer install && composer dump-autoload && npm install && npm run prod
 
     - name: kill vpn
       if: always()
