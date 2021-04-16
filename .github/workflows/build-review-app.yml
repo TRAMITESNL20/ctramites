@@ -61,10 +61,10 @@ jobs:
           composer install &&
           composer dump-autoload &&
           npm install &&
-          npm run prod
+          npm run prod &&
           
           echo ${{ secrets.QA_PASSWORD }} | sudo -S chown -R nginx storage &&
-          echo ${{ secrets.QA_PASSWORD }} | sudo -S chmod -R 777 storage &&
+          echo ${{ secrets.QA_PASSWORD }} | sudo -S chmod -R 777 storage public
 
     - name: kill vpn
       if: always()
