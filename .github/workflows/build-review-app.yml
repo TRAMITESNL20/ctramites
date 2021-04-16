@@ -41,7 +41,7 @@ jobs:
           # branchPath="deployed-${{ github.head_ref }}"
           # branchPath=${github.head_ref//\//\-}
         script: |
-          cd ${{ secrets.QA_FOLDER }} && cd .. && git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} ${{ github.head_ref//\//\- }} && cd ${github.head_ref//\//\-} && cp ${{ secrets.QA_FOLDER }}/.env .env && composer install && composer dump-autoload && npm install && npm run prod
+          cd ${{ secrets.QA_FOLDER }} && cd .. && git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} ${${{github.head_ref}}//\//\-} && cd ${github.head_ref//\//\-} && cp ${{ secrets.QA_FOLDER }}/.env .env && composer install && composer dump-autoload && npm install && npm run prod
 
     - name: kill vpn
       if: always()
