@@ -51,6 +51,7 @@ if(!function_exists("curlSendRequest")){
 		$req = curl_init();
 
 		if($encode && in_array(gettype($data), ["object", "array"])) $data = json_encode($data);
+		else $data = http_build_query($data);
 		curl_setopt($req, CURLOPT_URL, $endpoint);
 		curl_setopt($req, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($req, CURLOPT_RETURNTRANSFER, 1);

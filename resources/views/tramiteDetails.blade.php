@@ -230,8 +230,14 @@
                         <div class="card-body">
                             <div class="row">
                                 <?php
-                                    foreach($tramite->info->campos as $campo => $value){
-                                        while(gettype($value) == "array"){ $value = $value[0]; }
+                                    foreach($camposConfigurados as $campo => $value){
+                                        while(gettype($value) == "array"){
+                                            if(isset($value[0])) $value = $value[0];
+                                            if(!isset($value[0])) $value[0] = '-';
+
+                                            $value = $value[0];
+                                        }
+
                                         if(gettype($value) == "object"){
                                             if(isset($value->nombre)) $value = $value->nombre;
                                             else continue;
