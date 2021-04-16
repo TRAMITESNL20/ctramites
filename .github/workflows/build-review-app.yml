@@ -44,8 +44,8 @@ jobs:
           echo "$branchPath" &&
           cd ${{ secrets.QA_FOLDER }} &&
           cd .. &&
-          git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} ${{ branchPath }} &&
-          cd ${{ branchPath }} &&
+          git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} $branchPath &&
+          cd $branchPath &&
           cp ${{ secrets.QA_FOLDER }}/.env .env &&
           composer install &&
           composer dump-autoload &&
