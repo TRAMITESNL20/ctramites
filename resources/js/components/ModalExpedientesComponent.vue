@@ -15,7 +15,7 @@
                 <b-input-group size="lg"> 
                   <b-form-input
                     id="folio-input" name="folio" v-model="$v.form.folio.$model"  :state="$v.form.folio.$dirty ? !$v.form.folio.$error : null"  aria-describedby="folio-input-feedback"
-                    @change="getMontoOperacion"></b-form-input>
+                    @change="getMontoOperacion" v-uppercase></b-form-input>
                 </b-input-group>
                 <b-form-invalid-feedback id="folio-input-feedback">
                   <span v-if="!$v.form.folio.required"  class="form-text text-danger">
@@ -124,7 +124,7 @@
       return {
         direccion:{},
         form: {
-          expediente:'', estado:{ "clave": "19", "nombre": "NUEVO LEÓN" }, municipio:{ "clave": "70", "nombre": "Monterrey", "claveEstado": "19" }, folio:''
+          expediente:'', estado:{ "clave": "19", "nombre": "NUEVO LEÓN" }, municipio:{ "clave": "70", "nombre": "MONTERREY", "claveEstado": "19" }, folio:''
         },
         idModa:  uuid.v4(),
         btnIcon:'',titleModal:'', btnOkLabel:'', textBtnOpenModal:'',classBtn:'',
@@ -152,7 +152,7 @@
       resetModal() {
         
         this.form = { 
-            expediente:'', estado:{ "clave": "19", "nombre": "NUEVO LEÓN" }, municipio:{ "clave": "70", "nombre": "Monterrey", "claveEstado": "19" }, folio:''
+            expediente:'', estado:{ "clave": "19", "nombre": "NUEVO LEÓN" }, municipio:{ "clave": "70", "nombre": "MONTERREY", "claveEstado": "19" }, folio:''
         }
         this.clave = this.$v.form.municipio.$model.clave;
       },
@@ -255,6 +255,7 @@
           let options = await this.obtenerOptions(url);
           this.municipios = options.map( option => {
             option.claveEstado = clave;
+            option.nombre = option.nombre.toUpperCase();
             return option;
           }); 
         }
