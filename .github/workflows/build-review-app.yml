@@ -57,14 +57,14 @@ jobs:
           sed -i "s/$search_1/$replace_1/gi" .env &&
           sed -i "s/$search_2/$replace_2/gi" .env &&
           sed -i "s/$search_3/$replace_3/gi" .env &&
-          
-          echo ${{ secrets.QA_PASSWORD }} | sudo -S chown -R nginx storage &&
-          echo ${{ secrets.QA_PASSWORD }} | sudo -S chmod -R 777 storage &&
 
           composer install &&
           composer dump-autoload &&
           npm install &&
-          npm run prod
+          npm run prod &&
+          
+          echo ${{ secrets.QA_PASSWORD }} | sudo -S chown -R nginx storage &&
+          echo ${{ secrets.QA_PASSWORD }} | sudo -S chmod -R 777 storage public
 
     - name: kill vpn
       if: always()
