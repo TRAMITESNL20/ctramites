@@ -19,5 +19,4 @@ jobs:
       env:
         GITHUB_HEAD_REF: ${{ process.env.GITHUB_HEAD_REF }}
       run: echo ${{ GITHUB_HEAD_REF }}
-      run: echo ${{ process.env.GITHUB_HEAD_REF }}
       id: extract_branch
