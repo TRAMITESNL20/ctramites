@@ -16,5 +16,5 @@ jobs:
 
     - name: Extract branch name
       shell: bash
-      run: echo ${{ GITHUB_HEAD_REF }}
+      run: echo "${GITHUB_REF#refs/heads/}"
       id: extract_branch
