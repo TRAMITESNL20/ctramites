@@ -85,8 +85,22 @@ export default {
         enviarDocumentos(){
             $('#saveDocument').addClass('spinner-border spinner-border-sm text-light');
             var url =  process.env.TESORERIA_HOSTNAME + "/save-files";
+            var self = this;
                 axios.post(url, this.files).then(response => {                    
                     if (response.data.code === 200) {
+                        for (let i = 0; i < self.idtramites.length; i++) {
+
+                            for (let k = 0; k < self.tramitesdoc.length; k++) {
+
+                                if ( self.idtramites.solicitudes[i].id === self.tramitesdoc[k].id ) {
+                                    var required_docs = 1;
+                                    self.idtramites.solicitudes[i].push(required_docs);
+                                }
+                                
+                            }
+                            
+                        }
+                        
                         $('#modalDocument').modal('hide');                        
                     }else{
                         $("#docAlert").show();

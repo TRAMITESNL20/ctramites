@@ -1,6 +1,6 @@
 <template>
   <div>
-        <div class="pt-10 pl-10 pr-10"  v-if=" (tramitesdoc).length  != 2">
+        <div class="pt-10 pl-10 pr-10"  v-if=" (tramitesdoc).length > 0">
             <div >
                 <p> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
                 <modal-document-component 
@@ -12,7 +12,7 @@
         <div 
 
         >
-            <vue-pdf-component :urlSource="urlFirmado" >  
+            <vue-pdf-component :urlSource="urlFirmado" v-if="docFirmado == 1" >  
             
             </vue-pdf-component>
         </div>
@@ -26,7 +26,13 @@
                 @urlFirmado="urlFirmadoMethod">
             </firma-electronica-component>
         </div>
-        asda{{urlFirmado}}
+
+        <code>usuario {{usuario.typeof()}}
+        </code>
+        <code> tramitesdoc{{ tramitesdoc.typeof()}}
+        </code>
+
+       
   </div>
 
 </template>
@@ -47,7 +53,8 @@ export default {
         docFirmadoMethod(firmado){
             this.docFirmado =  firmado;
         }
-    }
+    },
+    
 
 }
 </script>
