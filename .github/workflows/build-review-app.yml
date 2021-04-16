@@ -22,5 +22,7 @@ jobs:
 
     - name: Step that prints name of pull request's base branch
       run: echo "Pull request's base branch is. ${BASE_BRANCH}"
+      run: echo "Pull request's compare branch is. ${COMPARE_BRANCH}"
       env:
         BASE_BRANCH: ${{ github.base_ref }}
+        COMPARE_BRANCH: ${{ github.compare_ref }}
