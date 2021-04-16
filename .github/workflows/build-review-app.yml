@@ -17,8 +17,9 @@ jobs:
 
     - name: Test
       run: |
-        path="${{ github.head_ref }}"
-        echo ${path//\//\-}
+        path="deployed-${{ github.head_ref }}"
+        path=${path//\//\-}
+        echo "$path"
 
     # - name: Install Open VPN
     #   run: sudo apt install openvpn -y && sudo apt install expect
