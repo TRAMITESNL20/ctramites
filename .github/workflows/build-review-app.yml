@@ -39,7 +39,7 @@ jobs:
         # script: cd ${{ secrets.QA_FOLDER }} && git stash && git pull origin ${{ secrets.QA_BRANCH }} && git stash pop && composer install && composer dump-autoload && npm install && npm run prod
         # cd ${{ secrets.QA_FOLDER }} && cd .. && git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} ${ "${{ github.head_ref }}"//\//\- }
         script: |
-          branchPath="deployed-${{ github.head_ref }}" && branchPath=${branchPath//\//\-} && cd ${{ secrets.QA_FOLDER }} && cd .. && git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} ${{ branchPath }} && cd ${{ branchPath }} && cp ${{ secrets.QA_FOLDER }}/.env .env && composer install && composer dump-autoload && npm install && npm run prod
+          env.branchPath="deployed-${{ github.head_ref }}" && env.branchPath=${branchPath//\//\-} && cd ${{ secrets.QA_FOLDER }} && cd .. && git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} ${{ env.branchPath }} && cd ${{ env.branchPath }} && cp ${{ secrets.QA_FOLDER }}/.env .env && composer install && composer dump-autoload && npm install && npm run prod
 
     - name: kill vpn
       if: always()
