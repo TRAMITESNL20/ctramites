@@ -50,13 +50,16 @@ jobs:
           search_1="http:\/\/10.153.144.218\/tramites-ciudadano" &&
           search_2="\/tramites-ciudadano" &&
           search_3="http:\/\/10.153.144.218\/ciudadano-tramites\/public" &&
+          search_4="http:\/\/10.153.144.218\/tramites-ciudadano\/public\/" &&
           replace_1="http:\/\/10.153.144.218\/$branchPath" &&
           replace_2="\/$branchPath" &&
           replace_3="http:\/\/10.153.144.218\/$branchPath\/public" &&
+          replace_4="http:\/\/10.153.144.218\/$branchPath\/public\/" &&
 
           sed -i "s/$search_1/$replace_1/gi" .env &&
           sed -i "s/$search_2/$replace_2/gi" .env &&
           sed -i "s/$search_3/$replace_3/gi" .env &&
+          sed -i "s/$search_4/$replace_4/gi" .env &&
 
           composer install &&
           composer dump-autoload &&
