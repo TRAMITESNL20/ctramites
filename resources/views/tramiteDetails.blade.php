@@ -1,5 +1,13 @@
 <?php
     $info = isset($tramite->info->campos->Escritura) ? $tramite->info->campos->Escritura : ( isset($tramite->info->campos->Expediente) ? $tramite->info->campos->Expediente : null );
+    $camposConfigurados = [];
+    foreach($tramite->info->camposConfigurados as $campo){
+        $name = strtolower($campo->nombre);
+        $name = preg_replace("([^A-Za-z\ ])", '', $name);
+        $name = preg_replace('/\s+/', '_', $name);
+        $camposConfigurados[$name] = isset($campo->valor) ? $campo->valor : (isset($campo->archivoCargado) ? $campo->archivoCargado : null);
+    }
+    // dd($camposConfigurados);
     // function getFields ($campos) {
         // $fields = "";
         // foreach($campos as $key => $val){
@@ -56,78 +64,194 @@
                 	</div>
                 </div>
                 <div class="card mt-5">
-                	<div class="card-header"><strong>Información</strong></div>
-                	<div class="card-body">
-                		<div class="row">
-                			<?php
-                				foreach($tramite->info->campos as $campo => $value){
-                					while(gettype($value) == "array"){ $value = $value[0]; }
-                                    if(gettype($value) == "object"){
-                                        if(isset($value->nombre)) $value = $value->nombre;
-                                        else continue;
-                                    }
-                					echo "
-                						<div class=\"col-md-6\">
-                							<span class=\"text-muted\">$campo</span>
-                							<p><strong>$value</strong></p>
-                						</div>
-                					";
-                				}
-                			?>
-                		</div>
-                	</div>
-                    @if ($tramite->tramite_id == 399)
-                        <hr>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <span class="text-muted">Expediente</span>
-                                    <p><strong>{{ $info->expedientes[0]->expediente }}</strong></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <span class="text-muted">Estado</span>
-                                    <p><strong>{{ $info->expedientes[0]->estado->nombre }}</strong></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <span class="text-muted">Municipio</span>
-                                    <p><strong>{{ $info->expedientes[0]->municipio->nombre }}</strong></p>
+                    @if ($tramite->tramite_id == getenv('TRAMITE_5_ISR'))
+                        @foreach($camposConfigurados['expedientes']->expedientes as $ind => $expediente)
+                            <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>Expedientes Catastrales</strong><span class="btn btn-light ml-auto">{{ $ind+1 }} de {{ count($camposConfigurados['expedientes']->expedientes) }}</span></h5>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <span class="text-muted">Número de escritura pública o minuta</span>
+                                        <p><strong>{{ $camposConfigurados['escritura'] }}</strong></p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="text-muted">Fecha de escritura pública o minuta</span>
+                                        <p><strong>{{ $camposConfigurados['fecha_de_escritura_o_minuta'] }}</strong></p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="text-muted">Cálculo del ISR conforme al 126 LISR (Archivo)</span>
+                                        <p>
+                                            @if($camposConfigurados['calculo_del_isr_conforme_al_lisr'])
+                                                <a href="" target="_blank" class="btn btn-primary text-white mt-2"><i class="fas fa-download"></i> Ver Documento</a>
+                                            @else
+                                            -
+                                            @endif
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="card-header"><strong>Dirección</strong></div>
-                        <div class="card-body">
-                            <div class="row">
-                                <?php
-                                    foreach($info->expedientes[0]->direccion as $key => $val){
-                                        if(gettype($val) == 'array' && count($val) == 1){
-                                            echo "</div>
-                                            </div>
-                                            <div class=\"card-header\"><strong>".str_replace('_', ' ', $key)."v</strong></div>
-                                            <div class=\"card-body\">
-                                                <div class=\"row\">";
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <span class="text-muted">Expediente</span>
+                                        <p><strong>{{ $expediente->expediente }}</strong></p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="text-muted">Estado</span>
+                                        <p><strong>{{ $expediente->estado->nombre }}</strong></p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="text-muted">Municipio</span>
+                                        <p><strong>{{ $expediente->municipio->nombre }}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="card-header border-0 text-uppercase bg-secondary"><strong>Dirección</strong></h5>
+                            <div class="card-body">
+                                <div class="row">
+                                    <?php
+                                        foreach($expediente->direccion as $key => $val){
+                                            if(gettype($val) == 'array' && count($val) == 1){
+                                                echo "</div>
+                                                </div>
+                                                <h6 class=\"card-header\"><strong>".strtoupper(str_replace('_', ' ', $key))."</strong></h6>
+                                                <div class=\"card-body\">
+                                                    <div class=\"row\">";
 
-                                            foreach($val[0] as $key => $val){
+                                                foreach($val[0] as $key => $val){
+                                                    echo "
+                                                        <div class=\"col-md-4\">
+                                                            <span class=\"text-muted text-capitalize\">".str_replace('_', ' ', $key)."</span>
+                                                            <p><strong>".( !empty($val) ? $val : '-' )."</strong></p>
+                                                        </div>
+                                                    ";
+                                                }
+                                            }else{
                                                 echo "
-                                                    <div class=\"col-md-6\">
-                                                        <span class=\"text-muted text-capitalize\">".str_replace('_', ' ', $key)."v</span>
-                                                        <p><strong>{$val}</strong></p>
+                                                    <div class=\"col-md-4\">
+                                                        <span class=\"text-muted text-capitalize\">".str_replace('_', ' ', $key)."</span>
+                                                        <p><strong>".( !empty($val) ? $val : '-' )."</strong></p>
                                                     </div>
                                                 ";
                                             }
-                                        }else{
-                                            echo "
-                                                <div class=\"col-md-6\">
-                                                    <span class=\"text-muted text-capitalize\">".str_replace('_', ' ', $key)."v</span>
-                                                    <p><strong>{$val}</strong></p>
-                                                </div>
-                                            ";
                                         }
+                                    ?>
+                                </div>
+                            </div>
+                        @endforeach
+                        </div>
+                        <div class="card mt-5">
+                            @foreach($camposConfigurados['listado_de_enajenantes']->enajenantes as $ind => $enajenante)
+                                <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>DATOS DEL ENAJENANTE</strong><span class="btn btn-light ml-auto">{{ $ind+1 }} de {{ count($camposConfigurados['listado_de_enajenantes']->enajenantes) }}</span></h5>
+                                <div class="card-body mb-3">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Registro Federal del Contribuyente</span>
+                                            <p><strong>{{ $enajenante->datosPersonales->curp }}</strong></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Clave Única de Registro de Población</span>
+                                            <p><strong>{{ $enajenante->datosPersonales->rfc }}</strong></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Clave de Elector (INE)</span>
+                                            <p><strong>{{ $enajenante->datosPersonales->claveIne }}</strong></p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Nombre</span>
+                                            <p><strong>{{ $enajenante->datosPersonales->nombre }}</strong></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Apellido Paterno</span>
+                                            <p><strong>{{ $enajenante->datosPersonales->apPat }}</strong></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Apellido Materno</span>
+                                            <p><strong>{{ $enajenante->datosPersonales->apMat }}</strong></p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <span class="text-muted">% de Co-propiedad</span>
+                                            <p><strong>{{ $enajenante->porcentajeCompra }}</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h6 class="card-header"><strong>DATOS PARA DETERMINAR EL IMPUESTO DE LA ENTIDAD FEDERATIVA</strong></h6>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Tipo de declaración</span>
+                                            <p><strong>{{ $tramite->info->tipoTramite }}</strong></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Ganancia obtenida</span>
+                                            <p><strong>MX$ {{ number_format($enajenante->detalle->Salidas->{'Ganancia Obtenida'}, 2) }}</strong></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Monto obtenido conforme al ART 127 BIS de la ISR</span>
+                                            <p><strong>MX$ {{ number_format($enajenante->detalle->Salidas->{'Monto obtenido conforme al art 127 LISR'}, 2) }}</strong></p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Pago provisional conforme al ART 126 BIS de la ISR</span>
+                                            <p><strong>MX$ {{ number_format($enajenante->detalle->Salidas->{'Pago provisional conforme al art 126 LISR'}, 2) }}</strong></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Impuesto correspondiente a la entidad federativa</span>
+                                            <p><strong>MX$ {{ number_format($enajenante->detalle->Salidas->{'Impuesto correspondiente a la entidad federativa'}, 2) }}</strong></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Parte actualizada del impuesto</span>
+                                            <p><strong>MX$ {{ number_format($enajenante->detalle->Salidas->{'Parte actualizada del impuesto'}, 2) }}</strong></p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Recargos</span>
+                                            <p><strong>MX$ {{ number_format($enajenante->detalle->Salidas->{'Recargos'}, 2) }}</strong></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Multa por correción fiscal</span>
+                                            <p><strong>MX$ {{ number_format($enajenante->detalle->Salidas->{'Multa corrección fiscal'}, 2) }}</strong></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span class="text-muted">Importe total</span>
+                                            <p><strong>MX$ {{ number_format($enajenante->detalle->Salidas->{'Importe total'}, 2) }}</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="card-header text-uppercase bg-secondary"><strong>Información</strong></div>
+                        <div class="card-body">
+                            <div class="row">
+                                <?php
+                                    foreach($camposConfigurados as $campo => $value){
+                                        while(gettype($value) == "array"){
+                                            if(isset($value[0])) $value = $value[0];
+                                            if(!isset($value[0])) $value[0] = '-';
+
+                                            $value = $value[0];
+                                        }
+
+                                        if(gettype($value) == "object"){
+                                            if(isset($value->nombre)) $value = $value->nombre;
+                                            else continue;
+                                        }
+                                        echo "
+                                            <div class=\"col-md-6\">
+                                                <span class=\"text-muted\">$campo</span>
+                                                <p><strong>$value</strong></p>
+                                            </div>
+                                        ";
                                     }
                                 ?>
                             </div>
-                        </div>
-                        <hr>
+                        </div>                        
                     @endif
                 </div>
                 <div class="card mt-5 <?= count($tramite->mensajes) == 0 ? "d-none" : ""?>">
