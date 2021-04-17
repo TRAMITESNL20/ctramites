@@ -17,8 +17,9 @@ class CheckSession
     {
         $session = to_object(session()->all());
         if(!empty($session->authenticated)){
-            $cart = curlSendRequest("GET", env("TESORERIA_HOSTNAME") . "/solicitudes-info/".session()->get("user")->id, []);
-            $firma = curlSendRequest("GET", env("TESORERIA_HOSTNAME") . "/solicitudes-info/".session()->get("user")->id."/firma", []);
+            $cart = curlSendRequest("GET", env("TESORERIA_HOSTNAME") . "/solicitudes-info/".session()->get("user")->id);
+            // dd($cart);
+            $firma = curlSendRequest("GET", env("TESORERIA_HOSTNAME") . "/solicitudes-info/".session()->get("user")->id."/firma");
             $cartCount = 0;
             $firmaCount = 0;
             if(isset($cart->tramites)){
