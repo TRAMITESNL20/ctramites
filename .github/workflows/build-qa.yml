@@ -16,6 +16,11 @@ jobs:
     - name: Install Open VPN
       run: sudo apt install openvpn -y && sudo apt install expect
 
+    - name: Get Github Context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+
     - name: Connect VPN
       uses: golfzaptw/action-connect-ovpn@master
       id: connect_vpn
