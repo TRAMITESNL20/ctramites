@@ -4,14 +4,24 @@ on:
     types: [assigned, opened, synchronize, reopened]
     branches:
       - '*'
+      - '!dev'
       - '!master'
 
 jobs:
-  connect-vpn-build-qa:
+  deploy-review-app:
     name: install ubuntu
     runs-on: ubuntu-latest
 
     steps:
+    - name: start deployment
+      uses: bobheadxi/deployments@v0.4.3
+      id: deployment
+      with:
+        step: start
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: review-app
+        desc: 
+
     - name: Checkout repository
       uses: actions/checkout@master
 
@@ -37,8 +47,7 @@ jobs:
         username: ${{ secrets.QA_USER }}
         password: ${{ secrets.QA_PASSWORD }}
         script: |
-          branchPath="deployed-${{ github.head_ref }}" &&
-          branchPath=${branchPath//\//\-} &&
+          branchPath="deployed-${${{ github.head_ref }}//\//\-}" &&
           echo "$branchPath" &&
           cd ${{ secrets.QA_FOLDER }} &&
           cd .. &&
@@ -73,3 +82,13 @@ jobs:
     - name: kill vpn
       if: always()
       run: sudo killall openvpn
+
+    - name: update deployment status
+      uses: bobheadxi/deployments@v0.4.3
+      if: always()
+      with:
+        step: finish
+        token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+        env_url: http://${{ secrets.QA_ENDPOINT }}/deployed-${${{ github.head_ref }}//\//\-}
