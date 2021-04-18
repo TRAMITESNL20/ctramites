@@ -4,7 +4,6 @@ on:
     types: [assigned, opened, synchronize, reopened]
     branches:
       - '*'
-      - '!dev'
       - '!master'
 
 jobs:
