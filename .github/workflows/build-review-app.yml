@@ -7,7 +7,7 @@ on:
       - '!master'
 
 env:
-    branchPath: deployed-${{ github.head_ref }}
+    branchPath: $(echo "deployed-${{ github.head_ref }}" | sed "s/\//\-/")
 jobs:
   deploy-review-app:
     name: install ubuntu
@@ -48,7 +48,7 @@ jobs:
         username: ${{ secrets.QA_USER }}
         password: ${{ secrets.QA_PASSWORD }}
         script: |
-          branchPath=$(echo "${{ env.branchPath }}" | sed "s/\//\-/")
+          branchPath=${{ env.branchPath }}
           echo "$branchPath" &&
           cd ${{ secrets.QA_FOLDER }} &&
           cd .. &&
@@ -92,4 +92,4 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         status: ${{ job.status }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-        env_url: http://${{ secrets.QA_ENDPOINT }}/deployed-$branchPath
+        env_url: http://${{ secrets.QA_ENDPOINT }}/deployed-${{ env.branchPath }}
