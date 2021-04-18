@@ -6,6 +6,8 @@ on:
       - '*'
       - '!master'
 
+env:
+    branchPath: deployed-${{ github.head_ref }}
 jobs:
   deploy-review-app:
     name: install ubuntu
@@ -18,8 +20,8 @@ jobs:
       with:
         step: start
         token: ${{ secrets.GITHUB_TOKEN }}
-        env: review-app
-        desc: 
+        env: integration
+        ref: ${{ github.head_ref }}
 
     - name: Checkout repository
       uses: actions/checkout@master
@@ -46,7 +48,7 @@ jobs:
         username: ${{ secrets.QA_USER }}
         password: ${{ secrets.QA_PASSWORD }}
         script: |
-          branchPath="deployed-${${{ github.head_ref }}//\//\-}" &&
+          branchPath=${env.branchPath//\//\-} &&
           echo "$branchPath" &&
           cd ${{ secrets.QA_FOLDER }} &&
           cd .. &&
@@ -90,4 +92,4 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         status: ${{ job.status }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-        env_url: http://${{ secrets.QA_ENDPOINT }}/deployed-${${{ github.head_ref }}//\//\-}
+        env_url: http://${{ secrets.QA_ENDPOINT }}/deployed-$branchPath
