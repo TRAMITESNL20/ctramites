@@ -19,7 +19,14 @@ jobs:
     - name: Get Github Context
       env:
         GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
+      run: |
+        echo "$GITHUB_CONTEXT"
+
+    - name: PR Merged
+      uses: guchaocharlie/comment-pr@v1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        comment: "Test"
 
     - name: Connect VPN
       uses: golfzaptw/action-connect-ovpn@master
