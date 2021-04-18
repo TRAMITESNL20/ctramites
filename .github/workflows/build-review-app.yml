@@ -48,7 +48,7 @@ jobs:
         username: ${{ secrets.QA_USER }}
         password: ${{ secrets.QA_PASSWORD }}
         script: |
-          branchPath=${${{env.branchPath}}//\//\-} &&
+          branchPath=${'${{env.branchPath}}'//\//\-} &&
           echo "$branchPath" &&
           cd ${{ secrets.QA_FOLDER }} &&
           cd .. &&
