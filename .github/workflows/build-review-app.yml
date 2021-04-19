@@ -15,10 +15,12 @@ jobs:
 
     steps:
     - name: Set env
-      run: env.branchPath=$(echo "deployed-${{ github.head_ref }}" | sed "s/\//\-/")
+      run: |
+        PATH=$(echo "deployed-${{ github.head_ref }}" | sed "s/\//\-/")
+        echo "BRANCH_PATH=$(echo $PATH | cut -c 1-6)" >> $GITHUB_ENV
 
     - name: Test new env
-      run: echo $BRANCH_PATH
+      run: echo ${{ env.BRANCH_PATH }}
 
     - name: start deployment
       uses: bobheadxi/deployments@v0.4.3
