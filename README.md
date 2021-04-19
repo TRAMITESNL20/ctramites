@@ -2,7 +2,6 @@
 
 ## Install Composer
 #### Composer - [Download](https://getcomposer.org/download/).
-
 To quickly install Composer in the current directory, run the following script in your terminal. To automate the installation, use the [guide on installing Composer programmatically](https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md).
 
 ```php
