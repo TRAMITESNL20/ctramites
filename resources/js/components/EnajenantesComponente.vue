@@ -141,7 +141,12 @@
                         return this.porcentajeTotalCompra <= value
                     },
                     isPorcentajeComplete(value){
-                        return this.porcentajeTotalCompra == value;
+                        if(this.enajentantes && this.enajentantes.length > 0){
+                            return this.porcentajeTotalCompra == value;
+                        } else {
+                            return true;
+                        }
+                        
                     },
                     maxValue: maxValue(100)
                 }
