@@ -281,7 +281,7 @@
 				<td class=""></td>
 			</tr>
 			<tr class="">
-				<td class="border_bottom  columna" style="text-align:left	">{{ $user->role->description ??'' }}  {{ $user->name ??'' }} {{ $user->mothers_surname ??'' }} {{ $user->fathers_surname ??'' }} {{ $user->curp ??'' }}   </td>
+				<td class="border_bottom  columna" style="text-align:left	">{{ $user}}   </td>
 				<td class="border_bottom columna"></td>
 				<td class="border_bottom columna value text-left">Codigo QR Oficial</td>
 			</tr>
