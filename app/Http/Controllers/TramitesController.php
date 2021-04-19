@@ -580,6 +580,8 @@ class TramitesController extends Controller
 
 
     public function respuestaPago(Request $request ){
+      var_dump( $request);
+      /*
       $url = getenv("PAYMENTS_HOSTNAME");
       $PAYMENTS_KEY = getenv("PAYMENTS_KEY");
 
@@ -595,7 +597,7 @@ class TramitesController extends Controller
         return layout_view("tramites.respuestaPago",  [ "respuestabanco" =>$json] );
       } else {
         return layout_view("tramites.respuestaPago",  [ "respuestabanco" =>[] ]);
-      }
+      }*/
 
     }
 

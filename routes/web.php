@@ -85,9 +85,9 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		Route::get('/pendiente-firma', "PendienteFirmaController@index")->name("pendiente-firma");
 		Route::get('/cart/', "TramitesController@carshop")->name("tramite.cart");
 
-		Route::get('/respuestaPago', "TramitesController@respuestaPago")->name("respuestaPago");
+		
 
 	});
-
+	Route::post('/respuestaPago', "TramitesController@respuestaPago")->name("respuestaPago");
 	Route::post('/respuestaPagoBBVA', "TramitesController@respuestaPagoBBVA")->name("respuestaPagoBBVA");
 });
