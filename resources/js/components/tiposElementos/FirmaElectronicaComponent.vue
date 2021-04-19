@@ -26,7 +26,9 @@ export default {
 			idFirmado: [],
 			urlFirmado: [],
 			guardado: false,
-			coutnLoad : 0
+			coutnLoad : 0,
+            docFirmadosListos: [],
+            docFirmadosPendientes: []
 		}
 	},
 	mounted() {
@@ -49,15 +51,29 @@ export default {
 				if(typeof this.folio === 'string') this.folio = [];
 				this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
 			
+                if(solicitud.required_docs == 1){
+                    this.docFirmadosListos.push(doc)
+                }else{
+                    this.docFirmadosPendientes.push(doc);
+                }
+
 			}else{
 				this.doc = doc;
 				this.llave = `${solicitud.id}`;
 				this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
+                if(solicitud.required_docs == 1){
+                    this.docFirmadosListos.push(doc)
+                }else{
+                    this.docFirmadosPendientes.push(doc);
+                }
 			}
 
 			this.idFirmado.push(solicitud.id);
 			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
-            this.$emit('urlFirmado', this.urlFirmado);
+
+        
+                
+            // this.$emit('urlFirmado', this.urlFirmado);
 
             // console.log(this.urlFirmado);
 		})
@@ -67,6 +83,7 @@ export default {
 		this.encodeData();
     },
     methods: {
+        
     	validateSigned (evt) {
     		this.coutnLoad++;
     		if(this.coutnLoad == 3){
@@ -78,10 +95,12 @@ export default {
                 .then(res => {
                     if(res.code === 200){
                         console.log('Firmado');    
+                        this.$emit('docFirmadosPendientes', this.docFirmadosPendientes);
+                        this.$emit('docFirmadosListos', this.docFirmadosListos);
+                        this.$emit('docFirmado', 1);
                     }
                     else console.log('Something goes wrong!', res);
                 });
-                this.$emit('docFirmado', 1);
                 this.$emit('urlFirmado', this.urlFirmado);
 
     		}

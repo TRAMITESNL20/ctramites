@@ -1,10 +1,10 @@
 <template>
     <div >
-      <div v-for="(url, index) in urlDownload">
-        <iframe src="http://tramites.nl.gob.mx/formato-declaracion/687" style="width:100%; height:500px;" frameborder="0"></iframe>
+      <div v-for="(url, index) in urlSourceListo">
+        <iframe :src="url" style="width:100%; height:500px;" frameborder="0"></iframe>
       </div>
         
-      <div v-for=" (url, index) in urlSource">
+      <div v-for=" (url, index) in urlSourcePendiente">
         <pdf :src="url"></pdf>
       </div>
 
@@ -15,7 +15,7 @@
 import pdf from 'vue-pdf'
 
 export default {
-  props:['urlSource', 'urlDownload'],
+  props:['urlSourceListo', 'urlSourcePendiente'],
   components: {
     pdf
   }

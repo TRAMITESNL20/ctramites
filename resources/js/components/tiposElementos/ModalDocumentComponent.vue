@@ -39,7 +39,7 @@
 
                             <label class="custom-file-label"
                             ><span>
-                                {{ fileName }}
+                                {{ fileName[index]  }}
                             </span>
                             </label>
                       
@@ -73,35 +73,38 @@ export default {
             files : [],
             fileById: '',
             filesx: '',
-            fileName: 'Seleccione archivo',
+            fileName: [],
             showAlert: 0
         }
     },
     mounted(){
         $('#modalDocument').appendTo("body");
          $("#docAlert").hide();
+         console.log('---idTramites');
+         console.log(this.idtramites);
+         console.log('---TramitesDoc');
+         console.log(this.tramitesdoc);
     },
     methods:{
         enviarDocumentos(){
-            $('#saveDocument').addClass('spinner-border spinner-border-sm text-light');
-            var url =  process.env.TESORERIA_HOSTNAME + "/save-files";
             var self = this;
+            $('#saveDocument').addClass('spinner-border spinner-border-sm text-light');
+          
+            console.log();
+            var url =  process.env.TESORERIA_HOSTNAME + "/save-files";
                 axios.post(url, this.files).then(response => {                    
                     if (response.data.code === 200) {
-                        for (let i = 0; i < self.idtramites.length; i++) {
+                        for (let i = 0; i < self.idtramites[0].solicitudes.length; i++) {
 
                             for (let k = 0; k < self.tramitesdoc.length; k++) {
 
-                                if ( self.idtramites.solicitudes[i].id === self.tramitesdoc[k].id ) {
-                                    var required_docs = 1;
-                                    self.idtramites.solicitudes[i].push(required_docs);
-                                }
-                                
+                                    if ( self.idtramites[0].solicitudes[i].id === self.tramitesdoc[k].id && self.tramitesdoc[k].required_docs == 1 ) {
+                                        self.idtramites[0].solicitudes[i].required_docs = 1;
+                                    }
                             }
-                            
-                        }
-                        
-                        $('#modalDocument').modal('hide');                        
+                            this.$emit('updatedTramites', self.idtramites)
+                        }  
+                    $('#modalDocument').modal('hide');                        
                     }else{
                         $("#docAlert").show();
                     }
@@ -116,13 +119,12 @@ export default {
 
         },
         previewFiles(id, index){
-            
+        
+        this.tramitesdoc[index].required_docs = 1
 
-
-                console.log('/////');
                 var i = $(this).prev('label').clone();
                 var auxName = $('#'+id)[0].files[0].name;
-                this.fileName =auxName;      
+                this.fileName[index] = auxName;      
 
             function getBase64(file) {
             return new Promise((resolve, reject) => {
