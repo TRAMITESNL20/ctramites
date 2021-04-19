@@ -6,7 +6,7 @@ on:
 
 jobs:
   connect-vpn-build-qa:
-    name: install ubuntu
+    name: Build QA
     runs-on: ubuntu-latest
 
     steps:

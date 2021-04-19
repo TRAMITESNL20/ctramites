@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy-review-app:
-    name: install ubuntu
+    name: Deploy Review App
     runs-on: ubuntu-latest
 
     steps:
