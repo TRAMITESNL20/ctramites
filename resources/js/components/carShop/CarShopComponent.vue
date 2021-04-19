@@ -23,22 +23,49 @@
                     </v-row>
                 </v-container>
                 <div v-if="!obteniendoTramites && items.length > 0">
-                <div class="card list-item card-custom gutter-b col-lg-12"  v-for="(item, index) in items" :key="index"  
-                v-bind:style="item.items.length > 1 ? 'background-color: rgb(217, 222, 226) !important;' : ''" id="cart-container">
-                  <agrupacion-items-carrrito-component :agrupacion="item" :index="index" :idUsuario="idUsuario"
-                  @updatingParent="updateList" ></agrupacion-items-carrrito-component>
-                </div>
-                <div class="card card-custom">
+                  <div class="card list-item card-custom gutter-b col-lg-12"  v-for="(item, index) in items" :key="index"  
+                  v-bind:style="item.items.length > 1 ? 'background-color: rgb(217, 222, 226) !important;' : ''" id="cart-container"
+                                    @drop='onDrop($event, item)' 
+                                    @dragover.prevent
+                                    @dragenter.prevent >
+
+   
+                      <agrupacion-items-carrrito-component 
+                        :agrupacion="item" 
+                        :index="index" 
+                        :idUsuario="idUsuario"
+                        @updatingParent="updateList" @dragEvent="dragEvent">
+                          
+                        </agrupacion-items-carrrito-component>
+   
+                  </div>
+
+
+
+                    <div class="card list-item card-custom gutter-b col-lg-12" id="elementDrop" style="border-style: dotted; background-color: rgba(105,105,105,1); display: none;">
+                        <div class="card-body py-7" >
+
+
+                            <div @drop='onDropFuera($event, false)' 
+                                @dragover.prevent
+                                @dragenter.prevent >
+                                  Mover aqui ...
+                                </div>
+
+                        </div>
+                    </div>
+
+                  <div class="card card-custom" >
                         <div class="card-body py-7">
                             <!--begin::Pagination-->
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
                                 <div class="d-flex flex-wrap mr-3" >
-                    <b-pagination
-                      v-model="currentPage"
-                      :total-rows="totalListTramites"
-                      :per-page="porPage"
-                      aria-controls="cart-container"
-                      align="center"></b-pagination>
+                              <b-pagination
+                                v-model="currentPage"
+                                :total-rows="totalListTramites"
+                                :per-page="porPage"
+                                aria-controls="cart-container"
+                                align="center"></b-pagination>
                                 </div>
 
                                 <div class="d-flex align-items-center">
@@ -437,7 +464,50 @@
 
         chagenPorPage(){
           this.currentPage = 1;
+        },
+
+
+        onDrop (evt, list) {
+
+          
+          const itemID = evt.dataTransfer.getData('itemID');
+
+
+          this.tramites.map( tram =>{
+              if( tram.id_tramite == itemID ){
+                if(!tram.calveTempOld){
+                  tram.calveTempOld = tram.calveTemp;
+                }
+                tram.calveTemp = list.clave;
+              }
+              return tram;
+          } );
+          $("#elementDrop").hide();
+        },
+
+        onDropFuera(evt, list){
+          const itemID = evt.dataTransfer.getData('itemID');
+          this.tramites.map( tram =>{
+              if( tram.id_tramite == itemID ){
+                tram.calveTemp = tram.calveTempOld || tram.calveTemp
+              }
+              return tram;
+          } )
+          $("#elementDrop").hide();
+        },
+
+        dragEvent(data){
+          console.log("oculatar")
+            console.log(JSON.parse(JSON.stringify(data)))
+            if(data.event == 'startdrag'){
+              $("#elementDrop").show();
+            } else {
+              $("#elementDrop").hide();
+            } 
+            
         }
+        
+
     }
-    }
+  }
 </script>

@@ -21,7 +21,7 @@
                 <!----> 
                 <div class="mr-auto" style="width: 60%;">
 
-                    <span class="ml-3" style="font-size: 12px;"  v-if="totalItemInGroup  == 1 && agrupacion.items[0].datos_solicitante">
+                    <span class="ml-3" style="font-size: 12px;"  v-if="totalItemInGroup  == 1 && agrupacion.items[0].datos_solicitante" draggable @dragstart="startdrag($event, agrupacion.items[0])" @dragend="dragend($event)">
                        {{ agrupacion.items[0].datos_solicitante.rfc || agrupacion.items[0].datos_solicitante.curp || "" }} - {{ agrupacion.items[0].datos_solicitante.razon_social ? agrupacion.items[0].datos_solicitante.razon_social : agrupacion.items[0].datos_solicitante.nombre + " " + agrupacion.items[0].datos_solicitante.apellido_paterno + " " + agrupacion.items[0].datos_solicitante.apellido_materno }}
                     </span>
                     <button class="btn btn-secondary" type="button" data-toggle="collapse" :data-target="`#collapse-${index}`" aria-expanded="false" :aria-controls="`collapse-${index}`" v-if="totalItemInGroup >1 ">
@@ -40,7 +40,7 @@
            </div>
         
            <div :id="`collapse-${index}`"  v-bind:class="totalItemInGroup > 1 ? 'collapse' : ''" v-if="totalItemInGroup >1 ">
-              <div v-bind:class="totalItemInGroup > 1 ? 'card' : ''" class="list-item card-custom gutter-b col-lg-12"  v-for="(item, i) in agrupacion.items" >
+              <div v-bind:class="totalItemInGroup > 1 ? 'card' : ''" class="list-item card-custom gutter-b col-lg-12"  v-for="(item, i) in agrupacion.items" draggable @dragstart="startdrag($event, item)" @dragend="dragend($event)" >
                  <div class="card-body p-0">
                     <div class="d-flex">
                        <div class="flex-grow-1">
@@ -131,6 +131,22 @@
             verDetalle(){
             	this.agrupacion.verDetalle =  !this.agrupacion.verDetalle;
             	this.$forceUpdate();
+            },
+
+
+            startdrag(evt, item){
+                console.log("en agrupacion")
+                this.$emit('dragEvent', {event:'startdrag'});
+                //console.log(item)
+                //console.log(  JSON.parse(JSON.stringify(agrupacion)))
+                //evt.dataTransfer.dropEffect = 'move'
+                //evt.dataTransfer.effectAllowed = 'move'
+                evt.dataTransfer.setData('itemID', item.id_tramite)
+            },
+
+            dragend(evt){
+                console.log("en fin")
+                this.$emit('dragEvent', {event:'dragend'});
             }
 
 
