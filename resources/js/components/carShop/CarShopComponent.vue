@@ -42,14 +42,14 @@
 
 
 
-                    <div class="card list-item card-custom gutter-b col-lg-12" id="elementDrop" style="border-style: dotted; background-color: rgba(105,105,105,1); display: none;">
+                    <div class="card list-item card-custom gutter-b col-lg-12" id="elementDrop" style="border-style: dotted; background-color: rgba(153,153,153,1); display: none;">
                         <div class="card-body py-7" >
 
 
                             <div @drop='onDropFuera($event, false)' 
                                 @dragover.prevent
                                 @dragenter.prevent >
-                                  Mover aqui ...
+                                  Sacar ...
                                 </div>
 
                         </div>
