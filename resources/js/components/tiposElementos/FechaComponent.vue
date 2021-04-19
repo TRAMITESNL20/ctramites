@@ -55,6 +55,8 @@
       },
       methods: {
         onContext(ctx) {
+          let date = ctx.selectedYMD.split('-');
+          if(date[2]) this.campo.show = `${date[2]}-${date[1]}-${date[0]}`;
           this.formatted = ctx.selectedFormatted
         },
         cahngeEvent(){
