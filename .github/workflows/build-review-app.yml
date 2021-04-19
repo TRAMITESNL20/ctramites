@@ -15,7 +15,7 @@ jobs:
 
     steps:
     - name: Set env
-      run: BRANCH_PATH=$(echo "deployed-${{ github.head_ref }}" | sed "s/\//\-/") >> $GITHUB_ENV
+      run: env.branchPath=$(echo "deployed-${{ github.head_ref }}" | sed "s/\//\-/")
 
     - name: Test new env
       run: echo $BRANCH_PATH
