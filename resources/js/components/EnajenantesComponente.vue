@@ -26,7 +26,7 @@
                         <span v-if="!$v.porcentajeVenta.isMayorQuePorcentajeAsignado"  class="form-text text-danger">
                            La suma de los porcentajes individuales es mayor al porcentaje de enajenación.
                         </span>
-                        <span v-if="!$v.porcentajeVenta.isPorcentajeComplete && enajentantes.length > 0"  class="form-text text-danger">
+                        <span v-if="!$v.porcentajeVenta.isPorcentajeComplete"  class="form-text text-danger">
                            El porcentaje de venta debe ser de {{$v.porcentajeVenta.$model}}
                         </span>
                         <span v-if="!$v.porcentajeVenta.maxValue"  class="form-text text-danger">
@@ -141,7 +141,12 @@
                         return this.porcentajeTotalCompra <= value
                     },
                     isPorcentajeComplete(value){
-                        return this.porcentajeTotalCompra == value;
+                        if(this.enajentantes && this.enajentantes.length > 0){
+                            return this.porcentajeTotalCompra == value;
+                        } else {
+                            return true;
+                        }
+                        
                     },
                     maxValue: maxValue(100)
                 }
