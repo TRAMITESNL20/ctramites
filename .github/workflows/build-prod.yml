@@ -6,7 +6,7 @@ on:
 
 jobs:
   connect-vpn-build-prod:
-    name: install ubuntu
+    name: Build Production
     runs-on: ubuntu-latest
 
     steps:
