@@ -92,4 +92,4 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         status: ${{ job.status }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-        env_url: http://${{ secrets.QA_ENDPOINT }}/deployed-${{ env.branchPath }}
+        env_url: "http://${{ secrets.QA_ENDPOINT }}/deployed-${{ env.branchPath }}"
