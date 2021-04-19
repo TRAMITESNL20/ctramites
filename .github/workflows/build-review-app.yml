@@ -17,7 +17,7 @@ jobs:
     - name: Set env
       run: |
         PATH=$(echo "deployed-${{ github.head_ref }}" | sed "s/\//\-/")
-        echo "BRANCH_PATH=$(echo $PATH | cut -c 1-6)" >> $GITHUB_ENV
+        echo "BRANCH_PATH=$PATH" >> $GITHUB_ENV
 
     - name: Test new env
       run: echo ${{ env.BRANCH_PATH }}
