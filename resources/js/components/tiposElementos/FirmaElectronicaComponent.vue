@@ -34,7 +34,7 @@ export default {
 		this.usuario.solicitudes.map((solicitud, ind) => {
             console.log(solicitud);
 			this.multiple = this.usuario.solicitudes.length > 1;
-        var auxEnv = process.env.APP_URL;
+            var auxEnv = process.env.APP_URL;
             if ( auxEnv == "https://tramites.nl.gob.mx") {
                 auxEnv = "http://tramites.nl.gob.mx";
             }
@@ -47,7 +47,7 @@ export default {
 				this.llave.push(`${solicitud.id}`)
 				 
 				if(typeof this.folio === 'string') this.folio = [];
-				this.folio.push(`${  ind}`)
+				this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
 			
 			}else{
 				this.doc = doc;
@@ -56,9 +56,10 @@ export default {
 			}
 
 			this.idFirmado.push(solicitud.id);
-			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
+			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
             this.$emit('urlFirmado', this.urlFirmado);
-            console.log(this.folio);
+
+            // console.log(this.urlFirmado);
 		})
 
 		this.rfc = this.user.rfc;
@@ -94,7 +95,7 @@ export default {
             var data = {
                 'perfil' : 'EI',
                 'multiple' : this.multiple,
-                'tramite' : this.usuario.tramite_id,
+                'tramite' :  this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id,
                 'llave' : this.llave,
                 'doc' : this.doc,
                 'folio' : this.folio,
@@ -119,7 +120,6 @@ export default {
             //         console.log(error)
             //     })
             //     .finally(() => console.log('listo'))
-           
                 $.ajax({
                     type: "POST",
                     data: {"tramite_id" : this.usuario.tramite_id, "value": JSON.stringify(data), "access_token" : this.access_token},

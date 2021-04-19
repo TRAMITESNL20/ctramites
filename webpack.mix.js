@@ -36,7 +36,8 @@ mix.webpackConfig({
 		dotenvplugin,
 	],
 	output : {
-		chunkFilename : "[name].[chunkhash].js"
+		chunkFilename : "[name].[chunkhash].js",
+        publicPath: process.env.MIX_ASSET_URL || "/"
 	},
 	devtool: 'source-map'
 }).sourceMaps();
