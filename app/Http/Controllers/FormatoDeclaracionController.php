@@ -8,14 +8,19 @@ use Barryvdh\DomPDF\Facade as PDF;
 class FormatoDeclaracionController extends Controller
 {
     public function index ($id) {
+		$enajenante="";
 		$tramite = curlSendRequest("GET", getenv("TESORERIA_HOSTNAME")."/solicitudes-get-tramite-pdf/{$id}");
 		if(isset($tramite->tramite) && count( $tramite->tramite->solicitudes) > 0){
 			$info = $tramite->tramite;
+			// dd($info);
 			$control = $tramite;
-			$enajenante = $info->solicitudes[0]->info->enajenante;
+			if($info->solicitudes[0]->info->tipoTramite != 'complementaria'){
+				$enajenante = $info->solicitudes[0]->info->enajenante;
+			}
 			$tipoTramite =  $info->solicitudes[0]->info->tipoTramite;
-
-			$pdf = PDF::loadView('pdf.formatoDeclaracionISR', compact('info', 'enajenante', 'tipoTramite', 'control'));
+			$user = session()->get("user");
+			
+			$pdf = PDF::loadView('pdf.formatoDeclaracionISR', compact('info', 'enajenante', 'tipoTramite', 'control', 'user'));
 			$tipo = "";
 			$escritura = $info->solicitudes[0]->info->campos->{'Escritura'} ?? "";
 			switch ($info->solicitudes[0]->info->{'tipoTramite'}) {
