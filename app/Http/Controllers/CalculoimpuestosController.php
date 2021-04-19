@@ -829,27 +829,45 @@ class CalculoimpuestosController extends Controller
     public function prueba(){
     		$fecha = $this->fecha_escritura;
     		$inhabil = $this->inhabiles;
+
         $dias=0;
         $fechaTermino = '';
         $hora = date("H",strtotime($fecha));
-        $fecha = ($hora>=13) ? date("Y-m-d",strtotime($fecha.' +1 days')) : date("Y-m-d",strtotime($fecha)) ;
+        $fecha = ($hora>=13) ? date("Y-n-j",strtotime($fecha.' +1 days')) : date("Y-n-j",strtotime($fecha)) ;
         $comienzo = $fecha;
+        $test_dia = 'inicio';
+
         //15 es el numero de dias que calcularemos
+        // $datafechas = array();
         while ($dias <= 15) {
             $finDeSemana = date("w",strtotime($comienzo));
-            //Si la fecha es sabado o domingo O la fecha existe en los inhabil
-            if (($finDeSemana == 0 || $finDeSemana == 6) || in_array($comienzo,$inhabil)) {
-                $comienzo = date("Y-m-d",strtotime($comienzo.' +1 days'));
-            }else{
+            $asueto = in_array($comienzo, $inhabil, TRUE);
 
-                $comienzo = date("Y-m-d",strtotime($comienzo.' +1 days'));
-                $fechaTermino = date("Y-m-d",strtotime($comienzo));
+            // $datafechas []= array(
+            //   'diasemana' => $finDeSemana,
+            //   'fecha' => $comienzo,
+            //   'test' => $test_dia,
+            //   'asueto' => $asueto
+            // );
+
+            //Si la fecha es sabado o domingo O la fecha existe en los inhabil
+
+            if($finDeSemana == 0 || $finDeSemana == 6 || $asueto == true ){
+              $comienzo = date("Y-n-j",strtotime($comienzo.' +1 days'));
+
+              $test_dia = 'finDeSemana';
+            }else{
+                $fechaTermino = date("Y-n-j",strtotime($comienzo));
+                $comienzo = date("Y-n-j",strtotime($comienzo.' +1 days'));
+
                 $dias++;
                 $test[]= $fechaTermino;
+                // $test_dia = 'habil';
             }
             //$com[]= $comienzo;
+
         }
-        //dd($test);
+        // dd($datafechas);
         return $fechaTermino;
 	}
 }
