@@ -103,7 +103,7 @@ Vue.filter('toCurrency', function (value) {
     var formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'MXN',
-        minimumFractionDigits: 2
+        minimumFractionDigits: 3
     });
     return formatter.format(value);
 });
