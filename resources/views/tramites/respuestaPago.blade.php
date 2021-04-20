@@ -31,7 +31,7 @@
 										<strong>
 											{{ $respuestabanco['mensaje'] }}
 											@if(isset($user->email))
-											<a href="mailto:{{$user->email}}?subject=Recibo de pago&body={{$respuestabanco['response']['datos']['url_recibo']}}" style="display: none;">
+											<a href="mailto:{{$user->email}}?subject=Recibo de pago&body={{$respuestabanco['url_recibo']}}" style="display: none;">
 												Enviar por correo <i class="fa fa-envelope-open-text "></i>
 											</a>
 											@endif
