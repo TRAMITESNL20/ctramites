@@ -138,7 +138,7 @@ class CalculoimpuestosController extends Controller
 	    			"multa por correccion fiscal (g)" => $this->g,
 	    		),
     		"Salidas" => array(
-    			"Fecha Actual"				=> $this->fecha_actual,
+    			"Fecha Actual"				=> date("d-m-Y", strtotime($this->fecha_actual)),
     			"Fecha vencimiento" 		=> $this->fecha_vencimiento,
     			"Factor de Actualizacion" 	=> $this->factor_actualizacion,
     			"INPC Periodo reciente" 	=> $this->inpc_reciente,
@@ -868,7 +868,7 @@ class CalculoimpuestosController extends Controller
             //$com[]= $comienzo;
 
         }
-        $fechaTermino = date("Y-m-d", strtotime($fechaTermino));
+        $fechaTermino = date("d-m-Y", strtotime($fechaTermino));
         //dd($fechaTermino);
         return $fechaTermino;
 	}
