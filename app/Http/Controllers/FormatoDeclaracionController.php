@@ -18,7 +18,7 @@ class FormatoDeclaracionController extends Controller
 				$enajenante = $info->solicitudes[0]->info->enajenante;
 			}
 			$tipoTramite =  $info->solicitudes[0]->info->tipoTramite;
-			$user = session()->get("user");
+			$user =base64_decode (request()->data) ;
 			
 			$pdf = PDF::loadView('pdf.formatoDeclaracionISR', compact('info', 'enajenante', 'tipoTramite', 'control', 'user'));
 			$tipo = "";
