@@ -1,6 +1,6 @@
 <template>
   <div>
-        <div class="pt-10 pl-10 pr-10"  v-if=" (tramitesdoc).length > 0">
+        <div class="pt-10 pl-10 pr-10"  v-if=" (tramitesdoc).length > 0 && docFirmado != 1">
             <div >
                 <p> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
                 <modal-document-component 
@@ -12,14 +12,10 @@
             </div>
         </div>
 
-        <div 
-
-        >
+        <div  v-if="docFirmado == 1">
             <vue-pdf-component 
                 :urlSourceListo="urlFirmadoListo" 
-                :urlSourcePendiente="urlFirmadoPendiente" 
-                v-if="docFirmado == 1" >  
-            
+                :urlSourcePendiente="urlFirmadoPendiente" >  
             </vue-pdf-component>
         </div>
 
@@ -29,8 +25,8 @@
                 :usuario="idTramite"   
                 :user="user"  
                 @docFirmado="docFirmadoMethod"
-                @urlFirmadoListo="urlFirmadoListoMethod"
-                @urlFirmadoPendiente="urlFirmadoPendienteMethod"
+                @docFirmadosListos="urlFirmadoListoMethod"
+                @docFirmadosPendientes="urlFirmadoPendienteMethod"
                 >
             </firma-electronica-component>
         </div>
@@ -66,9 +62,21 @@ export default {
             this.docFirmado =  firmado;
         },
         updatedTramitesMethod(newTramites){
+            console.log('tramites updateed en aux' );
+            console.log( newTramites);
             this.usuario = newTramites;
         }
     },
+    watch:{
+        usuario:{
+            immediate: true,
+            deep: true,
+            handler(oldVal, newVal){
+                console.log('oldval:' + oldVal + 'newVal' + newVal);
+                this.usuario = newVal;
+            }
+        }
+    }
     
 
 }

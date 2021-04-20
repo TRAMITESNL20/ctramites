@@ -39,7 +39,8 @@
 
                             <label class="custom-file-label"
                             ><span>
-                                {{ fileName[index]  }}
+                                {{index}}
+                                {{  fileName[index] ? fileName[index] : 'Seleccione archivo' }}
                             </span>
                             </label>
                       
@@ -102,7 +103,8 @@ export default {
                                         self.idtramites[0].solicitudes[i].required_docs = 1;
                                     }
                             }
-                            this.$emit('updatedTramites', self.idtramites)
+                            console.log('emited desde moral nuevos valores');
+                            this.$emit('updatedTramites', self.idtramites);
                         }  
                     $('#modalDocument').modal('hide');                        
                     }else{
@@ -122,9 +124,11 @@ export default {
         
         this.tramitesdoc[index].required_docs = 1
 
-                var i = $(this).prev('label').clone();
+                // var i = $(this).prev('label').clone();
                 var auxName = $('#'+id)[0].files[0].name;
-                this.fileName[index] = auxName;      
+                this.fileName[index] = auxName;   
+                console.log(auxName);
+                console.log(this.fileName[index]);
 
             function getBase64(file) {
             return new Promise((resolve, reject) => {
@@ -137,7 +141,7 @@ export default {
 
             this.fileById = document.getElementById(id).files[0];
             getBase64(this.fileById).then(data =>{
-              console.log(data);
+            //   console.log(data);
                 this.filesx = {"ticket_id" : id  ,"mensaje" : ""  , "file" : data };
                   var indexFile = this.files.findIndex(x => x.ticket_id === id);
             
