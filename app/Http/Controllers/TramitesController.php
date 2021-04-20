@@ -580,25 +580,37 @@ class TramitesController extends Controller
 
 
     public function respuestaPago(Request $request ){
-      var_dump( $request);
-      /*
-      $url = getenv("PAYMENTS_HOSTNAME");
-      $PAYMENTS_KEY = getenv("PAYMENTS_KEY");
-
-      $response = Http::withHeaders([
-          'Authorization' => 'Bearer ' . $PAYMENTS_KEY
-      ])->post( $url . '/v1/respuestabanco', [
-          'transactionToken' => $request->transactionToken,
-      ]);
-      $json = $response->json();
-      $json['codigoCambioEstatus'] = $this->cambiarEstatusTransaccion( $json );
-
-      if( $json['data'] ){
+      $json = json_decode($request->json, true);
+      $json['codigoCambioEstatus'] = $this->actualizarTransaccion($json);
+      if( $json ){
         return layout_view("tramites.respuestaPago",  [ "respuestabanco" =>$json] );
       } else {
         return layout_view("tramites.respuestaPago",  [ "respuestabanco" =>[] ]);
-      }*/
+      }
 
+    }
+
+    private function actualizarTransaccion($json){
+      if( isset( $json['estatus'] ) ){
+        $id_transaccion_motor = $json['id_transaccion_motor'];
+        $urlTesoreria = getenv("TESORERIA_HOSTNAME");
+        $estatus = $json['estatus'];
+        $statusChange = '0';
+        $url_recibo = $json['url_recibo'] ? $json['url_recibo'] : null;
+        if($estatus != 1){
+          $statusChange = "15";
+        }
+
+        $responseCambioEstatus = Http::post( $urlTesoreria . '/solicitudes-update-status-tramite', [
+            'id_transaccion_motor' => $id_transaccion_motor,
+            'status' => $statusChange,
+            'url_recibo' => $url_recibo
+
+        ]);
+        return $responseCambioEstatus->json() != null && $responseCambioEstatus->json()["Code"] != null ? $responseCambioEstatus->json()["Code"] : false;
+      } else {
+        return false;
+      }
     }
 
     private function cambiarEstatusTransaccion( $json ){
@@ -644,7 +656,7 @@ class TramitesController extends Controller
       ]);
 
       $json = $response->json();
-      $json['codigoCambioEstatus'] = $this->cambiarEstatusTransaccion( $json );
+      $json['codigoCambioEstatus'] = $this->cambiarEstatusTransaccion($json);
 
       if( $json['data'] ){
         return layout_view("tramites.respuestaPagoBancomer",  [ "respuestabanco" =>$json] );
