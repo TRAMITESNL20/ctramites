@@ -273,17 +273,17 @@
 			@endif
 		</tbody>
 	</table>
-	<div class="footer">
-		<table style="width: 100%; margin-top:0px; text-align:center;" >
+	<div class="footer"   >
+		<table style="width: 100%; margin-top:0px; float: right;" border="0" >
 			<tr class="">
 				<td class=""></td>
 				<td class=""></td>
 				<td class=""></td>
 			</tr>
 			<tr class="">
-				<td class="border_bottom  columna" style="text-align:left	">{{ $user->role->description ??'' }}  {{ $user->name ??'' }} {{ $user->mothers_surname ??'' }} {{ $user->fathers_surname ??'' }} {{ $user->curp ??'' }}   </td>
+				<td class="border_bottom  columna" style="text-align:left	">{{ $user}}   </td>
 				<td class="border_bottom columna"></td>
-				<td class="border_bottom columna value text-left">Codigo QR Oficial</td>
+				<td  class="border_bottom columna value text-right" style="width:150px">Codigo QR Oficial</td>
 			</tr>
 			<tr class="datos-enajenante">
 				<td  colspan="3"><div style="height:26px;"></div></td>
