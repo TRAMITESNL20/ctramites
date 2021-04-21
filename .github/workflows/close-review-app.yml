@@ -52,11 +52,8 @@ jobs:
           echo "$branchPath" &&
           cd ${{ secrets.QA_FOLDER }} &&
           cd .. &&
-          if [ -d "$branchPath" ];
-            then
-              cp $branchPath/.env .env.$branchPath &&
-              rm -Rf $branchPath;
-          fi &&
+          if [ -d "$branchPath" ]; then rm -Rf $branchPath; fi &&
+          test -f ".env.$branchPath" && then rm .env.$branchPath; fi &&
           echo "Branch '${{env.BRANCH_NAME}}' was successfully remove"
 
     - name: kill vpn
