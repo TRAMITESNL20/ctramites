@@ -7,37 +7,6 @@
         $name = preg_replace('/\s+/', '_', $name);
         $camposConfigurados[$name] = isset($campo->valor) ? $campo->valor : (isset($campo->archivoCargado) ? $campo->archivoCargado : null);
     }
-    // dd($camposConfigurados);
-    // function getFields ($campos) {
-        // $fields = "";
-        // foreach($campos as $key => $val){
-            // if(gettype($val) == 'array'){
-                // for($item in $val){
-                    // $fields .= getFields($val);
-                // }
-                // return true;
-            // }
-            // if(gettype($value) == "object"){
-                // if(isset($value->nombre)) $val = $val->nombre;
-                // else{
-                    // $fields .= getFields($val);
-                    // return true;
-                // }
-            // }
-            // $fields .= "
-                // <div class=\"col-md-6\">
-                    // <span class=\"text-muted\">{$key}</span>
-                    // <p><strong>{$val}</strong></p>
-                // </div>
-            // ";
-
-        // }
-
-        // return $fields;
-    // }
-
-     // echo getFields($tramite->info->campos);
-// die();
 ?>
 <div class="content d-flex flex-column flex-column-fluid" id="app">
     <div class="d-flex flex-column-fluid">
@@ -110,7 +79,7 @@
                                 <div class="row">
                                     <?php
                                         foreach($expediente->direccion as $key => $val){
-                                            if(gettype($val) == 'array' && count($val) == 1){
+                                            if(gettype($val) == 'array'){
                                                 echo "</div>
                                                 </div>
                                                 <h6 class=\"card-header\"><strong>".strtoupper(str_replace('_', ' ', $key))."</strong></h6>
@@ -272,15 +241,16 @@
 									array_push($format, $interval->format('%d') . " días");
 								array_push($format, $interval->format('%h') . " hrs");
 								array_push($format, $interval->format('%i') . " mins");
+                                
                 				echo "
-                					<div class=\"mensage ".($ind == 0 ? "pb-0 pt-4" : "py-4 border-bottom ").($ind == (count($tramite->mensajes)-1) ? "pt-0 pb-4" : "py-4")." px-1\">
+                					<div data-ind=".$ind." class=\"mensage ".($ind == (count($tramite->mensajes)-1) ? "pb-4 pt-0 border-bottom " : ($ind == 0 ? "pt-4 pb-0 " : "py-4 border-bottom "))."px-1\">
                 						<div class=\"row\">
                 							<div class=\"col-md-10\">
 		                						<p class=\"card-text mb-0\">{$msg->mensaje}</p>
 		                						<p class=\"card-text mt-2\"><small class=\"text-muted\">Ultima actualización hace ".implode(" ", $format)."</small></p>
                 							</div>
                 							<div class=\"col-md-2 text-right ".(empty($msg->attach) ? "d-none" : "")."\">
-                								<a href=\"".(!empty($msg->attach) ? getenv("TESORERIA_HOSTNAME")."/storage/app/{$msg->attach}" : "")."\" class=\"btn btn-secondary\" target=\"_blank\"><i class=\"fas fa-download\"></i> Ver Archivo</a>
+                								<a href=\"".(!empty($msg->attach) ? $msg->attach : "")."\" class=\"btn btn-secondary\" target=\"_blank\"><i class=\"fas fa-download\"></i> Ver Archivo</a>
                 							</div>
                 						</div>
                 					</div>

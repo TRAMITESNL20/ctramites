@@ -101,7 +101,7 @@
 			padding: 20px;
 		}
 		.motivo-fundamento:first-child{
-			border-right: 1px solid softgray;
+			/* border-right: 1px solid softgray; */
 		}
 	</style>
 </head>
@@ -125,7 +125,7 @@
 				<tr>
 					<td class="columna value" style="width: 33%;">{{ $info->solicitudes[0]->info->campos->{'Escritura'} ?? '' }}</td>
 					<td class="columna value" style="width: auto;" colspan="2"></td>
-					<td class="columna value" style="width: 33%;">{{ $info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'} ?? ''}}</td>
+					<td class="columna value" style="width: 33%;">{{  substr($info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'},8)  ?? ''}}-{{ substr($info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'} ,5, 2)   ?? ''}}-{{ substr( $info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'},0,4)    ?? ''}}   </td>
 				</tr>
 				<tr>
 					<td class="columna" style="width: 1%">MUNICIPIO</td>
@@ -135,11 +135,12 @@
 				<tr>
 					<td class="columna value" >{{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->municipio->{'nombre'}  ?? ''}}</td>
 					<td class="columna value" colspan="2">{{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->{'expediente'} ?? '' }}</td>
-					<td class="columna value" >{{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->direccion->datos_direccion[0]->{'calle'} ?? '' }} </td>
+					<td class="columna value" >{{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->direccion->datos_direccion[0]->{'calle'} ?? '' }} {{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->direccion->datos_direccion[0]->{'num_ext'} ?? '' }}, {{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->direccion->datos_direccion[0]->{'colonia'} ?? '' }}, {{ $info->solicitudes[0]->info->campos->Expedientes->expedientes[0]->direccion->datos_direccion[0]->{'nombre_loc'} ?? '' }} </td>
 				</tr>
 			<tr >
 				<td class="titulo1" colspan="4"> <strong> DATOS DEL ENAJENANTE </strong></td>
 			</tr>
+			@if($enajenante)
 				@if ($enajenante->tipoPersona == 'pf')
 					<tr class="datos-enajenante first">
 						<td class="columna">REGISTRO FEDERAL DEL CONTRIBUYENTE:</td>
@@ -148,7 +149,7 @@
 					</tr>
 					<tr class="datos-enajenante">
 						<td class="columna value">{{ $enajenante->datosPersonales->{'rfc'} ?? '' }}</td>
-						<td class="columna value" colspan="2">CLAVE ÚNICA DE REGISTRO DE POBLACIÓN:</td>
+						<td class="columna value" colspan="2">{{ $enajenante->datosPersonales->{'curp'} ?? '' }}</td>
 						<td class="columna value">{{ $enajenante->datosPersonales->{'claveIne'} ?? '' }}</td>
 					</tr>
 					<tr class="datos-enajenante">
@@ -163,14 +164,20 @@
 					</tr>
 					<tr class="datos-enajenante">
 						<td class="columna">% DE CO-PROPIEDAD:</td>
-						<td class="columna"colspan="2"></td>
+						@if ($info->solicitudes[0]->info->{'tipoTramite'} === 'declaracionEn0')
+						<td class="columna"colspan="2">MONTO DE OPERACIÓN:</td>
+						@else
+						<td class="columna"colspan="2">MONTO DE OPERACIÓN:</td>
+						@endif
 						<td class="columna"></td>
 					</tr>
 					<tr class="datos-enajenante last">
 						<td class="columna value">{{ $enajenante->{'porcentajeCompra'} ?? '' }}</td>
-						<td class="columna value" colspan="2"> </td>
+						<td class="columna value" colspan="2">{{ $enajenante->datosParaDeterminarImpuesto->{'montoOperacion'} ?? '' }} </td>
 						<td class="columna value"></td>
 					</tr>
+					
+
 				@elseif ($enajenante->tipoPersona == 'pm')
 					<tr class="datos-enajenante fisrt">
 						<td class="columna">REGISTRO FEDERAL DEL CONTRIBUYENTE:</td>
@@ -182,8 +189,7 @@
 						<td class="columna value" colspan="2">{{ $enajenante->datosPersonales->{'razonSocial'} ?? '' }}</td>
 						<td class="columna value">{{ $enajenante->{'porcentajeCompra'} ?? '' }}%</td>
 					</tr>
-				@endif
-				@if ($info->solicitudes[0]->info->{'tipoTramite'} === 'declaracionEn0')
+					@if ($info->solicitudes[0]->info->{'tipoTramite'} === 'declaracionEn0')
 					<tr class="datos-enajenante fisrt">
 						<td class="columna">MONTO DE OPERACIÓN:</td>
 						<td class="columna" colspan="2">&nbsp;</td>
@@ -194,8 +200,10 @@
 						<td class="columna value" colspan="2">&nbsp;</td>
 						<td class="columna value">&nbsp;</td>
 					</tr>
+					@endif
 				@endif
-
+			
+			@endif
 			@if ($info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0')
 				<tr >
 					<td class="titulo1" colspan="4"> <strong> DATOS PARA DETERMINAR EL IMPUESTO DE LA ENTIDAD FEDERATIVA </strong></td>
@@ -207,7 +215,7 @@
 					</tr>
 					<tr >
 						<td class="columna value text-uppercase">{{ $info->solicitudes[0]->info->{'tipoTramite'} ?? '' }}</td>
-						<td class="columna value" colspan="2"> {{ $enajenante->datosParaDeterminarImpuesto->{'gananciaObtenida'} ?? ''}}</td>
+						<td class="columna value" colspan="2"> {{ $enajenante->datosParaDeterminarImpuesto->{'gananciaObtenida'} ?? 'NA'}}</td>
 						<td class="columna value">MX${{ number_format($enajenante->detalle->Salidas->{'Monto obtenido conforme al art 127 LISR'} ?? 0,2) }}</td>
 					</tr>
 					<tr >
@@ -250,33 +258,33 @@
 					<td class="columna">REFERENCIA BANCARIA</td>
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }} last">
-					<td class="columna value">{{ $control->operaciones->{'fecha_pago'} ?? "-" }}</td>
+					<td class="columna value">{{ substr($control->operaciones->{'fecha_pago'} ,8, 2) ?? "-" }}-{{ substr( $control->operaciones->{'fecha_pago'},5, 2)  ?? "-" }}-{{ substr($control->operaciones->{'fecha_pago'},0,4)  ?? "-" }}</td>
+					
 					<td class="columna value" colspan="2">{{ $control->operaciones->{'operacion_interna'} ?? "-" }}</td>
 					<td class="columna value">{{  $control->operaciones->{'referencia'}  ?? "-"  }}</td>
 				</tr>
 			@if ($info->solicitudes[0]->info->{'tipoTramite'} === 'declaracionEn0')
 				<tr>
-					<td class="titulo1 text-center" colspan="2"> <strong> MOTIVO POR EL QUE DECLARA EN CEROS </strong></td>
-					<td class="titulo1 text-center" colspan="2"> <strong> FUNDAMENTO LEGAL</strong></td>
+					<td class="titulo1 text-left" colspan="4"> <strong> MOTIVO POR EL QUE DECLARA EN CEROS </strong></td>
 				</tr>
 					<tr class="datos-enajenante first last">
-						<td class="motivo-fundamento" colspan="2" valign="middle" align="center">{{ $info->solicitudes[0]->info->campos->{'Listado de enajenantes'}->motivo ?? '' }}</td>
-						<td class="motivo-fundamento" colspan="2" valign="middle" align="center">...</td>
+						<td class="motivo-fundamento" colspan="4" valign="middle" align="left">{{ $info->solicitudes[0]->info->campos->{'Listado de enajenantes'}->motivo ?? '' }}</td>
+					
 					</tr>
 			@endif
 		</tbody>
 	</table>
-	<div class="footer">
-		<table style="width: 100%; margin-top:0px; text-align:center;" >
+	<div class="footer"   >
+		<table style="width: 100%; margin-top:0px; float: right;" border="0" >
 			<tr class="">
 				<td class=""></td>
 				<td class=""></td>
 				<td class=""></td>
 			</tr>
 			<tr class="">
-				<td class="border_bottom">{{ 'NOTARIO_TITULAR' }}</td>
-				<td class="border_bottom">SELLO DEL NOTARIO PUBLICO</td>
-				<td class="border_bottom">FIRMA DEL CONTRIBUYENTE</td>
+				<td class="border_bottom  columna" style="text-align:left	">{{ $user}}   </td>
+				<td class="border_bottom columna"></td>
+				<td  class="border_bottom columna value text-right" style="width:150px">Codigo QR Oficial</td>
 			</tr>
 			<tr class="datos-enajenante">
 				<td  colspan="3"><div style="height:26px;"></div></td>

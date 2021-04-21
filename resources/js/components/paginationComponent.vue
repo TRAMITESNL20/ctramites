@@ -14,9 +14,9 @@
                             </h5>
 						</div>
 						<div class="my-lg-0 my-1">
-                            <a v-on:click="redirect(tramite[0].recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].recibo_referencia && [5].includes(type)">VER REFERENCIA</a>
-                            <a v-on:click="redirect(tramite[0].doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].doc_firmado && [2,3].includes(type)">VER DECLARACIÓN</a>
-                            <a v-on:click="redirect(tramite[0].tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].tramites && tramite[0].tramites[0] && tramite[0].tramites[0].url_recibo && [2,3].includes(type)">VER RECIBO DE PAGO</a>
+                            <a v-on:click="goTo(tramite[0].recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].recibo_referencia && [5].includes(type)">VER REFERENCIA</a>
+                            <!-- <a v-on:click="redirect(tramite[0].doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].doc_firmado && [2,3].includes(type)">VER DECLARACIÓN</a> -->
+                            <a v-on:click="goTo(tramite[0].tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].tramites && tramite[0].tramites[0] && tramite[0].tramites[0].url_recibo && [2,3].includes(type)">VER RECIBO DE PAGO</a>
 							<button v-on:click="addToCart(tramite[0])" v-if="tramite[0].status == 99 && !['notary_capturist'].includes(user.role_name)" type="button" class="btn btn-sm mr-2" :class="tramite[0].en_carrito ? 'btn-primary' : 'btn-outline-primary'">
                                 <span v-if="tramite[0].loading"><i class="fas fa-spinner fa-spin"></i></span>
                                 <span v-if="!tramite[0].loading"><i :class="tramite[0].en_carrito == 1 ? (cartComponent ? 'fas fa-trash' : 'fas fa-check-circle') : 'fas fa-plus-circle'"></i> {{ tramite[0].en_carrito == 1 ? (cartComponent ? 'ELIMINAR' : 'QUITAR DEL CARRITO') : 'AGREGAR AL CARRITO' }} ({{ tramite.length }})</span>
@@ -25,6 +25,17 @@
                                 <span v-if="tramite[0].loadingSign"><i class="fas fa-spinner fa-spin"></i></span>
                                 <span v-if="!tramite[0].loadingSign"><i :class="tramite[0].por_firmar == 1 ? 'fas fa-check-circle' : 'fas fa-plus-circle'"></i> {{ tramite[0].por_firmar == 1 ? 'DESELECCIONAR' : 'PREPARAR PARA FIRMAR' }}</span>
                             </button>
+                            <div class="btn-group mr-2" v-if="tramite[0].info && !cartComponent">
+                                <a v-on:click="goTo(tramite[0], true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="tramite[0].files.length == 0 ? 'rounded' : ''">
+                                    <span class="text-white">VER DETALLES</span>
+                                </a>
+                                <button v-if="tramite[0].files.length > 0" type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a v-for="(file, ind) in tramite[0].files" class="dropdown-item" :href="file.href || file" target="_blank" :key="ind"><i class="fas fa-download mr-2"></i> {{ file.name || file }}</a>
+                                </div>
+                            </div>
                             <span v-if="cartComponent" class="btn btn-secondary mr-2">{{ new Intl.NumberFormat('es-MX', { style : 'currency', currency : 'MXN' }).format(tramite.map(ele => ele.importe_tramite).reduce((a,b) => a+b)) }} </span>
                             <span v-if="tramite[0].info && tramite[0].descripcion && !cartComponent" class="btn btn-secondary mr-2">{{ tramite[0].descripcion || "CERRADO" }} </span>
                             <button class="btn btn-secondary" type="button" data-toggle="collapse" :data-target="`#collapse-${index}`" :aria-expanded="!cartComponent ? 'true' : 'false'" :aria-controls="`collapse-${index}`"><i class="fas fa-chevron-down p-0"></i></button>
@@ -84,6 +95,27 @@
 		mounted(){
 			this.calcularPage()
             this.pagination(1);
+
+            console.log(this.tramitesPaginados);
+
+            Object.entries(this.tramitesPaginados).map(obj => {
+                let [ind, tramite] = obj;
+                let files = [];
+                if(tramite[0].info && typeof tramite[0].info === 'string')
+                    tramite[0].info = JSON.parse(tramite[0].info)
+                if(tramite[0].mensajes && tramite[0].mensajes.length > 0){
+                    tramite[0].mensajes.map(msg => {
+                        if(msg.attach && msg.attach != ""){
+                            files.push(msg.attach);
+                        }
+                    })
+                }
+                if(tramite[0].doc_firmado) files.push({ name : 'Declaración', href : tramite[0].doc_firmado })
+                
+                tramite[0].files = files;
+
+                this.tramitesPaginados[ind] = tramite;
+            })
 		},
 		data () {
 			let attrs = this.$attrs;
@@ -104,6 +136,15 @@
             }
         },
 		methods : {
+            goTo(tramite, _blank=false){
+                if(typeof tramite === 'string') return redirect(tramite, _blank);
+                if(window.location.href.indexOf("borradores") >= 0){
+                    redirect("detalle-tramite/" + tramite.tramite_id + "?clave=" + tramite.clave, _blank);
+                } else {
+                    redirect(`/detalle${ tramite.id_tramite ? "-tramite" : "" }/` +  (tramite.id_tramite || tramite.id), _blank);
+                }
+                
+            },
 			processToCart(tramite){
 				this.$emit('processToCart', tramite);
 			},

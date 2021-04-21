@@ -138,8 +138,8 @@ class CalculoimpuestosController extends Controller
 	    			"multa por correccion fiscal (g)" => $this->g,
 	    		),
     		"Salidas" => array(
-    			"Fecha Actual"				=> $this->fecha_actual,
-    			"Fecha vencimiento" 		=> $this->fecha_vencimiento,
+    			"Fecha Actual"				=> date("d-m-Y", strtotime($this->fecha_actual)),
+    			"Fecha vencimiento" 		=> date("d-m-Y", strtotime($this->fecha_vencimiento)),
     			"Factor de Actualizacion" 	=> $this->factor_actualizacion,
     			"INPC Periodo reciente" 	=> $this->inpc_reciente,
     			"INPC Periodo" 				=> $this->inpc_periodo,
@@ -347,13 +347,14 @@ class CalculoimpuestosController extends Controller
 
     	// parte actualizada del impuesto
     	$this->e = ($this->d * $this->factor_actualizacion) - $this->d;
+
       $this->e = $this->redondeo($this->e);
     	// obtener los recargos
     	$this->f = ($this->d + $this->e) * $this->porcentaje_recargos;
+
       $this->f = $this->redondeo($this->f);
     	// importe total
     	$this->h =  $this->d + $this->e + $this->f + $this->g ;
-
 
     }
 
@@ -752,7 +753,7 @@ class CalculoimpuestosController extends Controller
   			}
   			$f = (integer)$f;
   			//$count = 0;
-        //$datafechas = array();
+        // $datafechas = array();
   			foreach($this->porcentajes_values as $p => $data)
   			{
 
@@ -770,13 +771,13 @@ class CalculoimpuestosController extends Controller
 
             $total += $data["requerido"];
             // $datafechas []= array(
-            //   'fecha en valores' => $p,
-            //   'fechaactual' => $i,
-            //   'fechavencimiento' => $f,
-            //   'fecha actual' => $this->fecha_actual,
-            //   'fecha ven' => $this->fecha_vencimiento,
-            //   'dias actual -ven' => $di.'-'.$df,
-            //   'total' => $total
+            //     'fecha en valores' => $p,
+            //     'fechaactual' => $i,
+            //     'fechavencimiento' => $f,
+            //     'fecha actual' => $this->fecha_actual,
+            //     'fecha ven' => $this->fecha_vencimiento,
+            //     'dias actual -ven' => $di.'-'.$df,
+            //     'total' => $total
             // );
   				}
       /*
@@ -829,27 +830,46 @@ class CalculoimpuestosController extends Controller
     public function prueba(){
     		$fecha = $this->fecha_escritura;
     		$inhabil = $this->inhabiles;
+
         $dias=0;
         $fechaTermino = '';
         $hora = date("H",strtotime($fecha));
-        $fecha = ($hora>=13) ? date("Y-m-d",strtotime($fecha.' +1 days')) : date("Y-m-d",strtotime($fecha)) ;
+        $fecha = ($hora>=13) ? date("Y-n-j",strtotime($fecha.' +1 days')) : date("Y-n-j",strtotime($fecha)) ;
         $comienzo = $fecha;
+        $test_dia = 'inicio';
+
         //15 es el numero de dias que calcularemos
+        // $datafechas = array();
         while ($dias <= 15) {
             $finDeSemana = date("w",strtotime($comienzo));
-            //Si la fecha es sabado o domingo O la fecha existe en los inhabil
-            if (($finDeSemana == 0 || $finDeSemana == 6) || in_array($comienzo,$inhabil)) {
-                $comienzo = date("Y-m-d",strtotime($comienzo.' +1 days'));
-            }else{
+            $asueto = in_array($comienzo, $inhabil, TRUE);
 
-                $comienzo = date("Y-m-d",strtotime($comienzo.' +1 days'));
-                $fechaTermino = date("Y-m-d",strtotime($comienzo));
+            // $datafechas []= array(
+            //   'diasemana' => $finDeSemana,
+            //   'fecha' => $comienzo,
+            //   'test' => $test_dia,
+            //   'asueto' => $asueto
+            // );
+
+            //Si la fecha es sabado o domingo O la fecha existe en los inhabil
+
+            if($finDeSemana == 0 || $finDeSemana == 6 || $asueto == true ){
+              $comienzo = date("Y-n-j",strtotime($comienzo.' +1 days'));
+
+              $test_dia = 'finDeSemana';
+            }else{
+                $fechaTermino = date("Y-n-j",strtotime($comienzo));
+                $comienzo = date("Y-n-j",strtotime($comienzo.' +1 days'));
+
                 $dias++;
                 $test[]= $fechaTermino;
+                // $test_dia = 'habil';
             }
             //$com[]= $comienzo;
+
         }
-        //dd($test);
+        //$fechaTermino = date("d-m-Y", strtotime($fechaTermino));
+        //dd($fechaTermino);
         return $fechaTermino;
 	}
 }
