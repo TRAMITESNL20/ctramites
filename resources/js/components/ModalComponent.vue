@@ -65,7 +65,7 @@
                   <b-col v-if="enajenante.tipoPersona == 'pm'" cols="12" md="6">
                     <b-form-group label="Razón Social" label-for="razon-social-input" >
                       <b-form-input id="razon-social-input" name="razonSocial" v-model="$v.form.datosPersonales.razonSocial.$model" aria-describedby="razonSocial-input-feedback" 
-                         :state="$v.form.datosPersonales.razonSocial.$dirty ? !$v.form.datosPersonales.razonSocial.$error : null" ></b-form-input>
+                         :state="$v.form.datosPersonales.razonSocial.$dirty ? !$v.form.datosPersonales.razonSocial.$error : null" v-uppercase></b-form-input>
                       <b-form-invalid-feedback id="razonSocial-input-feedback">
                         <span v-if="!$v.form.datosPersonales.razonSocial.required"  class="form-text text-danger">
                           Campo requerido
@@ -85,7 +85,7 @@
                         </template>
                         <b-form-input id="nombre-input" name="nombre" v-model="$v.form.datosPersonales.nombre.$model" aria-describedby="nombre-input-feedback" 
                                              :state="$v.form.datosPersonales.nombre.$dirty ? !$v.form.datosPersonales.nombre.$error : null" 
-                                              :disabled="curpEncontrada || buscandoCurp"></b-form-input>
+                                              :disabled="curpEncontrada || buscandoCurp" v-uppercase></b-form-input>
                       </b-input-group>
                       <b-form-invalid-feedback id="nombre-input-feedback">
                         <span v-if="!$v.form.datosPersonales.nombre.required"  class="form-text text-danger">
@@ -104,7 +104,7 @@
                             </strong>
                           </b-input-group-text>
                         </template>
-                        <b-form-input id="apPat-input" name="apPat" v-model="$v.form.datosPersonales.apPat.$model"  :state="$v.form.datosPersonales.apPat.$dirty ? !$v.form.datosPersonales.apPat.$error : null"  aria-describedby="apPat-input-feedback"  :disabled="curpEncontrada || buscandoCurp"></b-form-input>
+                        <b-form-input id="apPat-input" name="apPat" v-model="$v.form.datosPersonales.apPat.$model"  :state="$v.form.datosPersonales.apPat.$dirty ? !$v.form.datosPersonales.apPat.$error : null"  aria-describedby="apPat-input-feedback"  :disabled="curpEncontrada || buscandoCurp" v-uppercase></b-form-input>
                       </b-input-group>
                       <b-form-invalid-feedback id="apPat-input-feedback">
                         <span v-if="!$v.form.datosPersonales.apPat.required" class="form-text text-danger">
@@ -125,7 +125,7 @@
                             </strong>
                           </b-input-group-text>
                         </template>
-                        <b-form-input  id="apmaterno-input" name="apmaterno"  v-model="$v.form.datosPersonales.apMat.$model" :disabled="curpEncontrada || buscandoCurp"></b-form-input>
+                        <b-form-input  id="apmaterno-input" name="apmaterno"  v-model="$v.form.datosPersonales.apMat.$model" :disabled="curpEncontrada || buscandoCurp" v-uppercase></b-form-input>
                       </b-input-group>
                     </b-form-group>
                   </b-col> 
