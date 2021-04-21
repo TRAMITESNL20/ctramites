@@ -61,10 +61,20 @@ jobs:
           echo "$branchPath" &&
           cd ${{ secrets.QA_FOLDER }} &&
           cd .. &&
-          if [ -d "$branchPath" ]; then rm -Rf $branchPath; fi &&
+          
+          
+
+          if [ -d "$branchPath" ];
+          then
+            test -f "$branchPath/.env" && cp $branchPath/.env .env.$branchPath;
+            rm -Rf $branchPath;
+          fi &&
+          
           git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} $branchPath &&
           cd $branchPath &&
-          cp ${{ secrets.QA_FOLDER }}/.env .env &&
+
+          test -f "../.env.$branchPath" && cp ../.env.$branchPath .env;
+          ! test -f "../.env.$branchPath" && cp ${{ secrets.QA_FOLDER }}/.env .env;
 
           search_1="APP_URL=\"http:\/\/10.153.144.218\/tramites-ciudadano" &&
           search_2="APP_PREFIX=\"\/tramites-ciudadano" &&
