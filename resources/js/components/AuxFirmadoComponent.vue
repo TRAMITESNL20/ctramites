@@ -65,17 +65,18 @@ export default {
             console.log('tramites updateed en aux' );
             console.log( newTramites);
             this.usuario = newTramites;
+            this.$forceUpdate();
         }
     },
     watch:{
-        usuario:{
-            immediate: true,
-            deep: true,
-            handler(oldVal, newVal){
-                console.log('oldval:' + oldVal + 'newVal' + newVal);
-                this.usuario = newVal;
-            }
-        }
+        // usuario:{
+        //     immediate: true,
+        //     deep: true,
+        //     handler(oldVal, newVal){
+        //         console.log('oldval:' + oldVal + 'newVal' + newVal);
+        //         this.usuario = newVal;
+        //     }
+        // }
     }
     
 

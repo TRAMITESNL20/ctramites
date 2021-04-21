@@ -5,7 +5,9 @@
 </template>
 
 <script>
+import Vue from 'vue';
 var md5 = require('md5');
+
 
 
 export default {
