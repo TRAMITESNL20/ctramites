@@ -143,14 +143,15 @@
                           id="fechanac-input"
                           v-model="$v.form.datosPersonales.fechaNacimiento.$model"
                           type="text"
-                          placeholder="YYYY-MM-DD"
+                          placeholder="DD-MM-AAAA"
                           autocomplete="off"
                           :disabled="curpEncontrada">
                           
                         </b-form-input>
                         <b-input-group-append>
-                          <b-form-datepicker  class="mb-2" id="fechaNacimiento-input" name="fechaNacimiento"  v-model="$v.form.datosPersonales.fechaNacimiento.$model" :state="$v.form.datosPersonales.fechaNacimiento.$dirty ? !$v.form.datosPersonales.fechaNacimiento.$error : null" aria-describedby="fechaNacimiento-input-feedback" :disabled="curpEncontrada || buscandoCurp"
-                            button-only right aria-controls="fechanac-input"></b-form-datepicker>
+                          <b-form-datepicker  class="mb-2" id="fechaNacimiento-input" name="fechaNacimiento"  v-model="fechaDatepICKER" :state="$v.form.datosPersonales.fechaNacimiento.$dirty ? !$v.form.datosPersonales.fechaNacimiento.$error : null" aria-describedby="fechaNacimiento-input-feedback" :disabled="curpEncontrada || buscandoCurp"
+                            button-only right aria-controls="fechanac-input"  @input="formatFechaNacimiento()"
+                                                ></b-form-datepicker>
                         </b-input-group-append>
                       </b-input-group>
                       <b-form-invalid-feedback id="fechaNacimiento-input-feedback">
@@ -163,7 +164,7 @@
                   <b-col cols="12" md="4">
                     <b-form-group label="Clave de INE" label-for="claveIne-input" >
                       <b-form-input  id="claveIne-input" name="claveIne"  v-model="$v.form.datosPersonales.claveIne.$model" aria-describedby="claveIne-input-feedback" 
-                      :state="$v.form.datosPersonales.claveIne.$dirty ? !$v.form.datosPersonales.claveIne.$error : null" ></b-form-input>
+                      :state="$v.form.datosPersonales.claveIne.$dirty ? !$v.form.datosPersonales.claveIne.$error : null"  v-uppercase></b-form-input>
                       <b-form-invalid-feedback id="claveIne-input-feedback">
                         <span v-if="!$v.form.datosPersonales.claveIne.inePattern"  class="form-text text-danger">
                           Clave INE incorrecta.
@@ -429,7 +430,8 @@
         buscandoCurp:false,
         datosCostos:false, verDetalle:false, 
         calculandoCostos:false,
-        updateInfo:0
+        updateInfo:0,
+        fechaDatepICKER:''
 
       }
     },
@@ -636,7 +638,7 @@
           this.form.datosPersonales.nombre = data.data.nombres;
           this.form.datosPersonales.apPat = data.data.apePat;
           this.form.datosPersonales.apMat = data.data.apeMat;
-          this.form.datosPersonales.fechaNacimiento =  data.data.fechaNac.split("/").reverse().join("-");
+          this.form.datosPersonales.fechaNacimiento =  data.data.fechaNac.split("/").join("-");/*reverse()*/
         } else {
           this.curpEncontrada = false;
           this.form.datosPersonales.nombre = "";
@@ -708,6 +710,10 @@
           let montoOperacionGbl =  Vue.filter('toNumber')(this.montoOperacionGbl);          
           let montoCorrespondiente =  montoOperacionGbl * (val / 100);
           this.$v.form.datosParaDeterminarImpuesto.montoOperacion.$model = Vue.filter('formatoMoneda')( montoCorrespondiente ); */     
+      },
+
+      formatFechaNacimiento(){
+        this.form.datosPersonales.fechaNacimiento =  this.fechaDatepICKER.split("-").reverse().join("-");
       }
     },
     watch: {
