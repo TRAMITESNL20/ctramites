@@ -25,6 +25,17 @@
                                 <span v-if="tramite[0].loadingSign"><i class="fas fa-spinner fa-spin"></i></span>
                                 <span v-if="!tramite[0].loadingSign"><i :class="tramite[0].por_firmar == 1 ? 'fas fa-check-circle' : 'fas fa-plus-circle'"></i> {{ tramite[0].por_firmar == 1 ? 'DESELECCIONAR' : 'PREPARAR PARA FIRMAR' }}</span>
                             </button>
+                            <div class="btn-group mr-2" v-if="tramite[0].info && !cartComponent && type != 2">
+                                <a v-on:click="goTo(tramite[0])" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="tramite[0].files.length == 0 ? 'rounded' : ''">
+                                    <span class="text-white">VER DETALLES</span>
+                                </a>
+                                <button v-if="tramite[0].files.length > 0" type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a v-for="(file, ind) in tramite[0].files" class="dropdown-item" :href="file.href || file" :key="ind"><i class="fas fa-download mr-2"></i> {{ file.name || file }}</a>
+                                </div>
+                            </div>
                             <span v-if="cartComponent" class="btn btn-secondary mr-2">{{ new Intl.NumberFormat('es-MX', { style : 'currency', currency : 'MXN' }).format(tramite.map(ele => ele.importe_tramite).reduce((a,b) => a+b)) }} </span>
                             <span v-if="tramite[0].info && tramite[0].descripcion && !cartComponent" class="btn btn-secondary mr-2">{{ tramite[0].descripcion || "CERRADO" }} </span>
                             <button class="btn btn-secondary" type="button" data-toggle="collapse" :data-target="`#collapse-${index}`" :aria-expanded="!cartComponent ? 'true' : 'false'" :aria-controls="`collapse-${index}`"><i class="fas fa-chevron-down p-0"></i></button>
@@ -84,6 +95,27 @@
 		mounted(){
 			this.calcularPage()
             this.pagination(1);
+
+            console.log(this.tramitesPaginados);
+
+            Object.entries(this.tramitesPaginados).map(obj => {
+                let [ind, tramite] = obj;
+                let files = [];
+                if(tramite[0].info && typeof tramite[0].info === 'string')
+                    tramite[0].info = JSON.parse(tramite[0].info)
+                if(tramite[0].mensajes && tramite[0].mensajes.length > 0){
+                    tramite[0].mensajes.map(msg => {
+                        if(msg.attach && msg.attach != ""){
+                            files.push(msg.attach);
+                        }
+                    })
+                }
+                if(tramite[0].doc_firmado) files.push({ name : 'Declaración', href : tramite[0].doc_firmado })
+                
+                tramite[0].files = files;
+
+                this.tramitesPaginados[ind] = tramite;
+            })
 		},
 		data () {
 			let attrs = this.$attrs;

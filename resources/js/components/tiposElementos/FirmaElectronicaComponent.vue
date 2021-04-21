@@ -30,6 +30,7 @@ export default {
 		}
 	},
 	mounted() {
+
 		let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
 		this.usuario.solicitudes.map((solicitud, ind) => {
 			this.multiple = this.usuario.solicitudes.length > 1;
@@ -37,7 +38,9 @@ export default {
             if ( auxEnv == "https://tramites.nl.gob.mx") {
                 auxEnv = "http://tramites.nl.gob.mx";
             }
-			let doc = `${auxEnv}/formato-declaracion/${solicitud.id}`;
+            var userEncoded =btoa(this.user.role.description + ' - ' +  this.user.name + ' ' +  this.user.fathers_surname + ' RFC: ' +  this.user.rfc ) ;
+            console.log(userEncoded);
+			let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
 			if(this.multiple){
 				if(typeof this.doc === 'string') this.doc = [];
 				this.doc.push(doc)
@@ -55,7 +58,7 @@ export default {
 			}
 
 			this.idFirmado.push(solicitud.id);
-			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
+			this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${solicitud.id}_firmado.pdf` );
             // console.log(this.urlFirmado);
 		})
 
