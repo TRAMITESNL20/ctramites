@@ -13,7 +13,7 @@
         <b-col  cols="12" md="6">
           <b-form-group label="Nombre" label-for="nombre-input" >
             <b-form-input id="nombre-input" name="nombre" v-model="$v.form.datosValuo.valuador.nombre.$model" style="background-color: #e5f2f5 !important" placeholder="Nombre" @change="validar" 
-            :state="$v.form.datosValuo.valuador.nombre.$dirty ? !$v.form.datosValuo.valuador.nombre.$error : null"  aria-describedby="nombre-input-feedback"></b-form-input>
+            :state="$v.form.datosValuo.valuador.nombre.$dirty ? !$v.form.datosValuo.valuador.nombre.$error : null"  aria-describedby="nombre-input-feedback" v-uppercase></b-form-input>
             <small id="nombre-input-feedback"  class="position-absolute">
               <p v-if="!$v.form.datosValuo.valuador.nombre.required"  class="form-text text-danger">
                 El Nombre es requerido.
@@ -24,7 +24,7 @@
         <b-col cols="12" md="6">
           <b-form-group label="Apellido paterno" label-for="apPat-input" >
             <b-form-input id="apPat-input" name="apPat" v-model="$v.form.datosValuo.valuador.apPat.$model" style="background-color: #e5f2f5 !important" placeholder="Apellido paterno" 
-            @change="validar" :state="$v.form.datosValuo.valuador.apPat.$dirty ? !$v.form.datosValuo.valuador.apPat.$error : null"  aria-describedby="apPat-input-feedback"></b-form-input>
+            @change="validar" :state="$v.form.datosValuo.valuador.apPat.$dirty ? !$v.form.datosValuo.valuador.apPat.$error : null"  aria-describedby="apPat-input-feedback" v-uppercase></b-form-input>
               <small id="apPat-input-feedback"  class="position-absolute">
                 <p v-if="!$v.form.datosValuo.valuador.apPat.required"  class="form-text text-danger">
                   Apellido paterno
@@ -34,7 +34,7 @@
         </b-col>
         <b-col cols="12" md="6">
           <b-form-group label="Apellido materno" label-for="apMat-input" >
-            <b-form-input id="apMat-input" name="apMat" v-model="$v.form.datosValuo.valuador.apMat.$model" style="background-color: #e5f2f5 !important" placeholder="Apellido materno" @change="validar"></b-form-input>
+            <b-form-input id="apMat-input" name="apMat" v-model="$v.form.datosValuo.valuador.apMat.$model" style="background-color: #e5f2f5 !important" placeholder="Apellido materno" @change="validar" v-uppercase></b-form-input>
           </b-form-group>
         </b-col> 
         <b-col cols="12" md="6">
