@@ -139,7 +139,7 @@ class CalculoimpuestosController extends Controller
 	    		),
     		"Salidas" => array(
     			"Fecha Actual"				=> date("d-m-Y", strtotime($this->fecha_actual)),
-    			"Fecha vencimiento" 		=> $this->fecha_vencimiento,
+    			"Fecha vencimiento" 		=> date("d-m-Y", strtotime($this->fecha_vencimiento)),
     			"Factor de Actualizacion" 	=> $this->factor_actualizacion,
     			"INPC Periodo reciente" 	=> $this->inpc_reciente,
     			"INPC Periodo" 				=> $this->inpc_periodo,
@@ -753,7 +753,7 @@ class CalculoimpuestosController extends Controller
   			}
   			$f = (integer)$f;
   			//$count = 0;
-        //$datafechas = array();
+        // $datafechas = array();
   			foreach($this->porcentajes_values as $p => $data)
   			{
 
@@ -771,13 +771,13 @@ class CalculoimpuestosController extends Controller
 
             $total += $data["requerido"];
             // $datafechas []= array(
-            //   'fecha en valores' => $p,
-            //   'fechaactual' => $i,
-            //   'fechavencimiento' => $f,
-            //   'fecha actual' => $this->fecha_actual,
-            //   'fecha ven' => $this->fecha_vencimiento,
-            //   'dias actual -ven' => $di.'-'.$df,
-            //   'total' => $total
+            //     'fecha en valores' => $p,
+            //     'fechaactual' => $i,
+            //     'fechavencimiento' => $f,
+            //     'fecha actual' => $this->fecha_actual,
+            //     'fecha ven' => $this->fecha_vencimiento,
+            //     'dias actual -ven' => $di.'-'.$df,
+            //     'total' => $total
             // );
   				}
       /*
@@ -801,7 +801,7 @@ class CalculoimpuestosController extends Controller
 
   				}*/
   			}
-
+        //dd($datafechas);
   			return $total / 100;
   		}
     }
@@ -868,7 +868,7 @@ class CalculoimpuestosController extends Controller
             //$com[]= $comienzo;
 
         }
-        $fechaTermino = date("d-m-Y", strtotime($fechaTermino));
+        //$fechaTermino = date("d-m-Y", strtotime($fechaTermino));
         //dd($fechaTermino);
         return $fechaTermino;
 	}
