@@ -7,37 +7,6 @@
         $name = preg_replace('/\s+/', '_', $name);
         $camposConfigurados[$name] = isset($campo->valor) ? $campo->valor : (isset($campo->archivoCargado) ? $campo->archivoCargado : null);
     }
-    // dd($camposConfigurados);
-    // function getFields ($campos) {
-        // $fields = "";
-        // foreach($campos as $key => $val){
-            // if(gettype($val) == 'array'){
-                // for($item in $val){
-                    // $fields .= getFields($val);
-                // }
-                // return true;
-            // }
-            // if(gettype($value) == "object"){
-                // if(isset($value->nombre)) $val = $val->nombre;
-                // else{
-                    // $fields .= getFields($val);
-                    // return true;
-                // }
-            // }
-            // $fields .= "
-                // <div class=\"col-md-6\">
-                    // <span class=\"text-muted\">{$key}</span>
-                    // <p><strong>{$val}</strong></p>
-                // </div>
-            // ";
-
-        // }
-
-        // return $fields;
-    // }
-
-     // echo getFields($tramite->info->campos);
-// die();
 ?>
 <div class="content d-flex flex-column flex-column-fluid" id="app">
     <div class="d-flex flex-column-fluid">
@@ -110,7 +79,7 @@
                                 <div class="row">
                                     <?php
                                         foreach($expediente->direccion as $key => $val){
-                                            if(gettype($val) == 'array' && count($val) == 1){
+                                            if(gettype($val) == 'array'){
                                                 echo "</div>
                                                 </div>
                                                 <h6 class=\"card-header\"><strong>".strtoupper(str_replace('_', ' ', $key))."</strong></h6>
