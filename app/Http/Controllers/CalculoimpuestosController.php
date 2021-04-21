@@ -138,7 +138,7 @@ class CalculoimpuestosController extends Controller
 	    			"multa por correccion fiscal (g)" => $this->g,
 	    		),
     		"Salidas" => array(
-    			"Fecha Actual"				=> $this->fecha_actual,
+    			"Fecha Actual"				=> date("d-m-Y", strtotime($this->fecha_actual)),
     			"Fecha vencimiento" 		=> $this->fecha_vencimiento,
     			"Factor de Actualizacion" 	=> $this->factor_actualizacion,
     			"INPC Periodo reciente" 	=> $this->inpc_reciente,
@@ -347,13 +347,14 @@ class CalculoimpuestosController extends Controller
 
     	// parte actualizada del impuesto
     	$this->e = ($this->d * $this->factor_actualizacion) - $this->d;
+
       $this->e = $this->redondeo($this->e);
     	// obtener los recargos
     	$this->f = ($this->d + $this->e) * $this->porcentaje_recargos;
+
       $this->f = $this->redondeo($this->f);
     	// importe total
     	$this->h =  $this->d + $this->e + $this->f + $this->g ;
-
 
     }
 
@@ -800,7 +801,7 @@ class CalculoimpuestosController extends Controller
 
   				}*/
   			}
-        //dd($datafechas);
+
   			return $total / 100;
   		}
     }
@@ -867,7 +868,8 @@ class CalculoimpuestosController extends Controller
             //$com[]= $comienzo;
 
         }
-        // dd($datafechas);
+        $fechaTermino = date("d-m-Y", strtotime($fechaTermino));
+        //dd($fechaTermino);
         return $fechaTermino;
 	}
 }
