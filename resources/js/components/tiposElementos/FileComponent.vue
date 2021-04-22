@@ -139,6 +139,7 @@
                 this.campo.mensajes.push( mensaje );
             }
           }
+          this.$forceUpdate();
           this.campo.valido =  requeridoValido && extensionvalida;
           this.$emit('updateForm', this.campo);
         }
