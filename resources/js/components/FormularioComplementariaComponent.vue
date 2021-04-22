@@ -117,9 +117,7 @@
 
         methods:{
             cambioModelo(){
-                console.log(JSON.parse(JSON.stringify(this.form)));
                 let valido =  !this.$v.form.$invalid;
-                console.log(JSON.parse(JSON.stringify(this.$v.form)));
                 this.$emit('updatingScore', valido);
                 this.$emit('sendData', this.form);
             },
