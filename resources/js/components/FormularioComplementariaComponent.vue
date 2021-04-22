@@ -1,33 +1,29 @@
 <template>
     <div id="contenedorCampos" class="container-fluid">
-
-        <form id="formularioComplementaria">
+        <form id="formularioComplementaria" ref="form">
             <div class="panel panel-default" >
                 <div class="panel-heading">
                     <div class="row">
                         <div  class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group fv-plugins-icon-container"  >
-                                <label>Folio</label>
-                                <input @change="cambioModelo" type="text" class="form-control form-control-solid form-control-lg"  placeholder="Folio" id="folio" v-model="datos.folio_anterior" />
+                                <label>FOLIO</label>
+                                <input @change="cambioModelo" type="text" class="form-control form-control-solid form-control-lg"  placeholder="Folio" id="folio" v-model="form.folio_anterior" />
                             </div>
                         </div>
                         <div  class="col-md-6 col-sm-6 col-xs-6">
-                            <div class=" fv-plugins-icon-container" id="fechaElement">
-                                <label>Fecha Escritura</label>
-                                
-
+                            <div class="form-group fv-plugins-icon-container">
+                                <label>FECHA DE ESCRITURA O MINUTA</label>
                                 <b-input-group >
                                   <b-form-input
                                     type="text"
-                                    placeholder="YYYY-MM-DD"
-                                    autocomplete="off" id="fecha"  v-model="datos.fecha_escritura"        
+                                    placeholder="DD-MM-YYYY"
+                                    autocomplete="off" id="fecha"  v-model="form.fecha_escritura"        
                                       @change="cambioModelo" style="background-color: #e5f2f5 !important"
                                     @focus="cambioModelo" @input="cambioModelo"
                                   ></b-form-input>
                                   <b-input-group-append>
-                                    <b-form-datepicker   id="datepickerfecha" name="datepickerfecha"  v-model="datos.fecha_escritura"        
-                                     @change="cambioModelo" style="background-color: #e5f2f5 !important"
-                                    @focus="cambioModelo" @input="cambioModelo"  button-only right aria-controls="fecha"  :show-decade-nav="showDecadeNav">
+                                    <b-form-datepicker   id="datepickerfecha" name="datepickerfecha"  v-model="fechaDatepICKER"        
+                                    style="background-color: #e5f2f5 !important" @input="formatFechaNacimiento()"  button-only right aria-controls="fecha"  :show-decade-nav="showDecadeNav">
                                     </b-form-datepicker>
                                   </b-input-group-append>
                                 </b-input-group>
@@ -35,26 +31,26 @@
                         </div>
                         <div  class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group fv-plugins-icon-container"  >
-                                <label>Monto Operación</label>
-                                <input  type="text" class="form-control form-control-solid form-control-lg"  placeholder="Monto Operación" id="montoOper" v-model="datos.monto_operacion" @change="formatoMoneda('monto_operacion')"/>
+                                <label>MONTO DE OPERACIÓN</label>
+                                <input @change="cambioModelo"  type="text" class="form-control form-control-solid form-control-lg"  placeholder="Monto Operación" id="montoOper" v-model="form.monto_operacion"  v-currency/>
                             </div>
                         </div>
                         <div  class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group fv-plugins-icon-container"  >
-                                <label>Ganancia Obtenida</label>
-                                <input  type="text" class="form-control form-control-solid form-control-lg"  placeholder="Ganancia Obtenida" id="ganancia_obtenida" v-model="datos.ganancia_obtenida" @change="formatoMoneda('ganancia_obtenida')"/>
+                                <label>GANANCIA OBTENIDA</label>
+                                <input @change="cambioModelo" type="text" class="form-control form-control-solid form-control-lg"  placeholder="Ganancia Obtenida" id="ganancia_obtenida" v-model="form.ganancia_obtenida" v-currency/>
                             </div>
                         </div>
                         <div  class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group fv-plugins-icon-container"  >
-                                <label>Pago provisional</label>
-                                <input  type="text" class="form-control form-control-solid form-control-lg"  placeholder="Pago provisional" id="fecha" v-model="datos.pago_provisional_lisr" @change="formatoMoneda('pago_provisional_lisr')"/>
+                                <label>PAGO PROVISIONAL CONFORME AL ARTICULO 126 LISR</label>
+                                <input @change="cambioModelo" type="text" class="form-control form-control-solid form-control-lg"  placeholder="Pago provisional" id="fecha" v-model="form.pago_provisional_lisr" v-currency/>
                             </div>
                         </div>
                         <div  class="col-md-6 col-sm-6 col-xs-6">
                             <div class="form-group fv-plugins-icon-container"  >
-                                <label>Multa Corrección Fiscal</label>
-                                <input  type="text" class="form-control form-control-solid form-control-lg"  placeholder="Multa Corrección Fiscal" id="fecha" v-model="datos.multa_correccion_fiscal" @change="formatoMoneda('multa_correccion_fiscal')"
+                                <label>MULTA POR CORRECCION FISCAL</label>
+                                <input @change="cambioModelo" type="text" class="form-control form-control-solid form-control-lg"  placeholder="Multa Corrección Fiscal" id="fecha" v-model="form.multa_correccion_fiscal" v-currency
                                 />
                             </div>
                         </div>
@@ -67,70 +63,72 @@
 
 <script>
     import Vue from 'vue';
+    import { validationMixin } from 'vuelidate';
+    import { required, helpers  } from 'vuelidate/lib/validators';
+
     export default {
+        mixins: [validationMixin],
         props: ['infoGuardada'],
         data() {
             return {
-                datos:{
+                form:{
                     folio_anterior:'',
                     fecha_escritura:'', 
-                    monto_operacion: this.formatter('0'), 
-                    ganancia_obtenida:this.formatter('0'), 
-                    multa_correccion_fiscal:this.formatter('0'), 
-                    pago_provisional_lisr:this.formatter('0')
+                    monto_operacion: Vue.filter('formatoMoneda')("0"),
+                    ganancia_obtenida:Vue.filter('formatoMoneda')("0"), 
+                    multa_correccion_fiscal:Vue.filter('formatoMoneda')("0"),
+                    pago_provisional_lisr:Vue.filter('formatoMoneda')("0"),
                 },
-                showDecadeNav:true
+                showDecadeNav:true,
+                fechaDatepICKER:''
             }
         },
 
-
+        validations() {
+            return {
+                form:{
+                    folio_anterior:{required},
+                    fecha_escritura:{required},
+                    monto_operacion:{required},
+                    ganancia_obtenida:{required},
+                    pago_provisional_lisr:{required},
+                    multa_correccion_fiscal:{required},
+                }
+            }
+        },
 
         mounted() {
-           this.datos = this.infoGuardada && this.infoGuardada.camposComplementaria ? this.infoGuardada.camposComplementaria : this.datos;
-           if(this.datos){
-               this.formatoMoneda('monto_operacion');
-               this.formatoMoneda('ganancia_obtenida');
-               this.formatoMoneda('pago_provisional_lisr');
-               this.formatoMoneda('multa_correccion_fiscal');
-           }
-           if(this.infoGuardada && this.infoGuardada.camposComplementaria){
-                this.cambioModelo();
-           }
+
+            this.form = this.infoGuardada && this.infoGuardada.camposComplementaria ? this.infoGuardada.camposComplementaria : this.form;
+
+            if(this.infoGuardada && this.infoGuardada.camposComplementaria){
+                this.form={
+                    folio_anterior:'',
+                    fecha_escritura:'', 
+                    monto_operacion: Vue.filter('formatoMoneda')(this.form.monto_operacion),
+                    ganancia_obtenida:Vue.filter('formatoMoneda')(this.form.ganancia_obtenida), 
+                    multa_correccion_fiscal:Vue.filter('formatoMoneda')(this.form.multa_correccion_fiscal),
+                    pago_provisional_lisr:Vue.filter('formatoMoneda')(this.form.pago_provisional_lisr),
+                }
+                
+            }
+            this.cambioModelo();
         },
 
         methods:{
             cambioModelo(){
-                let formularioValido = true;
-                let claves = Object.keys(this.datos); 
-                for(let i=0; i< claves.length; i++){
-                  let clave = claves[i];
-                  formularioValido =  formularioValido && !!this.datos[clave] && this.datos[clave].length > 0
-                }
-
-                this.$emit('updatingScore', formularioValido);
-                this.$emit('sendData', this.datos);
-                
+                console.log(JSON.parse(JSON.stringify(this.form)));
+                let valido =  !this.$v.form.$invalid;
+                console.log(JSON.parse(JSON.stringify(this.$v.form)));
+                this.$emit('updatingScore', valido);
+                this.$emit('sendData', this.form);
             },
 
-            formatoMoneda(name){
+            formatFechaNacimiento(){
+                this.form.fecha_escritura =  this.fechaDatepICKER.split("-").reverse().join("-");
 
-                let self = this;
-                if(this.datos[name]){
-                  let numero = this.formatoNumero(this.datos[name]);
-                  this.datos[name] =  this.formatter(numero);
-                } else{
-                  return null;
-                }
                 this.cambioModelo();
-            },
-
-            formatoNumero(numberStr){
-                return  Vue.filter('toNumber')(numberStr +""); 
-            },
-
-            formatter(value){
-                return  Vue.filter('toCurrency')(value +"");
-            },
+            }
         }
     }
 </script>
