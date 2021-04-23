@@ -50,12 +50,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        // dd($exception);
+        $statusCode = method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : $exception->getCode();
         if($request->route() && $request->route()->getPrefix() == (getenv("APP_PREFIX") ? getenv("APP_PREFIX")."/" : "").'api') return response()->json([
             "response" => "error",
-            "code" => $exception->getStatusCode(),
+            "code" => $statusCode,
             "message" => $exception->getMessage()
-        ], $exception->getStatusCode());
+        ], ($statusCode > 0 && $statusCode < 512 && is_numeric($statusCode)) ? $statusCode : 500);
         return parent::render($request, $exception);
     }
 }
