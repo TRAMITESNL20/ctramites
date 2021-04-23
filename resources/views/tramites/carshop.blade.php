@@ -14,10 +14,7 @@
             </nav>
             <div style="min-height: 600px;" class="content d-flex flex-column flex-column-fluid pt-0">
                 <div>
-                    @php
-                        $usuario = json_encode($user);
-                      @endphp
-                    <car-shop-component :type="{{ $id }}" id-usuario="{{ $id }}" :usuario="{{$usuario}}"></car-shop-component>
+                    <car-shop-component :type="{{ $id }}" id-usuario="{{ $id }}"></car-shop-component>
                 </div>
             </div>
         </div>
