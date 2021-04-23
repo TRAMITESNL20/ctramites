@@ -5,7 +5,7 @@
         $name = strtolower($campo->nombre);
         $name = preg_replace("([^A-Za-z\ ])", '', $name);
         $name = preg_replace('/\s+/', '_', $name);
-        $camposConfigurados[$name] = isset($campo->valor) ? $campo->valor : (isset($campo->archivoCargado) ? $campo->archivoCargado : null);
+        $camposConfigurados[$name] = isset($campo->documento) ? $campo->documento : (isset($campo->valor) ? $campo->valor : null);
     }
 ?>
 <div class="content d-flex flex-column flex-column-fluid" id="app">
@@ -49,8 +49,10 @@
                                     <div class="col-md-4">
                                         <span class="text-muted">Cálculo del ISR conforme al 126 LISR (Archivo)</span>
                                         <p>
-                                            @if($camposConfigurados['calculo_del_isr_conforme_al_lisr'])
-                                                <a href="" target="_blank" class="btn btn-primary text-white mt-2"><i class="fas fa-download"></i> Ver Documento</a>
+                                            @if(count($camposConfigurados['calculo_del_isr_conforme_al_lisr']) > 0)
+                                                @foreach ($camposConfigurados['calculo_del_isr_conforme_al_lisr'] as $key => $documento)
+                                                    <a href="{{ $documento }}" target="_blank" class="btn btn-primary text-white mt-2"><i class="fas fa-download"></i> Ver Documento {{  count($camposConfigurados['calculo_del_isr_conforme_al_lisr']) > 1 ? $key+1 : '' }}</a>
+                                                @endforeach
                                             @else
                                             -
                                             @endif
