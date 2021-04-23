@@ -147,13 +147,13 @@
 													@updateForm="updateForm" :usuario="usuario"></listado-expedientes-5-i-s-r>
 
 												<div v-else-if="campo.tipo == 'question'">
-													¿Desea realizar el cobro por ?
+													¿Consigna valor?
 													<div class="col-md-12 col-lg-12">
 													    <div >
 														    <div class="custom-control custom-radio custom-control-inline">
 														      	<input type="radio" value="millar"  name="radioInline" class="custom-control-input" id="millar1" v-model="tipo_costo_obj.tipoCostoRadio" key="millar" @change="cambioModelo">
 														      	<label class="custom-control-label" for="millar1">
-														      		Millar	
+														      		Si (millar)	
 														      	</label>
 														    </div>
 
@@ -162,14 +162,14 @@
 														      	<input type="radio" value="hoja" name="radioInline" class="custom-control-input" id="hoja1" v-model="tipo_costo_obj.tipoCostoRadio" key="millar" @change="cambioModelo">
 
 														      	<label class="custom-control-label" for="hoja1">
-														      		Hoja
+														      		No (hoja)
 														      	</label>
 														    </div>
 														    <div class="custom-control custom-radio custom-control-inline" v-if="tipo_costo_obj.val_tipo_costo === 'L'">
 														      	<input type="radio" value="lote" name="radioInline" class="custom-control-input" id="lote1" v-model="tipo_costo_obj.tipoCostoRadio" key="lote" @change="cambioModelo">
 
 														      	<label class="custom-control-label" for="lote1">
-														      		Lote
+														      		No (lote)
 														      	</label>
 														    </div>
 														    <div class=" fv-plugins-icon-container" v-if="tipo_costo_obj.tipoCostoRadio=== 'hoja'"  >

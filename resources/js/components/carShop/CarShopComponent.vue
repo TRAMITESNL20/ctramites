@@ -353,6 +353,10 @@
             if(soliciante.info.hasOwnProperty('enajenante') && (soliciante.info.hasOwnProperty('solicitante') ) ){
               let solicitanteInfo = soliciante.info.solicitante;
               tramitesJson.auxiliar_1  = (solicitanteInfo.nombreSolicitante || '') + " " + (solicitanteInfo.apPat || '' )+ " " + (solicitanteInfo.apMat || '');
+              let usuario = window.user;
+              if(usuario && usuario.notary){
+                tramitesJson.auxiliar_1 = tramitesJson.auxiliar_1 + " - Notaria " + usuario.notary.notary_number
+              }
             } else {
               tramitesJson.auxiliar_1 =  "";//enviar como auxiliar el solicitante
             }

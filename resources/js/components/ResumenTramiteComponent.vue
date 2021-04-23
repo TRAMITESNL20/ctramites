@@ -236,12 +236,13 @@
                         //paramsCosto.divisa = campoDivisas.valor[0][0];
                     }
                 } else {
-                    this.datosComplementaria.fecha_escritura = this.datosComplementaria.fecha_escritura.split("-").map(dato => Number(dato)).join("-");
-                    this.datosComplementaria.ganancia_obtenida = this.formatoNumero(this.datosComplementaria.ganancia_obtenida);
-                    this.datosComplementaria.monto_operacion = this.formatoNumero(this.datosComplementaria.monto_operacion);
-                    this.datosComplementaria.multa_correccion_fiscal = this.formatoNumero(this.datosComplementaria.multa_correccion_fiscal);
-                    this.datosComplementaria.pago_provisional_lisr = this.formatoNumero(this.datosComplementaria.pago_provisional_lisr);
-                    return this.datosComplementaria;
+                    let params = {};
+                    params.fecha_escritura = this.datosComplementaria.fecha_escritura.split("-").reverse().map(dato => Number(dato)).join("-");
+                    params.ganancia_obtenida = this.formatoNumero(this.datosComplementaria.ganancia_obtenida);
+                    params.monto_operacion = this.formatoNumero(this.datosComplementaria.monto_operacion);
+                    params.multa_correccion_fiscal = this.formatoNumero(this.datosComplementaria.multa_correccion_fiscal);
+                    params.pago_provisional_lisr = this.formatoNumero(this.datosComplementaria.pago_provisional_lisr);
+                    return params;
                 }
 
                 return Object.assign(params, paramsCosto);

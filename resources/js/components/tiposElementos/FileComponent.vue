@@ -12,7 +12,7 @@
           :name="[[campo.campo_id]] + '-' + [[campo.relationship]]" 
           class="custom-file-input"  style="background-color: #e5f2f5 !important"
           ref="fileInput"
-          type="file" @change="validar"/>
+          type="file" @change="validar"  />
         <label class="custom-file-label" :for="[[campo.campo_id]] + '-' + [[campo.relationship]]">
           <span :id="[[campo.campo_id]]+ '-' + [[campo.relationship]]+'-namefile'">  
             {{ campo.attach || 'Seleccione archivo' }}
@@ -20,6 +20,11 @@
         </label>
       </div>
     </div>
+      <small  v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
+        <p v-for="mensaje in campo.mensajes" class="form-text text-danger">
+          {{ mensaje.mensajeStr }}
+        </p>
+    </small>
   </div>
 </template>
 
@@ -85,6 +90,7 @@
 
         validar(){
           let requeridoValido = false;
+          let extensionvalida = true;
           let caracteristicas = {};
           var caracteristicasStr = this.campo.caracteristicas;
           this.campo.mensajes = [];
@@ -94,7 +100,10 @@
           }catch(err){
             console.log(err);
           }
+
+
           var fileInput = document.getElementById(this.campo.campo_id +  "-" + this.campo.relationship );
+
           if( fileInput && fileInput.files.length > 0  ){
             requeridoValido = true;
             $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(   fileInput.files[0].name  );
@@ -115,7 +124,23 @@
             let file = fileInput.files[0];
             this.campo.valor = file;
           }
-          this.campo.valido =  requeridoValido;
+          if(caracteristicas.accept){
+            let extensionesPermitidas = caracteristicas.accept.split(",").map( ext =>{
+                return ext;
+            });
+            if(this.campo.valor && !extensionesPermitidas.includes(fileInput.value.split(".")[1])){
+
+                extensionvalida = false;
+                fileInput.value = '';
+                let mensaje = { 
+                  tipo:'required',
+                  mensajeStr: "Extension de archivo no permitida"
+                }
+                this.campo.mensajes.push( mensaje );
+            }
+          }
+          this.$forceUpdate();
+          this.campo.valido =  requeridoValido && extensionvalida;
           this.$emit('updateForm', this.campo);
         }
       }
