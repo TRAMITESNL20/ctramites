@@ -112,7 +112,7 @@
   import actualizadorCostos from '../../services/actualizadorCostos.service.js';
 
     export default {
-      props: ['idUsuario'],
+      props: ['idUsuario', 'usuario'],
         computed:{
             totalListTramites(){
                 return this.tramitesAgrupados.length;
@@ -173,7 +173,7 @@
                     let response = await axios.get(url);
 
                     let tramites =  response.data.tramites ;
-                    this.construirJSONTramites( tramites );
+                    this.construirJSONTramites( tramites, this.usuario );
                    /*
                     let arrayPromesasActualizacionDeCostos = [];
 
@@ -335,7 +335,7 @@
               return {};
             }
           },
-          async construirJSONTramites( tramites ){
+          async construirJSONTramites( tramites, usuario ){
             let listadoTramites = [];
             let requestCostos = [];
             tramites.forEach(  tramiteInarray => {
@@ -353,6 +353,9 @@
             if(soliciante.info.hasOwnProperty('enajenante') && (soliciante.info.hasOwnProperty('solicitante') ) ){
               let solicitanteInfo = soliciante.info.solicitante;
               tramitesJson.auxiliar_1  = (solicitanteInfo.nombreSolicitante || '') + " " + (solicitanteInfo.apPat || '' )+ " " + (solicitanteInfo.apMat || '');
+              if(usuario && usuario.notary){
+                tramitesJson.auxiliar_1 = tramitesJson.auxiliar_1 + " " + " Notaria " + usuario.notary.notary_number
+              }
             } else {
               tramitesJson.auxiliar_1 =  "";//enviar como auxiliar el solicitante
             }
