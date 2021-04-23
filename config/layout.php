@@ -62,18 +62,18 @@ return [
 			"path" => "tramites",
 			"options" => ["pendiente-de-pago-con-referencia", 5]
 		],
-		[
-			"name" => "En espera de atención",
-			"icon" => "fas fa-clock",
-			"path" => "tramites",
-			"options" => ["en-espera-de-atencion", 3]
-		],
-		[
-			"name" => "En curso",
-			"icon" => "fas fa-play-circle",
-			"path" => "tramites",
-			"options" => ["en-curso", 1]
-		],
+		// [
+		// 	"name" => "En espera de atención",
+		// 	"icon" => "fas fa-clock",
+		// 	"path" => "tramites",
+		// 	"options" => ["en-espera-de-atencion", 3]
+		// ],
+		// [
+		// 	"name" => "En curso",
+		// 	"icon" => "fas fa-play-circle",
+		// 	"path" => "tramites",
+		// 	"options" => ["en-curso", 1]
+		// ],
 		[
 			"name" => "Pendiente de Firmar",
 			"icon" => "fas fa-file-signature",
