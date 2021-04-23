@@ -61,13 +61,11 @@ jobs:
           echo "$branchPath" &&
           cd ${{ secrets.QA_FOLDER }} &&
           cd .. &&
-          
-          
 
           if [ -d "$branchPath" ];
           then
             test -f "$branchPath/.env" && cp $branchPath/.env .env.$branchPath;
-            rm -Rf $branchPath;
+            echo ${{ secrets.QA_PASSWORD }} | sudo -S rm -Rf $branchPath;
           fi &&
           
           git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} $branchPath &&
