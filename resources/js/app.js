@@ -143,6 +143,19 @@ Vue.directive('uppercase',
     }
   })
 
+Vue.directive('currency',
+  {
+    inserted: function(el, _, vnode) {
+          el.addEventListener('change', async function(e) {
+            let numero = Vue.filter('toNumber')(e.target.value +"");
+            e.target.value = Vue.filter('toCurrency')(numero +"")
+            vnode.componentInstance.$emit('input', e.target.value);
+          })
+        
+    }
+});
+
+
 const app = new Vue({
     el: '#app',
 });
