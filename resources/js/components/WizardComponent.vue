@@ -47,9 +47,11 @@
                                         </campos-tramite-component>
                                       </div>
                                       <div v-else-if="tipoTramite == 'complementaria' && camposGuardadosObtenidos">
+                                          <complementaria-component></complementaria-component>
+                                        <!--
                                           <formulario-complementaria-component @updatingScore="updateScore"
                                           @sendData="setDatosComplementaria" :infoGuardada="infoGuardada">
-                                          </formulario-complementaria-component>
+                                          </formulario-complementaria-component>-->
                                       </div>
                                     </div>
                                     <!--end: Wizard Step 1-->

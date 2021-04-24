@@ -1,62 +1,130 @@
 <template>
     <div id="contenedorCampos" class="container-fluid">
-        <form id="formularioComplementaria" ref="form">
-            <div class="panel panel-default" >
-                <div class="panel-heading">
-                    <div class="row">
-                        <div  class="col-md-6 col-sm-6 col-xs-6">
-                            <div class="form-group fv-plugins-icon-container"  >
-                                <label>FOLIO</label>
-                                <input @change="cambioModelo" type="text" class="form-control form-control-solid form-control-lg"  placeholder="Folio" id="folio" v-model="form.folio_anterior" />
-                            </div>
-                        </div>
-                        <div  class="col-md-6 col-sm-6 col-xs-6">
-                            <div class="form-group fv-plugins-icon-container">
-                                <label>FECHA DE ESCRITURA O MINUTA</label>
-                                <b-input-group >
-                                  <b-form-input
-                                    type="text"
-                                    placeholder="DD-MM-YYYY"
-                                    autocomplete="off" id="fecha"  v-model="form.fecha_escritura"        
-                                      @change="cambioModelo" style="background-color: #e5f2f5 !important"
-                                    @focus="cambioModelo" @input="cambioModelo"
-                                  ></b-form-input>
-                                  <b-input-group-append>
-                                    <b-form-datepicker   id="datepickerfecha" name="datepickerfecha"  v-model="fechaDatepICKER"        
-                                    style="background-color: #e5f2f5 !important" @input="formatFechaNacimiento()"  button-only right aria-controls="fecha"  :show-decade-nav="showDecadeNav">
-                                    </b-form-datepicker>
-                                  </b-input-group-append>
-                                </b-input-group>
-                            </div>
-                        </div>
-                        <div  class="col-md-6 col-sm-6 col-xs-6">
-                            <div class="form-group fv-plugins-icon-container"  >
-                                <label>MONTO DE OPERACIÓN</label>
-                                <input @change="cambioModelo"  type="text" class="form-control form-control-solid form-control-lg"  placeholder="Monto Operación" id="montoOper" v-model="form.monto_operacion"  v-currency/>
-                            </div>
-                        </div>
-                        <div  class="col-md-6 col-sm-6 col-xs-6">
-                            <div class="form-group fv-plugins-icon-container"  >
-                                <label>GANANCIA OBTENIDA</label>
-                                <input @change="cambioModelo" type="text" class="form-control form-control-solid form-control-lg"  placeholder="Ganancia Obtenida" id="ganancia_obtenida" v-model="form.ganancia_obtenida" v-currency/>
-                            </div>
-                        </div>
-                        <div  class="col-md-6 col-sm-6 col-xs-6">
-                            <div class="form-group fv-plugins-icon-container"  >
-                                <label>PAGO PROVISIONAL CONFORME AL ARTICULO 126 LISR</label>
-                                <input @change="cambioModelo" type="text" class="form-control form-control-solid form-control-lg"  placeholder="Pago provisional" id="fecha" v-model="form.pago_provisional_lisr" v-currency/>
-                            </div>
-                        </div>
-                        <div  class="col-md-6 col-sm-6 col-xs-6">
-                            <div class="form-group fv-plugins-icon-container"  >
-                                <label>MULTA POR CORRECCION FISCAL</label>
-                                <input @change="cambioModelo" type="text" class="form-control form-control-solid form-control-lg"  placeholder="Multa Corrección Fiscal" id="fecha" v-model="form.multa_correccion_fiscal" v-currency
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <form id="form" ref="form">
+                <b-row>
+                  <b-col cols="12" md="6">
+                    <b-form-group label="GANANCIA OBTENIDA" label-for="ganancia-obtenida-input" >
+                      <b-input-group  >
+                        <template #prepend>
+                          <b-input-group-text >$</b-input-group-text>
+                        </template>
+                        <b-form-input
+                        id="ganancia-obtenida-input" name="gananciaObtenida" v-model="$v.form.gananciaObtenida.$model"  :state="$v.form.gananciaObtenida.$dirty ? !$v.form.gananciaObtenida.$error : null"  aria-describedby="gananciaObtenida-input-feedback" @change="getDetalle" v-currency
+
+                      ></b-form-input>
+                      </b-input-group>
+                      <b-form-invalid-feedback id="gananciaObtenida-input-feedback">
+                        <span v-if="!$v.form.gananciaObtenida.required"  class="form-text text-danger">
+                          Campo requerido.
+                        </span>
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                  <b-col cols="12" md="6">
+                    <b-form-group label="PAGO PROVISIONAL CONFORME AL ARTICULO 126 LISR" label-for="pago-provisional-input" >
+                      <b-input-group  >
+                        <template #prepend>
+                          <b-input-group-text >$</b-input-group-text>
+                        </template>
+                        <b-form-input
+                          id="pago-provisional-input" name="pagoProvisional" v-model="$v.form.pagoProvisional.$model"  :state="$v.form.pagoProvisional.$dirty ? !$v.form.pagoProvisional.$error : null"  aria-describedby="pagoProvisional-input-feedback"  @change="getDetalle"  v-currency
+                        ></b-form-input>
+                      </b-input-group>
+                      <b-form-invalid-feedback id="pagoProvisional-input-feedback">
+                        <span v-if="!$v.form.pagoProvisional.required"  class="form-text text-danger">
+                          Campo requerido.
+                        </span>
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                  <!--
+                  <b-col cols="12" md="6">
+                    <b-form-group label="MONTO OBTENIDO CONFORME AL ART 127 LISR" label-for="monto-obtenido-conforme-isr-input" >
+                      <b-input-group  >
+                        <template #prepend>
+                          <b-input-group-text >$</b-input-group-text>
+                        </template>
+                        <b-form-input
+                          id="monto-obtenido-conforme-isr-input" name="montoObtenidoConformeISR"
+                          :disabled="true" :value="datosCostos && datosCostos.Salidas  ? currencyFormat('Monto obtenido conforme al art 127 LISR',  datosCostos.Salidas['Monto obtenido conforme al art 127 LISR']) : ''"
+                        ></b-form-input>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col> -->
+                  <b-col cols="12" md="6">
+                    <b-form-group label="MULTA POR CORRECCION FISCAL" label-for="multa-correccion-fiscal-input" >
+                      
+                      <b-input-group  > 
+                        <template #prepend>
+                          <b-input-group-text >$</b-input-group-text>
+                        </template>
+                        <b-form-input id="multa-correccion-fiscal-input" name="multaCorreccion" v-model="$v.form.multaCorreccion.$model"  :state="$v.form.multaCorreccion.$dirty ? !$v.form.multaCorreccion.$error : null"  aria-describedby="multaCorreccion-input-feedback"  @change="getDetalle"  v-currency ></b-form-input>
+                      </b-input-group>
+                      <b-form-invalid-feedback id="multaCorreccion-input-feedback">
+                        <span v-if="!$v.form.multaCorreccion.required"  class="form-text text-danger">
+                          Campo requerido.
+                        </span>
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>
+                  
+                  <b-col cols="12" md="6" >
+                    <b-form-group label="MONTO DE OPERACIÓN (proporcional conforme al % de venta)" label-for="monto-operacion-input" >
+                      <b-input-group  >
+                        <template #prepend>
+                          <b-input-group-text >$</b-input-group-text>
+                        </template>
+                        <b-form-input
+                          id="monto-operacion-input" name="montoOperacion" v-model="$v.form.montoOperacion.$model" 
+                          :state="$v.form.montoOperacion.$dirty ? !$v.form.montoOperacion.$error : null"  
+                          aria-describedby="montoOperacion-input-feedback"  @change="getDetalle"  v-currency
+                        ></b-form-input>
+                      </b-input-group>
+                      <b-form-invalid-feedback id="montoOperacion-input-feedback">
+                        <span v-if="!$v.form.montoOperacion.required"  class="form-text text-danger">
+                          Campo requerido.
+                        </span>
+                      </b-form-invalid-feedback>
+                    </b-form-group>
+                  </b-col>    
+                </b-row>
+
+                <b-row>
+                  <b-col cols="12" md="12" v-if="calculandoCostos">
+                       <b-spinner type="grow" label="Spinning"></b-spinner>
+                  </b-col>
+                  <b-col cols="12" md="12" v-if="!$v.form.$anyError && !calculandoCostos">
+                     <div class="text-center" v-if="datosCostos">
+                          <b-button title="Click para ver detalles" variant="primary" @click="verDetalle =  !verDetalle" class="mr-2 btn btn-block">
+                            {{!verDetalle? "Ver detalle " : "Ocultar detalle "}}   
+                          </b-button>
+                      </div>    
+                      <div>
+                        <b-card no-body v-if="datosCostos && verDetalle">
+                            <b-card-body id="nav-scroller"ref="content "style=" height:300px; overflow-y:scroll;" v-if="typeof datosCostos == 'object'">
+                                <b-row v-for="(salida, key) in datosCostos.Complementaria" :key="key">
+                                    <b-col class="text-left" style="width: 100%" >
+                                        <strong>{{ key }}</strong>
+                                    </b-col>
+                                    <b-col class="text-right" >
+                                        <span class="text-muted">   {{ currencyFormat(key, salida) }} </span>
+                                    </b-col>
+                                </b-row>
+                            </b-card-body> 
+                            <b-card-body id="nav-scroller"ref="content "style=" height:300px; overflow-y:scroll;" v-if="typeof datosCostos != 'object'">
+                              <div class="text-center">
+                                <h5 class="card-title" >Datos incorrectos</h5>
+                                Verificar fecha de escritura o minuta
+                              </div>
+                                
+                            </b-card-body> 
+                        </b-card>
+
+                      </div>                    
+                  </b-col>
+
+                </b-row>
+
         </form>
      </div> 
 </template>
@@ -68,65 +136,75 @@
 
     export default {
         mixins: [validationMixin],
-        props: ['infoGuardada'],
+        props: ['info'],
         data() {
             return {
                 form:{
-                    folio_anterior:'',
-                    fecha_escritura:'', 
-                    monto_operacion: Vue.filter('formatoMoneda')("0"),
-                    ganancia_obtenida:Vue.filter('formatoMoneda')("0"), 
-                    multa_correccion_fiscal:Vue.filter('formatoMoneda')("0"),
-                    pago_provisional_lisr:Vue.filter('formatoMoneda')("0"),
+                    montoOperacion: Vue.filter('formatoMoneda')("0"),
+                    gananciaObtenida:Vue.filter('formatoMoneda')("0"), 
+                    multaCorreccion:Vue.filter('formatoMoneda')("0"),
+                    pagoProvisional:Vue.filter('formatoMoneda')("0"),
                 },
-                showDecadeNav:true,
-                fechaDatepICKER:''
+                calculandoCostos:false,
+                datosCostos:false,
+                verDetalle:false
             }
         },
 
         validations() {
             return {
                 form:{
-                    folio_anterior:{required},
-                    fecha_escritura:{required},
-                    monto_operacion:{required},
-                    ganancia_obtenida:{required},
-                    pago_provisional_lisr:{required},
-                    multa_correccion_fiscal:{required},
+                    montoOperacion:{required},
+                    gananciaObtenida:{required},
+                    pagoProvisional:{required},
+                    multaCorreccion:{required},
                 }
             }
         },
 
         mounted() {
-
-            this.form = this.infoGuardada && this.infoGuardada.camposComplementaria ? this.infoGuardada.camposComplementaria : this.form;
-
-            if(this.infoGuardada && this.infoGuardada.camposComplementaria){
-                this.form={
-                    folio_anterior:'',
-                    fecha_escritura:'', 
-                    monto_operacion: Vue.filter('formatoMoneda')(this.form.monto_operacion),
-                    ganancia_obtenida:Vue.filter('formatoMoneda')(this.form.ganancia_obtenida), 
-                    multa_correccion_fiscal:Vue.filter('formatoMoneda')(this.form.multa_correccion_fiscal),
-                    pago_provisional_lisr:Vue.filter('formatoMoneda')(this.form.pago_provisional_lisr),
-                }
-                
-            }
-            this.cambioModelo();
+            this.getDetalle();
         },
 
         methods:{
-            cambioModelo(){
-                let valido =  !this.$v.form.$invalid;
-                this.$emit('updatingScore', valido);
-                this.$emit('sendData', this.form);
+            async getDetalle(){
+                this.calculandoCostos = true
+                let url = process.env.APP_URL + "/getComplementaria";
+     
+                let params = {};
+                params.fecha_escritura = this.info.fechaEscritura.split("-").reverse().map(dato => Number(dato)).join("-");
+                params.ganancia_obtenida = Vue.filter('toNumber')(this.form.gananciaObtenida +""); 
+                params.monto_operacion = Vue.filter('toNumber')(this.form.montoOperacion +""); 
+                params.multa_correccion_fiscal = Vue.filter('toNumber')(this.form.multaCorreccion +""); 
+                params.pago_provisional_lisr = Vue.filter('toNumber')(this.form.pagoProvisional +""); 
+                params.folio_anterior = this.info.folio;
+                try {
+                    let response = await axios.post(url, params);
+                    this.datosCostos = response.data;
+                    //console.log(JSON.parse(JSON.stringify(detalleTramite)))
+
+                    //const parsed = JSON.stringify(this.tramite);
+                    //localStorage.setItem('tramite', parsed);  
+                    //this.datosCostos = res.respuestaCosto;
+                    this.$forceUpdate();
+                } catch (error) {
+                    Command: toastr.error("Error!", error.message || "No fue posible obtener los costos");
+                }
+                this.calculandoCostos = false;
             },
 
-            formatFechaNacimiento(){
-                this.form.fecha_escritura =  this.fechaDatepICKER.split("-").reverse().join("-");
+            currencyFormat(campoName, salida){
+                  let arr = ["Ganancia Obtenida","Monto obtenido conforme al art 127 LISR",
+                              "Pago provisional conforme al art 126 LISR","Impuesto correspondiente a la entidad federativa",
+                              "Parte actualizada del impuesto", "Recargos", "Multa corrección fiscal", "Importe total","Monto pagado en la declaracion inmediata anterior","Pago en exceso", "Cantidad a cargo"];
+                  if(arr.includes(campoName)){
+                      let text = Vue.filter('toCurrency')(salida);
+                      return text;
+                  } else{
+                      return salida;
+                  }
+              },
 
-                this.cambioModelo();
-            }
         }
     }
 </script>
