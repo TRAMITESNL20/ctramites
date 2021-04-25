@@ -69,6 +69,7 @@ export default {
     methods: {
     	validateSigned (evt) {
     		this.coutnLoad++;
+            console.log(this.coutnLoad);
     		if(this.coutnLoad == 3){
     			fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
                     method : 'POST',
