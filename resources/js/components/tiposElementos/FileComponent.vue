@@ -12,7 +12,7 @@
           :name="[[campo.campo_id]] + '-' + [[campo.relationship]]" 
           class="custom-file-input"  style="background-color: #e5f2f5 !important"
           ref="fileInput"
-          type="file" @change="validar"  />
+          type="file" @change="validar" :accept="accept" />
         <label class="custom-file-label" :for="[[campo.campo_id]] + '-' + [[campo.relationship]]">
           <span :id="[[campo.campo_id]]+ '-' + [[campo.relationship]]+'-namefile'">  
             {{ campo.attach || 'Seleccione archivo' }}
@@ -51,7 +51,14 @@
     }
     export default {
       props: ['campo', 'estadoFormulario', 'showMensajes'],
-      created() {
+      data(){
+        return{
+          aceptSupported : {pdf:'application/pdf', xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'},
+          accept:''
+        }
+      },
+      created(){
+        this.definirAccept();
       },
       mounted(){
         let promises = [];
@@ -87,7 +94,17 @@
         }
       },
       methods: {
-
+        definirAccept(){
+          let caracteristicas = {};
+          try {
+            caracteristicas = JSON.parse(this.campo.caracteristicas + '');
+          }catch(err){
+            console.log(err);
+          }
+          if(caracteristicas.accept){
+            this.accept =  this.aceptSupported[caracteristicas.accept];
+          }
+        },
         validar(){
           let requeridoValido = false;
           let extensionvalida = true;
@@ -100,7 +117,6 @@
           }catch(err){
             console.log(err);
           }
-
 
           var fileInput = document.getElementById(this.campo.campo_id +  "-" + this.campo.relationship );
 
