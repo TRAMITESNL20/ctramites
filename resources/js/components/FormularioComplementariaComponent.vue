@@ -1,6 +1,6 @@
 <template>
     <div id="contenedorCampos" class="container-fluid">
-        <form id="form" ref="form">
+        <form id="form" ref="form"  >
                 <b-row>
                   <b-col cols="12" md="6">
                     <b-form-group label="GANANCIA OBTENIDA" label-for="ganancia-obtenida-input" >
@@ -101,16 +101,36 @@
                       </div>    
                       <div>
                         <b-card no-body v-if="datosCostos && verDetalle">
-                            <b-card-body id="nav-scroller"ref="content "style=" height:300px; overflow-y:scroll;" v-if="typeof datosCostos == 'object'">
-                                <b-row v-for="(salida, key) in datosCostos.Complementaria" :key="key">
-                                    <b-col class="text-left" style="width: 100%" >
-                                        <strong>{{ key }}</strong>
-                                    </b-col>
-                                    <b-col class="text-right" >
-                                        <span class="text-muted">   {{ currencyFormat(key, salida) }} </span>
-                                    </b-col>
-                                </b-row>
-                            </b-card-body> 
+                          <template #header>
+                            <h4 class="mb-0">Complementaria</h4>
+                            <hr>
+                          </template>
+                            <b-card-body id="nav-scroller" ref="content "style=" height:300px; overflow-y:scroll;" v-if="typeof datosCostos == 'object'"  >             
+                              <b-row v-for="(salida, key) in datosCostos.Complementaria" :key="key">
+                                  <b-col class="text-left" style="width: 70%" >
+                                      <strong>{{ key }}</strong>
+                                  </b-col>
+                                  <b-col class="text-right" >
+                                      <span class="text-muted">   {{ currencyFormat(key, salida) }} </span>
+                                  </b-col>
+                              </b-row>
+                            </b-card-body>
+                            <b-card no-body  v-if="typeof datosCostos == 'object'">
+                                <template #header>
+                                  <h4 class="mb-0">Normal</h4>
+                                  <hr>
+                                </template>
+                                <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
+                                    <b-row v-for="(salida, key) in datosCostos.Salidas" :key="key">
+                                        <b-col class="text-left" style="width: 70%" >
+                                            <strong>{{ key }}</strong>
+                                        </b-col>
+                                        <b-col class="text-right" >
+                                            <span class="text-muted">   {{ currencyFormat(key, salida) }} </span>
+                                        </b-col>
+                                    </b-row>
+                                </b-card-body> 
+                            </b-card> 
                             <b-card-body id="nav-scroller"ref="content "style=" height:300px; overflow-y:scroll;" v-if="typeof datosCostos != 'object'">
                               <div class="text-center">
                                 <h5 class="card-title" >Datos incorrectos</h5>
@@ -168,6 +188,8 @@
 
         methods:{
             async getDetalle(){
+                this.$emit('updateForm', {valid:false,info:this.info});
+
                 this.calculandoCostos = true
                 let url = process.env.APP_URL + "/getComplementaria";
      
@@ -181,16 +203,13 @@
                 try {
                     let response = await axios.post(url, params);
                     this.datosCostos = response.data;
-                    //console.log(JSON.parse(JSON.stringify(detalleTramite)))
-
-                    //const parsed = JSON.stringify(this.tramite);
-                    //localStorage.setItem('tramite', parsed);  
-                    //this.datosCostos = res.respuestaCosto;
                     this.$forceUpdate();
                 } catch (error) {
                     Command: toastr.error("Error!", error.message || "No fue posible obtener los costos");
                 }
                 this.calculandoCostos = false;
+
+                this.hasChanged();
             },
 
             currencyFormat(campoName, salida){
@@ -203,7 +222,17 @@
                   } else{
                       return salida;
                   }
-              },
+            },
+
+            hasChanged(  ){
+              let response = {
+                form:this.form,
+                valid:!this.$v.form.$invalid,
+                detalle:this.datosCostos,
+                info:this.info
+              }
+              this.$emit('updateForm', response);
+            }
 
         }
     }

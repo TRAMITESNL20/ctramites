@@ -18,24 +18,28 @@
           <div v-if="tramitesObtenidos.length > 0">
             <div  v-if="tramitesObtenidos.length > 0" >
                <v-expansion-panels  multiple>
-                  <v-expansion-panel v-for="tramite in tramitesObtenidos" :key="tramite.id" >
+                  <v-expansion-panel v-for="(tramite, index) in tramitesObtenidos" :key="tramite.id" >
                     <v-expansion-panel-header >
-                      <span class="pull-left">
-                          {{ tramite.info.enajenante.datosPersonales.curp ||  ""}}-  
-                          {{ tramite.info.enajenante.datosPersonales.nombre || ""}} 
-                          {{ tramite.info.enajenante.datosPersonales.apPat || ""}} 
-                          {{ tramite.info.enajenante.datosPersonales.apMat || ""}} 
+                      <span class="text-left">
+                          <b-form-checkbox v-model="tramite.selected" :key="tramite.id" name="flavour-3a"  @change="validar()" switch>
+                            <span>
+                            {{ tramite.info.enajenante.datosPersonales.curp ||  ""}}-  
+                            {{ tramite.info.enajenante.datosPersonales.nombre || ""}} 
+                            {{ tramite.info.enajenante.datosPersonales.apPat || ""}} 
+                            {{ tramite.info.enajenante.datosPersonales.apMat || ""}}
+                            </span>
+                          </b-form-checkbox>
+                          
                       </span>
                         <template v-slot:actions >
-                          <b-form-checkbox v-model="tramite.selected" :key="tramite.id" name="flavour-3a"  >
-                          </b-form-checkbox>
+
                           <i class="fa fa-angle-down" />
                         </template>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content v-if="tramite.selected">
                       <formulario-complementaria-component :info="{
-                        fechaEscritura, folio
-                      }"></formulario-complementaria-component>
+                        fechaEscritura, folio, idTramite:tramite.id, index
+                      }" @updateForm="updateForm"></formulario-complementaria-component>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </v-expansion-panels>            
@@ -51,34 +55,28 @@
   
 <script>
 
-    export default {
-      computed:{
-          enajentantesSeleccionados(){
-              return this.tramitesObtenidos.filter( tramite => tramite.selected);
-          },
-      },     
+    export default {     
       data() {
         return {
           folio:'',
           tramitesObtenidos:[],
           buscandoInformacion:false,
           mensaje:'',
-          fechaEscritura:''      
+          fechaEscritura:'', 
+          complementarias:[]   
         }
       },
       created() {
-
+        this.validar();
       },
       methods: {
         async getInformacion(){
           this.buscandoInformacion = true;
-          let url = process.env.TESORERIA_HOSTNAME + "/solicitudes-info/" + window.user.id;
+          let url = process.env.TESORERIA_HOSTNAME + "/getInfoNormales/" + this.folio;
           try {
             let response = await axios.get(url);
-            this.tramitesObtenidos = response.data.tramites.length > 0 ? response.data.tramites[0].solicitudes : [];
-            /*response.data.tramites[0].solicitudes[0].info.camposConfigurados.find( campos => {
 
-            } )*/
+            this.tramitesObtenidos = response.data.tramites.length > 0 ? response.data.tramites[0].solicitudes : [];
             if(this.tramitesObtenidos.length > 0){
               let arrFecha = this.tramitesObtenidos[0].info.enajenante.detalle.Entradas.fecha_escritura.split("-");
               arrFecha[1] = arrFecha[1].padStart(2, "0");
@@ -94,7 +92,47 @@
           }
           
           this.buscandoInformacion = false;
-        }
+        },
+
+        updateForm( response ){
+          this.tramitesObtenidos[response.info.index].datosComplementaria = response.form;
+          this.tramitesObtenidos[response.info.index].detalle = response.detalle;          
+          this.tramitesObtenidos[response.info.index].fechaEscritura = response.info.fechaEscritura;
+          this.tramitesObtenidos[response.info.index].folio = response.info.folio;
+          this.tramitesObtenidos[response.info.index].formValid = response.valid;
+          this.validar();
+        },
+
+        validar(){
+          this.complementarias = this.tramitesObtenidos.filter( tramite => tramite.selected).map( tramite => {
+              let complementaria = {};
+              complementaria.datosComplementaria = tramite.datosComplementaria;
+              complementaria.detalle = tramite.detalle;
+              complementaria.fechaEscritura = tramite.fechaEscritura;
+              complementaria.folioTransaccionAnterior = tramite.folio;
+              complementaria.idTicketAnterior = tramite.id;
+              complementaria.valido = tramite.formValid;
+              complementaria.enajenante =  {
+                datosPersonales: tramite.info.enajenante.datosPersonales,
+                nacionalidad: tramite.info.enajenante.nacionalidad,
+                tipoPersona: tramite.info.enajenante.tipoPersona
+              };
+
+            return complementaria;
+          });
+
+         
+          let valido = this.complementarias.length > 0;
+          this.complementarias.forEach( complementaria =>{
+            valido = valido && complementaria.valido;
+          });
+
+          this.$emit('updatingScore', valido);
+          if(valido){
+            this.$emit('sendData', this.complementarias);
+          }
+          
+        },
 
       }
     }
