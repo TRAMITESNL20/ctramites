@@ -125,7 +125,11 @@
 				<tr>
 					<td class="columna value" style="width: 33%;">{{ $info->solicitudes[0]->info->campos->{'Escritura'} ?? '' }}</td>
 					<td class="columna value" style="width: auto;" colspan="2"></td>
+					@if($info->solicitudes[0]->info->{'tipoTramite'} == 'complementaria')
+					<td class="columna value" style="width: 33%;">{{$info->solicitudes[0]->info->{'fechaEscritura'}  ?? ''}}  </td>
+					@else
 					<td class="columna value" style="width: 33%;">{{  substr($info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'},8)  ?? ''}}-{{ substr($info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'} ,5, 2)   ?? ''}}-{{ substr( $info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'},0,4)    ?? ''}}   </td>
+					@endif
 				</tr>
 				<tr>
 					<td class="columna" style="width: 1%">MUNICIPIO</td>
