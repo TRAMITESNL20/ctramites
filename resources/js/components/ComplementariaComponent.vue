@@ -1,10 +1,14 @@
 <template>
   <div class="row">
         <div class="col-lg-6">
-          <b-form-input v-model="folio" placeholder="FOLIO" @change="getInformacion()" :disabled="buscandoInformacion"></b-form-input>
+          <b-form-group label="FOLIO" label-for="folio-input" >
+            <b-form-input id="folio-input" v-model="folio" placeholder="FOLIO" @change="getInformacion()" :disabled="buscandoInformacion"></b-form-input>
+          </b-form-group>
         </div>
         <div class="col-lg-6">
-          <b-form-input v-model="fechaEscritura" placeholder="FECHA DE ESCRITURA O MINUTA" :disabled="true"></b-form-input>
+          <b-form-group label="FECHA DE ESCRITURA O MINUTA" label-for="fecha-input">
+            <b-form-input id="fecha-input" v-model="fechaEscritura" placeholder="FECHA DE ESCRITURA O MINUTA" :disabled="true"></b-form-input>
+          </b-form-group>
         </div>
       <div class="col-lg-12" >
         <div class="text-center" id="loadin" style=" margin-bottom: 9px;" v-if="buscandoInformacion" >
@@ -17,11 +21,11 @@
         <div v-if="!buscandoInformacion" class="col-lg-12">
           <div v-if="tramitesObtenidos.length > 0">
             <div  v-if="tramitesObtenidos.length > 0" >
-               <v-expansion-panels  multiple>
-                  <v-expansion-panel v-for="(tramite, index) in tramitesObtenidos" :key="tramite.id" >
+               <v-expansion-panels  multiple v-model="panel">
+                  <v-expansion-panel v-for="(tramite, index) in tramitesObtenidos" :key="tramite.id">
                     <v-expansion-panel-header >
                       <span class="text-left">
-                          <b-form-checkbox v-model="tramite.selected" :key="tramite.id" name="flavour-3a"  @change="validar()" switch>
+                          <b-form-checkbox v-model="tramite.selected" :key="tramite.id" name="flavour-3a"  @change="clickChecbox()" switch>
                             <span>
                             {{ tramite.info.enajenante.datosPersonales.curp ||  ""}}-  
                             {{ tramite.info.enajenante.datosPersonales.nombre || ""}} 
@@ -63,7 +67,8 @@
           buscandoInformacion:false,
           mensaje:'',
           fechaEscritura:'', 
-          complementarias:[]   
+          complementarias:[],
+          panel:[]   
         }
       },
       created() {
@@ -133,6 +138,15 @@
           }
           
         },
+
+        clickChecbox(){
+          this.panel = this.tramitesObtenidos.map( (tram, index) =>{
+            if(tram.selected){
+              return index;
+            }
+          });
+          this.validar();
+        }
 
       }
     }
