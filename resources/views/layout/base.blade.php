@@ -710,6 +710,7 @@
 					<a href="{{ url()->route("perfil") }}" class="navi-item pt-5">
 					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
 						<i class="flaticon2-shopping-cart-1"></i>
+						<span id="totalTramitesCarrito"  style="padding: 5px !important; vertical-align: super !important" class="badge badge-danger">{{ session()->get("tramites") }}</span>
 					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">
@@ -735,6 +736,7 @@
 					<a href="{{ url()->route("pendiente-firma") }}" class="navi-item pt-5">
 					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
 						<i class="flaticon2-pen"></i>
+						<span id="totalTramitesFirma" style="padding: 5px !important; vertical-align: super !important"  class="badge badge-danger">{{ session()->get("tramitesFirma") }}</span>
 					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">

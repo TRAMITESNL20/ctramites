@@ -31,9 +31,6 @@ export default {
 		}
 	},
 	mounted() {
-        console.logs = [];
-
-        this.interval = setInterval(()=> this.watchLogs(), 100000)
 
 		let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
 		this.usuario.solicitudes.map((solicitud, ind) => {
@@ -44,7 +41,7 @@ export default {
             }
             var userEncoded =btoa(this.user.role.description + ' - ' +  this.user.name + ' ' +  this.user.fathers_surname + ' RFC: ' +  this.user.rfc ) ;
             console.log(userEncoded);
-			let doc = `${APP_URL}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
+			let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
 			if(this.multiple){
 				if(typeof this.doc === 'string') this.doc = [];
 				this.doc.push(doc)
@@ -71,14 +68,7 @@ export default {
 		this.encodeData();
     },
     methods: {
-        watchLogs(){
-            console.log('..');
-            console.stdlog = console.log.bind(console);
-            console.log = function(){
-            console.logs.push(Array.from(arguments));
-            console.stdlog.apply(console, arguments);
-        }
-        },
+      
     	validateSigned (evt) {
     		this.coutnLoad++;
     		if(this.coutnLoad == 3){
@@ -185,9 +175,7 @@ export default {
         
    
     },
-    created(){
-        
-    }
+  
 }
 
 
