@@ -66,16 +66,21 @@
 
 .header-menu .menu-nav>.menu-item{
 	@media screen and (max-width: 1200px){
+		.boton-lista-mobil{
+			width: 70%;
+		}
+
 		.menu-text{
 			display: flex!important;
 			position: absolute;
 			padding: 10px 20px !important;
-			background-color: white;
+			// background-color: white;
+			color: #464E5F;
 			border-radius: 0 .5em .5em 0;
-			box-shadow: 10px 0px 15px rgba(0,0,0,.2);
-			top: 0;
-			left: -100%;
-			opacity: 0;
+			// box-shadow: 10px 0px 15px rgba(0,0,0,.2);
+			top: 10%;
+			left: 17%;
+			opacity: 1;
 			width: max-content!important;
 			transition: all .5s;
 		}

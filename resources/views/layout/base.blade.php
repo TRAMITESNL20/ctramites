@@ -653,7 +653,10 @@
 				<!--begin::Nav-->
 				<div class="navi navi-spacer-x-0 p-0">
 					<!--begin::Item-->
-					<a href="{{ url()->route("dashboard") }}" class="navi-item">
+					<a href="{{ url()->route("dashboard") }}" class="navi-item pt-5">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-architecture-and-city"></i>
+					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
@@ -672,12 +675,15 @@
 							</div> --}}
 							<div class="navi-text">
 								<div class="text-uppercase font-weight-bold"><strong>Inicio</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
 					</a>
 					<!--end:Item-->
-					<a href="{{ url()->route("perfil") }}" class="navi-item">
+					<a href="{{ url()->route("perfil") }}" class="navi-item pt-5">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-user-outline-symbol"></i>
+					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
@@ -696,12 +702,15 @@
 							</div> --}}
 							<div class="navi-text">
 								<div class="text-uppercase font-weight-bold"><strong>perfil</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
 					</a>
 					<!--end:Item-->
-					<a href="{{ url()->route("perfil") }}" class="navi-item">
+					<a href="{{ url()->route("perfil") }}" class="navi-item pt-5">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-shopping-cart-1"></i>
+					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
@@ -718,12 +727,15 @@
 							</div> --}}
 							<div class="navi-text">
 								<div class="text-uppercase font-weight-bold"><strong>Carrito</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
 					</a>
 					<!--end:Item-->
-					<a href="{{ url()->route("pendiente-firma") }}" class="navi-item">
+					<a href="{{ url()->route("pendiente-firma") }}" class="navi-item pt-5">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-pen"></i>
+					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
@@ -742,7 +754,7 @@
 							</div> --}}
 							<div class="navi-text">
 								<div class="text-uppercase font-weight-bold"><strong>Firma</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
 					</a>
@@ -908,6 +920,9 @@
 				<div class="navi navi-spacer-x-0 p-0">
 					<!--begin::Item-->
 					<a href="{{ url()->route("dashboard") }}" class="navi-item">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-architecture-and-city"></i>
+					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
@@ -932,6 +947,9 @@
 					</a>
 					<!--end:Item-->
 					<a href="{{ url()->route("perfil") }}" class="navi-item">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-user-outline-symbol"></i>
+					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
@@ -956,6 +974,9 @@
 					</a>
 					<!--end:Item-->
 					<a href="{{ url()->route("perfil") }}" class="navi-item">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-shopping-cart-1"></i>
+					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
@@ -978,6 +999,9 @@
 					</a>
 					<!--end:Item-->
 					<a href="{{ url()->route("pendiente-firma") }}" class="navi-item">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-pen"></i>
+					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">

@@ -9,7 +9,7 @@
                     <div class="d-flex align-items-center justify-content-between flex-wrap" :class="!group ? 'mt-2' : ''">
                         <div class="mr-7" v-if="!group && tramite.status && (tramite.status == 99 || tramite.status == 98) && !cartComponent && ['notary_titular', 'notary_substitute'].includes(user.role_name)"><input type="checkbox" :id="tramite.id" style="width:18px; height:18px;" v-on:change="processToCart(tramite, true)"></div>
                         <!--begin::User-->
-                        <div class="mr-auto" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '50%' } ]">
+                        <div class="mr-auto" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '70%' } ]">
                             <!--begin::Name-->
                             <a v-on:click="goTo(tramite)" class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column" v-if="">
                                 <strong v-if="!group && !cartComponent" class="text-uppercase text-truncate">{{ tramite.nombre_servicio && (tramite.titulo && tramite.nombre_servicio.toLowerCase() != tramite.titulo.toLowerCase()) ? `${tramite.nombre_servicio} - ` : '' }}{{ tramite.tramite || tramite.titulo | capitalize }}</strong>
@@ -29,7 +29,7 @@
                         </div>
                         <!--begin::User-->
                         <!--begin::Actions-->
-                        <div class="my-lg-0 my-1 d-flex flex-column">
+                        <div class="my-lg-0 my-1 d-flex flex-column boton-lista-mobil">
                             <span v-if="!group && tramite.info && tramite.descripcion && !cartComponent" class="btn btn-secondary">{{ tramite.descripcion || "CERRADO" }} </span>
                             <button v-on:click="addToCart(tramite)" v-if="!group && tramite.status == 99 && !['notary_capturist'].includes(user.role_name)" type="button" class="btn btn-sm mt-2" :class="tramite.en_carrito ? 'btn-primary' : 'btn-outline-primary'">
                                 <span v-if="tramite.loading"><i class="fas fa-spinner fa-spin"></i></span>

@@ -2,6 +2,16 @@
 @import "./mixins";
 
 @media only screen and (max-width: 770px) {
+    .boton-lista-mobil{
+        width: 70%;
+    }
+
+    .mobile-detalles{
+        padding-top: 5px;
+        padding-bottom: 5px;
+        align-items: center;
+    }
+
     .card {
         // border-color: #347ab8;
         border: none;
