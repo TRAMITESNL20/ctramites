@@ -211,8 +211,8 @@ class CalculoimpuestosController extends Controller
               $importe = $v;
 
             }
-            if($s == "Monto obtenido conforme al art 127 LISR"){
-              $monto_isr = $v;
+            if($s == "Impuesto correspondiente a la entidad federativa"){
+              $impuesto = $v;
               //dd($monto_isr);
             }
           }
@@ -284,7 +284,7 @@ class CalculoimpuestosController extends Controller
           ),
         "Complementaria"  => array(
           "Folio de la declaracion inmediata anterior"  => $normal,
-          "Monto pagado en la declaracion inmediata anterior" => $monto_isr,
+          "Monto pagado en la declaracion inmediata anterior" => $impuesto,
           "Pago en exceso"  => $this->k,
           "Cantidad a cargo" => $this->l,
         )
