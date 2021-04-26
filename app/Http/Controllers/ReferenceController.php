@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use \Symfony\Component\HttpKernel\Exception\HttpException;
 use DB;
 
 class ReferenceController extends Controller {
-    public function paid (Request $request, $reference) {
-    	$reference = DB::connection('db_operacion')
+	public function paid (Request $request, $reference) {
+		$reference = DB::connection('db_operacion')
 		->table('oper_transacciones')
 		->select(
 			'oper_transacciones.id_transaccion_motor as oper_transacciones-id_transaccion_motor',
@@ -71,99 +72,55 @@ class ReferenceController extends Controller {
 			"code" => 200,
 			"response" => "ok"
 		];
-    }
+	}
 
-    public function cancel (Request $request, $reference) {
-    	$reference = DB::connection('db_operacion')
-		->table('oper_transacciones')
-		->select(
-			'oper_transacciones.id_transaccion_motor as oper_transacciones-id_transaccion_motor',
-			'oper_transacciones.estatus as oper_transacciones-estatus',
-			'oper_transacciones.referencia as oper_transacciones-referencia',
-			'solicitudes_tramite.id as solicitudes_tramite-id',
-			'solicitudes_tramite.id_transaccion_motor as solicitudes_tramite-id_transaccion_motor',
-			'solicitudes_tramite.estatus as solicitudes_tramite-estatus',
-			'solicitudes_tramite.url_recibo as solicitudes_tramite-url_recibo'
-		)
-		->join('portal.solicitudes_tramite', 'oper_transacciones.id_transaccion_motor', 'solicitudes_tramite.id_transaccion_motor')
-		->where('referencia', $reference)
-		->first();
-		if(!isset($reference->{'solicitudes_tramite-id'}))
-			return abort(409, "Esta referencia no se encuentra en la base de datos de portal");
-		$reference->solicitudes = DB::connection('db_portal')
-		->table('solicitudes_ticket')
-		->select(
-			'solicitudes_ticket.id as id',
-			'solicitudes_ticket.clave as clave',
-			'solicitudes_ticket.id_tramite as id_tramite',
-			'solicitudes_ticket.recibo_referencia as recibo_referencia',
-			'solicitudes_ticket.status as status',
-			'solicitudes_ticket.catalogo_id as catalogo_id',
-			'solicitudes_catalogo.atendido_por as solicitudes_catalogo-atendido_por'
-		)
-		->join('solicitudes_catalogo', 'solicitudes_ticket.catalogo_id', 'solicitudes_catalogo.id')
-		->where('id_transaccion', $reference->{'solicitudes_tramite-id'})
-		->get();
+	public function cancel (Request $request, $reference=null) {
+		if(!$reference) $reference = request()->toArray();
+		if(gettype($reference) != 'array') $reference = [$reference];
+		if(count($reference) == 0) abort(409, "No hay referencias para validar.");
+		unset($reference["dev"]);
+		$errors = [];
 
-		if($reference->{'oper_transacciones-estatus'} != 99 && !$request->has('dev'))
-			abort(409, 'El estatus actual de la referencia es diferente de cancelado (60) o devuelto (X).');
-
-		$update = DB::connection('db_portal')
-		->table('solicitudes_tramite')
-		->where('id', $reference->{'solicitudes_tramite-id'})
-		->update([
-			'solicitudes_tramite.estatus' => $request->has('dev') ? 99 : $reference->{'oper_transacciones-estatus'}
-		]);
-
-		if($update){
-			foreach($reference->solicitudes as $solicitud){
-				$update = DB::connection('db_portal')
-				->table('solicitudes_ticket')
-				->where('id', $solicitud->id)
-				->update([
-					'solicitudes_ticket.status' => 5
-				]);
-
-				if($update){
-					DB::connection('db_portal')
-					->table('solicitudes_mensajes')
-					->where('ticket_id', $solicitud->id)
-					->delete();
-				}
+		foreach ($reference as $ref) {
+			try{
+				$this->process_delete_reference($ref);
+			}catch(HttpException $e){
+				array_push($errors, $e->getMessage());
 			}
 		}
 
+		if(count($errors) > 0) return response([ "response" => "error", "code" => 409, "message" => $errors ], 409);
 		return [
 			"code" => 200,
 			"response" => "ok"
 		];
-    }
+	}
 
-    public function emulator (){
-    	return view('pay-reference');
-    }
+	public function emulator (){
+		return view('pay-reference');
+	}
 
-    public function bankWs (Request $request) {
-    	ini_set("soap.wsdl_cache_enabled", 0);
+	public function bankWs (Request $request) {
+		ini_set("soap.wsdl_cache_enabled", 0);
 
 		list($usr, $pass) = explode("|", getenv("BANK_WS_CREDENTIALS"));
 		$data = $request->all();
 		$type = $data['type'];
 		unset($data['type']);
 
-        $data['date'] = date("Y-m-d");
-        $data['string'] = "uno";
-        $data['user'] = "LOCAL";
-        $data['password'] = "LOCAL";
-        $data['bank'] = "LOCAL";
-        if(in_array($type, ["NotificarPago"])) $data['paymentType'] = "0";
-        if(in_array($type, ["NotificarPago", "ReversoPago"])) $data['paymentId'] = "0";
-        $data['branch'] = "123";
-        if(in_array($type, ["NotificarPago"])) $data['account'] = "0000";
-        $wsdl = getenv("BANK_WS_HOSTNAME")."/wsbancos/egobws.php?wsdl";
-        if(in_array($type, ["ConsultaTransaccion"])) unset($data["amount"]);
+	    $data['date'] = date("Y-m-d");
+	    $data['string'] = "uno";
+	    $data['user'] = "LOCAL";
+	    $data['password'] = "LOCAL";
+	    $data['bank'] = "LOCAL";
+	    if(in_array($type, ["NotificarPago"])) $data['paymentType'] = "0";
+	    if(in_array($type, ["NotificarPago", "ReversoPago"])) $data['paymentId'] = "0";
+	    $data['branch'] = "123";
+	    if(in_array($type, ["NotificarPago"])) $data['account'] = "0000";
+	    $wsdl = getenv("BANK_WS_HOSTNAME")."/wsbancos/egobws.php?wsdl";
+	    if(in_array($type, ["ConsultaTransaccion"])) unset($data["amount"]);
 
-        $auth = array(
+	    $auth = array(
 			'Username' => $usr,
 			'Password' => $pass
 		);
@@ -262,6 +219,87 @@ class ReferenceController extends Controller {
 
 		echo json_encode($response)."\n\n";
 		echo '<a href="'.url()->route("pago-referencia").'"><-- Regresar</a>';
+		return true;
+	}
+
+    protected function process_delete_reference ($reference) {
+    	$ref = $reference;
+    	$request = request();
+    	$reference = DB::connection('db_operacion')
+		->table('oper_transacciones')
+		->select(
+			'oper_transacciones.id_transaccion_motor as oper_transacciones-id_transaccion_motor',
+			'oper_transacciones.estatus as oper_transacciones-estatus',
+			'oper_transacciones.referencia as oper_transacciones-referencia',
+			'solicitudes_tramite.id as solicitudes_tramite-id',
+			'solicitudes_tramite.id_transaccion_motor as solicitudes_tramite-id_transaccion_motor',
+			'solicitudes_tramite.estatus as solicitudes_tramite-estatus',
+			'solicitudes_tramite.url_recibo as solicitudes_tramite-url_recibo'
+		)
+		->join('portal.solicitudes_tramite', 'oper_transacciones.id_transaccion_motor', 'solicitudes_tramite.id_transaccion_motor')
+		->where('referencia', $reference)
+		->first();
+		if(!isset($reference->{'solicitudes_tramite-id'})) return abort(409, "La referencia \"{$ref}\" no se encuentra en la base de datos de portal");
+		
+		$reference->solicitudes = DB::connection('db_portal')
+		->table('solicitudes_ticket')
+		->select(
+			'solicitudes_ticket.id as id',
+			'solicitudes_ticket.clave as clave',
+			'solicitudes_ticket.id_tramite as id_tramite',
+			'solicitudes_ticket.recibo_referencia as recibo_referencia',
+			'solicitudes_ticket.status as status',
+			'solicitudes_ticket.catalogo_id as catalogo_id',
+			'solicitudes_catalogo.atendido_por as solicitudes_catalogo-atendido_por'
+		)
+		->join('solicitudes_catalogo', 'solicitudes_ticket.catalogo_id', 'solicitudes_catalogo.id')
+		->where('id_transaccion', $reference->{'solicitudes_tramite-id'})
+		->get();
+
+
+		if($reference->{'oper_transacciones-estatus'} != 99 && $reference->{'oper_transacciones-estatus'} != 65 && !$request->has('dev'))
+			return abort(409, 'El estatus actual de la referencia es diferente de cancelado (60) o devuelto (65).');
+
+		// SI ES STATUS 65 HAY QUE PASAR LA TRANSACCIÓN A PENDIENTE DE PAGO
+		// VALIDAR QUE SE NECESITARA MODIFICAR PARA QUE SE PUEDA EDITAR
+		$update = DB::connection('db_portal')
+		->table('solicitudes_tramite')
+		->where('id', $reference->{'solicitudes_tramite-id'})
+		->update([
+			'solicitudes_tramite.estatus' => $request->has('dev') ? 99 : $reference->{'oper_transacciones-estatus'}
+		]);
+
+		if($update){
+			foreach($reference->solicitudes as $solicitud){
+				$changes = [
+					'solicitudes_ticket.status' => 5
+				];
+
+				if($reference->{'oper_transacciones-estatus'} == 65){
+					$changes = [
+						'solicitudes_ticket.status' => 99,
+						'recibo_referencia' => null,
+						'id_transaccion' => null,
+						'asignado_a' => null,
+						'en_carrito' => 0,
+						'updated_at' => date('Y-m-d H:i:s')
+					];
+				}
+
+				$update = DB::connection('db_portal')
+				->table('solicitudes_ticket')
+				->where('id', $solicitud->id)
+				->update($changes);
+
+				if($update){
+					$update = DB::connection('db_portal')
+					->table('solicitudes_mensajes')
+					->where('ticket_id', $solicitud->id)
+					->delete();
+				}
+			}
+		}
+
 		return true;
     }
 }
