@@ -1,14 +1,16 @@
 <template>
   <div class="row">
-        <div class="col-lg-6">
-          <b-form-group label="FOLIO" label-for="folio-input" >
-            <b-form-input id="folio-input" v-model="folio" placeholder="FOLIO" @change="getInformacion()" :disabled="buscandoInformacion"></b-form-input>
-          </b-form-group>
+        <div class="col-lg-6 fv-plugins-icon-container"> 
+          <label>
+            Folio
+          </label>
+            <b-form-input id="folio-input" v-model="folio" placeholder="Folio" @change="getInformacion()" :disabled="buscandoInformacion"></b-form-input>
         </div>
-        <div class="col-lg-6">
-          <b-form-group label="FECHA DE ESCRITURA O MINUTA" label-for="fecha-input">
-            <b-form-input id="fecha-input" v-model="fechaEscritura" placeholder="FECHA DE ESCRITURA O MINUTA" :disabled="true"></b-form-input>
-          </b-form-group>
+        <div class="col-lg-6 fv-plugins-icon-container"">
+          <label>
+            Fecha de escritura o minuta
+          </label>
+          <b-form-input id="fecha-input" v-model="fechaEscritura" placeholder="Fecha de escritura o minuta" :disabled="true"></b-form-input>
         </div>
       <div class="col-lg-12" >
         <div class="text-center" id="loadin" style=" margin-bottom: 9px;" v-if="buscandoInformacion" >
