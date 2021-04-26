@@ -95,16 +95,16 @@ class CalculoimpuestosController extends Controller
 
       // obtener los dias inhabiles del año en curso
       $this->inhabiles	= $this->getInhabiles(date('Y'));
- 		// $this->fecha_vencimiento	= $this->getVencimiento();
-    $this->fecha_vencimiento  = $this->prueba();
- 		$this->inpc_periodo			= $this->getInpc($this->fecha_escritura); // getInpcperiodo en caso de que sea la fecha acumulada del año vigente
- 		$this->fecha_actual			= date("Y-m-d");
- 		$this->inpc_reciente		= $this->getInpc($this->fecha_actual);
+   		// $this->fecha_vencimiento	= $this->getVencimiento();
+      $this->fecha_vencimiento  = $this->prueba();
+   		$this->inpc_periodo			= $this->getInpc($this->fecha_escritura); // getInpcperiodo en caso de que sea la fecha acumulada del año vigente
+   		$this->fecha_actual			= date("Y-m-d");
+   		$this->inpc_reciente		= $this->getInpc($this->fecha_actual);
 
- 		$this->factor_actualizacion = $this->getFA();
+   		$this->factor_actualizacion = $this->getFA();
 
- 		$this->porcentaje_recargos	= $this->getPorcentajeregargos();
-    $this->calculo();
+   		$this->porcentaje_recargos	= $this->getPorcentajeregargos();
+      $this->calculo();
     	$results = array(
     		"Entradas" => array(
 	    			"fecha_escritura" => $this->fecha_escritura,
@@ -173,13 +173,6 @@ class CalculoimpuestosController extends Controller
     public function complementaria(Request $request) // Request $request
     {
 
-      // mostrar la forma para ejemplo del calculo de declaracion normal
-      // $fecha_escritura       = '2020-11-1'; // sin ceros iniciales ej 2020-9-1 para primero de sept de 2020
-      // $monto_operacion       = 1500000;
-      // $ganancia_obtenida       = 850000; // puede ser mayor o igual al monto de operacion
-      // $pago_provisional_lisr   = 40000;
-      // $multa_correccion_fiscal = 0;
-
       //Recibir valores front
       $fecha_escritura          =  $request->fecha_escritura;
       $monto_operacion          =  $request->monto_operacion;
@@ -209,12 +202,17 @@ class CalculoimpuestosController extends Controller
           $datos_normal = $info->detalle;
 
           $salidas = $datos_normal->Salidas;
-
+          //dd($salidas);
           foreach($salidas as $s => $v)
           {
+
             if(strcmp($s,"Importe total") == 0)
             {
               $importe = $v;
+
+            }
+            if($s == "Impuesto correspondiente a la entidad federativa"){
+              $impuesto = $v;
             }
           }
 
@@ -268,8 +266,8 @@ class CalculoimpuestosController extends Controller
             "multa por correccion fiscal" => $this->g,
           ),
         "Salidas" => array(
-          "Fecha Actual"        => $this->fecha_actual,
-          "Fecha vencimiento"     => $this->fecha_vencimiento,
+          "Fecha Actual"        => date("d-m-Y", strtotime($this->fecha_actual)),
+          "Fecha vencimiento"     => date("d-m-Y", strtotime($this->fecha_vencimiento)),
           "Factor de Actualizacion"   => $this->factor_actualizacion,
           "INPC Periodo reciente"   => $this->inpc_reciente,
           "INPC Periodo"        => $this->inpc_periodo,
@@ -285,7 +283,7 @@ class CalculoimpuestosController extends Controller
           ),
         "Complementaria"  => array(
           "Folio de la declaracion inmediata anterior"  => $normal,
-          "Monto pagado en la declaracion inmediata anterior" => $importe,
+          "Monto pagado en la declaracion inmediata anterior" => $impuesto,
           "Pago en exceso"  => $this->k,
           "Cantidad a cargo" => $this->l,
         )
@@ -833,8 +831,9 @@ class CalculoimpuestosController extends Controller
         }
         //Se toma la posicion 14 de la lista, iniciamos con 0
         $fechaTermino = $lista[14];
-        
+
         //dd($lista);
         return $fechaTermino;
 	}
+
 }
