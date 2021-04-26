@@ -47,13 +47,19 @@
             },
 
             getCaracteristicas(campo){
-              let caracteristicas = {};
-              try {
-                caracteristicas = JSON.parse(campo.caracteristicas + '');
-              }catch(err){
-                console.log(err);
+              if(typeof campo.caracteristicas == 'object'){
+                return campo.caracteristicas;
+              } else {
+                let caracteristicas = {};
+                try {
+                  caracteristicas = JSON.parse(campo.caracteristicas + '');
+                }catch(err){
+                  console.log(JSON.parse(JSON.stringify(campo)));
+                  console.log(err);
+                }
+                return caracteristicas;
               }
-              return caracteristicas;
+              
             },
 
             getInformacion(tramite, datosFormulario){
