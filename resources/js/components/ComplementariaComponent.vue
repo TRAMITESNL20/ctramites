@@ -10,7 +10,7 @@
           <label>
             Fecha de escritura o minuta
           </label>
-          <b-form-input id="fecha-input" v-model="fechaEscritura" placeholder="Fecha de escritura o minuta" :disabled="true"></b-form-input>
+          <b-form-input id="fecha-input" v-model="fechaEscritura" placeholder="DD-MM-AAAA" :disabled="true"></b-form-input>
         </div>
       <div class="col-lg-12" >
         <div class="text-center" id="loadin" style=" margin-bottom: 9px;" v-if="buscandoInformacion" >
