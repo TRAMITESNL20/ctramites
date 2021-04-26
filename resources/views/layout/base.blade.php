@@ -707,7 +707,7 @@
 						</div>
 					</a>
 					<!--end:Item-->
-					<a href="{{ url()->route("perfil") }}" class="navi-item pt-5">
+					<a href="{{ url()->route("tramite.cart") }}" class="navi-item pt-5">
 					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
 						<i class="flaticon2-shopping-cart-1"></i>
 						<span id="totalTramitesCarrito"  style="padding: 5px !important; vertical-align: super !important" class="badge badge-danger">{{ session()->get("tramites") }}</span>
@@ -975,7 +975,7 @@
 						</div>
 					</a>
 					<!--end:Item-->
-					<a href="{{ url()->route("perfil") }}" class="navi-item">
+					<a href="{{ url()->route("tramite.cart") }}" class="navi-item">
 					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
 						<i class="flaticon2-shopping-cart-1"></i>
 					</span>
