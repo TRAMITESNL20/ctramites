@@ -84,11 +84,12 @@
             let response = await axios.get(url);
 
             this.tramitesObtenidos = response.data.tramites.length > 0 ? response.data.tramites[0].solicitudes : [];
+
             if(this.tramitesObtenidos.length > 0){
-              let arrFecha = this.tramitesObtenidos[0].info.enajenante.detalle.Entradas.fecha_escritura.split("-");
+              let arrFecha =  this.tramitesObtenidos[0].info.detalle.Entradas.fecha_escritura.split("-");
               arrFecha[1] = arrFecha[1].padStart(2, "0");
               arrFecha[2] = arrFecha[2].padStart(2, "0");
-              this.fechaEscritura = arrFecha.reverse().join("-")
+              this.fechaEscritura = arrFecha.reverse().join("-");
               
             }
             
