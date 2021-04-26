@@ -213,7 +213,6 @@ class CalculoimpuestosController extends Controller
             }
             if($s == "Impuesto correspondiente a la entidad federativa"){
               $impuesto = $v;
-              //dd($monto_isr);
             }
           }
 
