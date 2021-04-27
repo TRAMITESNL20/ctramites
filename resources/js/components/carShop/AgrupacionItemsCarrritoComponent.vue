@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col">
                     <h4 >
-                        <strong class="ml-3 text-uppercase text-truncate">
+                        <strong class="text-uppercase text-truncate">
                         {{ agrupacion.nombre }} 
                         </strong>
                     </h4>

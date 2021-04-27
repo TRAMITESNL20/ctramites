@@ -2,8 +2,61 @@
 @import "./mixins";
 
 @media only screen and (max-width: 770px) {
-    .boton-lista-mobil{
-        width: 70%;
+    // .boton-lista-mobil{
+    //     width: 50%;
+    // }
+        
+    .container{
+        max-width: none;
+        padding: 0 6px;
+    }
+
+    .arrow-desktop{
+        display: none !important;
+    }
+
+    .arrow-mobile{
+        display: block !important;
+    }
+
+    .card-body {
+        flex: 1 1 auto;
+        min-height: 1px;
+        padding: 0rem;
+    }
+
+    .mobil-font{
+        font-size: 10px;
+
+    }
+        
+    .header-menu-mobile .menu-nav > .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover {
+        transition: none !important;
+    }
+
+    .menu-item-no-transition {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        float: none;
+        padding: 0; 
+        position: relative;
+        margin: 0;
+    }
+    
+    .header-menu .menu-nav > .menu-item-no-transition .menu-link .menu-icon {
+        justify-content: center;
+    }
+    .header-menu .menu-nav > .menu-item-no-transition .menu-link .menu-text {
+        margin-left: 10px;
+    }
+
+    .cards-espace{
+        margin-bottom: 0px !important;
+    }
+
+    .mobile-lista-multiple{
+        display: inline-block !important;
     }
 
     .mobile-detalles{
@@ -417,6 +470,11 @@
 
 .users-component {
     min-width: 1200px
+}
+
+
+.cards-espace{
+    margin-bottom: 30px;
 }
 
 #listaTramites, #cart-container {

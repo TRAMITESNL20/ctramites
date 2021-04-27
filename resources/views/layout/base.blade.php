@@ -53,8 +53,11 @@
 		<!--begin::Header Mobile-->
 		<div id="kt_header_mobile" class="header-mobile bg-primary header-mobile-fixed">
 			<!--begin::Logo-->
+			<button class="btn p-0 burger-icon burger-icon-left ml-4" id="kt_header_mobile_toggle">
+					<span></span>
+			</button>
 			<a href="{{ url()->route("home") }}">
-				<img alt="Logo" src="{{ assets('images/logo.svg') }}" class="max-h-30px" style="width: 70%" />
+				<img alt="Logo" src="{{ assets('images/logo.svg') }}" class="max-h-30px" style="width: 70%; margin-left: auto;margin-right: auto;display: block;"/>
 			</a>
 			{{-- <a class="btn pl-0">
 				<span> portal</span>
@@ -64,9 +67,7 @@
 			<!--begin::Toolbar-->
 			<div class="d-flex align-items-center">
 
-				<button class="btn p-0 burger-icon burger-icon-left ml-4" id="kt_header_mobile_toggle">
-					<span></span>
-				</button>
+				
 				{{-- <button class="btn p-0 ml-2" id="kt_header_mobile_topbar_toggle">
 					<span class="svg-icon svg-icon-xl">
 						<!--begin::Svg Icon | path:media/svg/icons/General/User.svg-->
@@ -117,7 +118,7 @@
 							<!--end::Logo-->
 
 							<a href="{{ url()->route("home") }}" class="mr-2 d-lg-flex col-lg-1 col-xl-2 align-items-center justify-content-center text-center d-flex ">
-								<img alt="Logo" src="{{ assets('images/logo.svg') }}" class="max-h-35px mr-3 w-100" width="200" />
+								<img alt="Logo" src="{{ assets('images/logo.svg') }}" class="max-h-35px mr-3 w-50" width="200" />
 							</a>
 							<!--begin::Topbar-->
 							<div class="topbar text-secondary ml-auto py-4 w-100 px-3 align-items-center">
@@ -417,33 +418,30 @@
 								<!--begin::Header Menu Wrapper-->
 								<div class="header-navs header-navs-left" id="kt_header_navs">
 									<!--begin::Tab Navs(for tablet and mobile modes)-->
-									<ul class="header-tabs p-5 p-lg-0 d-flex d-lg-none nav nav-bold nav-tabs" role="tablist">
-										<!--begin::Item-->
+									<!-- <ul class="header-tabs p-5 p-lg-0 d-flex d-lg-none nav nav-bold nav-tabs" role="tablist">
+									
 										<li class="nav-item mr-2">
 											<a href="#" class="nav-link btn btn-clean active" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Home</a>
 										</li>
-										<!--end::Item-->
-										<!--begin::Item-->
+									
 										<li class="nav-item mr-2">
 											<a href="#" class="nav-link btn btn-clean" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Reports</a>
 										</li>
-										<!--end::Item-->
-										<!--begin::Item-->
+									
 										<li class="nav-item mr-2">
 											<a href="#" class="nav-link btn btn-clean" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Orders</a>
 										</li>
-										<!--end::Item-->
-										<!--begin::Item-->
+										
 										<li class="nav-item mr-2">
 											<a href="#" class="nav-link btn btn-clean" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Help Ceter</a>
 										</li>
-										<!--end::Item-->
-									</ul>
+									
+									</ul> -->
 									<!--begin::Tab Navs-->
 									<!--begin::Tab Content-->
 									<div class="tab-content">
 										<!--begin::Tab Pane-->
-										<div class="tab-pane py-5 p-lg-0 show active" id="kt_header_tab_1">
+										<div class="tab-pane p-lg-0 show active" id="kt_header_tab_1">
 											<!--begin::Menu-->
 											<div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default flex-column align-items-center w-100 pt-4">
 												<!--begin::Nav-->
@@ -458,7 +456,7 @@
 													<?php
 														foreach(config("layout.menu") as $item){
 															echo "
-																<li class=\"menu-item ".(($currentPath == $item["path"]) ? "menu-item-active" : "")."\" aria-haspopup=\"true\">
+																<li class=\"menu-item ".(($currentPath == $item["path"]) ? "menu-item-active" : "")."\" aria-haspopup=\"false\">
 																	<a href=\"".url()->route($item["path"], $item["options"])."\" class=\"menu-link w-100\">";
 																		if(isset($item["icon"]))
 																			echo "<span class=\"menu-icon\"><i class=\"{$item["icon"]}\"></i></span>";
@@ -943,7 +941,7 @@
 							</div> --}}
 							<div class="navi-text">
 								<div class="text-uppercase font-weight-bold"><strong>Inicio</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
 					</a>
@@ -970,7 +968,7 @@
 							</div> --}}
 							<div class="navi-text">
 								<div class="text-uppercase font-weight-bold"><strong>perfil</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
 					</a>
@@ -995,7 +993,7 @@
 							</div> --}}
 							<div class="navi-text">
 								<div class="text-uppercase font-weight-bold"><strong>Carrito</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
 					</a>
@@ -1022,7 +1020,7 @@
 							</div> --}}
 							<div class="navi-text">
 								<div class="text-uppercase font-weight-bold"><strong>Firma</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
 					</a>

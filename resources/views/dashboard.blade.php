@@ -6,7 +6,7 @@
                     <div class="error"><span>ESTAS EN INTERNET EXPLORER</span></div>
                     ![endif]-->
 
-                <div class="col-lg-6" style="margin-bottom: 30px;"> 
+                <div class="col-lg-6 cards-espace" > 
                     <div class="card" >
                           <div class="card-body">
                                 <h5 class="card-title">
@@ -65,7 +65,7 @@
                           </div>
                     </div>
                 </div>
-                <div class="col-lg-6" style="margin-bottom: 30px;"> 
+                <div class="col-lg-6 cards-espace" > 
                     <div class="card" >
                           <div class="card-body">
                                 <h5 class="card-title">
@@ -124,7 +124,7 @@
                           </div>
                     </div>
                 </div>
-                <div class="col-lg-6" style="margin-bottom: 30px;"> 
+                <div class="col-lg-6 cards-espace" > 
                     <div class="card" >
                           <div class="card-body">
                                 <h5 class="card-title">
@@ -183,7 +183,7 @@
                           </div>
                     </div>
                 </div>
-                <div class="col-lg-6" style="margin-bottom: 30px;"> 
+                <div class="col-lg-6 cards-espace" > 
                     <div class="card" >
                           <div class="card-body">
                                 <h5 class="card-title">

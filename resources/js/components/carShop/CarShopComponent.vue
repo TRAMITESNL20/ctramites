@@ -54,7 +54,7 @@
                 </div>
 
                 <div v-else-if="!obteniendoTramites && items.length == 0">
-                  <div class="card" style="width: 100%;">
+                  <div class="card pt-2" style="width: 100%;">
                     <div class="card-body text-center">
                       <h5 class="card-title" >Aún no haz iniciado algún trámite</h5>
                         Para continuar da click <a  class="card-link"  v-on:click="iniciarTramite()"> <span style="cursor: pointer;"> aquí </span> </a>
