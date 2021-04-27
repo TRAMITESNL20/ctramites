@@ -214,6 +214,13 @@ class CalculoimpuestosController extends Controller
             if($s == "Impuesto correspondiente a la entidad federativa"){
               $impuesto = $v;
             }
+
+            if($s == "Parte actualizada del impuesto"){
+              $pai_anterior = $v;
+            }
+            if($s == "Recargos"){
+              $recargo_anterior = $v;
+            }
           }
 
         }else{
@@ -246,6 +253,27 @@ class CalculoimpuestosController extends Controller
       $this->porcentaje_recargos  = $this->getPorcentajeregargos();
 
       $this->calculo();
+
+
+      // se replantea el calculo de la parte ACTUALIZADA, recargos e IMPORTE
+
+      // parte actualizada del impuesto
+    	$this->e = ($this->d * $this->factor_actualizacion) - $this->d;
+
+      $this->e = $this->redondeo($this->e);
+    	// obtener los recargos
+    	$this->f = ($this->d + $this->e) * $this->porcentaje_recargos;
+
+      $this->f = $this->redondeo($this->f);
+
+      //Se calcula la diferencia entre la parte actualizada del impuesto actual y el anteriror
+      $this->e = $this->e - $pai_anterior;
+
+      //Se calcula la diferencia entre el recargo actual y el anteriror
+      $this->f = $this->f - $recargo_anterior;
+
+      // importe total
+    	$this->h =  $this->d + $this->e + $this->f + $this->g ;
 
 
       if($this->h < $importe)
