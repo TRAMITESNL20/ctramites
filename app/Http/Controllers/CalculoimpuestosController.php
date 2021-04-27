@@ -284,17 +284,16 @@ class CalculoimpuestosController extends Controller
 
 
       // importe total
-    	$this->h =  $this->b  + $this->e + $this->f + $this->g ;
+    	$this->h =  $this->d  + $this->e + $this->f + $this->g ;
       //Importe = Impuesto de la entidad federativa + parte actualiza + recargos + Multa
-
 
       //si importe actual es menor que el importe anterior
       if($this->h < $importe)
       {
         //La cantidad en exceso es el importe anterior
-        $this->k = $impuesto - $this->d;
+        $this->k = $impuesto - $this->h;
       }else{
-        $this->l = $this->d - $impuesto;
+        $this->l = $this->h - $impuesto;
       }
 
 
