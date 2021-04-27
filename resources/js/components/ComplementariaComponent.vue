@@ -78,26 +78,32 @@
       },
       methods: {
         async getInformacion(){
-          this.buscandoInformacion = true;
-          let url = process.env.TESORERIA_HOSTNAME + "/getInfoNormales/" + this.folio;
-          try {
-            let response = await axios.get(url);
+          if( this.folio && this.folio.length > 0 ){
+            this.buscandoInformacion = true;
+            let url = process.env.TESORERIA_HOSTNAME + "/getInfoNormales/" + this.folio;
+            try {
+              let response = await axios.get(url);
 
-            this.tramitesObtenidos = response.data.tramites.length > 0 ? response.data.tramites[0].solicitudes : [];
-            if(this.tramitesObtenidos.length > 0){
-              let arrFecha = this.tramitesObtenidos[0].info.enajenante.detalle.Entradas.fecha_escritura.split("-");
-              arrFecha[1] = arrFecha[1].padStart(2, "0");
-              arrFecha[2] = arrFecha[2].padStart(2, "0");
-              this.fechaEscritura = arrFecha.reverse().join("-")
+              this.tramitesObtenidos = response.data.tramites.length > 0 ? response.data.tramites[0].solicitudes : [];
+
+              if(this.tramitesObtenidos.length > 0){
+                let arrFecha =  this.tramitesObtenidos[0].info.detalle.Entradas.fecha_escritura.split("-");
+                arrFecha[1] = arrFecha[1].padStart(2, "0");
+                arrFecha[2] = arrFecha[2].padStart(2, "0");
+                this.fechaEscritura = arrFecha.reverse().join("-");
+                
+              }
               
-            }
-            
-            this.mensaje = this.tramitesObtenidos.length  == 0 ?  "No se encontraron tramites relacionados a este Folio" :  "";
-          } catch (error) {
-            
+              this.mensaje = this.tramitesObtenidos.length  == 0 ?  "No se encontraron tramites relacionados a este Folio" :  "";
+            } catch (error) {
+              
 
+            }
+          } else {
+            this.tramitesObtenidos = [];
+            this.mensaje = "";
+            this.validar();
           }
-          
           this.buscandoInformacion = false;
         },
 
