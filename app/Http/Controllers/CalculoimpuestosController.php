@@ -275,7 +275,7 @@ class CalculoimpuestosController extends Controller
     	$this->f = ($this->d + $this->e) * $this->porcentaje_recargos;
 
       $this->f = $this->redondeo($this->f);
-      $this->d = $this->b - $impuesto;
+
       //Se calcula la diferencia entre la parte actualizada del impuesto actual y el anteriror
       $this->e = $this->e - $pai_anterior;
 
@@ -284,16 +284,17 @@ class CalculoimpuestosController extends Controller
 
 
       // importe total
-    	$this->h =  $this->d + $this->e + $this->f + $this->g ;
+    	$this->h =  $this->b  + $this->e + $this->f + $this->g ;
       //Importe = Impuesto de la entidad federativa + parte actualiza + recargos + Multa
 
 
-
+      //si importe actual es menor que el importe anterior
       if($this->h < $importe)
       {
-        $this->k = $importe - $this->h;
+        //La cantidad en exceso es el importe anterior
+        $this->k = $impuesto - $this->d;
       }else{
-        $this->l = $this->h - $importe;
+        $this->l = $this->d - $impuesto;
       }
 
 
