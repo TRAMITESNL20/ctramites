@@ -1,17 +1,17 @@
 <template>
 
-    <div>
-        <div class="card-header container-fluid" id="newsHeading" style="background-color: transparent;">
+    <div :id="'header-' + agrupacion.clave ">
+        <div class="card-header container-fluid" style="background-color: transparent;">
             <div class="row">
                 <div class="col">
                     <h4 >
                         <strong class="ml-3 text-uppercase text-truncate">
-                        {{ agrupacion.nombre }} 
+                        {{  sameTramites ? agrupacion.nombre : 'Grupo Tramites' }} 
                         </strong>
                     </h4>
                 </div>
                 <div class="col">
-                    <button type="button" class="close" aria-label="Close" title="Quitar"  v-on:click="eliminar()" :disabled="desabilitar">
+                    <button type="button" class="close" aria-label="Close" title="Quitar"  v-on:click="showConfirm()" :disabled="desabilitar" :ref="'btnConfirm-' + index">
                       <span><i class="fas fa-trash" v-if="totalItemInGroup > 0" style="color:#808080;"></i> </span>
                     </button>
                 </div>
@@ -19,6 +19,9 @@
         </div>    
             <div class="d-flex align-items-center mb-3" :id="idItem">
                 <!----> 
+                <div class="mr-3 ml-4">
+                    <input type="checkbox" style="width:18px; height:18px;" @change="addSelect(agrupacion)" v-model="agrupacion.selected">
+                </div>
                 <div class="mr-auto" style="width: 60%;">
 
                     <span class="ml-3" style="font-size: 12px;"  v-if="totalItemInGroup  == 1 && agrupacion.items[0].datos_solicitante" draggable @dragstart="startdrag($event, agrupacion.items[0])" @dragend="dragend($event)">
@@ -45,8 +48,13 @@
                     <div class="d-flex">
                        <div class="flex-grow-1">
                           <div class="d-flex align-items-center justify-content-between flex-wrap" >
-                             <!----> 
+                            <div class="mr-3 ml-4" v-if="isAgrupable(item)">
+                                <i class="fas fa-undo" title="Qutar del grupo" style="width:18px; height:18px;"  @click="quitarSelect(item)"></i>
+                            </div>
                              <div class="mr-auto" style="width: 60%;">
+                                <div v-if="!sameTramites">
+                                    {{   item.nombre }} 
+                                </div>
                                 <a class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column">
                                     <span class="mt-3" style="font-size: 12px;"  v-if="item.datos_solicitante">
                                        {{ item.datos_solicitante.rfc || item.datos_solicitante.curp || "" }} - {{ item.datos_solicitante.razon_social ? item.datos_solicitante.razon_social : item.datos_solicitante.nombre + " " + item.datos_solicitante.apellido_paterno + " " + item.datos_solicitante.apellido_materno }}
@@ -64,14 +72,16 @@
                  </div>
               </div>
            </div>
-
+          <b-modal :id="'modalDelet-'+ index"  @ok="confirm" ok-title = "Si">
+            <div class="d-block">¿Confirma que desea enviar este item a pendientes de pago?</div>
+          </b-modal>
     </div>
 </template>
 
 <script>
 	import { uuid } from 'vue-uuid';
     export default {
-        props: ['agrupacion', 'index', 'idUsuario'],
+        props: ['agrupacion', 'index', 'idUsuario', 'tramitesServer'],
         data(){
             return {
                 campos:['datos_solicitante', 'importe_tramite'],
@@ -98,8 +108,19 @@
             		let itemSHow = { importe_tramite:item.importe_tramite, datos_solicitante:item.datos_solicitante }
             		return itemSHow;
             	});
-
-            }
+            },
+            sameTramites(){
+                let sameNameInAll = true;
+                let nameAux = this.agrupacion.items[0].nombre;
+                this.agrupacion.items.forEach(tramite => {
+                    sameNameInAll = sameNameInAll && tramite.nombre === nameAux;
+                });
+                /*
+                if(sameNameInAll){
+                    return nameAux;
+                }*/
+                return sameNameInAll ;
+            },
         },
         methods: {
             eliminar(){
@@ -135,19 +156,83 @@
 
 
             startdrag(evt, item){
-                console.log("en agrupacion")
+                //console.log(JSON.parse(JSON.stringify(item)))
+                //console.log(JSON.parse(JSON.stringify(this.tramitesServer)))
+                let infoTramite = this.tramitesServer.find( tramiteServer => {
+                    return tramiteServer.tramite === item.nombre;
+                });
+
+                
+                let solicitudStartDrag = infoTramite.solicitudes.find( solicitud => {
+                    return item.id_tramite == solicitud.id;
+                });
+                if(item.id_tipo_servicio == process.env.TRAMITE_5_ISR){
+                    if( solicitudStartDrag.info.camposConfigurados ){
+                        let campoEnajenantes = solicitudStartDrag.info.camposConfigurados.find( campo => campo.tipo == 'enajenante' );
+                        if( campoEnajenantes && campoEnajenantes.valor && campoEnajenantes.valor.enajenantes.length > 1 ){
+                            evt.preventDefault()
+                            return false;
+                        }
+                    }
+                      
+                }
+ 
                 this.$emit('dragEvent', {event:'startdrag'});
-                //console.log(item)
-                //console.log(  JSON.parse(JSON.stringify(agrupacion)))
-                //evt.dataTransfer.dropEffect = 'move'
-                //evt.dataTransfer.effectAllowed = 'move'
+
+                evt.dataTransfer.dropEffect = 'move'
+                evt.dataTransfer.effectAllowed = 'move'
                 evt.dataTransfer.setData('itemID', item.id_tramite)
             },
 
             dragend(evt){
-                console.log("en fin")
                 this.$emit('dragEvent', {event:'dragend'});
+            },
+
+            addSelect(agrupacion){
+                let data = { 
+                    selected:agrupacion.selected,
+                    items: agrupacion.items,
+                    index:this.index
+                }
+                this.$emit('selectionEvent', data);
+
+            },
+
+            quitarSelect(item){
+                this.$emit('removeEvent', item);  
+            }, 
+
+            isAgrupable(item){
+                let agrupable = true;
+                let infoTramite = this.tramitesServer.find( tramiteServer => {
+                    return tramiteServer.tramite === item.nombre;
+                });
+                
+                let solicitudStartDrag = infoTramite.solicitudes.find( solicitud => {
+                    return item.id_tramite == solicitud.id;
+                });
+                if(item.id_tipo_servicio == process.env.TRAMITE_5_ISR){
+                    if( solicitudStartDrag.info.camposConfigurados ){
+                        let campoEnajenantes = solicitudStartDrag.info.camposConfigurados.find( campo => campo.tipo == 'enajenante' );
+                        if( campoEnajenantes && campoEnajenantes.valor && campoEnajenantes.valor.enajenantes.length > 1 ){
+                            agrupable = false;
+                        } 
+                    }
+                }
+                return agrupable;
+            },
+
+            showConfirm(){
+                console.log("elemento delete")
+                console.log(this)
+                this.$root.$emit('bv::show::modal', 'modalDelet-'+ this.index, '#btnConfirm-' +this.index)
+            },
+
+            confirm(){
+               this.eliminar(); 
             }
+
+
 
 
         }

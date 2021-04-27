@@ -10,10 +10,19 @@
       </div>
     </div>
     <div class="row">
+        <div class="btn-group" v-if="elementosSeleccionados.length > 1">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Acciones
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                  <button @click="agruparSeleccion()" class="dropdown-item" type="button">Agrupar Tramites</button>
+              </div>
+        </div>
+    </div>
+    <div class="row">
         <!--Grid column-->
         <div class="col-lg-8">
             <!-- Card -->
-            
             <div v-if="!mostrarMetodos && !mostrarReciboPago0">
               <v-container v-if="obteniendoTramites">
                     <v-row>
@@ -26,30 +35,33 @@
                   <div class="card list-item card-custom gutter-b col-lg-12"  v-for="(item, index) in items" :key="index"  
                   v-bind:style="item.items.length > 1 ? 'background-color: rgb(217, 222, 226) !important;' : ''" id="cart-container"
                                     @drop='onDrop($event, item)' 
+                                    @dragenter = 'dragenter($event, item)'
                                     @dragover.prevent
                                     @dragenter.prevent >
-
    
                       <agrupacion-items-carrrito-component 
                         :agrupacion="item" 
                         :index="index" 
                         :idUsuario="idUsuario"
-                        @updatingParent="updateList" @dragEvent="dragEvent">
+                        @updatingParent="updateList" 
+                        @dragEvent="dragEvent" 
+                        :tramitesServer="tramitesServer"
+                        @selectionEvent="evtElementoSeleccionado"
+                        @removeEvent="evtRemoveElementoSeleccionado">
                           
-                        </agrupacion-items-carrrito-component>
+                      </agrupacion-items-carrrito-component>
    
                   </div>
 
 
 
-                    <div class="card list-item card-custom gutter-b col-lg-12" id="elementDrop" style="border-style: dotted; background-color: rgba(153,153,153,1); display: none;">
-                        <div class="card-body py-7" >
-
-
-                            <div @drop='onDropFuera($event, false)' 
+                    <div class="card list-item card-custom gutter-b col-lg-12" id="elementDrop" style="border-style: dotted; background-color: rgba(0,0,0,0.3); display: none;"  @drop='onDropFuera($event, false)' 
                                 @dragover.prevent
                                 @dragenter.prevent >
-                                  Sacar ...
+                        <div class="card-body py-7" >
+
+                            <div>
+                                  Sacar...
                                 </div>
 
                         </div>
@@ -137,7 +149,7 @@
 <script>
   //import costosApi from '../../services/costosApi.services.js';
   import actualizadorCostos from '../../services/actualizadorCostos.service.js';
-
+  import { uuid } from 'vue-uuid';
     export default {
       props: ['idUsuario'],
         computed:{
@@ -145,9 +157,10 @@
                 return this.tramitesAgrupados.length;
             },
             items(){
+              console.log("cambios")
               this.tramitesAgrupados = [];
               this.tramites.forEach( tramite => {
-                let item = { nombre: tramite.nombre, clave: tramite.calveTemp, items:[tramite], verDetalle:false };
+                let item = { nombre: tramite.nombre, clave: tramite.calveTemp, items:[tramite], verDetalle:false, selected:false };
                 let indice = this.tramitesAgrupados.findIndex( agrupado => agrupado.clave == tramite.calveTemp );
                 if( indice < 0 ){
                   this.tramitesAgrupados.push( item );
@@ -172,7 +185,9 @@
               camposTablaTramites:[
                     { key: 'nombre', label: 'Nombre' },
                     { key: 'importe_tramite', label: 'Importe' },
-              ]
+              ],
+              tramitesServer:[],
+              elementosSeleccionados:[]
             }
         },
   
@@ -199,8 +214,8 @@
                   this.informacion = "Obteniendo tramites";
                     let response = await axios.get(url);
 
-                    let tramites =  response.data.tramites ;
-                    this.construirJSONTramites( tramites );
+                    this.tramitesServer =  response.data.tramites ;
+                    this.construirJSONTramites( this.tramitesServer );
                    /*
                     let arrayPromesasActualizacionDeCostos = [];
 
@@ -468,44 +483,121 @@
 
 
         onDrop (evt, list) {
-
-          
+          console.log("ques es list")
+          console.log(JSON.parse(JSON.stringify(list)))
+          console.log(JSON.parse(JSON.stringify(evt)))
           const itemID = evt.dataTransfer.getData('itemID');
-
-
+          console.log((itemID))
           this.tramites.map( tram =>{
               if( tram.id_tramite == itemID ){
-                if(!tram.calveTempOld){
-                  tram.calveTempOld = tram.calveTemp;
-                }
                 tram.calveTemp = list.clave;
               }
               return tram;
           } );
           $("#elementDrop").hide();
+
+          this.saveCambios();
         },
 
         onDropFuera(evt, list){
           const itemID = evt.dataTransfer.getData('itemID');
           this.tramites.map( tram =>{
               if( tram.id_tramite == itemID ){
-                tram.calveTemp = tram.calveTempOld || tram.calveTemp
+                tram.calveTemp = uuid.v4();
               }
               return tram;
           } )
           $("#elementDrop").hide();
+
+          this.saveCambios();
         },
 
         dragEvent(data){
-          console.log("oculatar")
-            console.log(JSON.parse(JSON.stringify(data)))
-            if(data.event == 'startdrag'){
-              $("#elementDrop").show();
-            } else {
-              $("#elementDrop").hide();
-            } 
+          if(data.event == 'startdrag'){
+            $("#elementDrop").show();
+          } else {
+            $("#elementDrop").hide();
+          } 
             
+        },
+
+        dragenter(evt, item){
+          console.log("event")
+          console.log(JSON.parse(JSON.stringify(item)))
+          console.log(JSON.parse(JSON.stringify(evt)))
+        },
+
+        evtElementoSeleccionado( data){
+          let ids = data.items.map( item => item.id_tramite );
+
+          if(data.selected){
+            let elementosNuevos = ids.filter( elem => !this.elementosSeleccionados.includes(elem))
+            this.elementosSeleccionados = this.elementosSeleccionados.concat(elementosNuevos);
+          } else {
+            data.items.forEach( (i, index)=>{
+              if(this.elementosSeleccionados.includes( i.id_tramite )){
+                this.elementosSeleccionados.splice( index, 1 );
+              }
+            });
+          }
+    
+        },
+
+
+        agruparSeleccion(){
+          let claveGrupo = uuid.v4();
+          this.tramites.forEach( tramite => { 
+            if(this.elementosSeleccionados.includes( tramite.id_tramite )){
+              tramite.calveTemp = claveGrupo;            
+            }
+          });
+          this.elementosSeleccionados = [];
+
+          this.saveCambios();
+        },
+
+        evtRemoveElementoSeleccionado(item){
+          let claveGrupo = uuid.v4();
+          this.tramites.forEach( tramite => { 
+            if(item.id_tramite == tramite.id_tramite ){
+              tramite.calveTemp = claveGrupo;            
+            }
+          });
+          this.saveCambios();
+        },
+
+        saveCambios(){
+          let updateSolicitudes = [];
+          this.tramites.forEach( tramite => {
+            let solicitudUpdate = {
+              id:tramite.id_tramite,
+              clave:tramite.calveTemp
+            }
+            updateSolicitudes.push(solicitudUpdate); 
+          });
+          console.log(JSON.parse(JSON.stringify(updateSolicitudes)))
+          if(updateSolicitudes.length > 0){
+            let url = process.env.TESORERIA_HOSTNAME + "/edit-solicitudes-info";
+            axios.post(url, {data:updateSolicitudes}, {
+                 headers:{
+                    "Content-type":"application/json"
+                }
+            }).then(response => {
+              console.log(JSON.parse(JSON.stringify(response.data.Code)))
+              if( response && response.data && response.data.Code == "400" ){
+                Command: toastr.error("Error!", response.data.message || "No fue posible guardar los cambios");
+                this.obtenerTramitesAgregados();
+              }
+            }).catch(errors => {
+              Command: toastr.error("Error!", error.message || "No fue posible guardar los cambios");
+              this.obtenerTramitesAgregados();
+            }).finally(() => {
+            });
+          }
+
         }
+
+
         
 
     }
