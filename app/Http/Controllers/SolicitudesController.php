@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 use App\Repositories\PortalsolicitudescatalogoRepositoryEloquent;
+use App\Repositories\PortalsolicitudesticketRepositoryEloquent;
+use App\Repositories\PortalTramitesRepositoryEloquent;
 use App\Repositories\PortalcamporelationshipRepositoryEloquent;
 use App\Repositories\EgobiernotiposerviciosRepositoryEloquent;
 use App\Repositories\PortalcampotypeRepositoryEloquent;
@@ -46,6 +48,9 @@ class SolicitudesController extends Controller
   protected $catalogo_type;
   protected $group;
 
+  protected $ticket;
+  protected $solTramites;
+
   public function __construct(
     PortalsolicitudescatalogoRepositoryEloquent $solicitudes,
     PortalcamporelationshipRepositoryEloquent $relationship,
@@ -59,7 +64,9 @@ class SolicitudesController extends Controller
     PortaltramitecategoriarelacionRepositoryEloquent $relcat,
     PortaltramitedivisasRepositoryEloquent $reldivisas,
     DivisasRepositoryEloquent $divisas,
-    RolesRepositoryEloquent $roles
+    RolesRepositoryEloquent $roles,
+    PortalsolicitudesticketRepositoryEloquent $ticket,
+    PortalTramitesRepositoryEloquent $solTramites
     )
     {
       parent::__construct();
@@ -90,6 +97,9 @@ class SolicitudesController extends Controller
 
       $this->roles  = $roles;
       // creamos los catalogos iniciales
+
+      $this->ticket = $ticket;
+      $this->solTramites = $solTramites;
 
       $this->loadInfo();
 
@@ -422,6 +432,59 @@ class SolicitudesController extends Controller
         [
           "Code" => "400",
           "Message" => "Error al listar divisas",
+        ]
+      );
+    }
+  }
+
+  public function getNormales($folio){
+    try {
+
+      $id_tramite = env("TRAMITE_5_ISR");
+
+      //Se busca el tramite dentro de la tabla catalogo
+      $cat_data = $this->solicitudes->where("tramite_id", $id_tramite)->get();
+      foreach ($cat_data as $cat) {
+        $id_cat = $cat->id;
+        $titulo = $cat->titulo;
+        $catalogo [] = array(
+          "id" => $id_cat,
+          "titulo" =>$titulo
+        );
+      }
+      //Buscamos el folio dentro de la tabla solicitudes_tramite
+      $solicitud = $this->solTramites->where("id_transaccion_motor", $folio)->get();
+
+      foreach ($solicitud as $s) {
+        $id_transaccion = $s->id;
+        $catalogo_id = $s->catalogo_id;
+      }
+      $sol["folio"] = $id_transaccion;
+
+      //if(in_array())
+      //Con el id_transaccion se buscan los registros existentes dentro de solicitudes_ticket
+
+      $tickets = $this->ticket->where("id_transaccion", $id_transaccion)->get();
+
+      //$tmts = array();
+      foreach ($tickets as $t) {
+        $info = json_decode($t->info);
+        $cat = $t->catalogo_id;
+        $tmts["solcitudes"] = array(
+          "info"=>$info
+        );
+      }
+      //$tmts["tramites"] = $tmts;
+      //dd($tmts);
+      return $tmts;
+
+
+    } catch (\Exception $e) {
+      Log::info('Get Normales :'.$e->getMessage());
+      return response()->json(
+        [
+          "Code" => "400",
+          "Message" => "Error al obtener información",
         ]
       );
     }

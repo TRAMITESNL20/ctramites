@@ -62,17 +62,11 @@ class CalculoimpuestosController extends Controller
     	$this->porcentaje 	        = $porcentaje;
       $this->diasferiados         = $diasferiados;
 
-
       $this->solicitudes_tramite	= $solicitudes_tramite;
       $this->solicitudes_ticket   = $solicitudes_ticket;
 
-
-
-
     	$this->inpc_values			= $this->getInpcValues();
     	$this->porcentajes_values	= $this->getPorcentejesvalues();
-
-
 
     	$this->a 			= 0; //ganancia obtenida
     	$this->b 			= 0; //MONTO OBTENIDO CONFORME AL ARTICULO 127 LISR
@@ -83,30 +77,16 @@ class CalculoimpuestosController extends Controller
     	$this->g 			= 0; //MULTA POR CORRECCION FISCAL
     	$this->h			= 0; //IMPORTE TOTAL
 
-
-
     }
-
-
-
 
     public function index(Request $request)
     {
-
-    	// mostrar la forma para ejemplo del calculo de declaracion normal
-    	// $fecha_escritura 			= '2020-11-1'; // sin ceros iniciales ej 2020-9-1 para primero de sept de 2020
-    	// $monto_operacion 			= 1500000;
-    	// $ganancia_obtenida 			= 850000; // puede ser mayor o igual al monto de operacion
-    	// $pago_provisional_lisr		= 40000;
-    	// $multa_correccion_fiscal	= 0;
-
       //Recibir valores front
       $fecha_escritura 			= $request->fecha_escritura;
     	$monto_operacion 			= $request->monto_operacion;
     	$ganancia_obtenida 			= $request->ganancia_obtenida; // puede ser mayor o igual al monto de operacion
     	$pago_provisional_lisr		= $request->pago_provisional_lisr;
     	$multa_correccion_fiscal	= $request->multa_correccion_fiscal;
-
 
     	$this->a 					= $this->redondeo($ganancia_obtenida);
     	$this->c 					= $this->redondeo($pago_provisional_lisr);
@@ -115,20 +95,16 @@ class CalculoimpuestosController extends Controller
 
       // obtener los dias inhabiles del año en curso
       $this->inhabiles	= $this->getInhabiles(date('Y'));
- 		// $this->fecha_vencimiento	= $this->getVencimiento();
-    $this->fecha_vencimiento  = $this->prueba();
- 		$this->inpc_periodo			= $this->getInpc($this->fecha_escritura); // getInpcperiodo en caso de que sea la fecha acumulada del año vigente
- 		$this->fecha_actual			= date("Y-m-d");
- 		$this->inpc_reciente		= $this->getInpc($this->fecha_actual);
+   		// $this->fecha_vencimiento	= $this->getVencimiento();
+      $this->fecha_vencimiento  = $this->prueba();
+   		$this->inpc_periodo			= $this->getInpc($this->fecha_escritura); // getInpcperiodo en caso de que sea la fecha acumulada del año vigente
+   		$this->fecha_actual			= date("Y-m-d");
+   		$this->inpc_reciente		= $this->getInpc($this->fecha_actual);
 
- 		$this->factor_actualizacion = $this->getFA();
+   		$this->factor_actualizacion = $this->getFA();
 
- 		$this->porcentaje_recargos	= $this->getPorcentajeregargos();
-
-
-
-    	$this->calculo();
-
+   		$this->porcentaje_recargos	= $this->getPorcentajeregargos();
+      $this->calculo();
     	$results = array(
     		"Entradas" => array(
 	    			"fecha_escritura" => $this->fecha_escritura,
@@ -156,9 +132,7 @@ class CalculoimpuestosController extends Controller
 
     	);
 
-
     	return json_encode($results);
-
     }
     /**
      *
@@ -199,13 +173,6 @@ class CalculoimpuestosController extends Controller
     public function complementaria(Request $request) // Request $request
     {
 
-      // mostrar la forma para ejemplo del calculo de declaracion normal
-      // $fecha_escritura       = '2020-11-1'; // sin ceros iniciales ej 2020-9-1 para primero de sept de 2020
-      // $monto_operacion       = 1500000;
-      // $ganancia_obtenida       = 850000; // puede ser mayor o igual al monto de operacion
-      // $pago_provisional_lisr   = 40000;
-      // $multa_correccion_fiscal = 0;
-
       //Recibir valores front
       $fecha_escritura          =  $request->fecha_escritura;
       $monto_operacion          =  $request->monto_operacion;
@@ -222,6 +189,7 @@ class CalculoimpuestosController extends Controller
         // este es un error el folio de la declaracion normal no existe
       }else{
         // buscamos el registro de la declaracion normal
+
         $info = $this->solicitudes_tramite->findWhere( ["id_transaccion_motor" => $normal] )->first();
 
         if($info->count() > 0)
@@ -234,12 +202,18 @@ class CalculoimpuestosController extends Controller
           $datos_normal = $info->detalle;
 
           $salidas = $datos_normal->Salidas;
-
+          //dd($salidas);
           foreach($salidas as $s => $v)
           {
+
             if(strcmp($s,"Importe total") == 0)
             {
               $importe = $v;
+
+            }
+            if($s == "Monto obtenido conforme al art 127 LISR"){
+              $monto_isr = $v;
+              //dd($monto_isr);
             }
           }
 
@@ -293,8 +267,8 @@ class CalculoimpuestosController extends Controller
             "multa por correccion fiscal" => $this->g,
           ),
         "Salidas" => array(
-          "Fecha Actual"        => $this->fecha_actual,
-          "Fecha vencimiento"     => $this->fecha_vencimiento,
+          "Fecha Actual"        => date("d-m-Y", strtotime($this->fecha_actual)),
+          "Fecha vencimiento"     => date("d-m-Y", strtotime($this->fecha_vencimiento)),
           "Factor de Actualizacion"   => $this->factor_actualizacion,
           "INPC Periodo reciente"   => $this->inpc_reciente,
           "INPC Periodo"        => $this->inpc_periodo,
@@ -310,7 +284,7 @@ class CalculoimpuestosController extends Controller
           ),
         "Complementaria"  => array(
           "Folio de la declaracion inmediata anterior"  => $normal,
-          "Monto pagado en la declaracion inmediata anterior" => $importe,
+          "Monto pagado en la declaracion inmediata anterior" => $monto_isr,
           "Pago en exceso"  => $this->k,
           "Cantidad a cargo" => $this->l,
         )
@@ -478,7 +452,7 @@ class CalculoimpuestosController extends Controller
       		}
 
         }
-
+        //dd($dates);
     		return $dates;
 
     	}catch( \Exception $e ){
@@ -534,18 +508,14 @@ class CalculoimpuestosController extends Controller
     	$year 	= $d[0];
     	$month 	= 1;
 
-
     	// buscar en la tabla todos los factores que correspondan al año
     	try{
 
     		return $this->inpc_values[$year][$month];
 
-
     	}catch( \Exception $e ){
     		dd("CalculoimpuestosController::getInpc " . $e->getMessage());
     	}
-
-
     }
     /**
      * getInpcValues. esta funcion regresa un arreglo por año y dentro un asociativo por mes y valor
@@ -553,7 +523,6 @@ class CalculoimpuestosController extends Controller
      * @param fecha yyyy-m-d
      *
      * @return float
-     *
      *
     */
     private function getInpcValues()
@@ -566,15 +535,10 @@ class CalculoimpuestosController extends Controller
     			->orderBy('mes','ASC')
     			->all();
 
-
     		$years 	= array();
-
     		$months = array( 1,2,3,4,5,6,7,8,9,10,11,12 );
-
     		$years[]= (integer)date("Y");
-
     		$final = array();
-
     		foreach($list as $l)
     		{
 
@@ -830,46 +794,47 @@ class CalculoimpuestosController extends Controller
     public function prueba(){
     		$fecha = $this->fecha_escritura;
     		$inhabil = $this->inhabiles;
-
-        $dias=0;
+        $dias=1;
         $fechaTermino = '';
         $hora = date("H",strtotime($fecha));
         $fecha = ($hora>=13) ? date("Y-n-j",strtotime($fecha.' +1 days')) : date("Y-n-j",strtotime($fecha)) ;
         $comienzo = $fecha;
         $test_dia = 'inicio';
-
+        $var1 = 0;
         //15 es el numero de dias que calcularemos
-        // $datafechas = array();
-        while ($dias <= 15) {
-            $finDeSemana = date("w",strtotime($comienzo));
-            $asueto = in_array($comienzo, $inhabil, TRUE);
-
-            // $datafechas []= array(
-            //   'diasemana' => $finDeSemana,
-            //   'fecha' => $comienzo,
-            //   'test' => $test_dia,
-            //   'asueto' => $asueto
-            // );
-
-            //Si la fecha es sabado o domingo O la fecha existe en los inhabil
-
-            if($finDeSemana == 0 || $finDeSemana == 6 || $asueto == true ){
-              $comienzo = date("Y-n-j",strtotime($comienzo.' +1 days'));
-
-              $test_dia = 'finDeSemana';
-            }else{
-                $fechaTermino = date("Y-n-j",strtotime($comienzo));
-                $comienzo = date("Y-n-j",strtotime($comienzo.' +1 days'));
-
-                $dias++;
-                $test[]= $fechaTermino;
-                // $test_dia = 'habil';
-            }
-            //$com[]= $comienzo;
-
+        //Se genera un arreglo en donde se dividen todos los días existentes por delante de la fecha
+        for($i=0; $i<=60; $i++){
+          if($i==0){
+            $comienzo = date("Y-n-j",strtotime($comienzo.' +1 days'));
+            $fechas[$i]["fecha"]=date($comienzo);
+            $fechas[$i]["dia_semana"] =date("w",strtotime($comienzo));
+          }else{
+            $comienzo = date("Y-n-j",strtotime($comienzo.' +1 days'));
+            $fechas[$i]["fecha"]=date($comienzo);
+            $fechas[$i]["dia_semana"] =date("w",strtotime($comienzo));
+          }
         }
-        //$fechaTermino = date("d-m-Y", strtotime($fechaTermino));
-        //dd($fechaTermino);
+        //Se hace la validacion, si existen dentro del arreglo días feriados o sabado y domingo
+        foreach ($fechas as $fecha) {
+          $date = $fecha["fecha"];
+          $dia_semana = $fecha["dia_semana"];
+          if(in_array($date, $inhabil)){
+            $flag= 1;
+          }else{
+            $flag=0;
+          }
+
+          if($dia_semana == 0 || $dia_semana == 6 || $flag ==1){
+
+          }else{//Se agregan solo días habiles dentro del arreglo
+            $lista[]=$date;
+          }
+        }
+        //Se toma la posicion 14 de la lista, iniciamos con 0
+        $fechaTermino = $lista[14];
+
+        //dd($lista);
         return $fechaTermino;
 	}
+
 }
