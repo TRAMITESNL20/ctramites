@@ -125,11 +125,8 @@
 				<tr>
 					<td class="columna value" style="width: 33%;">{{ $info->solicitudes[0]->info->campos->{'Escritura'} ?? '' }}</td>
 					<td class="columna value" style="width: auto;" colspan="2"></td>
-					@if($info->solicitudes[0]->info->{'tipoTramite'} == 'complementaria')
-					<td class="columna value" style="width: 33%;">{{$info->solicitudes[0]->info->{'fechaEscritura'}  ?? ''}}  </td>
-					@else
-					<td class="columna value" style="width: 33%;">{{  substr($info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'},8)  ?? ''}}-{{ substr($info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'} ,5, 2)   ?? ''}}-{{ substr( $info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'},0,4)    ?? ''}}   </td>
-					@endif
+					
+					<td class="columna value" style="width: 33%;">{{ isset($info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'}) ?  date(  "d-m-Y", strtotime($info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'}) )  : ( isset($info->solicitudes[0]->info->{'fechaEscritura'}) ? $info->solicitudes[0]->info->{'fechaEscritura'} : '' )}}   </td>
 				</tr>
 				<tr>
 					<td class="columna" style="width: 1%">MUNICIPIO</td>
@@ -262,7 +259,7 @@
 					<td class="columna">REFERENCIA BANCARIA</td>
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }} last">
-					<td class="columna value">{{ substr($control->operaciones->{'fecha_pago'} ,8, 2) ?? "-" }}-{{ substr( $control->operaciones->{'fecha_pago'},5, 2)  ?? "-" }}-{{ substr($control->operaciones->{'fecha_pago'},0,4)  ?? "-" }}</td>
+					<td class="columna value">{{  date(  "d-m-Y", strtotime($control->operaciones->{'fecha_pago'}) )    }}   </td>
 					
 					<td class="columna value" colspan="2">{{ $control->operaciones->{'operacion_interna'} ?? "-" }}</td>
 					<td class="columna value">{{  $control->operaciones->{'referencia'}  ?? "-"  }}</td>
