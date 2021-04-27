@@ -9,13 +9,23 @@
           </div>
       </div>
     </div>
+    <b-modal id="modalAgrupar"  @ok="confirm" ok-title = "Si">
+      <div class="d-block">
+        Los actos que agrupaste deberán ingresarse de manera simultánea en el Instituto Registral y Catastral para que les puedan asignar la misma fecha y hora de prelación.
+      </div>
+    </b-modal>
     <div class="row">
         <div class="btn-group" v-if="elementosSeleccionados.length > 1">
               <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Acciones
               </button>
               <div class="dropdown-menu dropdown-menu-right">
+                  <button class="dropdown-item" type="button"  v-on:click="confirmarGrupo()" ref="confirGroup">
+                    Agrupar Tramites
+                  </button>
+                <!--
                   <button @click="agruparSeleccion()" class="dropdown-item" type="button">Agrupar Tramites</button>
+                -->
               </div>
         </div>
     </div>
@@ -599,6 +609,14 @@
             });
           }
 
+        },
+
+        confirmarGrupo(){
+            this.$root.$emit('bv::show::modal', 'modalAgrupar', '#confirGroup')
+        },
+
+        confirm(){
+          this.agruparSeleccion();
         }
 
 
