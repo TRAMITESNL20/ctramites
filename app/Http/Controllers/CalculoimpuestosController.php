@@ -221,6 +221,9 @@ class CalculoimpuestosController extends Controller
             if($s == "Recargos"){
               $recargo_anterior = $v;
             }
+            if($s == "Monto obtenido conforme al art 127 LISR"){
+              $monto_art127 = $v;
+            }
           }
 
         }else{
@@ -252,10 +255,17 @@ class CalculoimpuestosController extends Controller
 
       $this->porcentaje_recargos  = $this->getPorcentajeregargos();
 
-      $this->calculo();
+      //$this->calculo();
 
 
       // se replantea el calculo de la parte ACTUALIZADA, recargos e IMPORTE
+      //primero se hace la diferencia de la ganancia obtenida anterior y la actual y se aplica el .5
+
+      $this->b = $this->b - $monto_art127;
+      $this->b = $this->redondeo($this->a * .05);
+
+      // impuesto correspondiente a la entidad federativa $this->d
+    	($this->b >= $this->c) ? $this->d = $this->c : $this->d = $this->b;
 
       // parte actualizada del impuesto
     	$this->e = ($this->d * $this->factor_actualizacion) - $this->d;
@@ -265,15 +275,18 @@ class CalculoimpuestosController extends Controller
     	$this->f = ($this->d + $this->e) * $this->porcentaje_recargos;
 
       $this->f = $this->redondeo($this->f);
-
+      $this->d = $this->b - $impuesto;
       //Se calcula la diferencia entre la parte actualizada del impuesto actual y el anteriror
       $this->e = $this->e - $pai_anterior;
 
       //Se calcula la diferencia entre el recargo actual y el anteriror
       $this->f = $this->f - $recargo_anterior;
 
+
       // importe total
     	$this->h =  $this->d + $this->e + $this->f + $this->g ;
+      //Importe = Impuesto de la entidad federativa + parte actualiza + recargos + Multa
+
 
 
       if($this->h < $importe)
