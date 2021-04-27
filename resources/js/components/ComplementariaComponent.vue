@@ -123,6 +123,7 @@
               complementaria.detalle = tramite.detalle;
               complementaria.fechaEscritura = tramite.fechaEscritura;
               complementaria.folioTransaccionAnterior = tramite.folio;
+              complementaria.idTicketNormal = tramite.info.tipoTramite == 'normal' ? tramite.id : tramite.info.idTicketNormal;
               complementaria.idTicketAnterior = tramite.id;
               complementaria.valido = tramite.formValid;
               complementaria.enajenante =  {
