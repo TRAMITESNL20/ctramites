@@ -6,6 +6,18 @@
     //     width: 50%;
     // }\
 
+    .pagar-desktop{
+        display: none !important;
+    }
+    
+    .pagar-mobile{
+        display: inline !important;
+    }
+
+    .absolute-mobile{
+        position: absolute;
+    }
+
     .not-padding-left-mobile{
         padding-left: 0px;
     }

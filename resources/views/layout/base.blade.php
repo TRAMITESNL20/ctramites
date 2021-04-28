@@ -603,10 +603,14 @@
 		<div id="kt_quick_user" class="offcanvas offcanvas-right p-10">
 			<!--begin::Header-->
 			<div class="offcanvas-header d-flex align-items-center justify-content-between pb-5">
-				<h3 class="font-weight-bold m-0">Perfil de Usuario
-				<a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close">
-					<i class="ki ki-close icon-xs text-muted"></i>
-				</a>
+				<div class="col-10">
+					<h3 class="font-weight-bold m-0">Perfil de Usuario
+				</div>
+				<div class="col-2">
+					<a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close">
+						<i class="ki ki-close icon-xs text-muted"></i>
+					</a>
+				</div>
 			</div>
 			<!--end::Header-->
 			<!--begin::Content-->
@@ -620,7 +624,7 @@
 					</div>
 					<div class="d-flex flex-column">
 						<a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ $user ? $user->name : "" }} {{ $user ? $user->fathers_surname : "" }} </a>
-						<div class="text-muted mt-1">{{ $user ? $user->role->description : '' }}</div>
+						<div class="text-muted mt-1">{{ $user ? $user->role->description : '' }} -- {{ isset($user->notary) ?  "Notaría #" .  $user->notary->notary_number : ''}}</div>
 						<div class="navi mt-2">
 							<a href="mailto:{{ $user ? $user->email : "" }}" class="navi-item">
 								<span class="navi-link p-0 pb-2">
@@ -640,7 +644,13 @@
 									<span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user ? $user->email : "" }}</span>
 								</span>
 							</a>
-							<a href="{{ url()->route("logout") }}" class="btn btn-sm btn-light-danger font-weight-bolder text-danger text-hover-white py-2 px-5">Cerrar Sesión</a>
+							<div style="display:block" >
+										<span class="text-muted text-hover-primary text-truncate" style="font-size: 11px;">{{ $user ? "RFC: " . $user->rfc : "" }}</span>
+									</div>
+									<div style="display:block">
+										<span class="text-muted text-hover-primary text-truncate" style="font-size: 11px;">{{ $user ? "CURP: " . $user->curp : "" }}</span>
+							</div>
+							<!-- <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-light-danger font-weight-bolder text-danger text-hover-white py-2 px-5">Cerrar Sesión</a> -->
 						</div>
 					</div>
 				</div>
@@ -759,6 +769,7 @@
 						</div>
 					</a>
 					
+					
 				</div>
 				<!--end::Nav-->
 				{{-- <!--begin::Separator-->
@@ -862,6 +873,7 @@
 				</div>
 				<!--end::Notifications--> --}}
 			</div>
+			<div style="width:100%; height:100px; background-color: red; position:abosulite; bottom: 0;">  <a href="{{ url()->route("logout") }}" class="text-center" style="color:white !important;">Cerrar Sesión</a>  </div>
 			<!--end::Content-->
 		</div>
 		<!-- Desktop -->
