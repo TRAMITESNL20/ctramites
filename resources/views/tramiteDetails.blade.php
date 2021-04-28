@@ -1,7 +1,6 @@
 <?php
     $info = isset($tramite->info->campos->Escritura) ? $tramite->info->campos->Escritura : ( isset($tramite->info->campos->Expediente) ? $tramite->info->campos->Expediente : null );
     $camposConfigurados = [];
-    dd($tramite);
     foreach($tramite->info->camposConfigurados as $campo){
         $name = strtolower($campo->nombre);
         $name = preg_replace("([^A-Za-z\ ])", '', $name);
