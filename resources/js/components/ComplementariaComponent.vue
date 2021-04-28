@@ -126,12 +126,12 @@
               complementaria.idTicketNormal = tramite.info.tipoTramite == 'normal' ? tramite.id : tramite.info.idTicketNormal;
               complementaria.idTicketAnterior = tramite.id;
               complementaria.valido = tramite.formValid;
+              complementaria.idsNormales = this.tramitesObtenidos.filter( tramite => tramite.selected).map( tramite => tramite.id)
               complementaria.enajenante =  {
                 datosPersonales: tramite.info.enajenante.datosPersonales,
                 nacionalidad: tramite.info.enajenante.nacionalidad,
                 tipoPersona: tramite.info.enajenante.tipoPersona
               };
-
             return complementaria;
           });
 
