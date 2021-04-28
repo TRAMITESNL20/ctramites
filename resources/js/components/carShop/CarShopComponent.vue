@@ -1,5 +1,5 @@
 <template>                  
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-left:0px; padding-right:0px">
     <div class="row" v-if="informacion.length > 0 && false">
       <div class="col-lg-12">
         <div class="text-center">

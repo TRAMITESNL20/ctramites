@@ -6,7 +6,7 @@
 					<div class="d-flex mobile-lista-multiple align-items-center mb-3">
 						<div class="mr-3 ml-4  espace-checkbox" v-if="tramite[0].status && (tramite[0].status == 99 || tramite[0].status == 98) && !cartComponent && ['notary_titular', 'notary_substitute'].includes(user.role_name)"><input type="checkbox" :id="tramite[0].id" style="width:18px; height:18px;" v-on:change="processToCart(tramite[0], true)"></div>
 						<div class="mr-auto espace-checkbox-text" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '70%' } ]">
-							<h4 class="ml-3 text-uppercase text-truncate"><strong>{{ tramite[0].nombre_servicio && (tramite[0].titulo && tramite[0].nombre_servicio.toLowerCase() != tramite[0].titulo.toLowerCase()) ? `${tramite[0].nombre_servicio} - ` : '' }}{{ tramite[0].tramite || tramite[0].titulo | capitalize }}</strong></h4>
+							<h4 class="ml-3 text-uppercase text-truncate "><strong>{{ tramite[0].nombre_servicio && (tramite[0].titulo && tramite[0].nombre_servicio.toLowerCase() != tramite[0].titulo.toLowerCase()) ? `${tramite[0].nombre_servicio} - ` : '' }}{{ tramite[0].tramite || tramite[0].titulo | capitalize }}</strong></h4>
 							<h5 class="ml-3">
                                 <span style="font-weight: normal;" v-if="tramite[0].tramites[0] && tramite[0].tramites[0].id_transaccion_motor"><strong>FOLIO PAGO:</strong> {{ tramite[0].tramites[0].id_transaccion_motor ? `${tramite[0].tramites[0].id_transaccion_motor} -` : '' }}</span>
                                 <span style="font-weight: normal;" v-if="tramite[0].tramites[0] && tramite[0].tramites[0].id"><strong>FSE:</strong> {{ tramite[0].tramites[0].id ? `${tramite[0].tramites[0].id} -` : '' }}</span>
@@ -47,7 +47,7 @@
 				</div>
 				<tramite-component :cartComponent="cartComponent" :type="type" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="tramite[0]" v-bind:key="index"  v-if="tramite.length == 1 && totalItems != 0"></tramite-component>
 			</div>
-            <div class="card mb-4" v-if="totalItems === 0">
+            <div class="card mb-4 pt-5" v-if="totalItems === 0">
                 <div class="card-body">
                     <h3 class="text-center">{{ message || '¡Lo sentimos! No se encuentran registros para mostrar.' }}</h3>
                     <p class="text-center w-75 m-auto" v-if="cartComponent">Para continuar puedes <a class="card-link m-0 cursor-pointer" v-on:click="redirect('/nuevo-tramite')">inciar un tramite nuevo</a> o agregar trámites desde el listado de <a class="card-link m-0 cursor-pointer" v-on:click="redirect('/tramites/pendiente-de-pago/99')">Pendientes de Pago</a></p>

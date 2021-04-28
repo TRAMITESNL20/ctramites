@@ -1,11 +1,11 @@
 <template>
 
     <div>
-        <div class="card-header container-fluid" id="newsHeading" style="background-color: transparent;">
+        <div class="card-header container-fluid not-padding-left-mobile" id="newsHeading" style="background-color: transparent;">
             <div class="row">
                 <div class="col">
                     <h4 >
-                        <strong class="text-uppercase text-truncate">
+                        <strong class="text-uppercase text-truncate max-width-mobile{">
                         {{ agrupacion.nombre }} 
                         </strong>
                     </h4>
