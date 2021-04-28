@@ -47,9 +47,15 @@
                                         </campos-tramite-component>
                                       </div>
                                       <div v-else-if="tipoTramite == 'complementaria' && camposGuardadosObtenidos">
+                                          <complementaria-component 
+                                          @updatingScore="updateScore"
+                                          @sendData="setDatosComplementaria">
+                                            
+                                          </complementaria-component>
+                                        <!--
                                           <formulario-complementaria-component @updatingScore="updateScore"
                                           @sendData="setDatosComplementaria" :infoGuardada="infoGuardada">
-                                          </formulario-complementaria-component>
+                                          </formulario-complementaria-component>-->
                                       </div>
                                     </div>
                                     <!--end: Wizard Step 1-->
@@ -60,7 +66,7 @@
                                     <!--end: Wizard Step 2-->
                                     <!--begin: Wizard Step 3-->
                                     <div class="pb-5" data-wizard-type="step-content" id="step3" >
-                                        <div v-if="tramite.id_tramite == TRAMITE_5_ISR  && tipoTramite != 'complementaria'">
+                                        <div v-if="tramite.id_tramite == TRAMITE_5_ISR ">
                                           <resumen-tramite-5-isr-component v-if="currentStep == 3"
                                           :tipoTramite="tipoTramite" 
                                           :datosComplementaria="datosComplementaria" 
@@ -87,7 +93,7 @@
                                               :files="files"
                                               :datosComplementaria="datosComplementaria"
                                               :idUsuario="idUsuario"
-                                              :infoGuardadaFull="infoGuardadaFull" v-if="currentStep != 3" labelBtn="Guardar y Continuar después "
+                                              :infoGuardadaFull="infoGuardadaFull" v-if="currentStep != 3 && tipoTramite != 'complementaria'" labelBtn="Guardar y Continuar después "
                                               @tramiteAgregadoEvent="tramiteAgregadoEvent"
                                               ></btn-guardar-tramite-component>
 
