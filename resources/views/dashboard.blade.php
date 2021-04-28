@@ -7,7 +7,7 @@
                     ![endif]-->
 
                 <div class="col-lg-6 cards-espace" > 
-                    <div class="card" >
+                    <div class="card p-5" >
                           <div class="card-body">
                                 <h5 class="card-title">
                                     <div style="padding-left: 1%">
@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 cards-espace" > 
-                    <div class="card" >
+                    <div class="card p-5" >
                           <div class="card-body">
                                 <h5 class="card-title">
                                     <div style="padding-left: 1%">
@@ -125,7 +125,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 cards-espace" > 
-                    <div class="card" >
+                    <div class="card p-5" >
                           <div class="card-body">
                                 <h5 class="card-title">
                                     <div style="padding-left: 1%">
@@ -184,7 +184,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 cards-espace" > 
-                    <div class="card" >
+                    <div class="card p-5" >
                           <div class="card-body">
                                 <h5 class="card-title">
                                     <div style="padding-left: 1%">

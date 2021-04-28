@@ -7,7 +7,7 @@
                 <div class="wizard-nav">
                     <div class="wizard-steps">
                         <!--begin::Wizard StepS Nav-->
-                        <div v-for="(step, i) in steps" class="wizard-step" data-wizard-type="step" :data-wizard-state="step.state" :id="step.id" v-on:click="goTo(step.clickGotTo)">
+                        <div v-for="(step, i) in steps" class="wizard-step wizard-step-mobile" data-wizard-type="step" :data-wizard-state="step.state" :id="step.id" v-on:click="goTo(step.clickGotTo)">
                             <div class="wizard-wrapper">
                                 <div class="wizard-number">
                                   {{ step.wizardNumber}}

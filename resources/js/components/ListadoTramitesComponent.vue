@@ -114,7 +114,7 @@
                             {{ categoria.nombre_categoria }}
                         </legend>
                         <hr>
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 mobile-container">
                             <tramite-component v-for="(tramite, index) in categoria.tramites" :tramite="tramite" v-bind:key="index"></tramite-component>
                         </div>
                     </fieldset>

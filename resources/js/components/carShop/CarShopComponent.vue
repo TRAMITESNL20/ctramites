@@ -18,7 +18,14 @@
               <v-container v-if="obteniendoTramites">
                     <v-row>
                         <v-col cols="12" md="12">
-                            <v-skeleton-loader v-bind:key="i" type="list-item" v-for="(r,i) in [1,2,3,4,5,6]" height="90px" style="margin-bottom: 8px;"></v-skeleton-loader>
+                            <v-skeleton-loader
+                            class="card card-custom justify-content-center"
+                            type="list-item-two-line, button"
+                            v-for="(r,i) in [1,2,3,4,5,6]"
+                            v-bind:key="i"
+                            height="90px"
+                            style="margin-bottom: 8px;"
+                        ></v-skeleton-loader>
                         </v-col>
                     </v-row>
                 </v-container>

@@ -4,11 +4,34 @@
 @media only screen and (max-width: 770px) {
     // .boton-lista-mobil{
     //     width: 50%;
-    // }
-        
+    // }\
+
+    .text-initial{
+        white-space: initial;
+    }
+
+    .espace-checkbox-text{
+        padding-left: 25px !important;
+    }
+    
+
+    .espace-checkbox{
+        position: absolute;
+    }
+    .wizard-step-mobile{
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .mobile-container{
+        max-width: none;
+        padding-left:  0px  !important;
+        padding-right:  0px  !important;
+    }
+    
     .container{
         max-width: none;
-        padding: 0 6px;
+        padding: 0 15px;
     }
 
     .arrow-desktop{
@@ -52,7 +75,7 @@
     }
 
     .cards-espace{
-        margin-bottom: 0px !important;
+        margin-bottom: 5px !important;
     }
 
     .mobile-lista-multiple{

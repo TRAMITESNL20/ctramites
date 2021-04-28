@@ -1,6 +1,6 @@
 <template>
     <div>
-        <iframe id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height:500px;" frameborder="0"> </iframe>
+        <iframe id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe>
     </div>
 </template>
 
