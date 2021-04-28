@@ -423,14 +423,15 @@
             
             tramitesJson.datos_solicitante = this.obtenerDatosSolicitante(soliciante);
             tramitesJson.datos_factura = tramitesJson.datos_solicitante;
-            if( info.camposComplementaria && info.detalle && info.detalle.Complementaria){
+
+            if( info.tipoTramite == 'complementaria' && info.detalle && info.detalle.Complementaria){
               tramitesJson.importe_tramite = info.detalle.Complementaria['Cantidad a cargo'] ;
             } else {
               tramitesJson.importe_tramite = info.detalle && info.detalle.Salidas ?  info.detalle.Salidas['Importe total'] : info.costo_final ;
             }
             tramitesJson.detalle = [];
 
-            if(info && info.detalle && info.detalle.Salidas){
+            if(info && info.detalle && info.detalle.Salidas && info.tipoTramite != 'complementaria'){
               
 
               
