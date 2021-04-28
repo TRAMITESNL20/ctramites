@@ -141,7 +141,7 @@
 			<tr >
 				<td class="titulo1" colspan="4"> <strong> DATOS DEL ENAJENANTE </strong></td>
 			</tr>
-			@if($enajenante)
+			@if( isset($enajenante->tipoPersona))
 				@if ($enajenante->tipoPersona == 'pf')
 					<tr class="datos-enajenante first">
 						<td class="columna">REGISTRO FEDERAL DEL CONTRIBUYENTE:</td>
