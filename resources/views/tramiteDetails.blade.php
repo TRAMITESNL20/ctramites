@@ -5,7 +5,7 @@
         $name = strtolower($campo->nombre);
         $name = preg_replace("([^A-Za-z\ ])", '', $name);
         $name = preg_replace('/\s+/', '_', $name);
-        $camposConfigurados[$name] = isset($campo->documento) ? $campo->documento : (isset($campo->valor) ? $campo->valor : null);
+        $camposConfigurados[$campo->alias] = isset($campo->documento) ? $campo->documento : (isset($campo->valor) ? $campo->valor : null);
     }
 ?>
 <div class="content d-flex flex-column flex-column-fluid" id="app">
@@ -23,7 +23,7 @@
                 	<div class="card-body">
                 		<div class="row align-items-center">
                 			<div class="col">
-		                		<h3 class="m-0">{{ $tramite->titulo }}</h3>
+		                		<h3 class="m-0 text-uppercase">{{ $tramite->info->tipoTramite }}</h3>
 		                		<p class="text-muted m-0">{{ $tramite->clave }}</p>
                 			</div>
                 			<div class="col text-right">

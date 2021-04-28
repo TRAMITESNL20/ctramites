@@ -12,7 +12,7 @@
                         <div class="mr-auto" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '50%' } ]">
                             <!--begin::Name-->
                             <a v-on:click="goTo(tramite)" class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column" v-if="">
-                                <strong v-if="!group && !cartComponent" class="text-uppercase text-truncate">{{ tramite.nombre_servicio && (tramite.titulo && tramite.nombre_servicio.toLowerCase() != tramite.titulo.toLowerCase()) ? `${tramite.nombre_servicio} - ` : '' }}{{ tramite.tramite || tramite.titulo | capitalize }}</strong>
+                                <strong v-if="!group && !cartComponent" class="text-uppercase text-truncate">{{ tramite.nombre_servicio && (tramite.titulo && tramite.nombre_servicio.toLowerCase() != tramite.titulo.toLowerCase()) ? `${tramite.nombre_servicio} - ` : '' }}{{ (tramite.info && tramite.info.tipoTramite) || tramite.tramite || tramite.titulo | capitalize }}</strong>
                                 <span :class="group ? '' : 'text-muted'" v-if="type !== undefined && tramite.info && !group">
                                     <span style="font-weight: normal;" v-if="tramite.tramites && tramite.tramites[0] && tramite.tramites[0].id_transaccion_motor"><strong>FOLIO PAGO:</strong> {{ `${tramite.tramites[0].id_transaccion_motor} -` }}</span>
                                     <span style="font-weight: normal;" v-if="tramite.tramites && tramite.tramites[0] && tramite.tramites[0].id"><strong>FSE:</strong> {{ tramite.tramites[0].id }}</span>
