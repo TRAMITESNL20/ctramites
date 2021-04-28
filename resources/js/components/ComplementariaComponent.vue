@@ -126,7 +126,6 @@
               complementaria.idTicketNormal = tramite.info.tipoTramite == 'normal' ? tramite.id : tramite.info.idTicketNormal;
               complementaria.idTicketAnterior = tramite.id;
               complementaria.valido = tramite.formValid;
-              complementaria.idsNormales = this.tramitesObtenidos.filter( tramite => tramite.selected).map( tramite => tramite.id)
               complementaria.enajenante =  {
                 datosPersonales: tramite.info.enajenante.datosPersonales,
                 nacionalidad: tramite.info.enajenante.nacionalidad,
@@ -134,8 +133,11 @@
               };
             return complementaria;
           });
+          this.complementarias.map(complementaria => {
+            complementaria.idsNormales =  this.complementarias.map( complementaria => complementaria.idTicketNormal);
+            return complementaria;
+          })
 
-         
           let valido = this.complementarias.length > 0;
           this.complementarias.forEach( complementaria =>{
             valido = valido && complementaria.valido;
