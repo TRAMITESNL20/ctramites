@@ -43,30 +43,33 @@
            </div>
         
            <div :id="`collapse-${index}`"  v-bind:class="totalItemInGroup > 1 ? 'collapse' : ''" v-if="totalItemInGroup >1 ">
-              <div v-bind:class="totalItemInGroup > 1 ? 'card' : ''" class="list-item card-custom gutter-b col-lg-12"  v-for="(item, i) in unicos" draggable @dragstart="startdrag($event, item)" @dragend="dragend($event)" >
+              <div v-bind:class="totalItemInGroup > 1 ? 'card' : ''" class="list-item card-custom gutter-b col-lg-12"  v-for="(item, i) in agrupacion.items" draggable @dragstart="startdrag($event, item)" @dragend="dragend($event)" >
+
                  <div class="card-body p-0">
                     <div class="d-flex">
                        <div class="flex-grow-1">
-                          <div class="d-flex align-items-center justify-content-between flex-wrap" >
-                            <div class="mr-3 ml-4" v-if="isAgrupable(item)">
-                                <i class="fas fa-undo" title="Qutar del grupo" style="width:18px; height:18px;"  @click="quitarSelect(item)"></i>
-                            </div>
-                             <div class="mr-auto" style="width: 60%;">
-                                <div v-if="!sameTramites">
-                                    {{   item.nombre }}
+                        
+                            <div class="d-flex align-items-center justify-content-between flex-wrap" >
+    
+                                <div class="mr-3 ml-4" >
+                                    <i class="fas fa-undo" title="Qutar del grupo" style="width:18px; height:18px;"  @click="quitarSelect(item.claveIndividual)"></i>
                                 </div>
-                                <a class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column">
-                                    <span class="mt-3" style="font-size: 12px;"  v-if="item.datos_solicitante">
-                                       {{ item.datos_solicitante.rfc || item.datos_solicitante.curp || "" }} - {{ item.datos_solicitante.razon_social ? item.datos_solicitante.razon_social : item.datos_solicitante.nombre + " " + item.datos_solicitante.apellido_paterno + " " + item.datos_solicitante.apellido_materno }}
+                                 <div class="mr-auto" style="width: 60%;">
+                                    <div v-if="!sameTramites">
+                                        {{   item.nombre }}
+                                    </div>
+                                    <a class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column">
+                                        <span class="mt-3" style="font-size: 12px;"  v-if="item.datos_solicitante">
+                                           {{ item.datos_solicitante.rfc || item.datos_solicitante.curp || "" }} - {{ item.datos_solicitante.razon_social ? item.datos_solicitante.razon_social : item.datos_solicitante.nombre + " " + item.datos_solicitante.apellido_paterno + " " + item.datos_solicitante.apellido_materno }}
+                                        </span>
+                                    </a>
+                                 </div>
+                                 <div class="my-lg-0 my-1" >
+                                    <span class="btn btn-secondary mr-2">
+                                        {{item.importe_tramite | toCurrency}}                        
                                     </span>
-                                </a>
-                             </div>
-                             <div class="my-lg-0 my-1" >
-                                <span class="btn btn-secondary mr-2">
-                                    {{item.importe_tramite | toCurrency}}                        
-                                </span>
-                             </div>
-                          </div>
+                                 </div>
+                            </div>
                        </div>
                     </div>
                  </div>
@@ -117,7 +120,7 @@
                 });
                 return sameNameInAll ;
             },
-
+/*
             unicos(){
                 this.tramitesAgrupados = [];
                 this.agrupacion.items.forEach( tramite => {
@@ -126,11 +129,12 @@
                     if( indice < 0 ){
                       this.tramitesAgrupados.push( item );
                     } else {
+                        tramite.agrupable = false;
                       this.tramitesAgrupados[indice].items.push( tramite )
                     }
                 });
                 return this.tramitesAgrupados;        
-            }
+            }*/
         },
         methods: {
             eliminar(){
@@ -172,16 +176,16 @@
                 let solicitudStartDrag = infoTramite.solicitudes.find( solicitud => {
                     return item.id_tramite == solicitud.id;
                 });
-                if(!this.isAgrupable(item)){
+                /*if(!this.isAgrupable(item)){
                     return false;
-                }
+                }*/
 
- 
                 this.$emit('dragEvent', {event:'startdrag'});
 
                 evt.dataTransfer.dropEffect = 'move'
                 evt.dataTransfer.effectAllowed = 'move'
                 evt.dataTransfer.setData('itemID', item.id_tramite)
+                evt.dataTransfer.setData('clave',  item.claveIndividual)
             },
 
             dragend(evt){
@@ -198,8 +202,8 @@
 
             },
 
-            quitarSelect(item){
-                this.$emit('removeEvent', item);  
+            quitarSelect(claveIndividual){
+                this.$emit('removeEvent', claveIndividual);  
             }, 
 
             isAgrupable(item){
@@ -210,6 +214,7 @@
                     infoTramite = encontrado;
                    }
                 });
+
                 let clavesCantidad = {};
                 this.tramitesServer.forEach( tramiteServer => {
                     tramiteServer.solicitudes.forEach( solicitud => {
@@ -221,12 +226,10 @@
                     });
 
                 });
-                return clavesCantidad[infoTramite.clave].cantidad == 1;
+                return clavesCantidad[item.clave || item.claveIndividual].cantidad == 1;
             },
 
             showConfirm(){
-                console.log("elemento delete")
-                console.log(this)
                 this.$root.$emit('bv::show::modal', 'modalDelet-'+ this.index, '#btnConfirm-' +this.index)
             },
 

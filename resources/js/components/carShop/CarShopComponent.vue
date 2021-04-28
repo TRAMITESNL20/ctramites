@@ -45,7 +45,6 @@
                   <div class="card list-item card-custom gutter-b col-lg-12"  v-for="(item, index) in items" :key="index"  
                   v-bind:style="item.items.length > 1 ? 'background-color: rgb(217, 222, 226) !important;' : ''" id="cart-container"
                                     @drop='onDrop($event, item)' 
-                                    @dragenter = 'dragenter($event, item)'
                                     @dragover.prevent
                                     @dragenter.prevent >
    
@@ -174,8 +173,6 @@
                 if( indice < 0 || !tramite.calveTemp){
                   this.tramitesAgrupados.push( item );
                 } else {
-                                    console.log("otro")
-                  console.log(JSON.parse(JSON.stringify(item)))
                   this.tramitesAgrupados[indice].items.push( tramite )
                 }
               });
@@ -203,8 +200,6 @@
         },
   
         mounted() {
-          console.log("hi kalsdj")
-          console.log( uuid.v4() )
           this.obtenerTramitesAgregados();
         },
         methods: {
@@ -398,7 +393,7 @@
             
             let tramitesJson = {};
             tramitesJson.nombre = tramiteInarray.tramite;
-            tramitesJson.id_seguimiento = soliciante.grupo_clave;//tramiteInarray.tramite_id + "";
+            tramitesJson.id_seguimiento = tramiteInarray.tramite_id + "";//soliciante.grupo_clave;//
             tramitesJson.id_tipo_servicio = tramiteInarray.tramite_id;//397;//
             tramitesJson.idSolicitante = soliciante.id; 
             tramitesJson.id_tramite = soliciante.id;//soliciante.clave;
@@ -502,8 +497,9 @@
 
         onDrop (evt, list) {
           const itemID = evt.dataTransfer.getData('itemID');
+          const clave = evt.dataTransfer.getData('clave');
           this.tramites.map( tram =>{
-              if( tram.id_tramite == itemID ){
+              if( tram.claveIndividual == clave ){
                 tram.calveTemp = list.grupo_clave;
               }
               return tram;
@@ -514,10 +510,11 @@
         },
 
         onDropFuera(evt, list){
-          const itemID = evt.dataTransfer.getData('itemID');
+          let claveGrupo = uuid.v4();
+                    const clave = evt.dataTransfer.getData('clave');
           this.tramites.map( tram =>{
-              if( tram.id_tramite == itemID ){
-                tram.calveTemp = uuid.v4();
+              if( tram.claveIndividual == clave ){
+                tram.calveTemp = claveGrupo;
               }
               return tram;
           } )
@@ -535,21 +532,14 @@
             
         },
 
-        dragenter(evt, item){
-          console.log("event")
-          console.log(JSON.parse(JSON.stringify(item)))
-          console.log(JSON.parse(JSON.stringify(evt)))
-        },
-
         evtElementoSeleccionado( data){
-          let ids = data.items.map( item => item.id_tramite );
-
+          let ids = data.items.map( item => item.claveIndividual ).filter((val, index, self) =>  self.indexOf(val) === index);
           if(data.selected){
             let elementosNuevos = ids.filter( elem => !this.elementosSeleccionados.includes(elem))
             this.elementosSeleccionados = this.elementosSeleccionados.concat(elementosNuevos);
           } else {
             data.items.forEach( (i, index)=>{
-              if(this.elementosSeleccionados.includes( i.id_tramite )){
+              if(this.elementosSeleccionados.includes( i.claveIndividual )){
                 this.elementosSeleccionados.splice( index, 1 );
               }
             });
@@ -561,7 +551,7 @@
         agruparSeleccion(){
           let claveGrupo = uuid.v4();
           this.tramites.forEach( tramite => { 
-            if(this.elementosSeleccionados.includes( tramite.id_tramite )){
+            if(this.elementosSeleccionados.includes( tramite.claveIndividual )){
               tramite.calveTemp = claveGrupo;            
             }
           });
@@ -570,15 +560,16 @@
           this.saveCambios();
         },
 
-        evtRemoveElementoSeleccionado(item){
+        evtRemoveElementoSeleccionado(claveIndividual){
           let claveGrupo = uuid.v4();
-          this.tramites.forEach( tramite => { 
-            if(item.id_tramite == tramite.id_tramite ){
-              tramite.calveTemp = claveGrupo;            
+          this.tramites.forEach( (tramite, index) => { 
+            if( claveIndividual == tramite.claveIndividual ){
+              tramite.calveTemp = claveGrupo; 
+              //let index = this.elementosSeleccionados.findIndex( tramite => tramite.id_tramite == item.id_tramite );
+              this.elementosSeleccionados.splice( index, 1 );           
             }
           });
-          let index = this.elementosSeleccionados.findIndex( tramite => tramite.id_tramite == item.id_tramite );
-          this.elementosSeleccionados.splice( index, 1 );
+
      
           this.saveCambios();
         },
