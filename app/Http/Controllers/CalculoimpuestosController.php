@@ -267,24 +267,28 @@ class CalculoimpuestosController extends Controller
       // impuesto correspondiente a la entidad federativa $this->d
     	($this->b >= $this->c) ? $this->d = $this->c : $this->d = $this->b;
 
-      // parte actualizada del impuesto
-    	$this->e = ($this->d * $this->factor_actualizacion) - $this->d;
 
+      $diferencia = $this->d - $impuesto;
+      //var_dump("diferencia=".$diferencia);
+
+      // parte actualizada del impuesto
+    	$this->e = ($diferencia * $this->factor_actualizacion) - $diferencia;
+      //var_dump("e ".$this->e);
       $this->e = $this->redondeo($this->e);
     	// obtener los recargos
-    	$this->f = ($this->d + $this->e) * $this->porcentaje_recargos;
+    	$this->f = ($diferencia + $this->e) * $this->porcentaje_recargos;
 
       $this->f = $this->redondeo($this->f);
-
+      //var_dump("f ".$this->f);
       //Se calcula la diferencia entre la parte actualizada del impuesto actual y el anteriror
-      $this->e = $this->e - $pai_anterior;
+      //$this->e = $this->e - $pai_anterior;
 
       //Se calcula la diferencia entre el recargo actual y el anteriror
-      $this->f = $this->f - $recargo_anterior;
+      //$this->f = $this->f - $recargo_anterior;
 
 
       // importe total
-    	$this->h =  $this->d  + $this->e + $this->f + $this->g ;
+    	$this->h =  $this->d + $this->e + $this->f + $this->g ;
       //Importe = Impuesto de la entidad federativa + parte actualiza + recargos + Multa
 
       //si importe actual es menor que el importe anterior
