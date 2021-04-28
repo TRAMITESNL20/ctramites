@@ -42,8 +42,22 @@
               let datosFormulario = datosTabs[2];
 
               let informacion = this.getInformacion( tramite, datosFormulario );
+              
+              if(this.tipoTramite == 'complementaria'){
+                let detallesComplete = true;
+                this.datosComplementaria.forEach( complementaria => {
+                  detallesComplete = detallesComplete && !!complementaria.detalle && typeof complementaria.detalle == 'object'; 
+                });
+                formData = this.formDataComplementaria();
 
-              if(!!this.tieneEnajentantes(datosFormulario) && this.type != 'temporal' && this.tipoTramite != 'complementaria' ){
+                if(detallesComplete ||  this.type == 'temporal'){
+                  this.guardarTramiteUnico(formData, url );
+                } else {
+                  this.enviando = false;
+                  Command: toastr.warning("Aviso!", "Importe total requerido");
+                }
+
+              } else if(!!this.tieneEnajentantes(datosFormulario) && this.type != 'temporal' && this.tipoTramite != 'complementaria' ){
                 let enajenantes = this.extraerEnajentantes(datosFormulario, tramite, informacion, listaSolicitantes );
                 formData = this.getFormData(enajenantes);
 
@@ -69,7 +83,7 @@
                   Command: toastr.warning("Aviso!", "Importe total requerido");
                 }
 
-              } 
+              }
             },
 
             async guardarTramiteUnico(formData, url){

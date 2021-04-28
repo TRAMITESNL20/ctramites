@@ -95,16 +95,16 @@ class CalculoimpuestosController extends Controller
 
       // obtener los dias inhabiles del año en curso
       $this->inhabiles	= $this->getInhabiles(date('Y'));
- 		// $this->fecha_vencimiento	= $this->getVencimiento();
-    $this->fecha_vencimiento  = $this->prueba();
- 		$this->inpc_periodo			= $this->getInpc($this->fecha_escritura); // getInpcperiodo en caso de que sea la fecha acumulada del año vigente
- 		$this->fecha_actual			= date("Y-m-d");
- 		$this->inpc_reciente		= $this->getInpc($this->fecha_actual);
+   		// $this->fecha_vencimiento	= $this->getVencimiento();
+      $this->fecha_vencimiento  = $this->prueba();
+   		$this->inpc_periodo			= $this->getInpc($this->fecha_escritura); // getInpcperiodo en caso de que sea la fecha acumulada del año vigente
+   		$this->fecha_actual			= date("Y-m-d");
+   		$this->inpc_reciente		= $this->getInpc($this->fecha_actual);
 
- 		$this->factor_actualizacion = $this->getFA();
+   		$this->factor_actualizacion = $this->getFA();
 
- 		$this->porcentaje_recargos	= $this->getPorcentajeregargos();
-    $this->calculo();
+   		$this->porcentaje_recargos	= $this->getPorcentajeregargos();
+      $this->calculo();
     	$results = array(
     		"Entradas" => array(
 	    			"fecha_escritura" => $this->fecha_escritura,
@@ -173,13 +173,6 @@ class CalculoimpuestosController extends Controller
     public function complementaria(Request $request) // Request $request
     {
 
-      // mostrar la forma para ejemplo del calculo de declaracion normal
-      // $fecha_escritura       = '2020-11-1'; // sin ceros iniciales ej 2020-9-1 para primero de sept de 2020
-      // $monto_operacion       = 1500000;
-      // $ganancia_obtenida       = 850000; // puede ser mayor o igual al monto de operacion
-      // $pago_provisional_lisr   = 40000;
-      // $multa_correccion_fiscal = 0;
-
       //Recibir valores front
       $fecha_escritura          =  $request->fecha_escritura;
       $monto_operacion          =  $request->monto_operacion;
@@ -209,12 +202,27 @@ class CalculoimpuestosController extends Controller
           $datos_normal = $info->detalle;
 
           $salidas = $datos_normal->Salidas;
-
+          //dd($salidas);
           foreach($salidas as $s => $v)
           {
+
             if(strcmp($s,"Importe total") == 0)
             {
               $importe = $v;
+
+            }
+            if($s == "Impuesto correspondiente a la entidad federativa"){
+              $impuesto = $v;
+            }
+
+            if($s == "Parte actualizada del impuesto"){
+              $pai_anterior = $v;
+            }
+            if($s == "Recargos"){
+              $recargo_anterior = $v;
+            }
+            if($s == "Monto obtenido conforme al art 127 LISR"){
+              $monto_art127 = $v;
             }
           }
 
@@ -247,14 +255,49 @@ class CalculoimpuestosController extends Controller
 
       $this->porcentaje_recargos  = $this->getPorcentajeregargos();
 
-      $this->calculo();
+      //$this->calculo();
 
 
+      // se replantea el calculo de la parte ACTUALIZADA, recargos e IMPORTE
+      //primero se hace la diferencia de la ganancia obtenida anterior y la actual y se aplica el .5
+
+      $this->b = $this->b - $monto_art127;
+      $this->b = $this->redondeo($this->a * .05);
+
+      // impuesto correspondiente a la entidad federativa $this->d
+    	($this->b >= $this->c) ? $this->d = $this->c : $this->d = $this->b;
+
+
+      $diferencia = $this->d - $impuesto;
+      //var_dump("diferencia=".$diferencia);
+
+      // parte actualizada del impuesto
+    	$this->e = ($diferencia * $this->factor_actualizacion) - $diferencia;
+      //var_dump("e ".$this->e);
+      $this->e = $this->redondeo($this->e);
+    	// obtener los recargos
+    	$this->f = ($diferencia + $this->e) * $this->porcentaje_recargos;
+
+      $this->f = $this->redondeo($this->f);
+      //var_dump("f ".$this->f);
+      //Se calcula la diferencia entre la parte actualizada del impuesto actual y el anteriror
+      //$this->e = $this->e - $pai_anterior;
+
+      //Se calcula la diferencia entre el recargo actual y el anteriror
+      //$this->f = $this->f - $recargo_anterior;
+
+
+      // importe total
+    	$this->h =  $this->d + $this->e + $this->f + $this->g ;
+      //Importe = Impuesto de la entidad federativa + parte actualiza + recargos + Multa
+
+      //si importe actual es menor que el importe anterior
       if($this->h < $importe)
       {
-        $this->k = $importe - $this->h;
+        //La cantidad en exceso es el importe anterior
+        $this->k = $impuesto - $this->h;
       }else{
-        $this->l = $this->h - $importe;
+        $this->l = $this->h - $impuesto;
       }
 
 
@@ -268,8 +311,8 @@ class CalculoimpuestosController extends Controller
             "multa por correccion fiscal" => $this->g,
           ),
         "Salidas" => array(
-          "Fecha Actual"        => $this->fecha_actual,
-          "Fecha vencimiento"     => $this->fecha_vencimiento,
+          "Fecha Actual"        => date("d-m-Y", strtotime($this->fecha_actual)),
+          "Fecha vencimiento"     => date("d-m-Y", strtotime($this->fecha_vencimiento)),
           "Factor de Actualizacion"   => $this->factor_actualizacion,
           "INPC Periodo reciente"   => $this->inpc_reciente,
           "INPC Periodo"        => $this->inpc_periodo,
@@ -285,7 +328,7 @@ class CalculoimpuestosController extends Controller
           ),
         "Complementaria"  => array(
           "Folio de la declaracion inmediata anterior"  => $normal,
-          "Monto pagado en la declaracion inmediata anterior" => $importe,
+          "Monto pagado en la declaracion inmediata anterior" => $impuesto,
           "Pago en exceso"  => $this->k,
           "Cantidad a cargo" => $this->l,
         )
@@ -833,8 +876,9 @@ class CalculoimpuestosController extends Controller
         }
         //Se toma la posicion 14 de la lista, iniciamos con 0
         $fechaTermino = $lista[14];
-        
+
         //dd($lista);
         return $fechaTermino;
 	}
+
 }
