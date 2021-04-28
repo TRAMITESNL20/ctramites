@@ -211,9 +211,18 @@ class CalculoimpuestosController extends Controller
               $importe = $v;
 
             }
+            if($s == "Impuesto correspondiente a la entidad federativa"){
+              $impuesto = $v;
+            }
+
+            if($s == "Parte actualizada del impuesto"){
+              $pai_anterior = $v;
+            }
+            if($s == "Recargos"){
+              $recargo_anterior = $v;
+            }
             if($s == "Monto obtenido conforme al art 127 LISR"){
-              $monto_isr = $v;
-              //dd($monto_isr);
+              $monto_art127 = $v;
             }
           }
 
@@ -246,14 +255,49 @@ class CalculoimpuestosController extends Controller
 
       $this->porcentaje_recargos  = $this->getPorcentajeregargos();
 
-      $this->calculo();
+      //$this->calculo();
 
 
+      // se replantea el calculo de la parte ACTUALIZADA, recargos e IMPORTE
+      //primero se hace la diferencia de la ganancia obtenida anterior y la actual y se aplica el .5
+
+      $this->b = $this->b - $monto_art127;
+      $this->b = $this->redondeo($this->a * .05);
+
+      // impuesto correspondiente a la entidad federativa $this->d
+    	($this->b >= $this->c) ? $this->d = $this->c : $this->d = $this->b;
+
+
+      $diferencia = $this->d - $impuesto;
+      //var_dump("diferencia=".$diferencia);
+
+      // parte actualizada del impuesto
+    	$this->e = ($diferencia * $this->factor_actualizacion) - $diferencia;
+      //var_dump("e ".$this->e);
+      $this->e = $this->redondeo($this->e);
+    	// obtener los recargos
+    	$this->f = ($diferencia + $this->e) * $this->porcentaje_recargos;
+
+      $this->f = $this->redondeo($this->f);
+      //var_dump("f ".$this->f);
+      //Se calcula la diferencia entre la parte actualizada del impuesto actual y el anteriror
+      //$this->e = $this->e - $pai_anterior;
+
+      //Se calcula la diferencia entre el recargo actual y el anteriror
+      //$this->f = $this->f - $recargo_anterior;
+
+
+      // importe total
+    	$this->h =  $this->d + $this->e + $this->f + $this->g ;
+      //Importe = Impuesto de la entidad federativa + parte actualiza + recargos + Multa
+
+      //si importe actual es menor que el importe anterior
       if($this->h < $importe)
       {
-        $this->k = $importe - $this->h;
+        //La cantidad en exceso es el importe anterior
+        $this->k = $impuesto - $this->h;
       }else{
-        $this->l = $this->h - $importe;
+        $this->l = $this->h - $impuesto;
       }
 
 
@@ -284,7 +328,7 @@ class CalculoimpuestosController extends Controller
           ),
         "Complementaria"  => array(
           "Folio de la declaracion inmediata anterior"  => $normal,
-          "Monto pagado en la declaracion inmediata anterior" => $monto_isr,
+          "Monto pagado en la declaracion inmediata anterior" => $impuesto,
           "Pago en exceso"  => $this->k,
           "Cantidad a cargo" => $this->l,
         )

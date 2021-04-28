@@ -47,13 +47,19 @@
             },
 
             getCaracteristicas(campo){
-              let caracteristicas = {};
-              try {
-                caracteristicas = JSON.parse(campo.caracteristicas + '');
-              }catch(err){
-                console.log(err);
+              if(typeof campo.caracteristicas == 'object'){
+                return campo.caracteristicas;
+              } else {
+                let caracteristicas = {};
+                try {
+                  caracteristicas = JSON.parse(campo.caracteristicas + '');
+                }catch(err){
+                  console.log(JSON.parse(JSON.stringify(campo)));
+                  console.log(err);
+                }
+                return caracteristicas;
               }
-              return caracteristicas;
+              
             },
 
             getInformacion(tramite, datosFormulario){
@@ -94,6 +100,41 @@
                 return informacion;
             },
 
+            formDataComplementaria( idEdicion ){
+              let formData = new FormData();
+              formData.append('user_id', this.idUsuario );
+              //se envia enajenantes para que se cree un registro por cada complementaria
+              let listaComplementarias = [];
+              this.datosComplementaria.forEach( complementaria => {
+                let inf = Object.assign({} , complementaria);
+                inf.version = '1.0.0';
+                inf.id = 0;
+                inf.tipoTramite = this.tipoTramite;
+                listaComplementarias.push(inf);
+              });
+              formData.append('info', JSON.stringify({}) );
+              formData.append("enajenantes", JSON.stringify(listaComplementarias));
+              if( listaSolicitantes && listaSolicitantes.length > 0 ){
+                formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
+              }
+              let datosTabs = JSON.parse( JSON.stringify(this.obtenerDatosTabs() ) );
+              let listaSolicitantes = datosTabs[0];
+              let tramite = datosTabs[1];
+              if( listaSolicitantes && listaSolicitantes.length > 0 ){
+                formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
+              }
+              if(tramite){
+                formData.append('clave', tramite.id_seguimiento );
+                formData.append('catalogo_id', tramite.id_tramite );
+              }
+              if(  idEdicion  ){
+                formData.append('id', idEdicion );
+              }
+
+              return formData;
+              
+            },
+
             buildFormData(informacion, listaSolicitantes, tramite, idEdicion, enajenantes){
               let formData = new FormData();
               if( this.files && this.files.length > 0 ){
@@ -104,7 +145,8 @@
                     }
                 });
               }
-              formData.append('user_id', user.id );
+      
+              formData.append('user_id', this.idUsuario );
               if(!enajenantes){
                 formData.append('info', JSON.stringify(informacion) );
               } else {
@@ -139,8 +181,6 @@
               
               return formData;
             },
-
-
 
             getFormData(enajenantes){
                 let datosTabs = JSON.parse( JSON.stringify(this.obtenerDatosTabs() ) );
