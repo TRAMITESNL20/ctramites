@@ -87,6 +87,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 
 		Route::get('/respuestaPago', "TramitesController@respuestaPago")->name("respuestaPago");
 
+		Route::get('/getInfoNormales/{folio}', 'SolicitudesController@getNormales')->name("tramite.complementaria");
 	});
 
 	Route::post('/respuestaPagoBBVA', "TramitesController@respuestaPagoBBVA")->name("respuestaPagoBBVA");
