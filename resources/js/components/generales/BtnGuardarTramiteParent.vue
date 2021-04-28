@@ -116,6 +116,7 @@
               }
               if(tramite){
                 formData.append('clave', tramite.id_seguimiento );
+                formData.append('grupo_clave', tramite.id_seguimiento );
                 formData.append('catalogo_id', tramite.id_tramite );
               }
               if(  idEdicion  ){

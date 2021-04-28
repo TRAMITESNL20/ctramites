@@ -167,14 +167,15 @@
                 return this.tramitesAgrupados.length;
             },
             items(){
-              console.log("cambios")
               this.tramitesAgrupados = [];
               this.tramites.forEach( tramite => {
-                let item = { nombre: tramite.nombre, clave: tramite.calveTemp, items:[tramite], verDetalle:false, selected:false };
-                let indice = this.tramitesAgrupados.findIndex( agrupado => agrupado.clave == tramite.calveTemp );
-                if( indice < 0 ){
+                let item = { nombre: tramite.nombre, grupo_clave: tramite.calveTemp, items:[tramite], verDetalle:false, selected:false };
+                let indice = this.tramitesAgrupados.findIndex( agrupado => agrupado.grupo_clave == tramite.calveTemp );
+                if( indice < 0 || !tramite.calveTemp){
                   this.tramitesAgrupados.push( item );
                 } else {
+                                    console.log("otro")
+                  console.log(JSON.parse(JSON.stringify(item)))
                   this.tramitesAgrupados[indice].items.push( tramite )
                 }
               });
@@ -202,6 +203,8 @@
         },
   
         mounted() {
+          console.log("hi kalsdj")
+          console.log( uuid.v4() )
           this.obtenerTramitesAgregados();
         },
         methods: {
@@ -395,11 +398,12 @@
             
             let tramitesJson = {};
             tramitesJson.nombre = tramiteInarray.tramite;
-            tramitesJson.id_seguimiento = tramiteInarray.tramite_id + "";
+            tramitesJson.id_seguimiento = soliciante.grupo_clave;//tramiteInarray.tramite_id + "";
             tramitesJson.id_tipo_servicio = tramiteInarray.tramite_id;//397;//
             tramitesJson.idSolicitante = soliciante.id; 
             tramitesJson.id_tramite = soliciante.id;//soliciante.clave;
-            tramitesJson.calveTemp = soliciante.clave;//soliciante.clave;
+            tramitesJson.calveTemp = soliciante.grupo_clave ? soliciante.grupo_clave : soliciante.clave;//soliciante.clave;
+            tramitesJson.claveIndividual = soliciante.clave;//soliciante.clave;
             if(soliciante.info.enajenante) soliciante.info = {...soliciante.info, ...soliciante.info.enajenante}
             let info = (typeof soliciante.info) == 'string' ? JSON.parse(soliciante.info) : soliciante.info;
             if(soliciante.info.hasOwnProperty('enajenante') && (soliciante.info.hasOwnProperty('solicitante') ) ){
@@ -476,7 +480,6 @@
               }
             }
 
-            //console.log(JSON.parse(JSON.stringify(tramitesJson)))
 
  
             listadoTramites.push( tramitesJson );
@@ -497,14 +500,10 @@
 
 
         onDrop (evt, list) {
-          console.log("ques es list")
-          console.log(JSON.parse(JSON.stringify(list)))
-          console.log(JSON.parse(JSON.stringify(evt)))
           const itemID = evt.dataTransfer.getData('itemID');
-          console.log((itemID))
           this.tramites.map( tram =>{
               if( tram.id_tramite == itemID ){
-                tram.calveTemp = list.clave;
+                tram.calveTemp = list.grupo_clave;
               }
               return tram;
           } );
@@ -577,19 +576,23 @@
               tramite.calveTemp = claveGrupo;            
             }
           });
+          let index = this.elementosSeleccionados.findIndex( tramite => tramite.id_tramite == item.id_tramite );
+          this.elementosSeleccionados.splice( index, 1 );
+     
           this.saveCambios();
         },
 
         saveCambios(){
+          let claveGrupo = uuid.v4();
           let updateSolicitudes = [];
           this.tramites.forEach( tramite => {
             let solicitudUpdate = {
               id:tramite.id_tramite,
-              clave:tramite.calveTemp
+              grupo_clave:tramite.calveTemp
             }
             updateSolicitudes.push(solicitudUpdate); 
           });
-          console.log(JSON.parse(JSON.stringify(updateSolicitudes)))
+
           if(updateSolicitudes.length > 0){
             let url = process.env.TESORERIA_HOSTNAME + "/edit-solicitudes-info";
             axios.post(url, {data:updateSolicitudes}, {
@@ -597,7 +600,6 @@
                     "Content-type":"application/json"
                 }
             }).then(response => {
-              console.log(JSON.parse(JSON.stringify(response.data.Code)))
               if( response && response.data && response.data.Code == "400" ){
                 Command: toastr.error("Error!", response.data.message || "No fue posible guardar los cambios");
                 this.obtenerTramitesAgregados();
@@ -612,7 +614,7 @@
         },
 
         confirmarGrupo(){
-            this.$root.$emit('bv::show::modal', 'modalAgrupar', '#confirGroup')
+          this.$root.$emit('bv::show::modal', 'modalAgrupar', '#confirGroup')
         },
 
         confirm(){

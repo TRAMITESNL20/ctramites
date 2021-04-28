@@ -1,6 +1,6 @@
 <template>
 
-    <div :id="'header-' + agrupacion.clave ">
+    <div :id="'header-' + agrupacion.grupo_clave ">
         <div class="card-header container-fluid" style="background-color: transparent;">
             <div class="row">
                 <div class="col">
@@ -43,7 +43,7 @@
            </div>
         
            <div :id="`collapse-${index}`"  v-bind:class="totalItemInGroup > 1 ? 'collapse' : ''" v-if="totalItemInGroup >1 ">
-              <div v-bind:class="totalItemInGroup > 1 ? 'card' : ''" class="list-item card-custom gutter-b col-lg-12"  v-for="(item, i) in agrupacion.items" draggable @dragstart="startdrag($event, item)" @dragend="dragend($event)" >
+              <div v-bind:class="totalItemInGroup > 1 ? 'card' : ''" class="list-item card-custom gutter-b col-lg-12"  v-for="(item, i) in unicos" draggable @dragstart="startdrag($event, item)" @dragend="dragend($event)" >
                  <div class="card-body p-0">
                     <div class="d-flex">
                        <div class="flex-grow-1">
@@ -53,7 +53,7 @@
                             </div>
                              <div class="mr-auto" style="width: 60%;">
                                 <div v-if="!sameTramites">
-                                    {{   item.nombre }} 
+                                    {{   item.nombre }}
                                 </div>
                                 <a class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column">
                                     <span class="mt-3" style="font-size: 12px;"  v-if="item.datos_solicitante">
@@ -63,7 +63,7 @@
                              </div>
                              <div class="my-lg-0 my-1" >
                                 <span class="btn btn-secondary mr-2">
-                                    {{item.importe_tramite | toCurrency}}                              
+                                    {{item.importe_tramite | toCurrency}}                        
                                 </span>
                              </div>
                           </div>
@@ -115,12 +115,22 @@
                 this.agrupacion.items.forEach(tramite => {
                     sameNameInAll = sameNameInAll && tramite.nombre === nameAux;
                 });
-                /*
-                if(sameNameInAll){
-                    return nameAux;
-                }*/
                 return sameNameInAll ;
             },
+
+            unicos(){
+                this.tramitesAgrupados = [];
+                this.agrupacion.items.forEach( tramite => {
+                    let item = { nombre: tramite.nombre, clave: tramite.claveIndividual, items:[tramite] };
+                    let indice = this.tramitesAgrupados.findIndex( agrupado => agrupado.clave == tramite.claveIndividual );
+                    if( indice < 0 ){
+                      this.tramitesAgrupados.push( item );
+                    } else {
+                      this.tramitesAgrupados[indice].items.push( tramite )
+                    }
+                });
+                return this.tramitesAgrupados;        
+            }
         },
         methods: {
             eliminar(){
@@ -156,26 +166,16 @@
 
 
             startdrag(evt, item){
-                //console.log(JSON.parse(JSON.stringify(item)))
-                //console.log(JSON.parse(JSON.stringify(this.tramitesServer)))
                 let infoTramite = this.tramitesServer.find( tramiteServer => {
                     return tramiteServer.tramite === item.nombre;
                 });
-
-                
                 let solicitudStartDrag = infoTramite.solicitudes.find( solicitud => {
                     return item.id_tramite == solicitud.id;
                 });
-                if(item.id_tipo_servicio == process.env.TRAMITE_5_ISR){
-                    if( solicitudStartDrag.info.camposConfigurados ){
-                        let campoEnajenantes = solicitudStartDrag.info.camposConfigurados.find( campo => campo.tipo == 'enajenante' );
-                        if( campoEnajenantes && campoEnajenantes.valor && campoEnajenantes.valor.enajenantes.length > 1 ){
-                            evt.preventDefault()
-                            return false;
-                        }
-                    }
-                      
+                if(!this.isAgrupable(item)){
+                    return false;
                 }
+
  
                 this.$emit('dragEvent', {event:'startdrag'});
 
@@ -203,23 +203,25 @@
             }, 
 
             isAgrupable(item){
-                let agrupable = true;
-                let infoTramite = this.tramitesServer.find( tramiteServer => {
-                    return tramiteServer.tramite === item.nombre;
+                let infoTramite = null;
+                this.tramitesServer.forEach( tramiteServer => {
+                   let encontrado = tramiteServer.solicitudes.find( solicitud => solicitud.id == item.id_tramite );
+                   if(encontrado) {
+                    infoTramite = encontrado;
+                   }
                 });
-                
-                let solicitudStartDrag = infoTramite.solicitudes.find( solicitud => {
-                    return item.id_tramite == solicitud.id;
+                let clavesCantidad = {};
+                this.tramitesServer.forEach( tramiteServer => {
+                    tramiteServer.solicitudes.forEach( solicitud => {
+                        if(clavesCantidad[solicitud.clave]){
+                            clavesCantidad[solicitud.clave].cantidad = clavesCantidad[solicitud.clave].cantidad + 1;
+                        } else {
+                            clavesCantidad[solicitud.clave] = { cantidad : 1 };
+                        }
+                    });
+
                 });
-                if(item.id_tipo_servicio == process.env.TRAMITE_5_ISR){
-                    if( solicitudStartDrag.info.camposConfigurados ){
-                        let campoEnajenantes = solicitudStartDrag.info.camposConfigurados.find( campo => campo.tipo == 'enajenante' );
-                        if( campoEnajenantes && campoEnajenantes.valor && campoEnajenantes.valor.enajenantes.length > 1 ){
-                            agrupable = false;
-                        } 
-                    }
-                }
-                return agrupable;
+                return clavesCantidad[infoTramite.clave].cantidad == 1;
             },
 
             showConfirm(){
