@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use \Symfony\Component\HttpKernel\Exception\HttpException;
 use DB;
 
@@ -79,20 +80,28 @@ class ReferenceController extends Controller {
 		if(gettype($reference) != 'array') $reference = [$reference];
 		if(count($reference) == 0) abort(409, "No hay referencias para validar.");
 		unset($reference["dev"]);
-		$errors = [];
+		$response = [];
 
 		foreach ($reference as $ref) {
 			try{
 				$this->process_delete_reference($ref);
+				array_push($response, "Referencia Actualizada: {$ref}");
 			}catch(HttpException $e){
-				array_push($errors, $e->getMessage());
+				array_push($response, $e->getMessage());
 			}
 		}
 
-		if(count($errors) > 0) return response([ "response" => "error", "code" => 409, "message" => $errors ], 409);
+		// if(count($errors) > 0){
+		// 	return response([ "response" => "error", "code" => 409, "message" => $errors ], 409);
+		// }
+	
+		Log::channel('apilog')->info("DATA: ".json_encode($reference));
+		Log::channel('apilog')->info("RESPONSE: ".json_encode($response));
+
 		return [
 			"code" => 200,
-			"response" => "ok"
+			"response" => "ok",
+			"message" => $response
 		];
 	}
 
