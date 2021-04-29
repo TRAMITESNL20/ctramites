@@ -874,7 +874,7 @@
 				<!--end::Notifications--> --}}
 			</div>
 			<div style="width:100%; height:40px; left:0; background-color: red; position:absolute; bottom: 0;">  
-				<buttton href="{{ url()->route("logout") }}" class="text-center btn-lg btn-block" style="color:white !important;">Cerrar Sesión</buttton> 
+				<a href="{{ url()->route("logout") }}" class="text-center btn-lg btn-block" style="color:white !important;">Cerrar Sesión</a> 
 			</div>
 			<!--end::Content-->
 		</div>
@@ -1149,7 +1149,7 @@
 				<!--end::Notifications--> --}}
 			</div>
 			<div style="width:100%; height:40px; left:0; background-color: red; position:absolute; bottom: 0;">  
-				<buttton href="{{ url()->route("logout") }}" class="text-center btn-lg btn-block" style="color:white !important;">Cerrar Sesión</buttton> 
+				<a href="{{ url()->route("logout") }}" class="text-center btn-lg btn-block" style="color:white !important;">Cerrar Sesión</a> 
 			</div>
 			<!--end::Content-->
 		</div>

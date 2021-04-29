@@ -1,6 +1,8 @@
 <?php
     $info = isset($tramite->info->campos->Escritura) ? $tramite->info->campos->Escritura : ( isset($tramite->info->campos->Expediente) ? $tramite->info->campos->Expediente : null );
     $camposConfigurados = [];
+    // dd($tramite->created_at);
+    setlocale(LC_TIME, "spanish");
     foreach($tramite->info->camposConfigurados as $campo){
         $name = strtolower($campo->nombre);
         $name = preg_replace("([^A-Za-z\ ])", '', $name);
@@ -35,7 +37,7 @@
                 <div class="card mt-5">
                     @if ($tramite->tramite_id == getenv('TRAMITE_5_ISR'))
                         @foreach($camposConfigurados['expedientes']->expedientes as $ind => $expediente)
-                            <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>Expedientes Catastrales</strong><span class="btn btn-light ml-auto">{{ $ind+1 }} de {{ count($camposConfigurados['expedientes']->expedientes) }}</span></h5>
+                            <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>Expedientes Catastrales</strong><span class="btn btn-light ml-auto nowrap">{{ $ind+1 }} de {{ count($camposConfigurados['expedientes']->expedientes) }}</span></h5>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">

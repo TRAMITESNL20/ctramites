@@ -43,7 +43,7 @@
 			</form> 
 		</div>
 	</div>
-	<footer class="row bg-light align-items-center px-3">
+	<footer  style="position: fixed;bottom: 12px;" class="row bg-light align-items-center px-3">
 		<div class="col"><strong>Gobierno del Estado de Nuevo León</strong></div>
 		<div class="col text-center"><img src="{{ assets("images/escudo-gris.svg") }}" height="30"></div>
 		<div class="col text-right">
