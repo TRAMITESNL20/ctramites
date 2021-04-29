@@ -350,9 +350,13 @@
             tramitesJson.calveTemp = soliciante.clave;//soliciante.clave;
             if(soliciante.info.enajenante) soliciante.info = {...soliciante.info, ...soliciante.info.enajenante}
             let info = (typeof soliciante.info) == 'string' ? JSON.parse(soliciante.info) : soliciante.info;
+  
             if(soliciante.info.hasOwnProperty('enajenante') && (soliciante.info.hasOwnProperty('solicitante') ) ){
+
               let solicitanteInfo = soliciante.info.solicitante;
-              tramitesJson.auxiliar_1  = (solicitanteInfo.nombreSolicitante || '') + " " + (solicitanteInfo.apPat || '' )+ " " + (solicitanteInfo.apMat || '');
+              if( solicitanteInfo ){
+                tramitesJson.auxiliar_1  = (solicitanteInfo.nombreSolicitante || '') + " " + (solicitanteInfo.apPat || '' )+ " " + (solicitanteInfo.apMat || '');    
+              }
               let usuario = window.user;
               if(usuario && usuario.notary){
                 tramitesJson.auxiliar_1 = tramitesJson.auxiliar_1 + " - Notaria " + usuario.notary.notary_number
