@@ -220,9 +220,9 @@
             $("#gradientBackgroundLeft").css( "height" ,  height+"px" );
             $("#gradientBackgroundRight").css( "height" ,  height+"px" );
             $('#scrollDiv').scroll( function() {
-            ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
+                ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
 
-            ( $('#scrollDiv').scrollLeft() > 0) ? $('#gradientBackgroundLeft').show() : $('#gradientBackgroundLeft').hide();
+                ( $('#scrollDiv').scrollLeft() > 0) ? $('#gradientBackgroundLeft').show() : $('#gradientBackgroundLeft').hide();
             });
         },
         props:{
