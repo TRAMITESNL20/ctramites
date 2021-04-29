@@ -51,7 +51,7 @@
 	<body id="kt_body " class="header-fixed header-mobile-fixed page-loading">
 		<!--begin::Main-->
 		<!--begin::Header Mobile-->
-		<div id="kt_header_mobile" class="header-mobile bg-primary header-mobile-fixed">
+		<div id="kt_header_mobile" class="header-mobile bg-primary header-mobile-fixed @if($empty_layout === true) d-none @endif">
 			<!--begin::Logo-->
 			<button class="btn p-0 burger-icon burger-icon-left ml-4" id="kt_header_mobile_toggle">
 					<span></span>

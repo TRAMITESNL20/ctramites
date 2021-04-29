@@ -1,11 +1,11 @@
 <div class="container-fluid p-0">
 	<div class="card bg-transparent border-0" id="kt_login_signin_form">
 		<div class="card-body justify-content-center align-items-center text-center">
-			<img src="{{ assets("images/logo.svg") }}" alt="" width="200">
+			<img style="margin-left: auto;margin-right: auto; display: block;" src="{{ assets("images/logo.svg") }}" alt="" width="200">
 			<h1 class="mt-20"><strong>INICIA SESIÓN</strong></h1>
 			<p>Ingrese tus datos de acceso:</p>
 			<form class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
-				<div class="form-group fv-plugins-icon-container">
+				<div class="form-group fv-plugins-icon-container px-6">
 					<input
 						class="form-control form-control-solid bg-light h-auto py-5 px-6"
 						type="text"
@@ -17,7 +17,7 @@
 					>
 					<div class="fv-plugins-message-container"></div>
 				</div>
-				<div class="form-group fv-plugins-icon-container">
+				<div class="form-group fv-plugins-icon-container px-6">
 					<input
 						class="form-control form-control-solid bg-light h-auto py-5 px-6"
 						type="password"
@@ -43,10 +43,10 @@
 			</form> 
 		</div>
 	</div>
-	<footer  style="position: fixed;bottom: 12px;" class="row bg-light align-items-center px-3">
-		<div class="col"><strong>Gobierno del Estado de Nuevo León</strong></div>
-		<div class="col text-center"><img src="{{ assets("images/escudo-gris.svg") }}" height="30"></div>
-		<div class="col text-right">
+	<footer  style="position: fixed;bottom: 0px; width:100%" class="bg-light align-items-center px-3">
+		<!-- <div class="col"><strong>Gobierno del Estado de Nuevo León</strong></div>
+		<div class="col text-center"><img src="{{ assets("images/escudo-gris.svg") }}" height="30"></div> -->
+		<div class="col text-center">
 			<strong class="mr-2"><?= date("Y") ?></strong>
 			<strong class="mr-2">Aviso de Privacidad</strong>
 			<strong>Contacto</strong>
