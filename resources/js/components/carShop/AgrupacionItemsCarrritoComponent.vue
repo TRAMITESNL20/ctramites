@@ -24,7 +24,7 @@
                 </div>
                 <div class="mr-auto" style="width: 60%;">
 
-                    <span class="ml-3" style="font-size: 12px;"  v-if="totalItemInGroup  == 1 && agrupacion.items[0].datos_solicitante" draggable @dragstart="startdrag($event, agrupacion.items[0])" @dragend="dragend($event)">
+                    <span class="ml-3" style="font-size: 12px;cursor:move;"  v-if="totalItemInGroup  == 1 && agrupacion.items[0].datos_solicitante" draggable @dragstart="startdrag($event, agrupacion.items[0])" @dragend="dragend($event)" >
                        {{ agrupacion.items[0].datos_solicitante.rfc || agrupacion.items[0].datos_solicitante.curp || "" }} - {{ agrupacion.items[0].datos_solicitante.razon_social ? agrupacion.items[0].datos_solicitante.razon_social : agrupacion.items[0].datos_solicitante.nombre + " " + agrupacion.items[0].datos_solicitante.apellido_paterno + " " + agrupacion.items[0].datos_solicitante.apellido_materno }}
                     </span>
                     <button class="btn btn-secondary" type="button" data-toggle="collapse" :data-target="`#collapse-${index}`" aria-expanded="false" :aria-controls="`collapse-${index}`" v-if="totalItemInGroup >1 ">
@@ -37,13 +37,11 @@
                             <h3>{{ total | toCurrency }} </h3>
                         </span>
                     </div>
-
-
                 </div>
            </div>
         
            <div :id="`collapse-${index}`"  v-bind:class="totalItemInGroup > 1 ? 'collapse' : ''" v-if="totalItemInGroup >1 ">
-              <div v-bind:class="totalItemInGroup > 1 ? 'card' : ''" class="list-item card-custom gutter-b col-lg-12"  v-for="(item, i) in agrupacion.items" draggable @dragstart="startdrag($event, item)" @dragend="dragend($event)" >
+              <div v-bind:class="totalItemInGroup > 1 ? 'card' : ''" class="list-item card-custom gutter-b col-lg-12"  v-for="(item, i) in agrupacion.items" draggable @dragstart="startdrag($event, item)" @dragend="dragend($event)" style="cursor:move;">
 
                  <div class="card-body p-0">
                     <div class="d-flex">
@@ -51,7 +49,7 @@
                         
                             <div class="d-flex align-items-center justify-content-between flex-wrap" >
     
-                                <div class="mr-3 ml-4" >
+                                <div class="mr-3 ml-4" style="cursor:pointer;">
                                     <i class="fas fa-undo" title="Qutar del grupo" style="width:18px; height:18px;"  @click="quitarSelect(item.claveIndividual)"></i>
                                 </div>
                                  <div class="mr-auto" style="width: 60%;">
@@ -120,21 +118,6 @@
                 });
                 return sameNameInAll ;
             },
-/*
-            unicos(){
-                this.tramitesAgrupados = [];
-                this.agrupacion.items.forEach( tramite => {
-                    let item = { nombre: tramite.nombre, clave: tramite.claveIndividual, items:[tramite] };
-                    let indice = this.tramitesAgrupados.findIndex( agrupado => agrupado.clave == tramite.claveIndividual );
-                    if( indice < 0 ){
-                      this.tramitesAgrupados.push( item );
-                    } else {
-                        tramite.agrupable = false;
-                      this.tramitesAgrupados[indice].items.push( tramite )
-                    }
-                });
-                return this.tramitesAgrupados;        
-            }*/
         },
         methods: {
             eliminar(){
