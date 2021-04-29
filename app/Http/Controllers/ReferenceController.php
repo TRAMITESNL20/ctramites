@@ -7,6 +7,8 @@ use DB;
 
 class ReferenceController extends Controller {
 	public function paid (Request $request, $reference) {
+		$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		Log::channel('apilog')->info("\n\nENDPOINT: [{$_SERVER['REQUEST_METHOD']}] - ".$actual_link);
 		$ref = $reference;
 		$reference = DB::connection('db_operacion')
 		->table('oper_transacciones')
@@ -86,6 +88,8 @@ class ReferenceController extends Controller {
 	}
 
 	public function cancel (Request $request, $reference=null) {
+		$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		Log::channel('apilog')->info("\n\nENDPOINT: [{$_SERVER['REQUEST_METHOD']}] - ".$actual_link);
 		if(!$reference) $reference = request()->toArray();
 		if(gettype($reference) != 'array') $reference = [$reference];
 		if(count($reference) == 0) abort(409, "No hay referencias para validar.");
