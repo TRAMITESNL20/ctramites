@@ -131,11 +131,13 @@
                 nacionalidad: tramite.info.enajenante.nacionalidad,
                 tipoPersona: tramite.info.enajenante.tipoPersona
               };
-
             return complementaria;
           });
+          this.complementarias.map(complementaria => {
+            complementaria.idsNormales =  this.complementarias.map( complementaria => complementaria.idTicketNormal);
+            return complementaria;
+          })
 
-         
           let valido = this.complementarias.length > 0;
           this.complementarias.forEach( complementaria =>{
             valido = valido && complementaria.valido;
