@@ -1,11 +1,15 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use \Symfony\Component\HttpKernel\Exception\HttpException;
 use DB;
 
 class ReferenceController extends Controller {
 	public function paid (Request $request, $reference) {
+		$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		Log::channel('apilog')->info("\n\nENDPOINT: [{$_SERVER['REQUEST_METHOD']}] - ".$actual_link);
+		$ref = $reference;
 		$reference = DB::connection('db_operacion')
 		->table('oper_transacciones')
 		->select(
@@ -20,8 +24,13 @@ class ReferenceController extends Controller {
 		->join('portal.solicitudes_tramite', 'oper_transacciones.id_transaccion_motor', 'solicitudes_tramite.id_transaccion_motor')
 		->where('referencia', $reference)
 		->first();
-		if(!isset($reference->{'solicitudes_tramite-id'}))
-			return abort(409, "Esta referencia no se encuentra en la base de datos de portal");
+		Log::channel('apilog')->info("DATA: ".json_encode($reference, JSON_PRETTY_PRINT));
+
+		if(!isset($reference->{'solicitudes_tramite-id'})){
+			Log::channel('apilog')->error("RESPONSE: Esta referencia '{$ref}' no se encuentra en la base de datos de portal");
+			return abort(409, "Esta referencia '{$ref}' no se encuentra en la base de datos de portal");
+		}
+
 		$reference->solicitudes = DB::connection('db_portal')
 		->table('solicitudes_ticket')
 		->select(
@@ -37,8 +46,10 @@ class ReferenceController extends Controller {
 		->where('id_transaccion', $reference->{'solicitudes_tramite-id'})
 		->get();
 
-		if($reference->{'oper_transacciones-estatus'} != 0 && !$request->has('dev'))
-			return abort(409, 'El estatus actual de la referencia es diferente de pagado (0).');
+		if($reference->{'oper_transacciones-estatus'} != 0 && !$request->has('dev')){
+			Log::channel('apilog')->error("RESPONSE: El estatus actual de la referencia '{$ref}' es diferente de pagado (0).");
+			return abort(409, "El estatus actual de la referencia '{$ref}' es diferente de pagado (0).");
+		}
 
 		$update = DB::connection('db_portal')
 		->table('solicitudes_tramite')
@@ -68,6 +79,8 @@ class ReferenceController extends Controller {
 			}
 		}
 
+
+		Log::channel('apilog')->info("RESPONSE: Referencia Actualizada: {$ref}");
 		return [
 			"code" => 200,
 			"response" => "ok"
@@ -75,24 +88,30 @@ class ReferenceController extends Controller {
 	}
 
 	public function cancel (Request $request, $reference=null) {
+		$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		Log::channel('apilog')->info("\n\nENDPOINT: [{$_SERVER['REQUEST_METHOD']}] - ".$actual_link);
 		if(!$reference) $reference = request()->toArray();
 		if(gettype($reference) != 'array') $reference = [$reference];
 		if(count($reference) == 0) abort(409, "No hay referencias para validar.");
 		unset($reference["dev"]);
-		$errors = [];
+		$response = [];
 
 		foreach ($reference as $ref) {
 			try{
 				$this->process_delete_reference($ref);
+				array_push($response, "Referencia Actualizada: {$ref}");
 			}catch(HttpException $e){
-				array_push($errors, $e->getMessage());
+				array_push($response, $e->getMessage());
 			}
 		}
+	
+		Log::channel('apilog')->info("DATA: ".json_encode($reference, JSON_PRETTY_PRINT));
+		Log::channel('apilog')->info("RESPONSE: ".json_encode($response, JSON_PRETTY_PRINT));
 
-		if(count($errors) > 0) return response([ "response" => "error", "code" => 409, "message" => $errors ], 409);
 		return [
 			"code" => 200,
-			"response" => "ok"
+			"response" => "ok",
+			"message" => $response
 		];
 	}
 

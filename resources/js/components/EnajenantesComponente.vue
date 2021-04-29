@@ -127,7 +127,7 @@
         </b-row> 
         <b-row v-if="configCostos.declararEn0">
             <b-col  cols="12" >
-                <label>Motivo y Fundamento Legal</label>
+                <label>Motivo y Fundamento Legal *</label>
                 <textarea id="motivo" name="motivo" class="form-control  form-control-lg " style="background-color: #e5f2f5 !important" v-model="motivo" @input="validar" @change="validar"></b-form-input>
                 </b-input-group>></textarea>
                 <small  v-if="(!motivo || motivo.length < 0) && ( showMensajes || estadoFormulario > 0)" class="position-absolute">

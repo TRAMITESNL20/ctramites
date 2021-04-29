@@ -16,7 +16,14 @@ class FormatoDeclaracionController extends Controller
 			$control = $tramite;
 			if($info->solicitudes[0]->info->tipoTramite != 'complementaria'){
 				$enajenante = $info->solicitudes[0]->info->enajenante;
+			}else if($info->solicitudes[0]->info->tipoTramite == 'complementaria'){
+				$enajenante = $info->solicitudes[0]->info;
+				$datosParaDeterminarImpuesto['gananciaObtenida'] = $info->solicitudes[0]->info->datosComplementaria->gananciaObtenida;
+				$datosParaDeterminarImpuesto = json_decode( json_encode( $datosParaDeterminarImpuesto) );
+				$enajenante->datosParaDeterminarImpuesto = $datosParaDeterminarImpuesto;
 			}
+
+			// dd( $enajenante);
 			$tipoTramite =  $info->solicitudes[0]->info->tipoTramite;
 			$user =base64_decode (request()->data) ;
 			
