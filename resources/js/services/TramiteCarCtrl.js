@@ -21,15 +21,16 @@ export default class TramiteCar5ISRCtrl {
 	    this.json.datos_factura = this.json.datos_solicitante;
 
 	    this.json.detalle = this.getDetalle(solicitud);
-        console.log("llegas aqui y te devuelvo")
-                console.log( JSON.parse(JSON.stringify(this.json)))
 	  	return this.json;
   	}
 
   	getAuxiliar1(solicitud){
   		if(solicitud.info.hasOwnProperty('enajenante') && (solicitud.info.hasOwnProperty('solicitante') ) ){
 			let solicitanteInfo = solicitud.info.solicitante;
-			let auxiliar_1  = (solicitanteInfo.nombreSolicitante || '') + " " + (solicitanteInfo.apPat || '' )+ " " + (solicitanteInfo.apMat || '');
+            let auxiliar_1 = '';
+            if( solicitanteInfo ){
+			     auxiliar_1  = (solicitanteInfo.nombreSolicitante || '') + " " + (solicitanteInfo.apPat || '' )+ " " + (solicitanteInfo.apMat || '');
+            }
 			let usuario = window.user;
 			if(usuario && usuario.notary){
 				return auxiliar_1 = auxiliar_1 + " - Notaria " + usuario.notary.notary_number;
@@ -99,7 +100,6 @@ export default class TramiteCar5ISRCtrl {
 
 
     getDetalle(solicitud){
-    	console.log("precision")
     	let precision = Vue.prototype.$const.PRECISION;
     	let info = (typeof solicitud.info) == 'string' ? JSON.parse(solicitud.info) : solicitud.info;
     	let detalle = [];

@@ -368,11 +368,11 @@
           this.tramites = listadoTramites;
           this.obteniendoTramites = false;
           this.costosObtenidos = true;
+          
         },
         iniciarTramite(){
           redirect("/nuevo-tramite");
         },
-
 
         chagenPorPage(){
           this.currentPage = 1;
