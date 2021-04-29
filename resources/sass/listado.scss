@@ -5,7 +5,11 @@
     // .boton-lista-mobil{
     //     width: 50%;
     // }\
-
+    
+    .left-5{
+        left: 5%  !important;
+    }
+        
     .pagar-desktop{
         display: none !important;
     }
@@ -19,7 +23,7 @@
     }
 
     .not-padding-left-mobile{
-        padding-left: 0px;
+        padding-left: 0px !important;
     }
     
     .max-width-mobile{

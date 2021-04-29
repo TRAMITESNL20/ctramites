@@ -447,9 +447,9 @@
 												<!--begin::Nav-->
 												<ul class="menu-nav flex-column w-100 px-4">
 													<li class="menu-item <?= ($currentPath == "/avisos") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("tramite.nuevo") }}" class="menu-link bg-success w-100">
+														<a href="{{ url()->route("tramite.nuevo") }}" class="menu-link bg-success w-100 not-padding-left-mobile"  >
 															<span class="menu-icon"><i class="fas fa-folder-plus text-white"></i></span>
-															<span class="menu-text text-white d-flex d-md-none d-xl-flex">Iniciar Trámite</span>
+															<span class="menu-text text-white d-flex d-md-none d-xl-flex left-5">Iniciar Trámite</span>
 														</a>
 													</li>
 													<li><hr></li>
@@ -457,41 +457,41 @@
 														foreach(config("layout.menu") as $item){
 															echo "
 																<li class=\"menu-item ".(($currentPath == $item["path"]) ? "menu-item-active" : "")."\" aria-haspopup=\"false\">
-																	<a href=\"".url()->route($item["path"], $item["options"])."\" class=\"menu-link w-100\">";
+																	<a href=\"".url()->route($item["path"], $item["options"])."\" class=\"menu-link w-100 not-padding-left-mobile \"  >";
 																		if(isset($item["icon"]))
 																			echo "<span class=\"menu-icon\"><i class=\"{$item["icon"]}\"></i></span>";
-																		echo "<span class=\"menu-text d-flex d-md-none d-xl-flex\">{$item["name"]}</span>
+																		echo "<span class=\"menu-text d-flex d-md-none d-xl-flex left-5\">{$item["name"]}</span>
 																	</a>
 																</li>
 															";
 														}
 													?>
 													{{-- <li class="menu-item <?= ($currentPath == "/dashboard") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("dashboard") }}" class="menu-link w-100">
+														<a href="{{ url()->route("dashboard") }}" class="menu-link w-100 not-padding-left-mobile" >
 															<span class="menu-icon"><i class="fas fa-home"></i></span>
 															<span class="menu-text d-flex d-md-none d-xl-flex">Inicio</span>
 														</a>
 													</li>
 													<li class="menu-item <?= ($currentPath == "/tramites/pendientes") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("tramites", ["pendientes"]) }}" class="menu-link w-100">
+														<a href="{{ url()->route("tramites", ["pendientes"]) }}" class="menu-link w-100 not-padding-left-mobile">
 															<span class="menu-icon"><i class="fas fa-clock"></i></span>
 															<span class="menu-text d-flex d-md-none d-xl-flex">Trámites Pendientes</span>
 														</a>
 													</li>
 													<li class="menu-item <?= ($currentPath == "/tramites/curso") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("tramites", ["curso"]) }}" class="menu-link w-100">
+														<a href="{{ url()->route("tramites", ["curso"]) }}" class="menu-link w-100 not-padding-left-mobile">
 															<span class="menu-icon"><i class="fas fa-play-circle"></i></span>
 															<span class="menu-text d-flex d-md-none d-xl-flex">Trámites en Curso</span>
 														</a>
 													</li>
 													<li class="menu-item <?= ($currentPath == "/tramites/finalizados") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("tramites", ["finalizados"]) }}" class="menu-link w-100">
+														<a href="{{ url()->route("tramites", ["finalizados"]) }}" class="menu-link w-100 not-padding-left-mobile">
 															<span class="menu-icon"><i class="fas fa-check-circle"></i></span>
 															<span class="menu-text d-flex d-md-none d-xl-flex">Trámites Finalizados</span>
 														</a>
 													</li>
 													<li class="menu-item <?= ($currentPath == "/tramites/finalizados") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("tramites", ["por-pagar"]) }}" class="menu-link w-100">
+														<a href="{{ url()->route("tramites", ["por-pagar"]) }}" class="menu-link w-100 not-padding-left-mobile">
 															<span class="menu-icon"><i class="fas fa-money-bill"></i></span>
 															<span class="menu-text d-flex d-md-none d-xl-flex">Trámites Por Pagar</span>
 														</a>
@@ -873,7 +873,9 @@
 				</div>
 				<!--end::Notifications--> --}}
 			</div>
-			<div style="width:100%; height:100px; background-color: red; position:abosulite; bottom: 0;">  <a href="{{ url()->route("logout") }}" class="text-center" style="color:white !important;">Cerrar Sesión</a>  </div>
+			<div style="width:100%; height:40px; left:0; background-color: red; position:absolute; bottom: 0;">  
+				<buttton href="{{ url()->route("logout") }}" class="text-center btn-lg btn-block" style="color:white !important;">Cerrar Sesión</buttton> 
+			</div>
 			<!--end::Content-->
 		</div>
 		<!-- Desktop -->
