@@ -311,6 +311,7 @@ class CalculoimpuestosController extends Controller
             "multa por correccion fiscal" => $this->g,
           ),
         "Salidas" => array(
+          "Folio de la declaración inmediata anterior" => $normal,
           "Fecha Actual"        => date("d-m-Y", strtotime($this->fecha_actual)),
           "Fecha vencimiento"     => date("d-m-Y", strtotime($this->fecha_vencimiento)),
           "Factor de Actualizacion"   => $this->factor_actualizacion,
@@ -321,16 +322,15 @@ class CalculoimpuestosController extends Controller
           "Monto obtenido conforme al art 127 LISR" => $this->b,
           "Pago provisional conforme al art 126 LISR" => $this->c,
           "Impuesto correspondiente a la entidad federativa" => $this->d,
+          "Monto pagado en la declaracion inmediata anterior" => $impuesto,
           "Parte actualizada del impuesto" => $this->e,
           "Recargos" => $this->f,
           "Multa corrección fiscal" => $this->g,
-          "Importe total" => $this->redondeo($this->h),
-          ),
-        "Complementaria"  => array(
-          "Folio de la declaracion inmediata anterior"  => $normal,
-          "Monto pagado en la declaracion inmediata anterior" => $impuesto,
           "Pago en exceso"  => $this->k,
           "Cantidad a cargo" => $this->l,
+          "Importe total" => $this->redondeo($this->h),
+          ),
+        "Complementaria"  => array(  
         )
 
       );
