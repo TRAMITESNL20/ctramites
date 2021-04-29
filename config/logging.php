@@ -102,7 +102,7 @@ return [
 
         'apilog' => [
             'driver' => 'single',
-            'path' => storage_path('logs/api-logerror.log'),
+            'path' => storage_path('logs/api.log'),
             'level' => 'debug',
         ],
     ],
