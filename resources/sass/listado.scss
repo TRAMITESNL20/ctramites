@@ -5,6 +5,24 @@
     // .boton-lista-mobil{
     //     width: 50%;
     // }\
+
+
+    .border-table-left{
+        position: absolute;	
+        background: rgb(0,0,0);
+        background: linear-gradient(90deg, rgba(0,0,0,0.075) 0%, rgba(3,3,3,0) 100%);    }
+    
+    .border-table-right{
+        position:absolute ;
+        right :10px;
+        transform:translateX(0px) rotate(180deg);
+        background: rgb(0,0,0);
+        background: linear-gradient(90deg, rgba(0,0,0,0.075) 0%, rgba(3,3,3,0) 100%);
+    }
+
+    .desktop-agrupacion-width{
+        width: 70% !important; 
+    }
     
     .left-5{
         left: 5%  !important;

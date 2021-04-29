@@ -922,7 +922,13 @@
 									<span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user ? $user->email : "" }}</span>
 								</span>
 							</a>
-							<a href="{{ url()->route("logout") }}" class="btn btn-sm btn-light-danger font-weight-bolder text-danger text-hover-white py-2 px-5">Cerrar Sesión</a>
+							<div style="display:block" >
+										<span class="text-muted text-hover-primary text-truncate" style="font-size: 11px;">{{ $user ? "RFC: " . $user->rfc : "" }}</span>
+									</div>
+									<div style="display:block">
+										<span class="text-muted text-hover-primary text-truncate" style="font-size: 11px;">{{ $user ? "CURP: " . $user->curp : "" }}</span>
+							</div>
+							<!-- <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-light-danger font-weight-bolder text-danger text-hover-white py-2 px-5">Cerrar Sesión</a> -->
 						</div>
 					</div>
 				</div>
@@ -1141,6 +1147,9 @@
 					<!--end::Item-->
 				</div>
 				<!--end::Notifications--> --}}
+			</div>
+			<div style="width:100%; height:40px; left:0; background-color: red; position:absolute; bottom: 0;">  
+				<buttton href="{{ url()->route("logout") }}" class="text-center btn-lg btn-block" style="color:white !important;">Cerrar Sesión</buttton> 
 			</div>
 			<!--end::Content-->
 		</div>
