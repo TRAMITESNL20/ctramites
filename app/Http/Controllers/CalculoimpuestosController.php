@@ -329,9 +329,7 @@ class CalculoimpuestosController extends Controller
           "Pago en exceso"  => $this->k,
           "Cantidad a cargo" => $this->l,
           "Importe total" => $this->redondeo($this->h),
-          ),
-        "Complementaria"  => array(  
-        )
+          )
 
       );
 
