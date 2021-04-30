@@ -2,7 +2,7 @@
   <div class=" fv-plugins-icon-container">
     <div class="input-group">
       <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroupFileAddon01">{{ campo.nombre}}</span>
+      <span class="input-group-text " id="inputGroupFileAddon01">{{ campo.nombre}}</span>
       </div>  
       <div class="custom-file">
         <input  
