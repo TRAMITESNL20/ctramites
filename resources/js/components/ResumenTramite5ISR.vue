@@ -123,7 +123,6 @@
                                         <b-card key="1" no-body v-if="data && data.item.detalle.Complementaria">
                                                 <template #header>
                                                   <h4 class="mb-0">Complementaria</h4>
-                                                  <hr>
                                                 </template>
                                                 <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
                                                     <b-row v-for="(salida, key) in data.item.detalle.Complementaria" :key="key">
