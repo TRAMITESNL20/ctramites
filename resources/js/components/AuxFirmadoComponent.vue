@@ -11,14 +11,6 @@
                 </modal-document-component>
             </div>
         </div>
-
-        <div  v-if="docFirmado == 1">
-            <vue-pdf-component 
-                :urlSourceListo="urlFirmadoListo" 
-                :urlSourcePendiente="urlFirmadoPendiente" >  
-            </vue-pdf-component>
-        </div>
-
                                                    
         <div class="pt-10 pl-10 pr-10"  v-for="idTramite in usuario" v-if="docFirmado != 1">
             <firma-electronica-component 
@@ -29,6 +21,13 @@
                 @docFirmadosPendientes="urlFirmadoPendienteMethod"
                 >
             </firma-electronica-component>
+        </div>
+
+        <div  v-if="docFirmado == 1">
+            <vue-pdf-component 
+                :urlSourceListo="urlFirmadoListo" 
+                :urlSourcePendiente="urlFirmadoPendiente" >  
+            </vue-pdf-component>
         </div>
 
         <!-- <code>usuario {{usuario.typeof()}}
@@ -44,11 +43,15 @@
 <script>
 export default {
     props: ['usuario', 'tramitesdoc' , 'user'],
+    mounted(){
+
+    },
     data(){
         return {
             urlFirmadoListo: [],
             urlFirmadoPendiente: [],
             docFirmado:'',
+            solicitudes : this.usuario
         }
     },
     methods: {
@@ -56,7 +59,7 @@ export default {
            this.urlFirmadoListo = urlArray; 
         },
         urlFirmadoPendienteMethod(urlArray) {
-           this.urlFirmadoPendiente = urlArray; 
+           this.urlFirmadoPendiente = urlArray;
         },
         docFirmadoMethod(firmado){
             this.docFirmado =  firmado;
@@ -65,10 +68,13 @@ export default {
             console.log('tramites updateed en aux' );
             console.log( newTramites);
             this.usuario = newTramites;
+            this.solicitudes = newTramites;
             this.$forceUpdate();
         }
     },
     watch:{
+        usuario : (newVal) => console.log('watch newVal', newVal),
+        solicitudes : (newVal) => console.log('newVal solicitudes', newVal)
         // usuario:{
         //     immediate: true,
         //     deep: true,

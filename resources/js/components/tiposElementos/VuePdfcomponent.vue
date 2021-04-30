@@ -5,8 +5,8 @@
         <iframe :src="url" style="width:100%; height:500px;" frameborder="0"></iframe>
       </div>
         
-      <div v-for=" (url, index) in urlSourcePendiente">
-        <pdf :src="url"></pdf>
+      <div v-for=" (urlx, index) in urlSourcePendiente">
+        <pdf :src="urlx"></pdf>
       </div>
 
       <code>listo: {{urlSourceListo}}</code>
