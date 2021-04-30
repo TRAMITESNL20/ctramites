@@ -46,7 +46,7 @@
               if(this.tipoTramite == 'complementaria'){
                 if(this.type != 'temporal'){
                   let detallesComplete = true;
-                  this.datosComplementaria.forEach( complementaria => {
+                  this.datosComplementaria.complementarias.forEach( complementaria => {
                     detallesComplete = detallesComplete && !!complementaria.detalle && typeof complementaria.detalle == 'object'; 
                   });
                   formData = this.formDataComplementaria();

@@ -87,12 +87,12 @@
                             </b-table>
                         </div>
                     </b-row> 
-                    <b-row v-if="datosComplementaria.length > 0">
+                    <b-row v-if="datosComplementaria && datosComplementaria.complementarias.length > 0">
                         <div class="col-sm-12">
                             <h2 class="border-bottom my-3">Complementarias</h2>
                         </div>
                         <div class="col-sm-12">
-                            <b-table responsive striped hover :items="datosComplementaria" :fields="camposComplementarias">
+                            <b-table responsive striped hover :items="datosComplementaria.complementarias" :fields="camposComplementarias">
                                 <template #cell(enajenante)="data">
                                     <template-datos-personales-component :datosPersonales="data.item.enajenante.datosPersonales"></template-datos-personales-component>
                                 </template>
@@ -174,6 +174,7 @@
 
         props: ['datosComplementaria','tipoTramite', 'files', 'usuario'],
         mounted() {
+
             this.obtenerInformacionDelTramite();
             
             this.camposGenerales = this.datosFormulario.campos;

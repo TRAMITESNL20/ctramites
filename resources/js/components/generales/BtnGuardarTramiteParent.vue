@@ -108,11 +108,15 @@
               let listaComplementarias = [];
               let listaSolicitantes = datosTabs[0];
               if(config && config.temporal){
-                formData.append('info', JSON.stringify(this.datosComplementaria) );
+                let informacion = {
+                  datosComplementaria:this.datosComplementaria,
+                  tipoTramite:this.tipoTramite
+                }
+                formData.append('info', JSON.stringify(informacion) );
                 formData.append('enajenantes',[]);
-                //formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
+                formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
               } else {
-                this.datosComplementaria.forEach( complementaria => {
+                this.datosComplementaria.complementarias.forEach( complementaria => {
                   let inf = Object.assign({} , complementaria);
                   inf.version = '1.0.0';
                   inf.id = 0;

@@ -355,17 +355,10 @@
                   this.infoGuardada.archivosGuardados = response.data[0].archivos;
                 }
 
-                if(!this.infoGuardada.tipoTramite){
-                  this.tipoTramite = '';
-                  this.infoGuardada.forEach( info=>{
-                    this.tipoTramite = info.datosComplementaria ? 'complementaria' : '';
-                  })
-                } else {
-                  this.tipoTramite = this.infoGuardada.tipoTramite;
-                }
-
+                this.tipoTramite = this.infoGuardada.tipoTramite;
                 
-                this.tipoTramiteDisabled = !this.infoGuardada.campos ? 'normal' : 'complementaria';
+
+                //this.tipoTramiteDisabled = !this.infoGuardada.campos ? 'normal' : 'complementaria';
 
                 this.camposGuardadosObtenidos = true;
 
