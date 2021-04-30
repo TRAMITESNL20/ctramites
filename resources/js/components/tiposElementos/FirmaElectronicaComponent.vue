@@ -70,7 +70,7 @@ export default {
     	validateSigned (evt) {
     		this.coutnLoad++;
             console.log(this.coutnLoad);
-    		if(this.coutnLoad == 3){
+    		if(this.coutnLoad >= 2  &&  this.coutnLoad <= 5  ){
     			fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
                     method : 'POST',
                     body: JSON.stringify({ ids : this.idFirmado, status : 1, type : 'firmado', urls : this.urlFirmado, user_id: user.id })
@@ -78,7 +78,10 @@ export default {
                 .then(res => res.json())
                 .then(res => {
                     if(res.code === 200) console.log('Firmado');
-                    else console.log('Something goes wrong!', res);
+                    else{
+                        console.log('On count n#'+ this.coutnLoad);
+                        console.log('Something goes wrong!', res);    
+                    } 
                 });
     		}
     	},
