@@ -49,7 +49,8 @@
                                       <div v-else-if="tipoTramite == 'complementaria' && camposGuardadosObtenidos">
                                           <complementaria-component 
                                           @updatingScore="updateScore"
-                                          @sendData="setDatosComplementaria">
+                                          @sendData="setDatosComplementaria"
+                                          :infoGuardada="infoGuardada">
                                             
                                           </complementaria-component>
                                         <!--
@@ -93,7 +94,7 @@
                                               :files="files"
                                               :datosComplementaria="datosComplementaria"
                                               :idUsuario="idUsuario"
-                                              :infoGuardadaFull="infoGuardadaFull" v-if="currentStep != 3 && tipoTramite != 'complementaria'" labelBtn="Guardar y Continuar después "
+                                              :infoGuardadaFull="infoGuardadaFull" v-if="currentStep != 3" labelBtn="Guardar y Continuar después "
                                               @tramiteAgregadoEvent="tramiteAgregadoEvent"
                                               ></btn-guardar-tramite-component>
 
@@ -258,8 +259,6 @@
                   if(!['finalizar', 'temporal'].includes(data.type)) redirect("/nuevo-tramite");
                 }
               } else {
-                console.log(JSON.parse(JSON.stringify(data)));
-
                 Command: toastr.success("Eroor !", data.response.data.Message || "Error al tratar de guardar la solicitud");
               }
             }
@@ -356,7 +355,16 @@
                   this.infoGuardada.archivosGuardados = response.data[0].archivos;
                 }
 
-                this.tipoTramite = this.infoGuardada.tipoTramite;
+                if(!this.infoGuardada.tipoTramite){
+                  this.tipoTramite = '';
+                  this.infoGuardada.forEach( info=>{
+                    this.tipoTramite = info.datosComplementaria ? 'complementaria' : '';
+                  })
+                } else {
+                  this.tipoTramite = this.infoGuardada.tipoTramite;
+                }
+
+                
                 this.tipoTramiteDisabled = !this.infoGuardada.campos ? 'normal' : 'complementaria';
 
                 this.camposGuardadosObtenidos = true;

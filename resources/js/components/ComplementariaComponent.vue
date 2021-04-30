@@ -27,7 +27,7 @@
                   <v-expansion-panel v-for="(tramite, index) in tramitesObtenidos" :key="tramite.id">
                     <v-expansion-panel-header >
                       <span class="text-left">
-                          <b-form-checkbox v-model="tramite.selected" :key="tramite.id" name="flavour-3a"  @change="clickChecbox()" switch>
+                          <b-form-checkbox v-model="tramite.selected" :key="tramite.id" name="flavour-3a"  @change="clickChecbox()" switch :id="tramite.id + '-checkbox'">
                             <span>
                             {{ tramite.info.enajenante.datosPersonales.curp ||  ""}}-  
                             {{ tramite.info.enajenante.datosPersonales.nombre || ""}} 
@@ -44,7 +44,7 @@
                     </v-expansion-panel-header>
                     <v-expansion-panel-content v-if="tramite.selected">
                       <formulario-complementaria-component :info="{
-                        fechaEscritura, folio, idTramite:tramite.id, index
+                        fechaEscritura, folio, idTramite:tramite.id, index, datosComplementaria: tramite.datosComplementaria
                       }" @updateForm="updateForm"></formulario-complementaria-component>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
@@ -61,7 +61,14 @@
   
 <script>
 
-    export default {     
+    export default {        
+      props:{
+
+        infoGuardada:{
+          default: null,
+        },
+
+      },     
       data() {
         return {
           folio:'',
@@ -74,7 +81,13 @@
         }
       },
       created() {
-        this.validar();
+        if(this.infoGuardada.length > 0) {
+          this.folio = this.infoGuardada[0].folioTransaccionAnterior;
+          this.fechaEscritura = this.infoGuardada[0].fechaEscritura;
+          this.getInformacion();
+        } else{
+          this.validar();
+        }
       },
       methods: {
         async getInformacion(){
@@ -84,17 +97,34 @@
             try {
               let response = await axios.get(url);
 
-              this.tramitesObtenidos = response.data.tramites.length > 0 ? response.data.tramites[0].solicitudes : [];
+              let tramitesObtenidos = response.data.tramites.length > 0 ? response.data.tramites[0].solicitudes : [];
 
-              if(this.tramitesObtenidos.length > 0){
-                let arrFecha =  this.tramitesObtenidos[0].info.detalle.Entradas.fecha_escritura.split("-");
+              if(tramitesObtenidos.length > 0){
+                let arrFecha =  tramitesObtenidos[0].info.detalle.Entradas.fecha_escritura.split("-");
                 arrFecha[1] = arrFecha[1].padStart(2, "0");
                 arrFecha[2] = arrFecha[2].padStart(2, "0");
                 this.fechaEscritura = arrFecha.reverse().join("-");
                 
               }
-              
-              this.mensaje = this.tramitesObtenidos.length  == 0 ?  "No se encontraron tramites relacionados a este Folio" :  "";
+
+              if(this.infoGuardada.length > 0) {
+
+                 tramitesObtenidos.map( tramite=>{
+                  let seGuardoAnteriormente = this.infoGuardada.find(complementariaGuardadda=> tramite.id == complementariaGuardadda.idTicketAnterior);
+                  if(seGuardoAnteriormente){
+                    tramite.selected = true;
+                    tramite.datosComplementaria = seGuardoAnteriormente.datosComplementaria;
+                  }
+                  return tramite
+                 });
+                this.tramitesObtenidos = tramitesObtenidos;
+                this.mensaje = this.tramitesObtenidos.length  == 0 ?  "No se encontraron tramites relacionados a este Folio" :  "";
+                this.clickChecbox();
+              } else{
+                this.tramitesObtenidos = tramitesObtenidos;
+                this.mensaje = this.tramitesObtenidos.length  == 0 ?  "No se encontraron tramites relacionados a este Folio" :  "";
+              }
+
             } catch (error) {
               
 
