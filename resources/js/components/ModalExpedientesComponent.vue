@@ -18,7 +18,7 @@
                     @change="getMontoOperacion" v-uppercase></b-form-input>
                   <template #append>
                     <b-input-group-text v-b-tooltip.hover title="Localizado en el informativo de valor catastral o aviso de enajenación" style="font-size: 7px;" >
-                      <i class="fa fa-question-circle" style="color: blue;"></i>
+                      <i class="fa fa-question-circle" style="color: cornflowerblue;"></i>
                     </b-input-group-text>
                   </template>
                 </b-input-group>
