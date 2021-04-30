@@ -1,5 +1,5 @@
 <template>
-	<button type="button" :class="btnClass ? btnClass : 'btn btn-success font-weight-bolder text-uppercase px-9 py-4'"
+	<button type="button" :class="btnClass ? btnClass : 'btn btn-success font-weight-bolder text-uppercase px-9 py-4 mobil-font'"
 		v-on:click="agregar()" :disabled="enviando">
         {{ labelBtn }}
         <div id="spinner-guardaFina" class="spinner-border spinner-border-sm float-right" role="status" 

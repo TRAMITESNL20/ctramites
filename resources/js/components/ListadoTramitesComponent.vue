@@ -1,5 +1,5 @@
 <template>
-    <div class="content d-flex flex-column flex-column-fluid" data-app>
+    <div class="content d-flex flex-column flex-column-fluid pt-0" data-app>
         <div class="subheader py-2 py-lg-4 subheader-transparent" id="kt_subheader">
             <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
                 <!--begin::Details-->
@@ -114,7 +114,7 @@
                             {{ categoria.nombre_categoria }}
                         </legend>
                         <hr>
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 mobile-container">
                             <tramite-component v-for="(tramite, index) in categoria.tramites" :tramite="tramite" v-bind:key="index"></tramite-component>
                         </div>
                     </fieldset>
