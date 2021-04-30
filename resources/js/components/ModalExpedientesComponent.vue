@@ -11,11 +11,16 @@
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <b-row>
             <b-col cols="" md="4" >
-              <b-form-group label="Folio del aviso de enajenación" label-for="folio-input" >
+              <b-form-group label="Folio del aviso de enajenación o folio forma" label-for="folio-input" >
                 <b-input-group size="lg"> 
                   <b-form-input
                     id="folio-input" name="folio" v-model="$v.form.folio.$model"  :state="$v.form.folio.$dirty ? !$v.form.folio.$error : null"  aria-describedby="folio-input-feedback"
                     @change="getMontoOperacion" v-uppercase></b-form-input>
+                  <template #append>
+                    <b-input-group-text v-b-tooltip.hover title="Localizado en el informativo de valor catastral o aviso de enajenación" style="font-size: 7px;" >
+                      <i class="fa fa-question-circle" style="color: blue;"></i>
+                    </b-input-group-text>
+                  </template>
                 </b-input-group>
                 <b-form-invalid-feedback id="folio-input-feedback">
                   <span v-if="!$v.form.folio.required"  class="form-text text-danger">
