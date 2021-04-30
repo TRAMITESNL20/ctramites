@@ -2,6 +2,135 @@
 @import "./mixins";
 
 @media only screen and (max-width: 770px) {
+    // .boton-lista-mobil{
+    //     width: 50%;
+    // }\
+
+    .nowrap{
+        white-space: nowrap;
+    }  
+    .border-table-left{
+        position: absolute;	
+        background: rgb(0,0,0);
+        background: linear-gradient(90deg, rgba(0,0,0,0.075) 0%, rgba(3,3,3,0) 100%);    }
+    
+    .border-table-right{
+        position:absolute ;
+        right :10px;
+        transform:translateX(0px) rotate(180deg);
+        background: rgb(0,0,0);
+        background: linear-gradient(90deg, rgba(0,0,0,0.075) 0%, rgba(3,3,3,0) 100%);
+    }
+
+    .desktop-agrupacion-width{
+        width: 70% !important; 
+    }
+    
+    .left-5{
+        left: 5%  !important;
+    }
+        
+    .pagar-desktop{
+        display: none !important;
+    }
+    
+    .pagar-mobile{
+        display: inline !important;
+    }
+
+    .absolute-mobile{
+        position: absolute;
+    }
+
+    .not-padding-left-mobile{
+        padding-left: 0px !important;
+    }
+    
+    .max-width-mobile{
+        max-width: 400px ;
+    }
+    .text-initial{
+        white-space: initial;
+    }
+
+    .espace-checkbox-text{
+        padding-left: 25px !important;
+    }
+    
+
+    .espace-checkbox{
+        position: absolute;
+    }
+    .wizard-step-mobile{
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .mobile-container{
+        max-width: none;
+        padding-left:  0px  !important;
+        padding-right:  0px  !important;
+    }
+    
+    .container{
+        max-width: none;
+        padding: 0 15px;
+    }
+
+    .arrow-desktop{
+        display: none !important;
+    }
+
+    .arrow-mobile{
+        display: block !important;
+    }
+
+    .card-body {
+        flex: 1 1 auto;
+        min-height: 1px;
+        padding: 0rem;
+    }
+
+    .mobil-font{
+        font-size: 10px;
+
+    }
+        
+    .header-menu-mobile .menu-nav > .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover {
+        transition: none !important;
+    }
+
+    .menu-item-no-transition {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        float: none;
+        padding: 0; 
+        position: relative;
+        margin: 0;
+    }
+    
+    .header-menu .menu-nav > .menu-item-no-transition .menu-link .menu-icon {
+        justify-content: center;
+    }
+    .header-menu .menu-nav > .menu-item-no-transition .menu-link .menu-text {
+        margin-left: 10px;
+    }
+
+    .cards-espace{
+        margin-bottom: 5px !important;
+    }
+
+    .mobile-lista-multiple{
+        display: inline-block !important;
+    }
+
+    .mobile-detalles{
+        padding-top: 5px;
+        padding-bottom: 5px;
+        align-items: center;
+    }
+
     .card {
         // border-color: #347ab8;
         border: none;
@@ -46,8 +175,12 @@
     }
     .btn-vermas {
         background-color: #0c4d8b;
-        color: #fff;
+        color: white !important;
     }
+
+    
+
+
     .dashboard {
         padding-top: 250px;
     }
@@ -115,6 +248,8 @@
     .users-component {
         min-width: 350px !important;
     }
+
+    
 }
 
 @media only screen and (max-width: 635px) {
@@ -148,7 +283,7 @@
 
                 .my-lg-0{
                     margin-top: 10px;
-                    margin-left: auto;
+                    margin-left: unset;
                 }
             }
         }
@@ -401,6 +536,11 @@
 
 .users-component {
     min-width: 1200px
+}
+
+
+.cards-espace{
+    margin-bottom: 30px;
 }
 
 #listaTramites, #cart-container {

@@ -51,10 +51,13 @@
 	<body id="kt_body " class="header-fixed header-mobile-fixed page-loading">
 		<!--begin::Main-->
 		<!--begin::Header Mobile-->
-		<div id="kt_header_mobile" class="header-mobile bg-primary header-mobile-fixed">
+		<div id="kt_header_mobile" class="header-mobile bg-primary header-mobile-fixed @if($empty_layout === true) d-none @endif">
 			<!--begin::Logo-->
+			<button class="btn p-0 burger-icon burger-icon-left ml-4" id="kt_header_mobile_toggle">
+					<span></span>
+			</button>
 			<a href="{{ url()->route("home") }}">
-				<img alt="Logo" src="{{ assets('images/logo.svg') }}" class="max-h-30px" style="width: 70%" />
+				<img alt="Logo" src="{{ assets('images/logo.svg') }}" class="max-h-30px" style="width: 70%; margin-left: auto;margin-right: auto;display: block;"/>
 			</a>
 			{{-- <a class="btn pl-0">
 				<span> portal</span>
@@ -64,9 +67,7 @@
 			<!--begin::Toolbar-->
 			<div class="d-flex align-items-center">
 
-				<button class="btn p-0 burger-icon burger-icon-left ml-4" id="kt_header_mobile_toggle">
-					<span></span>
-				</button>
+				
 				{{-- <button class="btn p-0 ml-2" id="kt_header_mobile_topbar_toggle">
 					<span class="svg-icon svg-icon-xl">
 						<!--begin::Svg Icon | path:media/svg/icons/General/User.svg-->
@@ -117,7 +118,7 @@
 							<!--end::Logo-->
 
 							<a href="{{ url()->route("home") }}" class="mr-2 d-lg-flex col-lg-1 col-xl-2 align-items-center justify-content-center text-center d-flex ">
-								<img alt="Logo" src="{{ assets('images/logo.svg') }}" class="max-h-35px mr-3 w-100" width="200" />
+								<img alt="Logo" src="{{ assets('images/logo.svg') }}" class="max-h-35px mr-3 w-50" width="200" />
 							</a>
 							<!--begin::Topbar-->
 							<div class="topbar text-secondary ml-auto py-4 w-100 px-3 align-items-center">
@@ -417,83 +418,80 @@
 								<!--begin::Header Menu Wrapper-->
 								<div class="header-navs header-navs-left" id="kt_header_navs">
 									<!--begin::Tab Navs(for tablet and mobile modes)-->
-									<ul class="header-tabs p-5 p-lg-0 d-flex d-lg-none nav nav-bold nav-tabs" role="tablist">
-										<!--begin::Item-->
+									<!-- <ul class="header-tabs p-5 p-lg-0 d-flex d-lg-none nav nav-bold nav-tabs" role="tablist">
+									
 										<li class="nav-item mr-2">
 											<a href="#" class="nav-link btn btn-clean active" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Home</a>
 										</li>
-										<!--end::Item-->
-										<!--begin::Item-->
+									
 										<li class="nav-item mr-2">
 											<a href="#" class="nav-link btn btn-clean" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Reports</a>
 										</li>
-										<!--end::Item-->
-										<!--begin::Item-->
+									
 										<li class="nav-item mr-2">
 											<a href="#" class="nav-link btn btn-clean" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Orders</a>
 										</li>
-										<!--end::Item-->
-										<!--begin::Item-->
+										
 										<li class="nav-item mr-2">
 											<a href="#" class="nav-link btn btn-clean" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Help Ceter</a>
 										</li>
-										<!--end::Item-->
-									</ul>
+									
+									</ul> -->
 									<!--begin::Tab Navs-->
 									<!--begin::Tab Content-->
 									<div class="tab-content">
 										<!--begin::Tab Pane-->
-										<div class="tab-pane py-5 p-lg-0 show active" id="kt_header_tab_1">
+										<div class="tab-pane p-lg-0 show active" id="kt_header_tab_1">
 											<!--begin::Menu-->
 											<div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default flex-column align-items-center w-100 pt-4">
 												<!--begin::Nav-->
 												<ul class="menu-nav flex-column w-100 px-4">
 													<li class="menu-item <?= ($currentPath == "/avisos") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("tramite.nuevo") }}" class="menu-link bg-success w-100">
+														<a href="{{ url()->route("tramite.nuevo") }}" class="menu-link bg-success w-100 not-padding-left-mobile"  >
 															<span class="menu-icon"><i class="fas fa-folder-plus text-white"></i></span>
-															<span class="menu-text text-white d-flex d-md-none d-xl-flex">Iniciar Trámite</span>
+															<span class="menu-text text-white d-flex d-md-none d-xl-flex left-5">Iniciar Trámite</span>
 														</a>
 													</li>
 													<li><hr></li>
 													<?php
 														foreach(config("layout.menu") as $item){
 															echo "
-																<li class=\"menu-item ".(($currentPath == $item["path"]) ? "menu-item-active" : "")."\" aria-haspopup=\"true\">
-																	<a href=\"".url()->route($item["path"], $item["options"])."\" class=\"menu-link w-100\">";
+																<li class=\"menu-item ".(($currentPath == $item["path"]) ? "menu-item-active" : "")."\" aria-haspopup=\"false\">
+																	<a href=\"".url()->route($item["path"], $item["options"])."\" class=\"menu-link w-100 not-padding-left-mobile \"  >";
 																		if(isset($item["icon"]))
 																			echo "<span class=\"menu-icon\"><i class=\"{$item["icon"]}\"></i></span>";
-																		echo "<span class=\"menu-text d-flex d-md-none d-xl-flex\">{$item["name"]}</span>
+																		echo "<span class=\"menu-text d-flex d-md-none d-xl-flex left-5\">{$item["name"]}</span>
 																	</a>
 																</li>
 															";
 														}
 													?>
 													{{-- <li class="menu-item <?= ($currentPath == "/dashboard") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("dashboard") }}" class="menu-link w-100">
+														<a href="{{ url()->route("dashboard") }}" class="menu-link w-100 not-padding-left-mobile" >
 															<span class="menu-icon"><i class="fas fa-home"></i></span>
 															<span class="menu-text d-flex d-md-none d-xl-flex">Inicio</span>
 														</a>
 													</li>
 													<li class="menu-item <?= ($currentPath == "/tramites/pendientes") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("tramites", ["pendientes"]) }}" class="menu-link w-100">
+														<a href="{{ url()->route("tramites", ["pendientes"]) }}" class="menu-link w-100 not-padding-left-mobile">
 															<span class="menu-icon"><i class="fas fa-clock"></i></span>
 															<span class="menu-text d-flex d-md-none d-xl-flex">Trámites Pendientes</span>
 														</a>
 													</li>
 													<li class="menu-item <?= ($currentPath == "/tramites/curso") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("tramites", ["curso"]) }}" class="menu-link w-100">
+														<a href="{{ url()->route("tramites", ["curso"]) }}" class="menu-link w-100 not-padding-left-mobile">
 															<span class="menu-icon"><i class="fas fa-play-circle"></i></span>
 															<span class="menu-text d-flex d-md-none d-xl-flex">Trámites en Curso</span>
 														</a>
 													</li>
 													<li class="menu-item <?= ($currentPath == "/tramites/finalizados") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("tramites", ["finalizados"]) }}" class="menu-link w-100">
+														<a href="{{ url()->route("tramites", ["finalizados"]) }}" class="menu-link w-100 not-padding-left-mobile">
 															<span class="menu-icon"><i class="fas fa-check-circle"></i></span>
 															<span class="menu-text d-flex d-md-none d-xl-flex">Trámites Finalizados</span>
 														</a>
 													</li>
 													<li class="menu-item <?= ($currentPath == "/tramites/finalizados") ? "menu-item-active" : "" ?>" aria-haspopup="true">
-														<a href="{{ url()->route("tramites", ["por-pagar"]) }}" class="menu-link w-100">
+														<a href="{{ url()->route("tramites", ["por-pagar"]) }}" class="menu-link w-100 not-padding-left-mobile">
 															<span class="menu-icon"><i class="fas fa-money-bill"></i></span>
 															<span class="menu-text d-flex d-md-none d-xl-flex">Trámites Por Pagar</span>
 														</a>
@@ -601,13 +599,18 @@
 		</div>
 		<!--end::Main-->
 		<!-- begin::User Panel-->
+		<!--============= celular ==============-->
 		<div id="kt_quick_user" class="offcanvas offcanvas-right p-10">
 			<!--begin::Header-->
 			<div class="offcanvas-header d-flex align-items-center justify-content-between pb-5">
-				<h3 class="font-weight-bold m-0">Perfil de Usuario
-				<a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close">
-					<i class="ki ki-close icon-xs text-muted"></i>
-				</a>
+				<div class="col-10">
+					<h3 class="font-weight-bold m-0">Perfil de Usuario
+				</div>
+				<div class="col-2">
+					<a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close">
+						<i class="ki ki-close icon-xs text-muted"></i>
+					</a>
+				</div>
 			</div>
 			<!--end::Header-->
 			<!--begin::Content-->
@@ -621,7 +624,7 @@
 					</div>
 					<div class="d-flex flex-column">
 						<a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">{{ $user ? $user->name : "" }} {{ $user ? $user->fathers_surname : "" }} </a>
-						<div class="text-muted mt-1">{{ $user ? $user->role->description : '' }}</div>
+						<div class="text-muted mt-1">{{ $user ? $user->role->description : '' }} -- {{ isset($user->notary) ?  "Notaría #" .  $user->notary->notary_number : ''}}</div>
 						<div class="navi mt-2">
 							<a href="mailto:{{ $user ? $user->email : "" }}" class="navi-item">
 								<span class="navi-link p-0 pb-2">
@@ -641,7 +644,13 @@
 									<span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user ? $user->email : "" }}</span>
 								</span>
 							</a>
-							<a href="{{ url()->route("logout") }}" class="btn btn-sm btn-light-danger font-weight-bolder text-danger text-hover-white py-2 px-5">Cerrar Sesión</a>
+							<div style="display:block" >
+										<span class="text-muted text-hover-primary text-truncate" style="font-size: 11px;">{{ $user ? "RFC: " . $user->rfc : "" }}</span>
+									</div>
+									<div style="display:block">
+										<span class="text-muted text-hover-primary text-truncate" style="font-size: 11px;">{{ $user ? "CURP: " . $user->curp : "" }}</span>
+							</div>
+							<!-- <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-light-danger font-weight-bolder text-danger text-hover-white py-2 px-5">Cerrar Sesión</a> -->
 						</div>
 					</div>
 				</div>
@@ -652,7 +661,10 @@
 				<!--begin::Nav-->
 				<div class="navi navi-spacer-x-0 p-0">
 					<!--begin::Item-->
-					<a href="{{ url()->route("dashboard") }}" class="navi-item">
+					<a href="{{ url()->route("dashboard") }}" class="navi-item pt-5">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-architecture-and-city"></i>
+					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
@@ -671,88 +683,93 @@
 							</div> --}}
 							<div class="navi-text">
 								<div class="text-uppercase font-weight-bold"><strong>Inicio</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
 					</a>
 					<!--end:Item-->
-					<!--begin::Item-->
-					{{-- <a href="{{ url()->route("tramites", ["pendientes"]) }}" class="navi-item">
+					<a href="{{ url()->route("perfil") }}" class="navi-item pt-5">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-user-outline-symbol"></i>
+					</span>
 						<div class="navi-link">
-							<div class="symbol symbol-40 bg-light mr-3">
+							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
-									<span class="svg-icon svg-icon-md svg-icon-warning">
-										<!--begin::Svg Icon | path:media/svg/icons/Shopping/Chart-bar1.svg-->
+									<span class="svg-icon svg-icon-md svg-icon-success">
+										<!--begin::Svg Icon | path:media/svg/icons/General/Notification2.svg-->
 										<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
 											<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 												<rect x="0" y="0" width="24" height="24" />
-												<rect fill="#000000" opacity="0.3" x="12" y="4" width="3" height="13" rx="1.5" />
-												<rect fill="#000000" opacity="0.3" x="7" y="9" width="3" height="8" rx="1.5" />
-												<path d="M5,19 L20,19 C20.5522847,19 21,19.4477153 21,20 C21,20.5522847 20.5522847,21 20,21 L4,21 C3.44771525,21 3,20.5522847 3,20 L3,4 C3,3.44771525 3.44771525,3 4,3 C4.55228475,3 5,3.44771525 5,4 L5,19 Z" fill="#000000" fill-rule="nonzero" />
-												<rect fill="#000000" opacity="0.3" x="17" y="11" width="3" height="6" rx="1.5" />
+												<path d="M13.2070325,4 C13.0721672,4.47683179 13,4.97998812 13,5.5 C13,8.53756612 15.4624339,11 18.5,11 C19.0200119,11 19.5231682,10.9278328 20,10.7929675 L20,17 C20,18.6568542 18.6568542,20 17,20 L7,20 C5.34314575,20 4,18.6568542 4,17 L4,7 C4,5.34314575 5.34314575,4 7,4 L13.2070325,4 Z" fill="#000000" />
+												<circle fill="#000000" opacity="0.3" cx="18.5" cy="5.5" r="2.5" />
 											</g>
 										</svg>
 										<!--end::Svg Icon-->
 									</span>
 								</div>
-							</div>
+							</div> --}}
 							<div class="navi-text">
-								<div class="text-uppercase font-weight-bold"><strong>Trámites Pendientes</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<div class="text-uppercase font-weight-bold"><strong>perfil</strong></div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
-					</a> --}}
+					</a>
 					<!--end:Item-->
-					<!--begin::Item-->
-					{{-- <a href="{{ url()->route("tramites", ["curso"]) }}" class="navi-item">
+					<a href="{{ url()->route("tramite.cart") }}" class="navi-item pt-5">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-shopping-cart-1"></i>
+						<span id="totalTramitesCarrito"  style="padding: 5px !important; vertical-align: super !important" class="badge badge-danger">{{ session()->get("tramites") }}</span>
+					</span>
 						<div class="navi-link">
-							<div class="symbol symbol-40 bg-light mr-3">
+							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
-									<span class="svg-icon svg-icon-md svg-icon-danger">
-										<!--begin::Svg Icon | path:media/svg/icons/Files/Selected-file.svg-->
-										<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-											<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-												<polygon points="0 0 24 0 24 24 0 24" />
-												<path d="M4.85714286,1 L11.7364114,1 C12.0910962,1 12.4343066,1.12568431 12.7051108,1.35473959 L17.4686994,5.3839416 C17.8056532,5.66894833 18,6.08787823 18,6.52920201 L18,19.0833333 C18,20.8738751 17.9795521,21 16.1428571,21 L4.85714286,21 C3.02044787,21 3,20.8738751 3,19.0833333 L3,2.91666667 C3,1.12612489 3.02044787,1 4.85714286,1 Z M8,12 C7.44771525,12 7,12.4477153 7,13 C7,13.5522847 7.44771525,14 8,14 L15,14 C15.5522847,14 16,13.5522847 16,13 C16,12.4477153 15.5522847,12 15,12 L8,12 Z M8,16 C7.44771525,16 7,16.4477153 7,17 C7,17.5522847 7.44771525,18 8,18 L11,18 C11.5522847,18 12,17.5522847 12,17 C12,16.4477153 11.5522847,16 11,16 L8,16 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" />
-												<path d="M6.85714286,3 L14.7364114,3 C15.0910962,3 15.4343066,3.12568431 15.7051108,3.35473959 L20.4686994,7.3839416 C20.8056532,7.66894833 21,8.08787823 21,8.52920201 L21,21.0833333 C21,22.8738751 20.9795521,23 19.1428571,23 L6.85714286,23 C5.02044787,23 5,22.8738751 5,21.0833333 L5,4.91666667 C5,3.12612489 5.02044787,3 6.85714286,3 Z M8,12 C7.44771525,12 7,12.4477153 7,13 C7,13.5522847 7.44771525,14 8,14 L15,14 C15.5522847,14 16,13.5522847 16,13 C16,12.4477153 15.5522847,12 15,12 L8,12 Z M8,16 C7.44771525,16 7,16.4477153 7,17 C7,17.5522847 7.44771525,18 8,18 L11,18 C11.5522847,18 12,17.5522847 12,17 C12,16.4477153 11.5522847,16 11,16 L8,16 Z" fill="#000000" fill-rule="nonzero" />
-											</g>
-										</svg>
-										<!--end::Svg Icon-->
-									</span>
-								</div>
-							</div>
-							<div class="navi-text">
-								<div class="text-uppercase font-weight-bold"><strong>Trámites en Curso</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
-							</div>
-						</div>
-					</a> --}}
-					<!--end:Item-->
-					<!--begin::Item-->
-					{{-- <a href="{{ url()->route("tramites", ["finalizados"]) }}" class="navi-item">
-						<div class="navi-link">
-							<div class="symbol symbol-40 bg-light mr-3">
-								<div class="symbol-label">
-									<span class="svg-icon svg-icon-md svg-icon-primary">
-										<!--begin::Svg Icon | path:media/svg/icons/Communication/Mail-opened.svg-->
+									<span class="svg-icon svg-icon-md svg-icon-success">
 										<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
 											<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 												<rect x="0" y="0" width="24" height="24" />
-												<path d="M6,2 L18,2 C18.5522847,2 19,2.44771525 19,3 L19,12 C19,12.5522847 18.5522847,13 18,13 L6,13 C5.44771525,13 5,12.5522847 5,12 L5,3 C5,2.44771525 5.44771525,2 6,2 Z M7.5,5 C7.22385763,5 7,5.22385763 7,5.5 C7,5.77614237 7.22385763,6 7.5,6 L13.5,6 C13.7761424,6 14,5.77614237 14,5.5 C14,5.22385763 13.7761424,5 13.5,5 L7.5,5 Z M7.5,7 C7.22385763,7 7,7.22385763 7,7.5 C7,7.77614237 7.22385763,8 7.5,8 L10.5,8 C10.7761424,8 11,7.77614237 11,7.5 C11,7.22385763 10.7761424,7 10.5,7 L7.5,7 Z" fill="#000000" opacity="0.3" />
-												<path d="M3.79274528,6.57253826 L12,12.5 L20.2072547,6.57253826 C20.4311176,6.4108595 20.7436609,6.46126971 20.9053396,6.68513259 C20.9668779,6.77033951 21,6.87277228 21,6.97787787 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,6.97787787 C3,6.70173549 3.22385763,6.47787787 3.5,6.47787787 C3.60510559,6.47787787 3.70753836,6.51099993 3.79274528,6.57253826 Z" fill="#000000" />
+												<path d="M13.2070325,4 C13.0721672,4.47683179 13,4.97998812 13,5.5 C13,8.53756612 15.4624339,11 18.5,11 C19.0200119,11 19.5231682,10.9278328 20,10.7929675 L20,17 C20,18.6568542 18.6568542,20 17,20 L7,20 C5.34314575,20 4,18.6568542 4,17 L4,7 C4,5.34314575 5.34314575,4 7,4 L13.2070325,4 Z" fill="#000000" />
+												<circle fill="#000000" opacity="0.3" cx="18.5" cy="5.5" r="2.5" />
+											</g>
+										</svg>
+									</span>
+								</div>
+							</div> --}}
+							<div class="navi-text">
+								<div class="text-uppercase font-weight-bold"><strong>Carrito</strong></div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
+							</div>
+						</div>
+					</a>
+					<!--end:Item-->
+					<a href="{{ url()->route("pendiente-firma") }}" class="navi-item pt-5">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-pen"></i>
+						<span id="totalTramitesFirma" style="padding: 5px !important; vertical-align: super !important"  class="badge badge-danger">{{ session()->get("tramitesFirma") }}</span>
+					</span>
+						<div class="navi-link">
+							{{-- <div class="symbol symbol-40 bg-light mr-3">
+								<div class="symbol-label">
+									<span class="svg-icon svg-icon-md svg-icon-success">
+										<!--begin::Svg Icon | path:media/svg/icons/General/Notification2.svg-->
+										<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+											<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+												<rect x="0" y="0" width="24" height="24" />
+												<path d="M13.2070325,4 C13.0721672,4.47683179 13,4.97998812 13,5.5 C13,8.53756612 15.4624339,11 18.5,11 C19.0200119,11 19.5231682,10.9278328 20,10.7929675 L20,17 C20,18.6568542 18.6568542,20 17,20 L7,20 C5.34314575,20 4,18.6568542 4,17 L4,7 C4,5.34314575 5.34314575,4 7,4 L13.2070325,4 Z" fill="#000000" />
+												<circle fill="#000000" opacity="0.3" cx="18.5" cy="5.5" r="2.5" />
 											</g>
 										</svg>
 										<!--end::Svg Icon-->
 									</span>
 								</div>
-							</div>
+							</div> --}}
 							<div class="navi-text">
-								<div class="text-uppercase font-weight-bold"><strong>Trámites Finalizados</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<div class="text-uppercase font-weight-bold"><strong>Firma</strong></div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
-					</a> --}}
-					<!--end:Item-->
+					</a>
+					
+					
 				</div>
 				<!--end::Nav-->
 				{{-- <!--begin::Separator-->
@@ -856,12 +873,16 @@
 				</div>
 				<!--end::Notifications--> --}}
 			</div>
+			<div style="width:100%; height:40px; left:0; background-color: red; position:absolute; bottom: 0;">  
+				<a href="{{ url()->route("logout") }}" class="text-center btn-lg btn-block" style="color:white !important;">Cerrar Sesión</a> 
+			</div>
 			<!--end::Content-->
 		</div>
+		<!-- Desktop -->
 		<div id="kt_quick_user2" class="offcanvas offcanvas-right p-10">
 			<!--begin::Header-->
 			<div class="offcanvas-header d-flex align-items-center justify-content-between pb-5">
-				<h3 class="font-weight-bold m-0">Perfil de Usuario
+				<h3 class="font-weight-bold m-0">Perfil de Usuario 
 				<a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close">
 					<i class="ki ki-close icon-xs text-muted"></i>
 				</a>
@@ -901,7 +922,13 @@
 									<span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user ? $user->email : "" }}</span>
 								</span>
 							</a>
-							<a href="{{ url()->route("logout") }}" class="btn btn-sm btn-light-danger font-weight-bolder text-danger text-hover-white py-2 px-5">Cerrar Sesión</a>
+							<div style="display:block" >
+										<span class="text-muted text-hover-primary text-truncate" style="font-size: 11px;">{{ $user ? "RFC: " . $user->rfc : "" }}</span>
+									</div>
+									<div style="display:block">
+										<span class="text-muted text-hover-primary text-truncate" style="font-size: 11px;">{{ $user ? "CURP: " . $user->curp : "" }}</span>
+							</div>
+							<!-- <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-light-danger font-weight-bolder text-danger text-hover-white py-2 px-5">Cerrar Sesión</a> -->
 						</div>
 					</div>
 				</div>
@@ -913,6 +940,9 @@
 				<div class="navi navi-spacer-x-0 p-0">
 					<!--begin::Item-->
 					<a href="{{ url()->route("dashboard") }}" class="navi-item">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-architecture-and-city"></i>
+					</span>
 						<div class="navi-link">
 							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
@@ -931,87 +961,89 @@
 							</div> --}}
 							<div class="navi-text">
 								<div class="text-uppercase font-weight-bold"><strong>Inicio</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
 					</a>
 					<!--end:Item-->
-					<!--begin::Item-->
-					{{-- <a href="{{ url()->route("tramites", ["pendientes"]) }}" class="navi-item">
+					<a href="{{ url()->route("perfil") }}" class="navi-item">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-user-outline-symbol"></i>
+					</span>
 						<div class="navi-link">
-							<div class="symbol symbol-40 bg-light mr-3">
+							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
-									<span class="svg-icon svg-icon-md svg-icon-warning">
-										<!--begin::Svg Icon | path:media/svg/icons/Shopping/Chart-bar1.svg-->
+									<span class="svg-icon svg-icon-md svg-icon-success">
+										<!--begin::Svg Icon | path:media/svg/icons/General/Notification2.svg-->
 										<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
 											<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 												<rect x="0" y="0" width="24" height="24" />
-												<rect fill="#000000" opacity="0.3" x="12" y="4" width="3" height="13" rx="1.5" />
-												<rect fill="#000000" opacity="0.3" x="7" y="9" width="3" height="8" rx="1.5" />
-												<path d="M5,19 L20,19 C20.5522847,19 21,19.4477153 21,20 C21,20.5522847 20.5522847,21 20,21 L4,21 C3.44771525,21 3,20.5522847 3,20 L3,4 C3,3.44771525 3.44771525,3 4,3 C4.55228475,3 5,3.44771525 5,4 L5,19 Z" fill="#000000" fill-rule="nonzero" />
-												<rect fill="#000000" opacity="0.3" x="17" y="11" width="3" height="6" rx="1.5" />
+												<path d="M13.2070325,4 C13.0721672,4.47683179 13,4.97998812 13,5.5 C13,8.53756612 15.4624339,11 18.5,11 C19.0200119,11 19.5231682,10.9278328 20,10.7929675 L20,17 C20,18.6568542 18.6568542,20 17,20 L7,20 C5.34314575,20 4,18.6568542 4,17 L4,7 C4,5.34314575 5.34314575,4 7,4 L13.2070325,4 Z" fill="#000000" />
+												<circle fill="#000000" opacity="0.3" cx="18.5" cy="5.5" r="2.5" />
 											</g>
 										</svg>
 										<!--end::Svg Icon-->
 									</span>
 								</div>
-							</div>
+							</div> --}}
 							<div class="navi-text">
-								<div class="text-uppercase font-weight-bold"><strong>Trámites Pendientes</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<div class="text-uppercase font-weight-bold"><strong>perfil</strong></div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
-					</a> --}}
+					</a>
 					<!--end:Item-->
-					<!--begin::Item-->
-					{{-- <a href="{{ url()->route("tramites", ["curso"]) }}" class="navi-item">
+					<a href="{{ url()->route("tramite.cart") }}" class="navi-item">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-shopping-cart-1"></i>
+					</span>
 						<div class="navi-link">
-							<div class="symbol symbol-40 bg-light mr-3">
+							{{-- <div class="symbol symbol-40 bg-light mr-3">
 								<div class="symbol-label">
-									<span class="svg-icon svg-icon-md svg-icon-danger">
-										<!--begin::Svg Icon | path:media/svg/icons/Files/Selected-file.svg-->
-										<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-											<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-												<polygon points="0 0 24 0 24 24 0 24" />
-												<path d="M4.85714286,1 L11.7364114,1 C12.0910962,1 12.4343066,1.12568431 12.7051108,1.35473959 L17.4686994,5.3839416 C17.8056532,5.66894833 18,6.08787823 18,6.52920201 L18,19.0833333 C18,20.8738751 17.9795521,21 16.1428571,21 L4.85714286,21 C3.02044787,21 3,20.8738751 3,19.0833333 L3,2.91666667 C3,1.12612489 3.02044787,1 4.85714286,1 Z M8,12 C7.44771525,12 7,12.4477153 7,13 C7,13.5522847 7.44771525,14 8,14 L15,14 C15.5522847,14 16,13.5522847 16,13 C16,12.4477153 15.5522847,12 15,12 L8,12 Z M8,16 C7.44771525,16 7,16.4477153 7,17 C7,17.5522847 7.44771525,18 8,18 L11,18 C11.5522847,18 12,17.5522847 12,17 C12,16.4477153 11.5522847,16 11,16 L8,16 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" />
-												<path d="M6.85714286,3 L14.7364114,3 C15.0910962,3 15.4343066,3.12568431 15.7051108,3.35473959 L20.4686994,7.3839416 C20.8056532,7.66894833 21,8.08787823 21,8.52920201 L21,21.0833333 C21,22.8738751 20.9795521,23 19.1428571,23 L6.85714286,23 C5.02044787,23 5,22.8738751 5,21.0833333 L5,4.91666667 C5,3.12612489 5.02044787,3 6.85714286,3 Z M8,12 C7.44771525,12 7,12.4477153 7,13 C7,13.5522847 7.44771525,14 8,14 L15,14 C15.5522847,14 16,13.5522847 16,13 C16,12.4477153 15.5522847,12 15,12 L8,12 Z M8,16 C7.44771525,16 7,16.4477153 7,17 C7,17.5522847 7.44771525,18 8,18 L11,18 C11.5522847,18 12,17.5522847 12,17 C12,16.4477153 11.5522847,16 11,16 L8,16 Z" fill="#000000" fill-rule="nonzero" />
-											</g>
-										</svg>
-										<!--end::Svg Icon-->
-									</span>
-								</div>
-							</div>
-							<div class="navi-text">
-								<div class="text-uppercase font-weight-bold"><strong>Trámites en Curso</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
-							</div>
-						</div>
-					</a> --}}
-					<!--end:Item-->
-					<!--begin::Item-->
-					{{-- <a href="{{ url()->route("tramites", ["finalizados"]) }}" class="navi-item">
-						<div class="navi-link">
-							<div class="symbol symbol-40 bg-light mr-3">
-								<div class="symbol-label">
-									<span class="svg-icon svg-icon-md svg-icon-primary">
-										<!--begin::Svg Icon | path:media/svg/icons/Communication/Mail-opened.svg-->
+									<span class="svg-icon svg-icon-md svg-icon-success">
 										<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
 											<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 												<rect x="0" y="0" width="24" height="24" />
-												<path d="M6,2 L18,2 C18.5522847,2 19,2.44771525 19,3 L19,12 C19,12.5522847 18.5522847,13 18,13 L6,13 C5.44771525,13 5,12.5522847 5,12 L5,3 C5,2.44771525 5.44771525,2 6,2 Z M7.5,5 C7.22385763,5 7,5.22385763 7,5.5 C7,5.77614237 7.22385763,6 7.5,6 L13.5,6 C13.7761424,6 14,5.77614237 14,5.5 C14,5.22385763 13.7761424,5 13.5,5 L7.5,5 Z M7.5,7 C7.22385763,7 7,7.22385763 7,7.5 C7,7.77614237 7.22385763,8 7.5,8 L10.5,8 C10.7761424,8 11,7.77614237 11,7.5 C11,7.22385763 10.7761424,7 10.5,7 L7.5,7 Z" fill="#000000" opacity="0.3" />
-												<path d="M3.79274528,6.57253826 L12,12.5 L20.2072547,6.57253826 C20.4311176,6.4108595 20.7436609,6.46126971 20.9053396,6.68513259 C20.9668779,6.77033951 21,6.87277228 21,6.97787787 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,6.97787787 C3,6.70173549 3.22385763,6.47787787 3.5,6.47787787 C3.60510559,6.47787787 3.70753836,6.51099993 3.79274528,6.57253826 Z" fill="#000000" />
+												<path d="M13.2070325,4 C13.0721672,4.47683179 13,4.97998812 13,5.5 C13,8.53756612 15.4624339,11 18.5,11 C19.0200119,11 19.5231682,10.9278328 20,10.7929675 L20,17 C20,18.6568542 18.6568542,20 17,20 L7,20 C5.34314575,20 4,18.6568542 4,17 L4,7 C4,5.34314575 5.34314575,4 7,4 L13.2070325,4 Z" fill="#000000" />
+												<circle fill="#000000" opacity="0.3" cx="18.5" cy="5.5" r="2.5" />
+											</g>
+										</svg>
+									</span>
+								</div>
+							</div> --}}
+							<div class="navi-text">
+								<div class="text-uppercase font-weight-bold"><strong>Carrito</strong></div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
+							</div>
+						</div>
+					</a>
+					<!--end:Item-->
+					<a href="{{ url()->route("pendiente-firma") }}" class="navi-item">
+					<span style="float:left" class="svg-icon svg-icon-xl pt-3 pr-5">
+						<i class="flaticon2-pen"></i>
+					</span>
+						<div class="navi-link">
+							{{-- <div class="symbol symbol-40 bg-light mr-3">
+								<div class="symbol-label">
+									<span class="svg-icon svg-icon-md svg-icon-success">
+										<!--begin::Svg Icon | path:media/svg/icons/General/Notification2.svg-->
+										<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+											<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+												<rect x="0" y="0" width="24" height="24" />
+												<path d="M13.2070325,4 C13.0721672,4.47683179 13,4.97998812 13,5.5 C13,8.53756612 15.4624339,11 18.5,11 C19.0200119,11 19.5231682,10.9278328 20,10.7929675 L20,17 C20,18.6568542 18.6568542,20 17,20 L7,20 C5.34314575,20 4,18.6568542 4,17 L4,7 C4,5.34314575 5.34314575,4 7,4 L13.2070325,4 Z" fill="#000000" />
+												<circle fill="#000000" opacity="0.3" cx="18.5" cy="5.5" r="2.5" />
 											</g>
 										</svg>
 										<!--end::Svg Icon-->
 									</span>
 								</div>
-							</div>
+							</div> --}}
 							<div class="navi-text">
-								<div class="text-uppercase font-weight-bold"><strong>Trámites Finalizados</strong></div>
-								<div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+								<div class="text-uppercase font-weight-bold"><strong>Firma</strong></div>
+								<!-- <div class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div> -->
 							</div>
 						</div>
-					</a> --}}
+					</a>
 					<!--end:Item-->
 				</div>
 				<!--end::Nav-->
@@ -1115,6 +1147,9 @@
 					<!--end::Item-->
 				</div>
 				<!--end::Notifications--> --}}
+			</div>
+			<div style="width:100%; height:40px; left:0; background-color: red; position:absolute; bottom: 0;">  
+				<a href="{{ url()->route("logout") }}" class="text-center btn-lg btn-block" style="color:white !important;">Cerrar Sesión</a> 
 			</div>
 			<!--end::Content-->
 		</div>
