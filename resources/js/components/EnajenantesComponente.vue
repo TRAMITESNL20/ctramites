@@ -108,7 +108,7 @@
             </b-col>
             <b-col v-if="totalMontoOperacionDeclarado != totalMontoOperacionDeEnajentantes && enajentantes.length > 0">
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                  <strong>IMPORTANTE!</strong> El monto de operación declarado, no corresponde al ingresado en el Aviso de Enajenación
+                  <strong>IMPORTANTE!</strong> El monto de operación declarado, no corresponde al ingresado en el Aviso de Enajenación o no se ha presentado.
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
