@@ -7,7 +7,7 @@
                 <div class="wizard-nav">
                     <div class="wizard-steps">
                         <!--begin::Wizard StepS Nav-->
-                        <div v-for="(step, i) in steps" class="wizard-step" data-wizard-type="step" :data-wizard-state="step.state" :id="step.id" v-on:click="goTo(step.clickGotTo)">
+                        <div v-for="(step, i) in steps" class="wizard-step wizard-step-mobile" data-wizard-type="step" :data-wizard-state="step.state" :id="step.id" v-on:click="goTo(step.clickGotTo)">
                             <div class="wizard-wrapper">
                                 <div class="wizard-number">
                                   {{ step.wizardNumber}}
@@ -29,7 +29,7 @@
                 <!--begin: Wizard Body-->
                 <div class="card card-custom card-shadowless rounded-top-0">
                     <div class="card-body p-0">
-                        <div class="row justify-content-center py-8 px-8 py-lg-15 px-lg-10">
+                        <div class="row justify-content-center  py-lg-15 px-lg-10">
                             <div class="col-xl-12 col-xxl-12">
                                 <!--begin: Wizard Form-->
                                     <!--begin: Wizard Step 1 Campos tramite-->
@@ -85,7 +85,7 @@
                                         <div class="mr-2">
                                             <button type="button" class="btn btn-light-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-prev">Previous</button>
                                         </div>
-                                        <div >
+                                        <div class="pb-5" >
                                           <div class="btn-group" role="group" aria-label="Basic example">
                                              <btn-guardar-tramite-component
                                               type="temporal"
@@ -119,8 +119,11 @@
                                               labelBtn="Pagar"
                                               @tramiteAgregadoEvent="tramiteAgregadoEvent"
                                               ></btn-guardar-tramite-component>
-                                            <button type="button" id="btnWizard" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4" data-wizard-type="action-next" v-on:click="next()" v-if="currentStep != 3">
+                                            <button type="button" id="btnWizard" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4 arrow-desktop" data-wizard-type="action-next" v-on:click="next()" v-if="currentStep != 3">
                                                 Siguiente
+                                            </button>
+                                            <button type="button" id="btnWizard" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4 arrow-mobile" data-wizard-type="action-next" v-on:click="next()" v-if="currentStep != 3"> 
+                                                <i class="fas fa-arrow-right"></i>
                                             </button>
                                           </div>
                                         </div>

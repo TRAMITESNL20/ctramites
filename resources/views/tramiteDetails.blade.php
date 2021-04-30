@@ -1,6 +1,7 @@
 <?php
     $info = isset($tramite->info->campos->Escritura) ? $tramite->info->campos->Escritura : ( isset($tramite->info->campos->Expediente) ? $tramite->info->campos->Expediente : null );
     $camposConfigurados = [];
+    setlocale(LC_TIME, "spanish");
     foreach($tramite->info->camposConfigurados as $campo){
         $name = strtolower($campo->nombre);
         $name = preg_replace("([^A-Za-z\ ])", '', $name);
@@ -35,7 +36,7 @@
                 <div class="card mt-5">
                     @if ($tramite->tramite_id == getenv('TRAMITE_5_ISR'))
                         @foreach($camposConfigurados['expedientes']->expedientes as $ind => $expediente)
-                            <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>Expedientes Catastrales</strong><span class="btn btn-light ml-auto">{{ $ind+1 }} de {{ count($camposConfigurados['expedientes']->expedientes) }}</span></h5>
+                            <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>Expedientes Catastrales</strong><span class="btn btn-light ml-auto nowrap">{{ $ind+1 }} de {{ count($camposConfigurados['expedientes']->expedientes) }}</span></h5>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -49,7 +50,7 @@
                                     <div class="col-md-4">
                                         <span class="text-muted">Cálculo del ISR conforme al 126 LISR (Archivo)</span>
                                         <p>
-                                            @if(count($camposConfigurados['calculo_del_isr_conforme_al_lisr']) > 0)
+                                            @if( isset($camposConfigurados['calculo_del_isr_conforme_al_lisr'])  &&  (  $camposConfigurados['calculo_del_isr_conforme_al_lisr'] ) != null &&  count($camposConfigurados['calculo_del_isr_conforme_al_lisr'])  >   0 ) )
                                                 @foreach ($camposConfigurados['calculo_del_isr_conforme_al_lisr'] as $key => $documento)
                                                     <a href="{{ $documento }}" target="_blank" class="btn btn-primary text-white mt-2"><i class="fas fa-download"></i> Ver Documento {{  count($camposConfigurados['calculo_del_isr_conforme_al_lisr']) > 1 ? $key+1 : '' }}</a>
                                                 @endforeach

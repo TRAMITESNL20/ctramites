@@ -1,6 +1,6 @@
 <template>
     <div>
-        <iframe id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height:500px;" frameborder="0"> </iframe>
+        <iframe id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe>
     </div>
 </template>
 
@@ -27,6 +27,7 @@ export default {
 			urlFirmado: [],
 			guardado: false,
 			coutnLoad : 0
+            
 		}
 	},
 	mounted() {
@@ -67,6 +68,7 @@ export default {
 		this.encodeData();
     },
     methods: {
+      
     	validateSigned (evt) {
     		this.coutnLoad++;
             console.log(this.coutnLoad);
@@ -174,7 +176,7 @@ export default {
         
    
     },
- 
+  
 }
 
 
