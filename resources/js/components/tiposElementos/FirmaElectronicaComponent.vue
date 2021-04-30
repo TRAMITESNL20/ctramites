@@ -1,6 +1,6 @@
 <template>
     <div >
-        <iframe v-if="coutnLoad != 3" id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height:500px;" frameborder="0"> </iframe>
+        <iframe v-if="coutnLoad != 3" id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height: 550px;" frameborder="0"> </iframe>
     </div>
 </template>
 
@@ -82,7 +82,8 @@ export default {
         
     	validateSigned (evt) {
     		this.coutnLoad++;
-    		if(this.coutnLoad == 3){
+            console.log(this.coutnLoad);
+    		if(this.coutnLoad >= 2  &&  this.coutnLoad <= 5  ){
     			fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
                     method : 'POST',
                     body: JSON.stringify({ ids : this.idFirmado, status : 1, type : 'firmado', urls : this.urlFirmado, user_id: user.id })

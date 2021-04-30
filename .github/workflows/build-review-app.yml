@@ -14,8 +14,11 @@ jobs:
     steps:
     - name: Set env
       run: |
-        BRANCH=$(echo "${{ github.head_ref }}" | sed "s/\//\-/")
-        echo "BRANCH_PATH=deployed-$BRANCH" >> $GITHUB_ENV
+        BRANCH=$(echo "${{ github.head_ref }}" | sed "s/\//\-/g") &&
+        BRANCH=$(echo "$BRANCH" | sed "s/[0-9]*//g") &&
+        BRANCH=$(echo "$BRANCH" | sed "s/\.//g") &&
+        BRANCH=$(echo "$BRANCH" | sed "s/\-$//g") &&
+        echo "BRANCH_PATH=deployed-$BRANCH" >> $GITHUB_ENV &&
         echo "BRANCH_NAME=$BRANCH" >> $GITHUB_ENV
 
     - name: Test new env
@@ -61,10 +64,18 @@ jobs:
           echo "$branchPath" &&
           cd ${{ secrets.QA_FOLDER }} &&
           cd .. &&
-          if [ -d "$branchPath" ]; then rm -Rf $branchPath; fi &&
+
+          if [ -d "$branchPath" ];
+          then
+            test -f "$branchPath/.env" && cp $branchPath/.env .env.$branchPath;
+            echo ${{ secrets.QA_PASSWORD }} | sudo -S rm -Rf $branchPath;
+          fi &&
+          
           git clone -b ${{ github.head_ref }} --single-branch ${{ secrets.URL_REPO }} $branchPath &&
           cd $branchPath &&
-          cp ${{ secrets.QA_FOLDER }}/.env .env &&
+
+          test -f "../.env.$branchPath" && cp ../.env.$branchPath .env;
+          ! test -f "../.env.$branchPath" && cp ${{ secrets.QA_FOLDER }}/.env .env;
 
           search_1="APP_URL=\"http:\/\/10.153.144.218\/tramites-ciudadano" &&
           search_2="APP_PREFIX=\"\/tramites-ciudadano" &&

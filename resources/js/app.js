@@ -86,6 +86,8 @@ Vue.component('tree-component', () => import( /* webpackChunkName: "js/component
 Vue.component('agrupacion-items-carrrito-component', () => import( /* webpackChunkName: "js/components/generales/agrupacion-items-carrrito-component" */ './components/carShop/AgrupacionItemsCarrritoComponent.vue'));
 Vue.component("valuador-component" , () => import( /* webpackChunkName: "js/components/valuador-component" */ './components/ValuadorComponet.vue' ));
 
+Vue.component("complementaria-component" , () => import( /* webpackChunkName: "js/components/complementaria-component" */ './components/ComplementariaComponent.vue' ));
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -144,6 +146,19 @@ Vue.directive('uppercase',
       })
     }
   })
+
+Vue.directive('currency',
+  {
+    inserted: function(el, _, vnode) {
+          el.addEventListener('change', async function(e) {
+            let numero = Vue.filter('toNumber')(e.target.value +"");
+            e.target.value = Vue.filter('toCurrency')(numero +"")
+            vnode.componentInstance.$emit('input', e.target.value);
+          })
+        
+    }
+});
+
 
 const app = new Vue({
     el: '#app',

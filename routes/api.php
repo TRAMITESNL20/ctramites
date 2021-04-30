@@ -16,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/reference-payment/{reference}', "ReferenceController@paid");
 Route::delete('/reference-payment/{reference}', "ReferenceController@cancel");
+Route::delete('/reference-payment', "ReferenceController@cancel");
