@@ -284,7 +284,7 @@ class CalculoimpuestosController extends Controller
       //$this->e = $this->e - $pai_anterior;
 
       //Se calcula la diferencia entre el recargo actual y el anteriror
-      //$this->f = $this->f - $recargo_anterior;
+      $dif = $this->d - $impuesto;
 
 
       // importe total
@@ -323,6 +323,7 @@ class CalculoimpuestosController extends Controller
           "Pago provisional conforme al art 126 LISR" => $this->c,
           "Impuesto correspondiente a la entidad federativa" => $this->d,
           "Monto pagado en la declaracion inmediata anterior" => $impuesto,
+          "Diferencia de Impuesto correspondiente a la Entidad Federativa" => $dif,
           "Parte actualizada del impuesto" => $this->e,
           "Recargos" => $this->f,
           "Multa corrección fiscal" => $this->g,
