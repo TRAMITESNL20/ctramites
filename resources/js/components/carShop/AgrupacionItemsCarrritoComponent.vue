@@ -1,16 +1,16 @@
 <template>
 
     <div>
-        <div class="card-header container-fluid" id="newsHeading" style="background-color: transparent;">
+        <div class="card-header container-fluid not-padding-left-mobile" id="newsHeading" style="background-color: transparent;">
             <div class="row">
-                <div class="col">
+                <div class="col-xl-6 col-sm-10">
                     <h4 >
-                        <strong class="ml-3 text-uppercase text-truncate">
+                        <strong class="text-uppercase text-truncate text-initial">
                         {{ agrupacion.nombre }} 
                         </strong>
                     </h4>
                 </div>
-                <div class="col">
+                <div class="col-xl-6 col-sm-2 absolute-mobile" >
                     <button type="button" class="close" aria-label="Close" title="Quitar"  v-on:click="eliminar()" :disabled="desabilitar">
                       <span><i class="fas fa-trash" v-if="totalItemInGroup > 0" style="color:#808080;"></i> </span>
                     </button>

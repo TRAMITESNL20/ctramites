@@ -1,5 +1,5 @@
 
-<div class="content d-flex flex-column flex-column-fluid" id="app">
+<div class="content d-flex flex-column flex-column-fluid pt-0" id="app">
     <div class="d-flex flex-column-fluid">
 	    <div class="container">              
             <div>
@@ -18,8 +18,7 @@
 									<div class="row" >
 										<div class="col-lg-12 col-sm-12">
 											<div class="container">
-                                            <div class="pt-10 pl-10 pr-10">
-                                                    
+                                            <div class="pt-10 ">
                                                     <!-- <div class="pt-10 pl-10 pr-10"  v-if=" {{ strlen($tramitesDoc) }} != 2">
                                                         <div >
                                                             <p> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
@@ -27,7 +26,7 @@
                                                         </div>
                                                     </div> -->
 
-                                                    <div class="pt-10 pl-10 pr-10"  v-for="idTramite in {{$idTramites}}">
+                                                    <div class="pt-10 "  v-for="idTramite in {{$idTramites}}">
                                                         <firma-electronica-component :usuario="idTramite"   :user="{{$user}}" ></firma-electronica-component>
                                                     </div>
 

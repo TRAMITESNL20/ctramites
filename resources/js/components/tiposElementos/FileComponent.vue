@@ -2,7 +2,7 @@
   <div class=" fv-plugins-icon-container">
     <div class="input-group">
       <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroupFileAddon01">
+      <span class="input-group-text text-initial" id="inputGroupFileAddon01">
           {{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}
       </span>
       </div>

@@ -39,8 +39,10 @@
         </b-row>
         <b-row >
             <b-col  cols="12" >
-                <div class="table-responsive">
-                    <table class="table  table-striped">
+                <div class="table-responsive" id="scrollDiv">
+                        <div id="gradientBackgroundLeft" class="border-table-left" ></div>
+                        <div id="gradientBackgroundRight" class="border-table-right" ></div>
+                    <table class="table  table-striped" id="tableEnajenantes">
                         <thead style="border-bottom: solid;">
                             <tr>
                                 <th class="text-center">
@@ -64,6 +66,9 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- <div style="right:10; width:20%; height:100%; position:absolute "> -->
+                                <!-- <div class="border-table-left"></div> -->
+                                <!-- </div> -->
                             <tr  v-for="(registro, key) in enajentantes"  >
                                 <td class="text-center">
                                     <i class="fa fa-times" id="iconBtnEliminar"  @click="eliminar(key)" style="cursor: pointer; color: red;" title="Quitar"></i> 
@@ -96,6 +101,7 @@
                             </tr>
                         </tbody>
                     </table>
+
                 </div>
                 Porcentaje de venta asignado 
                 <b-progress :value="porcentajeTotalCompra" max="porcentajeVenta" show-value class="mb-3" :precision="$const.PRECISION"></b-progress>
@@ -204,7 +210,21 @@
                 this.calcularTotalMontoOperacionDeEnajentantes();
             }
             this.validar();
+            $('#gradientBackgroundLeft').hide();
+            
 		},
+        updated(){
+            var height = $("#tableEnajenantes")[0].clientHeight;
+            $("#gradientBackgroundLeft").css( "width" ,'12%');
+            $("#gradientBackgroundRight").css( "width" ,'12%');
+            $("#gradientBackgroundLeft").css( "height" ,  height+"px" );
+            $("#gradientBackgroundRight").css( "height" ,  height+"px" );
+            $('#scrollDiv').scroll( function() {
+                ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
+
+                ( $('#scrollDiv').scrollLeft() > 0) ? $('#gradientBackgroundLeft').show() : $('#gradientBackgroundLeft').hide();
+            });
+        },
         props:{
 
           campo:{

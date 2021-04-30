@@ -199,7 +199,7 @@
 			 									</valuador-component>
 			 								</div>
 		 									<div v-if="agrupacion.tieneSeccionDocumentos" class="col-md-12 col-lg-12">
-		 										<div class="text-right">
+		 										<div class="text-left">
 													<strong>Nota:</strong>
 													<small class="">
 														De no anexar el documento obligatorio, no podrá Imprimir su declaración fiscal, mismo que podra ser requerido por la Autoridad.
