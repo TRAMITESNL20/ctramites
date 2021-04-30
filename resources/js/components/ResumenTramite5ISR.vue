@@ -97,9 +97,9 @@
                                     <template-datos-personales-component :datosPersonales="data.item.enajenante.datosPersonales"></template-datos-personales-component>
                                 </template>
                                 <template #cell(detalle)="data" >
-                                    <div v-if="data.item.detalle && data.item.detalle.Complementaria">
+                                    <div v-if="data.item.detalle && data.item.detalle.Salidas">
                                         <div class="text-center">
-                                            {{currencyFormat('Cantidad a cargo', data.item.detalle.Complementaria['Cantidad a cargo'])}}
+                                            {{currencyFormat('Cantidad a cargo', data.item.detalle.Salidas['Cantidad a cargo'])}}
                                         </div>                          
                                     </div>
                                     <div v-else-if="!data.item.detalle || typeof data.item.detalle != 'object'">
@@ -120,20 +120,12 @@
                                 </template> 
                                 <template #row-details="data" #title="Detalle">
                                     <transition name="slide-fade" tag="b-card">
-                                        <b-card key="1" no-body v-if="data && data.item.detalle.Complementaria">
+                                        <b-card key="1" no-body v-if="data && data.item.detalle.Salidas">
                                                 <template #header>
                                                   <h4 class="mb-0">Complementaria</h4>
                                                 </template>
                                                 <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
-                                                    <b-row v-for="(salida, key) in data.item.detalle.Complementaria" :key="key">
-                                                        <b-col class="text-left" style="width: 70%" >
-                                                            <strong>{{ key }}</strong>
-                                                        </b-col>
-                                                        <b-col class="text-right" >
-                                                            <span class="text-muted">   {{ currencyFormat(key, salida) }} </span>
-                                                        </b-col>
-                                                    </b-row>
-                                                    <hr>
+                                                    
   
                                                     <b-row v-for="(salida, key) in data.item.detalle.Salidas" :key="key">
                                                         <b-col class="text-left" style="width: 70%" >
