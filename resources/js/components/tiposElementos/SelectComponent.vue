@@ -3,9 +3,9 @@
 		<label>{{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}</label>
     <multiselect v-model="campo.valor" :options="options" :multiple="campo.tipo == 'multiple'" label="nombre" track-by="clave" :searchable="true" @input="validar" ></multiselect>
 		<small v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
-			<p v-for="mensaje in campo.mensajes" class="form-text text-danger">
-				{{ mensaje.mensajeStr }}
-			</p>
+        <p  class="form-text text-danger">
+          {{ campo.mensajes[0].mensajeStr }}
+        </p>
 		</small>
 	</div>
 </template>
