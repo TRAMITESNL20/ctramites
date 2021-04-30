@@ -101,23 +101,9 @@
                       </div>    
                       <div>
                         <b-card no-body v-if="datosCostos && verDetalle">
-                          <template #header>
-                            <h4 class="mb-0">Complementaria</h4>
-                            <hr>
-                          </template>
-                            <b-card-body id="nav-scroller" ref="content "style=" height:300px; overflow-y:scroll;" v-if="typeof datosCostos == 'object'"  >             
-                              <b-row v-for="(salida, key) in datosCostos.Complementaria" :key="key">
-                                  <b-col class="text-left" style="width: 70%" >
-                                      <strong>{{ key }}</strong>
-                                  </b-col>
-                                  <b-col class="text-right" >
-                                      <span class="text-muted">   {{ currencyFormat(key, salida) }} </span>
-                                  </b-col>
-                              </b-row>
-                            </b-card-body>
                             <b-card no-body  v-if="typeof datosCostos == 'object'">
                                 <template #header>
-                                  <h4 class="mb-0">Normal</h4>
+                                  <h4 class="mb-0">Complementaria</h4>
                                   <hr>
                                 </template>
                                 <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
