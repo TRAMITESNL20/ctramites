@@ -50,7 +50,7 @@
                                     <div class="col-md-4">
                                         <span class="text-muted">Cálculo del ISR conforme al 126 LISR (Archivo)</span>
                                         <p>
-                                            @if( isset($camposConfigurados['calculo_del_isr_conforme_al_lisr'])  &&  (  $camposConfigurados['calculo_del_isr_conforme_al_lisr'] ) != null &&  count($camposConfigurados['calculo_del_isr_conforme_al_lisr'])  >   0 ) )
+                                            @if($camposConfigurados['calculo_del_isr_conforme_al_lisr'] != null && count($camposConfigurados['calculo_del_isr_conforme_al_lisr']) > 0)
                                                 @foreach ($camposConfigurados['calculo_del_isr_conforme_al_lisr'] as $key => $documento)
                                                     <a href="{{ $documento }}" target="_blank" class="btn btn-primary text-white mt-2"><i class="fas fa-download"></i> Ver Documento {{  count($camposConfigurados['calculo_del_isr_conforme_al_lisr']) > 1 ? $key+1 : '' }}</a>
                                                 @endforeach
