@@ -198,9 +198,9 @@ export default {
                             this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
                         
                             if(solicitud.required_docs == 1){
-                                this.docFirmadosListos.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf`);
+                                this.docFirmadosListos.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`);
                             }else{
-                                this.docFirmadosPendientes.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf`);
+                                this.docFirmadosPendientes.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`);
                             }
 
                         }else{
@@ -208,15 +208,15 @@ export default {
                             this.llave = `${solicitud.id}`;
                             this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
                             if(solicitud.required_docs == 1){
-                                this.docFirmadosListos.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf`);
+                                this.docFirmadosListos.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`);
                             }else{
-                                this.docFirmadosPendientes.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf`);
+                                this.docFirmadosPendientes.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.solicitudes[0].id}_${this.usuario.tramite_id}_firmado.pdf`);
                             }
                         }
 
                     this.rfc= this.user.rfc; 
                     this.idFirmado.push(solicitud.id);
-                    this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
+                    this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
                     })
                 this.accesToken();
                 this.encodeData();
