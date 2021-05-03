@@ -129,6 +129,7 @@ class CalculoimpuestosController extends Controller
 	    		"Multa corrección fiscal" => $this->g,
 	    		"Importe total" => $this->h,
     			),
+        "Nivel" => "Normal",
 
     	);
 
