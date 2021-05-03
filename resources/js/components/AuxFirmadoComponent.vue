@@ -12,7 +12,7 @@
             </div>
         </div>
                                                    
-        <div class="pt-10 pl-10 pr-10"  v-for="idTramite in usuario" v-if="docFirmado != 1">
+        <div class="pt-10 pl-10 pr-10"  v-for="idTramite in solicitudes" v-if="docFirmado != 1">
             <firma-electronica-component 
                 :usuario="idTramite"   
                 :user="user"  
@@ -69,15 +69,18 @@ export default {
             console.log('tramites updateed en aux' );
             console.log( newTramites);
             this.usuario = newTramites;
-            this.solicitudes = newTramites;
+            // this.solicitudes = newTramites;
             var cloned =  _.cloneDeep(newTramites);
             this.clonedData = cloned;
+            console.log('------clonedData');
+            console.log(this.clonedData);
+            this.solicitudes = this.clonedData;
             this.$forceUpdate();
         }
     },
     watch:{
-        usuario : (newVal) => console.log('watch newVal', newVal),
-        solicitudes : (newVal) => console.log('newVal solicitudes', newVal),
+        // usuario : (newVal) => console.log('watch newVal', newVal),
+        // solicitudes : (newVal) => console.log('newVal solicitudes', newVal),
         // usuario:{
         //     immediate: true,
         //     deep: true,
@@ -91,8 +94,8 @@ export default {
            immediate: true,
            deep: true,
            handler(oldVal, newVal){
-               console.log('oldval:' + oldVal + 'newVal' + newVal);
-               this.usuario = newVal;
+            //    console.log('oldval:' + oldVal + 'newVal' + newVal);
+            //    this.solicitudes = newVal;
            }
         }
     }

@@ -84,25 +84,39 @@ export default {
     	validateSigned (evt) {
     		this.coutnLoad++;
             console.log(this.coutnLoad);
-    		if(this.coutnLoad >= 2  &&  this.coutnLoad <= 5  ){
-    			fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
-                    method : 'POST',
-                    body: JSON.stringify({ ids : this.idFirmado, status : 1, type : 'firmado', urls : this.urlFirmado, user_id: user.id })
-                })
-                .then(res => res.json())
-                .then(res => {
-                    if(res.code === 200){
-                        console.log('Firmado');    
-                        this.tramiteFirmado = true;
-                        this.$emit('docFirmadosPendientes', this.docFirmadosPendientes);
-                        this.$emit('docFirmadosListos', this.docFirmadosListos);
-                        this.$emit('docFirmado', 1);
-                    }
-                    else console.log('Something goes wrong!', res);
-                });
-                this.$emit('urlFirmado', this.urlFirmado);
+                
+                if(this.coutnLoad >= 2  &&  this.coutnLoad <= 5  ){
 
-    		}
+                        fetch(this.urlFirmado[0], { method: 'GET' })
+                        .then(
+                            res => res.json()
+                            .then(
+                                res => {
+                                    if( res.code === 200 ){
+                                        
+                                        fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+                                                method : 'POST',
+                                                body: JSON.stringify({ ids : this.idFirmado, status : 1, type : 'firmado', urls : this.urlFirmado, user_id: user.id })
+                                            })
+                                            .then(res => res.json())
+                                            .then(res => {
+                                                if(res.code === 200){
+                                                    console.log('Firmado');    
+                                                    this.tramiteFirmado = true;
+                                                    this.$emit('docFirmadosPendientes', this.docFirmadosPendientes);
+                                                    this.$emit('docFirmadosListos', this.docFirmadosListos);
+                                                    this.$emit('docFirmado', 1);
+                                                }
+                                                else console.log('Something goes wrong!', res);
+                                            });
+                                            this.$emit('urlFirmado', this.urlFirmado);
+
+                                    } 
+                                }
+                            )
+                        );
+                        
+                }
     	},
         encodeData(){
             var urlDataGeneric =  process.env.INSUMOS_API_HOSTNAME + '/data_generic';
@@ -197,60 +211,60 @@ export default {
    
     },
     watch:{
-        usuario : (newVal) => console.log('newVal', newVal)
-        // usuario: {
-        //     handler(newVal, oldVal) {
-        //             this.docFirmadosListos= [];
-        //             this.docFirmadosPendientes= [];
-        //             console.log('Prop changed: ', newVal );
-        //             console.log('Prop changed| was: ', oldVal);
-        //             console.log('tramite actualizado en firma');
-        //             let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
-        //             this.usuario.solicitudes.map((solicitud, ind) => {
-        //                 console.log(solicitud);
-        //                 this.multiple = this.usuario.solicitudes.length > 1;
-        //                 var auxEnv = process.env.APP_URL;
-        //                 if ( auxEnv == "https://tramites.nl.gob.mx") {
-        //                     auxEnv = "http://tramites.nl.gob.mx";
-        //                 }
-        //                 let doc = `${APP_URL}/formato-declaracion/${solicitud.id}`;
-        //                 if(this.multiple){
-        //                     if(typeof this.doc === 'string') this.doc = [];
-        //                     this.doc.push(doc)
+            // usuario : (newVal) => console.log('newVal', newVal)
+        usuario: {
+            handler(newVal, oldVal) {
+                    this.docFirmadosListos= [];
+                    this.docFirmadosPendientes= [];
+                    console.log('Prop changed: ', newVal );
+                    console.log('Prop changed| was: ', oldVal);
+                    console.log('tramite actualizado en firma');
+                    let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
+                    this.usuario.solicitudes.map((solicitud, ind) => {
+                        console.log(solicitud);
+                        this.multiple = this.usuario.solicitudes.length > 1;
+                        var auxEnv = process.env.APP_URL;
+                        if ( auxEnv == "https://tramites.nl.gob.mx") {
+                            auxEnv = "http://tramites.nl.gob.mx";
+                        }
+                        let doc = `${APP_URL}/formato-declaracion/${solicitud.id}`;
+                        if(this.multiple){
+                            if(typeof this.doc === 'string') this.doc = [];
+                            this.doc.push(doc)
                             
-        //                     if(typeof this.llave === 'string') this.llave = [];
-        //                     this.llave.push(`${solicitud.id}`)
+                            if(typeof this.llave === 'string') this.llave = [];
+                            this.llave.push(`${solicitud.id}`)
                             
-        //                     if(typeof this.folio === 'string') this.folio = [];
-        //                     this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
+                            if(typeof this.folio === 'string') this.folio = [];
+                            this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
                         
-        //                     if(solicitud.required_docs == 1){
-        //                         this.docFirmadosListos.push(doc)
-        //                     }else{
-        //                         this.docFirmadosPendientes.push(doc);
-        //                     }
+                            if(solicitud.required_docs == 1){
+                                this.docFirmadosListos.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf`);
+                            }else{
+                                this.docFirmadosPendientes.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf`);
+                            }
 
-        //                 }else{
-        //                     this.doc = doc;
-        //                     this.llave = `${solicitud.id}`;
-        //                     this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
-        //                     if(solicitud.required_docs == 1){
-        //                         this.docFirmadosListos.push(doc)
-        //                     }else{
-        //                         this.docFirmadosPendientes.push(doc);
-        //                     }
-        //                 }
+                        }else{
+                            this.doc = doc;
+                            this.llave = `${solicitud.id}`;
+                            this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
+                            if(solicitud.required_docs == 1){
+                                this.docFirmadosListos.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf`);
+                            }else{
+                                this.docFirmadosPendientes.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf`);
+                            }
+                        }
 
-        //             this.rfc= this.user.rfc; 
-        //             this.idFirmado.push(solicitud.id);
-        //             this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
-        //             })
-        //         this.accesToken();
-        //         this.encodeData();
-        //         },
-        //         immediate: true, 
+                    this.rfc= this.user.rfc; 
+                    this.idFirmado.push(solicitud.id);
+                    this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_firmado.pdf` );
+                    })
+                this.accesToken();
+                this.encodeData();
+                },
+                immediate: true, 
             
-        //  }
+         }
     }
  
 }
