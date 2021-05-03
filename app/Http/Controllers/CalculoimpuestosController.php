@@ -284,7 +284,7 @@ class CalculoimpuestosController extends Controller
       //$this->e = $this->e - $pai_anterior;
 
       //Se calcula la diferencia entre el recargo actual y el anteriror
-      //$this->f = $this->f - $recargo_anterior;
+      $dif = $this->d - $impuesto;
 
 
       // importe total
@@ -311,6 +311,7 @@ class CalculoimpuestosController extends Controller
             "multa por correccion fiscal" => $this->g,
           ),
         "Salidas" => array(
+          "Folio de la declaración inmediata anterior" => $normal,
           "Fecha Actual"        => date("d-m-Y", strtotime($this->fecha_actual)),
           "Fecha vencimiento"     => date("d-m-Y", strtotime($this->fecha_vencimiento)),
           "Factor de Actualizacion"   => $this->factor_actualizacion,
@@ -321,11 +322,15 @@ class CalculoimpuestosController extends Controller
           "Monto obtenido conforme al art 127 LISR" => $this->b,
           "Pago provisional conforme al art 126 LISR" => $this->c,
           "Impuesto correspondiente a la entidad federativa" => $this->d,
+          "Monto pagado en la declaracion inmediata anterior" => $impuesto,
+          "Diferencia de Impuesto correspondiente a la Entidad Federativa" => $dif,
           "Parte actualizada del impuesto" => $this->e,
           "Recargos" => $this->f,
           "Multa corrección fiscal" => $this->g,
+          "Pago en exceso"  => $this->k,
+          "Cantidad a cargo" => $this->l,
           "Importe total" => $this->redondeo($this->h),
-          ),
+        ),
         "Complementaria"  => array(
           "Folio de la declaracion inmediata anterior"  => $normal,
           "Monto pagado en la declaracion inmediata anterior" => $impuesto,
