@@ -49,6 +49,7 @@ export default {
             urlFirmadoListo: [],
             urlFirmadoPendiente: [],
             docFirmado:'',
+            clonedData: '',
         }
     },
     methods: {
@@ -65,6 +66,8 @@ export default {
             console.log('tramites updateed en aux' );
             console.log( newTramites);
             this.usuario = newTramites;
+            var cloned =  _.cloneDeep(newTramites);
+            this.clonedData = cloned;
             this.$forceUpdate();
         }
     },
@@ -77,6 +80,15 @@ export default {
         //         this.usuario = newVal;
         //     }
         // }
+
+        clonedData:{
+           immediate: true,
+           deep: true,
+           handler(oldVal, newVal){
+               console.log('oldval:' + oldVal + 'newVal' + newVal);
+               this.usuario = newVal;
+           }
+        }
     }
     
 
