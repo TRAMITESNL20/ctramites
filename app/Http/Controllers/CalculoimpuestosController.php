@@ -341,7 +341,7 @@ class CalculoimpuestosController extends Controller
           "Multa corrección fiscal" => $this->g,
           "Pago en exceso"  => $this->k,
           "Cantidad a cargo" => $this->l,
-          "Importe total" => $this->redondeo($this->h),
+          "Importe total a pagar" => $this->l, //$this->redondeo($this->h),
         ),
         "Complementaria"  => array(
           "Folio de la declaracion inmediata anterior"  => $normal,
