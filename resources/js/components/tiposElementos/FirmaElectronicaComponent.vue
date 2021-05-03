@@ -42,38 +42,42 @@ export default {
         
     	validateSigned (evt) {
     		this.coutnLoad++;
+            var self = this;
             console.log(this.coutnLoad);
                 
                 if(this.coutnLoad >= 2  &&  this.coutnLoad <= 5  ){
 
                         fetch(this.urlFirmado[0], { method: 'GET' })
-                        .then(
-                            res => res.json()
-                            .then(
-                                res => {
-                                    if( res.code === 200 ){
-                                        
+                        .then( function(response ) {
+                                        console.log(self.idFirmado);
+                                        console.log(response.status);
+                                         // then log it out    
+                                    if( response.status == 200 ){
                                         fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
-                                                method : 'POST',
-                                                body: JSON.stringify({ ids : this.idFirmado, status : 1, type : 'firmado', urls : this.urlFirmado, user_id: user.id })
+                                            method : 'POST',
+                                                body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
                                             })
                                             .then(res => res.json())
-                                            .then(res => {
-                                                if(res.code === 200){
-                                                    console.log('Firmado');    
-                                                    this.tramiteFirmado = true;
-                                                    this.$emit('docFirmadosPendientes', this.docFirmadosPendientes);
-                                                    this.$emit('docFirmadosListos', this.docFirmadosListos);
-                                                    this.$emit('docFirmado', 1);
-                                                }
-                                                else console.log('Something goes wrong!', res);
+                                                .then(res => {
+                                                    if(res.code === 200){
+                                                        console.log('Firmado');    
+                                                        self.tramiteFirmado = true;
+                                                        self.$emit('docFirmadosPendientes', self.docFirmadosPendientes);
+                                                        self.$emit('docFirmadosListos', self.docFirmadosListos);
+                                                        self.$emit('docFirmado', 1);
+                                                        self.$emit('urlFirmado', self.urlFirmado);
+                                                    }
+                                                    else console.log('Something goes wrong!', res);
                                             });
-                                            this.$emit('urlFirmado', this.urlFirmado);
 
                                     } 
-                                }
-                            )
-                        );
+                                
+                            }) 
+                            .catch(function(error) {
+                                    console.log('no se encontro el archivo en insumos');
+                                    console.log(error);
+                            })
+                
                         
                 }
     	},
@@ -173,6 +177,11 @@ export default {
             // usuario : (newVal) => console.log('newVal', newVal)
         usuario: {
             handler(newVal, oldVal) {
+                    this.doc = [];
+                    this.idFirmado = [];
+                    this.folio = [];
+                    this.llave = [];
+                    this.urlFirmado = [];
                     this.docFirmadosListos= [];
                     this.docFirmadosPendientes= [];
                     console.log('Prop changed: ', newVal );
@@ -216,6 +225,7 @@ export default {
 
                     this.rfc= this.user.rfc; 
                     this.idFirmado.push(solicitud.id);
+                    console.log(this.idFirmado);
                     this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
                     })
                 this.accesToken();
