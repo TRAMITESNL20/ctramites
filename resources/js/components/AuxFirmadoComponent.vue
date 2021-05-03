@@ -29,12 +29,6 @@
                 :urlSourcePendiente="urlFirmadoPendiente" >  
             </vue-pdf-component>
         </div>
-
-        <!-- <code>usuario {{usuario.typeof()}}
-        </code>
-        <code> tramitesdoc{{ tramitesdoc.typeof()}}
-        </code> -->
-
        
   </div>
 
@@ -78,28 +72,6 @@ export default {
             this.$forceUpdate();
         }
     },
-    watch:{
-        // usuario : (newVal) => console.log('watch newVal', newVal),
-        // solicitudes : (newVal) => console.log('newVal solicitudes', newVal),
-        // usuario:{
-        //     immediate: true,
-        //     deep: true,
-        //     handler(oldVal, newVal){
-        //         console.log('oldval:' + oldVal + 'newVal' + newVal);
-        //         this.usuario = newVal;
-        //     }
-        // }
-
-        clonedData:{
-           immediate: true,
-           deep: true,
-           handler(oldVal, newVal){
-            //    console.log('oldval:' + oldVal + 'newVal' + newVal);
-            //    this.solicitudes = newVal;
-           }
-        }
-    }
-    
 
 }
 </script>
