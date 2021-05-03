@@ -215,7 +215,7 @@ class CalculoimpuestosController extends Controller
               $nivel = "CF";
             }
           }catch(\Exception $e){
-            $nivel = "Complementaria";
+            $nivel = "C1";
             Log::info('Registro sin Nivel'. $e->getMessage());
           }
 
