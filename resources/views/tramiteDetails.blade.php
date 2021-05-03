@@ -1,43 +1,13 @@
 <?php
     $info = isset($tramite->info->campos->Escritura) ? $tramite->info->campos->Escritura : ( isset($tramite->info->campos->Expediente) ? $tramite->info->campos->Expediente : null );
     $camposConfigurados = [];
+    setlocale(LC_TIME, "spanish");
     foreach($tramite->info->camposConfigurados as $campo){
         $name = strtolower($campo->nombre);
         $name = preg_replace("([^A-Za-z\ ])", '', $name);
         $name = preg_replace('/\s+/', '_', $name);
-        $camposConfigurados[$name] = isset($campo->valor) ? $campo->valor : (isset($campo->archivoCargado) ? $campo->archivoCargado : null);
+        $camposConfigurados[$campo->alias] = isset($campo->documento) ? $campo->documento : (isset($campo->valor) ? $campo->valor : null);
     }
-    // dd($camposConfigurados);
-    // function getFields ($campos) {
-        // $fields = "";
-        // foreach($campos as $key => $val){
-            // if(gettype($val) == 'array'){
-                // for($item in $val){
-                    // $fields .= getFields($val);
-                // }
-                // return true;
-            // }
-            // if(gettype($value) == "object"){
-                // if(isset($value->nombre)) $val = $val->nombre;
-                // else{
-                    // $fields .= getFields($val);
-                    // return true;
-                // }
-            // }
-            // $fields .= "
-                // <div class=\"col-md-6\">
-                    // <span class=\"text-muted\">{$key}</span>
-                    // <p><strong>{$val}</strong></p>
-                // </div>
-            // ";
-
-        // }
-
-        // return $fields;
-    // }
-
-     // echo getFields($tramite->info->campos);
-// die();
 ?>
 <div class="content d-flex flex-column flex-column-fluid" id="app">
     <div class="d-flex flex-column-fluid">
@@ -54,7 +24,7 @@
                 	<div class="card-body">
                 		<div class="row align-items-center">
                 			<div class="col">
-		                		<h3 class="m-0">{{ $tramite->titulo }}</h3>
+		                		<h3 class="m-0 text-uppercase">{{ $tramite->info->tipoTramite }}</h3>
 		                		<p class="text-muted m-0">{{ $tramite->clave }}</p>
                 			</div>
                 			<div class="col text-right">
@@ -66,7 +36,7 @@
                 <div class="card mt-5">
                     @if ($tramite->tramite_id == getenv('TRAMITE_5_ISR'))
                         @foreach($camposConfigurados['expedientes']->expedientes as $ind => $expediente)
-                            <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>Expedientes Catastrales</strong><span class="btn btn-light ml-auto">{{ $ind+1 }} de {{ count($camposConfigurados['expedientes']->expedientes) }}</span></h5>
+                            <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>Expedientes Catastrales</strong><span class="btn btn-light ml-auto nowrap">{{ $ind+1 }} de {{ count($camposConfigurados['expedientes']->expedientes) }}</span></h5>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -80,8 +50,10 @@
                                     <div class="col-md-4">
                                         <span class="text-muted">Cálculo del ISR conforme al 126 LISR (Archivo)</span>
                                         <p>
-                                            @if($camposConfigurados['calculo_del_isr_conforme_al_lisr'])
-                                                <a href="" target="_blank" class="btn btn-primary text-white mt-2"><i class="fas fa-download"></i> Ver Documento</a>
+                                            @if( isset($camposConfigurados['calculo_del_isr_conforme_al_lisr'])  &&  (  $camposConfigurados['calculo_del_isr_conforme_al_lisr'] ) != null &&  count($camposConfigurados['calculo_del_isr_conforme_al_lisr'])  >   0 ) )
+                                                @foreach ($camposConfigurados['calculo_del_isr_conforme_al_lisr'] as $key => $documento)
+                                                    <a href="{{ $documento }}" target="_blank" class="btn btn-primary text-white mt-2"><i class="fas fa-download"></i> Ver Documento {{  count($camposConfigurados['calculo_del_isr_conforme_al_lisr']) > 1 ? $key+1 : '' }}</a>
+                                                @endforeach
                                             @else
                                             -
                                             @endif
@@ -110,7 +82,7 @@
                                 <div class="row">
                                     <?php
                                         foreach($expediente->direccion as $key => $val){
-                                            if(gettype($val) == 'array' && count($val) == 1){
+                                            if(gettype($val) == 'array'){
                                                 echo "</div>
                                                 </div>
                                                 <h6 class=\"card-header\"><strong>".strtoupper(str_replace('_', ' ', $key))."</strong></h6>

@@ -29,13 +29,14 @@
 import Vue from 'vue';
 export default {
     props:['item'],
-    updated(){
+    mounted(){
         if(this.item.datos_catastrales){
             this.item.datos_catastrales.map( dato => {
                 dato.valor_catastral = Vue.filter('toCurrency')(dato.valor_catastral);
                 return dato;
             });
         }
+        
     },
     methods: {
         toggle: function (key) {

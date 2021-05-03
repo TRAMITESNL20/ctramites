@@ -125,7 +125,8 @@
 				<tr>
 					<td class="columna value" style="width: 33%;">{{ $info->solicitudes[0]->info->campos->{'Escritura'} ?? '' }}</td>
 					<td class="columna value" style="width: auto;" colspan="2"></td>
-					<td class="columna value" style="width: 33%;">{{ $info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'} ?? ''}}</td>
+					
+					<td class="columna value" style="width: 33%;">{{ isset($info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'}) ?  date(  "d-m-Y", strtotime($info->solicitudes[0]->info->campos->{'Fecha de escritura o minuta'}) )  : ( isset($info->solicitudes[0]->info->{'fechaEscritura'}) ? $info->solicitudes[0]->info->{'fechaEscritura'} : '' )}}   </td>
 				</tr>
 				<tr>
 					<td class="columna" style="width: 1%">MUNICIPIO</td>
@@ -140,7 +141,7 @@
 			<tr >
 				<td class="titulo1" colspan="4"> <strong> DATOS DEL ENAJENANTE </strong></td>
 			</tr>
-			@if($enajenante)
+			@if( isset($enajenante->tipoPersona))
 				@if ($enajenante->tipoPersona == 'pf')
 					<tr class="datos-enajenante first">
 						<td class="columna">REGISTRO FEDERAL DEL CONTRIBUYENTE:</td>
@@ -258,7 +259,8 @@
 					<td class="columna">REFERENCIA BANCARIA</td>
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }} last">
-					<td class="columna value">{{ $control->operaciones->{'fecha_pago'} ?? "-" }}</td>
+					<td class="columna value">{{  date(  "d-m-Y", strtotime($control->operaciones->{'fecha_pago'}) )    }}   </td>
+					
 					<td class="columna value" colspan="2">{{ $control->operaciones->{'operacion_interna'} ?? "-" }}</td>
 					<td class="columna value">{{  $control->operaciones->{'referencia'}  ?? "-"  }}</td>
 				</tr>
@@ -273,17 +275,17 @@
 			@endif
 		</tbody>
 	</table>
-	<div class="footer">
-		<table style="width: 100%; margin-top:0px; text-align:center;" >
+	<div class="footer"   >
+		<table style="width: 100%; margin-top:0px; float: right;" border="0" >
 			<tr class="">
 				<td class=""></td>
 				<td class=""></td>
 				<td class=""></td>
 			</tr>
 			<tr class="">
-				<td class="border_bottom  columna" style="text-align:left	">{{ $user->role->description ??'' }}  {{ $user->name ??'' }} {{ $user->mothers_surname ??'' }} {{ $user->fathers_surname ??'' }} {{ $user->curp ??'' }}   </td>
+				<td class="border_bottom  columna" style="text-align:left	">{{ $user}}   </td>
 				<td class="border_bottom columna"></td>
-				<td class="border_bottom columna value text-left">Codigo QR Oficial</td>
+				<td  class="border_bottom columna value text-right" style="width:150px">Codigo QR Oficial</td>
 			</tr>
 			<tr class="datos-enajenante">
 				<td  colspan="3"><div style="height:26px;"></div></td>
