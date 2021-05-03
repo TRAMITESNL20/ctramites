@@ -201,7 +201,7 @@
             currencyFormat(campoName, salida){
                   let arr = ["Ganancia Obtenida","Monto obtenido conforme al art 127 LISR",
                               "Pago provisional conforme al art 126 LISR","Impuesto correspondiente a la entidad federativa",
-                              "Parte actualizada del impuesto", "Recargos", "Multa corrección fiscal", "Importe total","Monto pagado en la declaracion inmediata anterior","Pago en exceso", "Cantidad a cargo"];
+                              "Parte actualizada del impuesto", "Recargos", "Multa corrección fiscal", "Importe total","Monto pagado en la declaracion inmediata anterior","Pago en exceso", "Cantidad a cargo", "Diferencia de Impuesto correspondiente a la Entidad Federativa"];
                   if(arr.includes(campoName)){
                       let text = Vue.filter('toCurrency')(salida);
                       return text;
