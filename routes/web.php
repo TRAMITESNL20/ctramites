@@ -33,7 +33,7 @@ Route::post("/ssl-proxy", function(){
 	}
 	$url = Request::query('url');
 	$data = Request::toArray();
-	$response = curlSendRequest('POST', $url, $data, $headers);
+	$response = curlSendRequest('POST', $url, $data, $headers, null, true);
     return json_encode($response);
 });
 

@@ -15,11 +15,12 @@ jobs:
     - name: Set env
       run: |
         BRANCH=$(echo "${{ github.head_ref }}" | sed "s/\//\-/g") &&
+        BRANCH=$(echo "$BRANCH" | sed "s/\_/\-/g") &&
         BRANCH=$(echo "$BRANCH" | sed "s/[0-9]*//g") &&
         BRANCH=$(echo "$BRANCH" | sed "s/\.//g") &&
         BRANCH=$(echo "$BRANCH" | sed "s/\-$//g") &&
         echo "BRANCH_PATH=deployed-$BRANCH" >> $GITHUB_ENV &&
-        echo "BRANCH_NAME=$BRANCH" >> $GITHUB_ENV
+        echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
 
     - name: Test new env
       run: |

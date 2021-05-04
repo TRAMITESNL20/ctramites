@@ -129,6 +129,7 @@ class CalculoimpuestosController extends Controller
 	    		"Multa corrección fiscal" => $this->g,
 	    		"Importe total" => $this->h,
     			),
+        "Nivel" => "Normal",
 
     	);
 
@@ -202,7 +203,24 @@ class CalculoimpuestosController extends Controller
           $datos_normal = $info->detalle;
 
           $salidas = $datos_normal->Salidas;
-          //dd($salidas);
+          try{
+            $nivel = $datos_normal->Nivel;
+            if($nivel == "Normal"){
+              $nivel = "C1";
+            }elseif ($nivel == "C1") {
+              $nivel = "C2";
+            }elseif ($nivel == "C2") {
+              $nivel = "C3";
+            }elseif ($nivel == "C3") {
+              $nivel = "CF";
+            }
+          }catch(\Exception $e){
+            $nivel = "C1";
+            Log::info('Registro sin Nivel'. $e->getMessage());
+          }
+
+
+
           foreach($salidas as $s => $v)
           {
 
@@ -329,14 +347,15 @@ class CalculoimpuestosController extends Controller
           "Multa corrección fiscal" => $this->g,
           "Pago en exceso"  => $this->k,
           "Cantidad a cargo" => $this->l,
-          "Importe total" => $this->redondeo($this->h),
+          "Importe total a pagar" => $this->l, //$this->redondeo($this->h),
         ),
         "Complementaria"  => array(
           "Folio de la declaracion inmediata anterior"  => $normal,
           "Monto pagado en la declaracion inmediata anterior" => $impuesto,
           "Pago en exceso"  => $this->k,
           "Cantidad a cargo" => $this->l,
-        )
+        ),
+        "Nivel" => $nivel,
 
       );
 
