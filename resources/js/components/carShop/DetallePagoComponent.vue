@@ -28,7 +28,7 @@
                 </li>
             </ul>
 
-            <button id="metodoPagoBtn" type="button" class="btn btn-primary btn-block" v-on:click="metodoPago()" :disabled="!obtenidoCostos || consultandoMetodos">
+            <button id="metodoPagoBtn" v-if="!mostrarCancelarPago"  type="button" class="btn btn-info btn-block" v-on:click="metodoPago()" :disabled="!obtenidoCostos || consultandoMetodos">
                 Pagar
                 <div id="spinner-pago" class="spinner-border spinner-border-sm float-right" role="status" v-if="consultandoMetodos">
                     <span class="sr-only">Loading...</span>

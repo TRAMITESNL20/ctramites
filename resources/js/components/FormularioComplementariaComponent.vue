@@ -169,7 +169,10 @@
         },
 
         mounted() {
-            this.getDetalle();
+          if(this.info.datosComplementaria){
+            this.form = this.info.datosComplementaria;
+          }
+          this.getDetalle();
         },
 
         methods:{
