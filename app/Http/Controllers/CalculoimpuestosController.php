@@ -203,17 +203,23 @@ class CalculoimpuestosController extends Controller
           $datos_normal = $info->detalle;
 
           $salidas = $datos_normal->Salidas;
-          $nivel = $datos_normal->Nivel;
-
-          if($nivel == "Normal"){
+          try{
+            $nivel = $datos_normal->Nivel;
+            if($nivel == "Normal"){
+              $nivel = "C1";
+            }elseif ($nivel == "C1") {
+              $nivel = "C2";
+            }elseif ($nivel == "C2") {
+              $nivel = "C3";
+            }elseif ($nivel == "C3") {
+              $nivel = "CF";
+            }
+          }catch(\Exception $e){
             $nivel = "C1";
-          }elseif ($nivel == "C1") {
-            $nivel = "C2";
-          }elseif ($nivel == "C2") {
-            $nivel = "C3";
-          }elseif ($nivel == "C3") {
-            $nivel = "CF";
+            Log::info('Registro sin Nivel'. $e->getMessage());
           }
+
+
 
           foreach($salidas as $s => $v)
           {

@@ -7,9 +7,9 @@
       class="form-control  form-control-lg " style="background-color: #e5f2f5 !important" v-model="campo.valor"
       @change="validar" ></textarea>
       <small   v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
-         <p v-for="mensaje in campo.mensajes" class="form-text text-danger">
-          {{ mensaje.mensajeStr }}
-        </p>
+          <p  class="form-text text-danger">
+            {{ campo.mensajes[0].mensajeStr }}
+          </p>
       </small>
     
   </div>
