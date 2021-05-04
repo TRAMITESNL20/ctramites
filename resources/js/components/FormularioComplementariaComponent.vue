@@ -37,7 +37,7 @@
                       </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
-                  <!--
+         
                   <b-col cols="12" md="6">
                     <b-form-group label="MONTO OBTENIDO CONFORME AL ART 127 LISR" label-for="monto-obtenido-conforme-isr-input" >
                       <b-input-group  >
@@ -50,7 +50,7 @@
                         ></b-form-input>
                       </b-input-group>
                     </b-form-group>
-                  </b-col> -->
+                  </b-col> 
                   <b-col cols="12" md="6">
                     <b-form-group label="MULTA POR CORRECCION FISCAL" label-for="multa-correccion-fiscal-input" >
                       
