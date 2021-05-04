@@ -18,15 +18,14 @@
                 :user="user"  
                 @docFirmado="docFirmadoMethod"
                 @docFirmadosListos="urlFirmadoListoMethod"
-                @docFirmadosPendientes="urlFirmadoPendienteMethod"
                 >
             </firma-electronica-component>
         </div>
 
-        <div  v-if="docFirmado == 1">
+        <div >
             <vue-pdf-component 
                 :urlSourceListo="urlFirmadoListo" 
-                :urlSourcePendiente="urlFirmadoPendiente" >  
+            >  
             </vue-pdf-component>
         </div>
        
@@ -43,7 +42,6 @@ export default {
     data(){
         return {
             urlFirmadoListo: [],
-            urlFirmadoPendiente: [],
             docFirmado:'',
             clonedData: '',
             solicitudes : this.usuario
@@ -53,9 +51,9 @@ export default {
         urlFirmadoListoMethod(urlArray) {
            this.urlFirmadoListo = urlArray; 
         },
-        urlFirmadoPendienteMethod(urlArray) {
-           this.urlFirmadoPendiente = urlArray;
-        },
+        // urlFirmadoPendienteMethod(urlArray) {
+        //    this.urlFirmadoPendiente = urlArray;
+        // },
         docFirmadoMethod(firmado){
             this.docFirmado =  firmado;
         },

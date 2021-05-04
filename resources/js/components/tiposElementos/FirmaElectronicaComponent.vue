@@ -62,7 +62,7 @@ export default {
                                                     if(res.code === 200){
                                                         console.log('Firmado');    
                                                         self.tramiteFirmado = true;
-                                                        self.$emit('docFirmadosPendientes', self.docFirmadosPendientes);
+                                                        // self.$emit('docFirmadosPendientes', self.docFirmadosPendientes);
                                                         self.$emit('docFirmadosListos', self.docFirmadosListos);
                                                         self.$emit('docFirmado', 1);
                                                         self.$emit('urlFirmado', self.urlFirmado);
@@ -207,9 +207,13 @@ export default {
                             this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
                         
                             if(solicitud.required_docs == 1){
-                                this.docFirmadosListos.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`);
+                                console.log('/////');
+                                console.log(solicitud);
+                                solicitud['urlDocumentoFirmado'] = `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`;
+                                this.docFirmadosListos.push(solicitud);
                             }else{
-                                this.docFirmadosPendientes.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`);
+                                solicitud['urlDocumentoFirmado'] =  `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`;
+                                this.docFirmadosListos.push(solicitud);
                             }
 
                         }else{
@@ -217,9 +221,11 @@ export default {
                             this.llave = `${solicitud.id}`;
                             this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
                             if(solicitud.required_docs == 1){
-                                this.docFirmadosListos.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`);
+                                solicitud['urlDocumentoFirmado'] = `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` ;
+                                this.docFirmadosListos.push(solicitud);
                             }else{
-                                this.docFirmadosPendientes.push(`${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.solicitudes[0].id}_${this.usuario.tramite_id}_firmado.pdf`);
+                                solicitud['urlDocumentoFirmado'] = `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` ;
+                                this.docFirmadosListos.push(solicitud);
                             }
                         }
 

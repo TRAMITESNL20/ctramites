@@ -12,16 +12,15 @@
                     </button>
                     <h4 class="modal-title">Ingresa los documentos correspondientes</h4>
                 </div>
+                 <div id="docAlert" class="w-100">
+                            <div role="alert" class="alert alert-warning alert-dismissible fade show ">Ocurrio un error al guardar el documento intente nuevamente 
+                            <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true">×</span></button></div>
+                </div>
                 <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body">
                     
                     <h3>Tramite id: {{tramiteDoc.id}} </h3>
 
                     <div class="input-group">
-                        
-                        <div id="docAlert" class="w-100">
-                            <div role="alert" class="alert alert-warning alert-dismissible fade show ">Ocurrio un error al guardar el documento intente nuevamente 
-                            <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true">×</span></button></div>
-                        </div>
 
                         <div class="input-group-prepend">
                             <span id="inputGroupFileAddon01" class="input-group-text">
@@ -39,8 +38,7 @@
 
                             <label class="custom-file-label"
                             ><span>
-                                {{index}}
-                                {{  fileName[index] ? fileName[index] : 'Seleccione archivo' }}
+                                {{  fileName[index] ? fileName[index] : 'Seleccione el archivo' }}
                             </span>
                             </label>
                       
@@ -81,10 +79,9 @@ export default {
     mounted(){
         $('#modalDocument').appendTo("body");
          $("#docAlert").hide();
-         console.log('---idTramites');
-         console.log(this.idtramites);
-         console.log('---TramitesDoc');
-         console.log(this.tramitesdoc);
+    },
+    created(){
+         $("#docAlert").hide();
     },
     methods:{
         enviarDocumentos(){
@@ -103,7 +100,7 @@ export default {
                                         self.idtramites[0].solicitudes[i].required_docs = 1;
                                     }
                             }
-                            console.log('emited desde moral nuevos valores');
+                            console.log('Guardado desde el modal');
                             this.$emit('updatedTramites', self.idtramites);
                         }  
                     $('#modalDocument').modal('hide');                        
@@ -127,6 +124,10 @@ export default {
                 // var i = $(this).prev('label').clone();
                 var auxName = $('#'+id)[0].files[0].name;
                 this.fileName[index] = auxName;   
+
+                this.$forceUpdate();
+
+
                 console.log(auxName);
                 console.log(this.fileName[index]);
 
