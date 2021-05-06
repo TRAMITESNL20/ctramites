@@ -2,7 +2,7 @@
   <div>
 
     <div class="w-100" v-for="(solicitud, index) in urlSourceListo" >
-      <div class="card list-item card-custom gutter-b col-lg-12" style="background-color: rgb(217, 222, 226) !important" >
+      <div class="card list-item card-custom mb-5 col-lg-12" style="background-color: rgb(217, 222, 226) !important" >
         <div class="d-flex mobile-lista-multiple align-items-center mb-3">
           <!---->
           <div class="mr-auto espace-checkbox-text desktop-agrupacion-width" style="width: 70%">
@@ -31,8 +31,8 @@
               </button>
 
                 <!-- boton de descarga  -->
-                <a  v-if="solicitud.required_docs != 1" :href="solicitud.urlDocumentoFirmado" target="_blank" :disabled="solicitud.required_docs != 1"  v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]"  style="border-top-left-radius:0px;border-bottom-left-radius:0px"  class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" >DESCARGAR</a>
-                <a  v-if="solicitud.required_docs == 1" :href="solicitud.urlDocumentoFirmado" target="_blank" v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]"   class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" >DESCARGAR</a>
+                <a  v-if="solicitud.required_docs != 1" :href="solicitud.urlDocumentoFirmado" target="_blank" :disabled="solicitud.required_docs != 1"  v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]"  style="border-top-left-radius:0px;border-bottom-left-radius:0px"  class="btn btn-primary font-weight-bolder text-uppercase text-white mr-5" >DESCARGAR</a>
+                <a  v-if="solicitud.required_docs == 1" :href="solicitud.urlDocumentoFirmado" target="_blank" v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]"   class="btn btn-primary font-weight-bolder text-uppercase text-white mr-5" >DESCARGAR</a>
                 <!-- boton de collapse -->
                 <button
                   class="btn btn-secondary"
