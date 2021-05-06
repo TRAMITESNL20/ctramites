@@ -32,7 +32,7 @@
           </div>
         </div>
         <!-- ----- COLAPSABLE ---- -->
-        <div  :id="`#collapse-${index}`" class="collapse show" style="" >
+        <div  :id="`collapse-${index}`" class="collapse " style="" >
           <div class="card list-item card-custom gutter-b col-lg-12" >
             <div class="card-body p-0">
               <div class="d-flex">
