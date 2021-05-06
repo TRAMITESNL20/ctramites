@@ -3,7 +3,7 @@
 		<div class="card-body justify-content-center align-items-center text-center">
 			<img style="margin-left: auto;margin-right: auto; display: block;" src="{{ assets("images/logo.svg") }}" alt="" width="200">
 			<h1 class="mt-20"><strong>INICIA SESIÓN</strong></h1>
-			<p>Ingrese tus datos de acceso:</p>
+			<p>Ingresa tus datos de acceso:</p>
 			<form class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
 				<div class="form-group fv-plugins-icon-container px-6">
 					<input

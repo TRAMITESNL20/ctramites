@@ -27,7 +27,7 @@
                   <v-expansion-panel v-for="(tramite, index) in tramitesObtenidos" :key="tramite.id">
                     <v-expansion-panel-header >
                       <span class="text-left">
-                          <b-form-checkbox v-model="tramite.selected" :key="tramite.id" name="flavour-3a"  @change="clickChecbox()" switch>
+                          <b-form-checkbox v-model="tramite.selected" :key="tramite.id" name="flavour-3a"  @change="clickChecbox()" switch :id="tramite.id + '-checkbox'">
                             <span>
                             {{ tramite.info.enajenante.datosPersonales.curp ||  ""}}-  
                             {{ tramite.info.enajenante.datosPersonales.nombre || ""}} 
@@ -44,7 +44,7 @@
                     </v-expansion-panel-header>
                     <v-expansion-panel-content v-if="tramite.selected">
                       <formulario-complementaria-component :info="{
-                        fechaEscritura, folio, idTramite:tramite.id, index
+                        fechaEscritura, folio, idTramite:tramite.id, index, datosComplementaria: tramite.datosComplementaria
                       }" @updateForm="updateForm"></formulario-complementaria-component>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
@@ -61,7 +61,14 @@
   
 <script>
 
-    export default {     
+    export default {        
+      props:{
+
+        infoGuardada:{
+          default: null,
+        },
+
+      },     
       data() {
         return {
           folio:'',
@@ -74,37 +81,70 @@
         }
       },
       created() {
-        this.validar();
+        if(this.infoGuardada && this.infoGuardada.datosComplementaria) {
+          this.folio = this.infoGuardada.datosComplementaria.folio;
+          this.fechaEscritura = this.infoGuardada.datosComplementaria.fechaEscritura;
+          this.getInformacion();
+        } else{
+          this.validar();
+        }
       },
       methods: {
-        async getInformacion(){
-          if( this.folio && this.folio.length > 0 ){
-            this.buscandoInformacion = true;
+        async getData(){
+          try {
             let url = process.env.TESORERIA_HOSTNAME + "/getInfoNormales/" + this.folio;
-            try {
-              let response = await axios.get(url);
+            let response = await axios.get(url);
+            return response.data;
+          } catch (error) {
+        
+          }
+        },
+        getInformacion(){
+          let self = this;
+          if( self.folio && self.folio.length > 0 ){
+            let response = [];
+            self.buscandoInformacion = true;
+            (async () => {
+              
+              response = await self.getData();
 
-              this.tramitesObtenidos = response.data.tramites.length > 0 ? response.data.tramites[0].solicitudes : [];
+              let tramitesObtenidos = response.tramites.length > 0 ? response.tramites[0].solicitudes : [];
 
-              if(this.tramitesObtenidos.length > 0){
-                let arrFecha =  this.tramitesObtenidos[0].info.detalle.Entradas.fecha_escritura.split("-");
+              if(tramitesObtenidos.length > 0){
+                let arrFecha =  tramitesObtenidos[0].info.detalle.Entradas.fecha_escritura.split("-");
                 arrFecha[1] = arrFecha[1].padStart(2, "0");
                 arrFecha[2] = arrFecha[2].padStart(2, "0");
-                this.fechaEscritura = arrFecha.reverse().join("-");
-                
-              }
-              
-              this.mensaje = this.tramitesObtenidos.length  == 0 ?  "No se encontraron tramites relacionados a este Folio" :  "";
-            } catch (error) {
-              
+                self.fechaEscritura = arrFecha.reverse().join("-");
 
-            }
+                if(self.infoGuardada && self.infoGuardada.datosComplementaria && self.infoGuardada.datosComplementaria.complementarias.length > 0) {
+
+                   tramitesObtenidos.map( tramite=>{
+                    let seGuardoAnteriormente = self.infoGuardada.datosComplementaria.complementarias.find(complementariaGuardadda=> tramite.id == complementariaGuardadda.idTicketAnterior);
+                    if(seGuardoAnteriormente){
+                      tramite.selected = true;
+                      tramite.datosComplementaria = seGuardoAnteriormente.datosComplementaria;
+                    }
+                    return tramite
+                   });
+                  self.tramitesObtenidos = tramitesObtenidos;
+                  self.mensaje = self.tramitesObtenidos.length  == 0 ?  "No se encontraron tramites relacionados a este Folio" :  "";
+                  self.clickChecbox();
+                } else{
+                  self.tramitesObtenidos = tramitesObtenidos;
+                  self.mensaje = this.tramitesObtenidos.length  == 0 ?  "No se encontraron tramites relacionados a este Folio" :  "";
+                  self.validar();
+                }
+                
+              } 
+
+            })()
+
           } else {
-            this.tramitesObtenidos = [];
-            this.mensaje = "";
-            this.validar();
+            self.tramitesObtenidos = [];
+            self.mensaje = "";
+            self.validar();
           }
-          this.buscandoInformacion = false;
+          self.buscandoInformacion = false;
         },
 
         updateForm( response ){
@@ -144,9 +184,14 @@
           });
 
           this.$emit('updatingScore', valido);
-          if(valido){
-            this.$emit('sendData', this.complementarias);
-          }
+          //if(valido){
+            let info = {
+              folio:this.folio,
+              fechaEscritura:this.fechaEscritura,
+              complementarias:this.complementarias
+            }
+            this.$emit('sendData', info);
+          //}
           
         },
 

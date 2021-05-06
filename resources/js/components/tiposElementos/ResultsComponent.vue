@@ -42,7 +42,7 @@
 			return{
 				selectedId: '',
 		}},
-		updated () {
+		mounted () {
 			this.campo.valido = true;
 			this.$emit('updateForm', this.campo);
 		},

@@ -37,7 +37,7 @@
                       </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
-                  <!--
+         
                   <b-col cols="12" md="6">
                     <b-form-group label="MONTO OBTENIDO CONFORME AL ART 127 LISR" label-for="monto-obtenido-conforme-isr-input" >
                       <b-input-group  >
@@ -50,7 +50,7 @@
                         ></b-form-input>
                       </b-input-group>
                     </b-form-group>
-                  </b-col> -->
+                  </b-col> 
                   <b-col cols="12" md="6">
                     <b-form-group label="MULTA POR CORRECCION FISCAL" label-for="multa-correccion-fiscal-input" >
                       
@@ -169,7 +169,10 @@
         },
 
         mounted() {
-            this.getDetalle();
+          if(this.info.datosComplementaria){
+            this.form = this.info.datosComplementaria;
+          }
+          this.getDetalle();
         },
 
         methods:{
@@ -201,7 +204,7 @@
             currencyFormat(campoName, salida){
                   let arr = ["Ganancia Obtenida","Monto obtenido conforme al art 127 LISR",
                               "Pago provisional conforme al art 126 LISR","Impuesto correspondiente a la entidad federativa",
-                              "Parte actualizada del impuesto", "Recargos", "Multa corrección fiscal", "Importe total","Monto pagado en la declaracion inmediata anterior","Pago en exceso", "Cantidad a cargo"];
+                              "Parte actualizada del impuesto", "Recargos", "Multa corrección fiscal", "Importe total","Monto pagado en la declaracion inmediata anterior","Pago en exceso", "Cantidad a cargo", "Diferencia de Impuesto correspondiente a la Entidad Federativa", "Importe total a pagar"];
                   if(arr.includes(campoName)){
                       let text = Vue.filter('toCurrency')(salida);
                       return text;

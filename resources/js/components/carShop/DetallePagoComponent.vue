@@ -8,7 +8,7 @@
                     <h3><span id="idSeguimiento">{{idSeguimiento}}</span></h3>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center px-0 pb-0" v-if="folioMotor">
-                    <h3><strong>Folio Transacción</strong></h3>
+                    <h3><strong>Folio Pago</strong></h3>
                     <h3><span id="folioMotor">{{folioMotor}}</span></h3>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
@@ -28,7 +28,7 @@
                 </li>
             </ul>
 
-            <button id="metodoPagoBtn" type="button" class="btn btn-primary btn-block" v-on:click="metodoPago()" :disabled="!obtenidoCostos || consultandoMetodos">
+            <button id="metodoPagoBtn" v-if="!mostrarCancelarPago"  type="button" class="btn btn-info btn-block" v-on:click="metodoPago()" :disabled="!obtenidoCostos || consultandoMetodos">
                 Pagar
                 <div id="spinner-pago" class="spinner-border spinner-border-sm float-right" role="status" v-if="consultandoMetodos">
                     <span class="sr-only">Loading...</span>
