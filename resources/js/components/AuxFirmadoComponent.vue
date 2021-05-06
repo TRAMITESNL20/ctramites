@@ -22,8 +22,8 @@
             </firma-electronica-component>
         </div>
 
-            <vue-pdf-component class="pt-10" v-if="docFirmado == 1"
-                :urlSourceListo="urlFirmadoListo" 
+            <vue-pdf-component class="pt-10" 
+                    :urlSourceListo="urlFirmadoListo" 
             >  
             </vue-pdf-component>
         
