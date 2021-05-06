@@ -88,13 +88,15 @@ export default {
   components: {
     pdf,
   },
-  data: {
-    aDisabled: {
-            color: 'currentColor',
+  data() {
+    return{
+      aDisabled: {
+        color: 'currentColor',
             cursor: 'not-allowed',
             opacity: '0.5',
             color: '#464E5F',
       }
+  }
   },
   mounted(){
     $('[data-toggle=tooltip]').tooltip()
