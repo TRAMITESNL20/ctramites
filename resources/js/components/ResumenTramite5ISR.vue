@@ -87,7 +87,7 @@
                             </b-table>
                         </div>
                     </b-row> 
-                    <b-row v-if="datosComplementaria && datosComplementaria.complementarias.length > 0">
+                    <b-row v-if="datosComplementaria && datosComplementaria.complementarias && datosComplementaria.complementarias.length > 0">
                         <div class="col-sm-12">
                             <h2 class="border-bottom my-3">Complementarias</h2>
                         </div>
