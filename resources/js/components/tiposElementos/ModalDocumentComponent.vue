@@ -1,66 +1,74 @@
 <template>
     <div> 
-        <button type="button" class="btn btn-sm  btn-success font-weight-bolder text-uppercase text-white mt-2" data-toggle="modal" data-target="#modalDocument">Ingresar documentos </button>
+            <div class="col-lg-12 col-sm-12">
+			    <div class="container">
+                    <div class="card-body">
+                        <div class="row" >
+
+                            <button type="button" class="btn btn-sm  btn-success font-weight-bolder text-uppercase text-white mt-2" data-toggle="modal" data-target="#modalDocument">Ingresar documentos </button>
 
 
-            <div class="modal fade" id="modalDocument" role="dialog">
-            <div class="modal-dialog  modal-dialog-centered   modal-dialog-scrollable modal-lg">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                    &times;
-                    </button>
-                    <h4 class="modal-title">Ingresa los documentos correspondientes</h4>
+                            <div class="modal fade" id="modalDocument" role="dialog">
+                                <div class="modal-dialog  modal-dialog-centered   modal-dialog-scrollable modal-lg">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">
+                                        &times;
+                                        </button>
+                                        <h4 class="modal-title">Ingresa los documentos correspondientes</h4>
+                                    </div>
+                                    <div id="docAlert" class="w-100">
+                                                <div role="alert" class="alert alert-warning alert-dismissible fade show ">Ocurrio un error al guardar el documento intente nuevamente 
+                                                <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true">×</span></button></div>
+                                    </div>
+                                    <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body">
+                                        
+                                        <h3>Tramite id: {{tramiteDoc.id}} </h3>
+
+                                        <div class="input-group">
+
+                                            <div class="input-group-prepend">
+                                                <span id="inputGroupFileAddon01" class="input-group-text">
+                                                CALCULO DEL ISR CONFORME AL 126 LISR
+                                                </span>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input 
+                                                type="file" 
+                                                :id="tramiteDoc.id" 
+                                                ref="myFiles" 
+                                                class="custom-file-input" 
+                                                accept=".pdf"
+                                                @change="previewFiles(tramiteDoc.id , index)" >
+
+                                                <label class="custom-file-label"
+                                                ><span>
+                                                    {{  fileName[index] ? fileName[index] : 'Seleccione el archivo' }}
+                                                </span>
+                                                </label>
+                                        
+                                            </div>
+                                        </div>      
+                                    </div>
+                                
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                        Close
+                                        </button>
+                                        <button v-on:click="enviarDocumentos()"  type="button" class="btn btn-success">
+                                    <span id="saveDocument" role="status" aria-hidden="true"></span>
+                                        Guardar
+                                        </button>
+                                    
+                                    </div>
+                                    </div>
+                            </div>
+                            </div>
+                    </div>
+                    </div>
                 </div>
-                 <div id="docAlert" class="w-100">
-                            <div role="alert" class="alert alert-warning alert-dismissible fade show ">Ocurrio un error al guardar el documento intente nuevamente 
-                            <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true">×</span></button></div>
-                </div>
-                <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body">
-                    
-                    <h3>Tramite id: {{tramiteDoc.id}} </h3>
-
-                    <div class="input-group">
-
-                        <div class="input-group-prepend">
-                            <span id="inputGroupFileAddon01" class="input-group-text">
-                            CALCULO DEL ISR CONFORME AL 126 LISR
-                            </span>
-                        </div>
-                        <div class="custom-file">
-                            <input 
-                            type="file" 
-                            :id="tramiteDoc.id" 
-                            ref="myFiles" 
-                            class="custom-file-input" 
-                            accept=".pdf"
-                            @change="previewFiles(tramiteDoc.id , index)" >
-
-                            <label class="custom-file-label"
-                            ><span>
-                                {{  fileName[index] ? fileName[index] : 'Seleccione el archivo' }}
-                            </span>
-                            </label>
-                      
-                        </div>
-                    </div>      
-                </div>
-             
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                    Close
-                    </button>
-                    <button v-on:click="enviarDocumentos()"  type="button" class="btn btn-success">
-                   <span id="saveDocument" role="status" aria-hidden="true"></span>
-                    Guardar
-                    </button>
-                  
-                </div>
-                </div>
-        </div>
-        </div>
-
+            </div>
     </div>
 </template>
 

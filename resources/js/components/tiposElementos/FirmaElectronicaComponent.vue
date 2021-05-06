@@ -1,7 +1,17 @@
 <template>
-    <div >
-        <iframe v-if="tramiteFirmado == false" id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height: 550px;" frameborder="0"> </iframe>
-    </div>
+        
+        <div class="card">
+            <div class="col-lg-12 col-sm-12">
+			    <div class="container">
+                    <div class="card-body">
+                        <div class="row" >
+                            <iframe v-if="tramiteFirmado == false" id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height: 550px;" frameborder="0"> </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 </template>
 
 <script>
@@ -94,7 +104,7 @@ export default {
                 'llave' : this.llave,
                 'doc' : this.doc,
                 'folio' : this.folio,
-                'rfc' : 'GOFF951130TJ0',
+                'rfc' : this.user.rfc,
                 // 'rfc' : this.rfc,
                 'pagado' : 1,
                 'descargable': false,

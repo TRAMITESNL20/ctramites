@@ -1,7 +1,7 @@
 <template>
   <div>
-    
-    <div class="" v-for="(solicitud, index) in urlSourceListo" >
+
+    <div class="w-100" v-for="(solicitud, index) in urlSourceListo" >
       <div class="card list-item card-custom gutter-b col-lg-12" style="background-color: rgb(217, 222, 226) !important" >
         <div class="d-flex mobile-lista-multiple align-items-center mb-3">
           <!---->
@@ -17,22 +17,39 @@
           </div>
           <div class="my-lg-0 my-1">
             <!---->
-            <a :href="solicitud.urlDocumentoFirmado" :disabled="solicitud.required_docs != 1"  v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" >DESCARGAR</a>
+            <div  class="input-group-append">
+              <!-- alerta de que no puedes descargar el documento -->
+
+              <button 
+                v-if="solicitud.required_docs != 1"
+                class="btn btn-danger disabled" 
+                style="border-top-right-radius: 0px;border-bottom-right-radius: 0px;font-size: 7px;border-radius: 1 1 0 0 !important;" 
+                data-toggle="tooltip" 
+                data-placement="top" 
+                data-original-title="No es posbile descargar este archivo al no contar con el documento del CALCULO DEL ISR CONFORME AL 126 LISR O COMPROBANTE DE LA EXENCIÓN ">
+                    <i class="text-white fa fa-question-circle"></i>
+              </button>
+
+                <!-- boton de descarga  -->
+                <a  v-if="solicitud.required_docs != 1" :href="solicitud.urlDocumentoFirmado" target="_blank" :disabled="solicitud.required_docs != 1"  v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]"  style="border-top-left-radius:0px;border-bottom-left-radius:0px"  class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" >DESCARGAR</a>
+                <a  v-if="solicitud.required_docs == 1" :href="solicitud.urlDocumentoFirmado" target="_blank" v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]"   class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" >DESCARGAR</a>
+                <!-- boton de collapse -->
+                <button
+                  class="btn btn-secondary"
+                  type="button"
+                  data-toggle="collapse"
+                  :data-target="`#collapse-${index}`" 
+                  aria-expanded="false"
+                  :aria-controls="`collapse-${index}`"
+                >
+                <i class="fas fa-chevron-down p-0"></i>
+                </button>
+            </div>
             <!---->
-            <button
-              type="button"
-              data-toggle="collapse"
-              :data-target="`#collapse-${index}`" 
-              aria-expanded="false"
-              aria-controls="collapse-4936bff8-9312-4ad3-aebb-fed66e193e5d"
-              class="btn btn-secondary"
-            >
-              <i class="fas fa-chevron-down p-0"></i>
-            </button>
           </div>
         </div>
         <!-- ----- COLAPSABLE ---- -->
-        <div  :id="`collapse-${index}`" class="collapse " style="" >
+        <div  :id="`collapse-${index}`" class="collapse" style="" >
           <div class="card list-item card-custom gutter-b col-lg-12" >
             <div class="card-body p-0">
               <div class="d-flex">
@@ -78,6 +95,9 @@ export default {
             opacity: '0.5',
             color: '#464E5F',
       }
+  },
+  mounted(){
+    $('[data-toggle=tooltip]').tooltip()
   }
 
 };

@@ -1,6 +1,6 @@
 <template>
   <div>
-        <div class="pt-10 pl-10 pr-10"  v-if=" (tramitesdoc).length > 0 && docFirmado != 1">
+        <div class="pt-10 pl-10 pr-10"  style="background-color:white" v-if=" (tramitesdoc).length > 0 && docFirmado != 1">
             <div >
                 <p> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
                 <modal-document-component 
@@ -12,7 +12,7 @@
             </div>
         </div>
                                                    
-        <div class="pt-10 pl-10 pr-10"  v-for="idTramite in solicitudes" v-if="docFirmado != 1">
+        <div class="p-10" style="background-color:white"  v-for="idTramite in solicitudes" v-if="docFirmado != 1">
             <firma-electronica-component 
                 :usuario="idTramite"   
                 :user="user"  
@@ -22,13 +22,11 @@
             </firma-electronica-component>
         </div>
 
-        <div >
-            <vue-pdf-component 
+            <vue-pdf-component class="pt-10" v-if="docFirmado == 1"
                 :urlSourceListo="urlFirmadoListo" 
             >  
             </vue-pdf-component>
-        </div>
-       
+        
   </div>
 
 </template>
