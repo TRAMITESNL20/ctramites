@@ -133,7 +133,7 @@
 
               if(tramite){
                 formData.append('clave', tramite.id_seguimiento );
-                formData.append('grupo_clave', tramite.id_seguimiento );
+                formData.append('grupo_clave',  tramite.grupo_clave || tramite.id_seguimiento );
                 formData.append('catalogo_id', tramite.id_tramite );
               }
 
@@ -168,6 +168,7 @@
               }
               if(tramite){
                 formData.append('clave', tramite.id_seguimiento );
+                formData.append('grupo_clave', tramite.grupo_clave || tramite.id_seguimiento );
                 formData.append('catalogo_id', tramite.id_tramite );
               }
 
@@ -198,7 +199,6 @@
                 let listaSolicitantes = datosTabs[0];
                 let tramite = datosTabs[1];
                 let datosFormulario = datosTabs[2];
-
                 datosFormulario.campos = this.formatearCampos(datosFormulario.campos);
                 let informacion = this.getInformacion( tramite, datosFormulario );
                 let idEdicion = null;
@@ -211,6 +211,7 @@
                 } else if(this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status == 3) {
                   informacion.complementoDe =  this.infoGuardadaFull.id;
                   tramite.id_seguimiento = uuid.v4();
+                  tramite.grupo_clave = this.infoGuardadaFull.grupo_clave;
                 }
                 return this.buildFormData( informacion, listaSolicitantes, tramite, idEdicion,enajenantes );
             },
