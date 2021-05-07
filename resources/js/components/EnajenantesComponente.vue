@@ -211,7 +211,11 @@
             }
             this.validar();
             $('#gradientBackgroundLeft').hide();
-            
+
+            if ( $("body").width() > 1024) {
+                $('#gradientBackgroundRight').hide();
+                $('#gradientBackgroundLeft').hide();
+            }
 		},
         updated(){
             var height = $("#tableEnajenantes")[0].clientHeight;
