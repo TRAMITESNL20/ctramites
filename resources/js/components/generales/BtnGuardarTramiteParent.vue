@@ -100,34 +100,47 @@
                 return informacion;
             },
 
-            formDataComplementaria( idEdicion ){
+            formDataComplementaria( config ){
               let formData = new FormData();
               formData.append('user_id', this.idUsuario );
               //se envia enajenantes para que se cree un registro por cada complementaria
               let datosTabs = JSON.parse( JSON.stringify(this.obtenerDatosTabs() ) );
               let listaComplementarias = [];
               let listaSolicitantes = datosTabs[0];
-              this.datosComplementaria.forEach( complementaria => {
-                let inf = Object.assign({} , complementaria);
-                inf.version = '1.0.0';
-                inf.id = 0;
-                inf.tipoTramite = this.tipoTramite;
-                inf.solicitante = listaSolicitantes[0];
-                listaComplementarias.push(inf);
-              });
-              formData.append('info', JSON.stringify({}) );
-              formData.append("enajenantes", JSON.stringify(listaComplementarias));
+              if(config && config.temporal){
+                let informacion = {
+                  datosComplementaria:this.datosComplementaria,
+                  tipoTramite:this.tipoTramite
+                }
+                formData.append('info', JSON.stringify(informacion) );
+                formData.append('enajenantes',[]);
+                formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
+              } else {
+                this.datosComplementaria.complementarias.forEach( complementaria => {
+                  let inf = Object.assign({} , complementaria);
+                  inf.version = '1.0.0';
+                  inf.id = 0;
+                  inf.tipoTramite = this.tipoTramite;
+                  inf.solicitante = listaSolicitantes[0];
+                  listaComplementarias.push(inf);
+                });
+                formData.append('info', JSON.stringify({}) );
+                formData.append("enajenantes", JSON.stringify(listaComplementarias));
+              }
+                
 
-              
+
               
               let tramite = datosTabs[1];
 
               if(tramite){
                 formData.append('clave', tramite.id_seguimiento );
+                formData.append('grupo_clave', tramite.id_seguimiento );
                 formData.append('catalogo_id', tramite.id_tramite );
               }
-              if(  idEdicion  ){
-                formData.append('id', idEdicion );
+
+              if(this.infoGuardadaFull && this.infoGuardadaFull.id > 0) {
+                formData.append('id', this.infoGuardadaFull.id );
               }
 
               return formData;

@@ -10,12 +10,17 @@
       <b-container fluid>
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <b-row>
-            <b-col cols="12" md="4" >
-              <b-form-group label="Folio del aviso de enajenación" label-for="folio-input" >
+            <b-col cols="" md="4" >
+              <b-form-group label="Folio del aviso de enajenación o folio forma" label-for="folio-input" >
                 <b-input-group size="lg"> 
                   <b-form-input
                     id="folio-input" name="folio" v-model="$v.form.folio.$model"  :state="$v.form.folio.$dirty ? !$v.form.folio.$error : null"  aria-describedby="folio-input-feedback"
                     @change="getMontoOperacion" v-uppercase></b-form-input>
+                  <template #append>
+                    <b-input-group-text v-b-tooltip.hover title="Localizado en el informativo de valor catastral o aviso de enajenación" style="font-size: 7px;" >
+                      <i class="fa fa-question-circle" style="color: cornflowerblue;"></i>
+                    </b-input-group-text>
+                  </template>
                 </b-input-group>
                 <b-form-invalid-feedback id="folio-input-feedback">
                   <span v-if="!$v.form.folio.required"  class="form-text text-danger">
@@ -24,7 +29,7 @@
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="4" >
+            <b-col cols="" md="4" >
               <b-form-group label="Estado" label-for="estado-select" >
                 <multiselect id="estado-select" v-model="$v.form.estado.$model" :options="estados" label="nombre" track-by="clave" 
                 :searchable="true" @input="getMunicipios" :state="$v.form.estado.$dirty ? !$v.form.estado.$error : null"  aria-describedby="estado-select-feedback" 
@@ -36,7 +41,7 @@
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="4" >
+            <b-col cols="" md="4" >
               <b-form-group label="Municipio" label-for="municipio-select" >
                 <multiselect id="municipio-select" v-model="$v.form.municipio.$model" :options="municipios" label="nombre" track-by="clave" 
                 :searchable="true" :state="$v.form.municipio.$dirty ? !$v.form.municipio.$error : null"  aria-describedby="municipio-select-feedback"  @input="setValMunicipio"></multiselect>
@@ -47,7 +52,7 @@
                 </b-form-invalid-feedback>
               </b-form-group>
             </b-col>
-            <b-col cols="12" md="4" >
+            <b-col cols="" md="4" >
               <b-form-group label="No. Expediente Catastral" label-for="expediente-input" >
                 <b-input-group size="lg"> 
                   <template #prepend>

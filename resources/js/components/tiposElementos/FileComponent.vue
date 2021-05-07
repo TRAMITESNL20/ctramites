@@ -2,7 +2,7 @@
   <div class=" fv-plugins-icon-container">
     <div class="input-group">
       <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroupFileAddon01">
+      <span class="input-group-text text-initial" id="inputGroupFileAddon01">
           {{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}
       </span>
       </div>
@@ -21,9 +21,9 @@
       </div>
     </div>
       <small  v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
-        <p v-for="mensaje in campo.mensajes" class="form-text text-danger">
-          {{ mensaje.mensajeStr }}
-        </p>
+          <p  class="form-text text-danger">
+            {{ campo.mensajes[0].mensajeStr }}
+          </p>
     </small>
   </div>
 </template>

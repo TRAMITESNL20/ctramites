@@ -37,7 +37,7 @@
                       </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
-                  <!--
+         
                   <b-col cols="12" md="6">
                     <b-form-group label="MONTO OBTENIDO CONFORME AL ART 127 LISR" label-for="monto-obtenido-conforme-isr-input" >
                       <b-input-group  >
@@ -50,7 +50,7 @@
                         ></b-form-input>
                       </b-input-group>
                     </b-form-group>
-                  </b-col> -->
+                  </b-col> 
                   <b-col cols="12" md="6">
                     <b-form-group label="MULTA POR CORRECCION FISCAL" label-for="multa-correccion-fiscal-input" >
                       
@@ -101,23 +101,9 @@
                       </div>    
                       <div>
                         <b-card no-body v-if="datosCostos && verDetalle">
-                          <template #header>
-                            <h4 class="mb-0">Complementaria</h4>
-                            <hr>
-                          </template>
-                            <b-card-body id="nav-scroller" ref="content "style=" height:300px; overflow-y:scroll;" v-if="typeof datosCostos == 'object'"  >             
-                              <b-row v-for="(salida, key) in datosCostos.Complementaria" :key="key">
-                                  <b-col class="text-left" style="width: 70%" >
-                                      <strong>{{ key }}</strong>
-                                  </b-col>
-                                  <b-col class="text-right" >
-                                      <span class="text-muted">   {{ currencyFormat(key, salida) }} </span>
-                                  </b-col>
-                              </b-row>
-                            </b-card-body>
                             <b-card no-body  v-if="typeof datosCostos == 'object'">
                                 <template #header>
-                                  <h4 class="mb-0">Normal</h4>
+                                  <h4 class="mb-0">Complementaria</h4>
                                   <hr>
                                 </template>
                                 <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
@@ -183,7 +169,10 @@
         },
 
         mounted() {
-            this.getDetalle();
+          if(this.info.datosComplementaria){
+            this.form = this.info.datosComplementaria;
+          }
+          this.getDetalle();
         },
 
         methods:{
@@ -215,7 +204,7 @@
             currencyFormat(campoName, salida){
                   let arr = ["Ganancia Obtenida","Monto obtenido conforme al art 127 LISR",
                               "Pago provisional conforme al art 126 LISR","Impuesto correspondiente a la entidad federativa",
-                              "Parte actualizada del impuesto", "Recargos", "Multa corrección fiscal", "Importe total","Monto pagado en la declaracion inmediata anterior","Pago en exceso", "Cantidad a cargo"];
+                              "Parte actualizada del impuesto", "Recargos", "Multa corrección fiscal", "Importe total","Monto pagado en la declaracion inmediata anterior","Pago en exceso", "Cantidad a cargo", "Diferencia de Impuesto correspondiente a la Entidad Federativa", "Importe total a pagar"];
                   if(arr.includes(campoName)){
                       let text = Vue.filter('toCurrency')(salida);
                       return text;

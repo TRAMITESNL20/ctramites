@@ -129,6 +129,7 @@ class CalculoimpuestosController extends Controller
 	    		"Multa corrección fiscal" => $this->g,
 	    		"Importe total" => $this->h,
     			),
+        "Nivel" => "Normal",
 
     	);
 
@@ -202,7 +203,24 @@ class CalculoimpuestosController extends Controller
           $datos_normal = $info->detalle;
 
           $salidas = $datos_normal->Salidas;
-          //dd($salidas);
+          try{
+            $nivel = $datos_normal->Nivel;
+            if($nivel == "Normal"){
+              $nivel = "C1";
+            }elseif ($nivel == "C1") {
+              $nivel = "C2";
+            }elseif ($nivel == "C2") {
+              $nivel = "C3";
+            }elseif ($nivel == "C3") {
+              $nivel = "CF";
+            }
+          }catch(\Exception $e){
+            $nivel = "C1";
+            Log::info('Registro sin Nivel'. $e->getMessage());
+          }
+
+
+
           foreach($salidas as $s => $v)
           {
 
@@ -284,7 +302,7 @@ class CalculoimpuestosController extends Controller
       //$this->e = $this->e - $pai_anterior;
 
       //Se calcula la diferencia entre el recargo actual y el anteriror
-      //$this->f = $this->f - $recargo_anterior;
+      $dif = $this->d - $impuesto;
 
 
       // importe total
@@ -311,27 +329,33 @@ class CalculoimpuestosController extends Controller
             "multa por correccion fiscal" => $this->g,
           ),
         "Salidas" => array(
+          "Folio de la declaración inmediata anterior" => $normal,
           "Fecha Actual"        => date("d-m-Y", strtotime($this->fecha_actual)),
           "Fecha vencimiento"     => date("d-m-Y", strtotime($this->fecha_vencimiento)),
           "Factor de Actualizacion"   => $this->factor_actualizacion,
-          "INPC Periodo reciente"   => $this->inpc_reciente,
-          "INPC Periodo"        => $this->inpc_periodo,
+          "INPC Periodo más reciente"   => $this->inpc_reciente,
+          "INPC Periodo más antiguo"        => $this->inpc_periodo,
           "Porcentaje de recargos"  => $this->porcentaje_recargos,
           "Ganancia Obtenida" => $this->a,
           "Monto obtenido conforme al art 127 LISR" => $this->b,
           "Pago provisional conforme al art 126 LISR" => $this->c,
           "Impuesto correspondiente a la entidad federativa" => $this->d,
+          "Monto pagado en la declaracion inmediata anterior" => $impuesto,
+          "Diferencia de Impuesto correspondiente a la Entidad Federativa" => $dif,
           "Parte actualizada del impuesto" => $this->e,
           "Recargos" => $this->f,
           "Multa corrección fiscal" => $this->g,
-          "Importe total" => $this->redondeo($this->h),
-          ),
+          "Pago en exceso"  => $this->k,
+          "Cantidad a cargo" => $this->l,
+          "Importe total a pagar" => $this->l, //$this->redondeo($this->h),
+        ),
         "Complementaria"  => array(
           "Folio de la declaracion inmediata anterior"  => $normal,
           "Monto pagado en la declaracion inmediata anterior" => $impuesto,
           "Pago en exceso"  => $this->k,
           "Cantidad a cargo" => $this->l,
-        )
+        ),
+        "Nivel" => $nivel,
 
       );
 

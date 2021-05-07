@@ -17,9 +17,9 @@
       />
     </span>
     <small  v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
-        <p v-for="mensaje in campo.mensajes" class="form-text text-danger">
-          {{ mensaje.mensajeStr }}
-        </p>
+          <p  class="form-text text-danger">
+            {{ campo.mensajes[0].mensajeStr }}
+          </p>
     </small>
   </div>
 </template>

@@ -3,9 +3,9 @@
 		<div class="pagination-content">
 			<div v-for="(tramite, index) in tramitesPaginados" :class="!tramite[0].en_carrito && cartComponent ? 'd-none' : '' ">
 				<div class="card list-item card-custom gutter-b col-lg-12" style="background-color: #d9dee2 !important;" v-if="tramite.length > 1">
-					<div class="d-flex align-items-center mb-3">
-						<div class="mr-3 ml-4" v-if="tramite[0].status && (tramite[0].status == 99 || tramite[0].status == 98) && !cartComponent && ['notary_titular', 'notary_substitute'].includes(user.role_name)"><input type="checkbox" :id="tramite[0].id" style="width:18px; height:18px;" v-on:change="processToCart(tramite[0], true)"></div>
-						<div class="mr-auto" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '50%' } ]">
+					<div class="d-flex mobile-lista-multiple align-items-center mb-3">
+						<div class="mr-3 ml-4  espace-checkbox" v-if="tramite[0].status && (tramite[0].status == 99 || tramite[0].status == 98) && !cartComponent && ['notary_titular', 'notary_substitute'].includes(user.role_name)"><input type="checkbox" :id="tramite[0].id" style="width:18px; height:18px;" v-on:change="processToCart(tramite[0], true)"></div>
+						<div class="mr-auto espace-checkbox-text desktop-agrupacion-width" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '70%' } ]">
 							<h4 class="ml-3 text-uppercase text-truncate"><strong>{{ tramite[0].nombre_servicio && (tramite[0].titulo && tramite[0].nombre_servicio.toLowerCase() != tramite[0].titulo.toLowerCase()) ? `${tramite[0].nombre_servicio} - ` : '' }}{{ (tramite[0].info && tramite[0].info.tipoTramite) || tramite[0].tramite || tramite[0].titulo | capitalize }}</strong></h4>
 							<h5 class="ml-3">
                                 <span style="font-weight: normal;" v-if="tramite[0].tramites[0] && tramite[0].tramites[0].id_transaccion_motor"><strong>FOLIO PAGO:</strong> {{ tramite[0].tramites[0].id_transaccion_motor ? `${tramite[0].tramites[0].id_transaccion_motor} -` : '' }}</span>
@@ -25,7 +25,7 @@
                                 <span v-if="tramite[0].loadingSign"><i class="fas fa-spinner fa-spin"></i></span>
                                 <span v-if="!tramite[0].loadingSign"><i :class="tramite[0].por_firmar == 1 ? 'fas fa-check-circle' : 'fas fa-plus-circle'"></i> {{ tramite[0].por_firmar == 1 ? 'DESELECCIONAR' : 'PREPARAR PARA FIRMAR' }}</span>
                             </button>
-                            <div class="btn-group mr-2" v-if="tramite[0].info && !cartComponent">
+                            <div class="btn-group mr-2 mobile-detalles" v-if="tramite[0].info && !cartComponent">
                                 <a v-on:click="goTo(tramite[0], true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="tramite[0].files.length == 0 ? 'rounded' : ''">
                                     <span class="text-white">VER DETALLES</span>
                                 </a>
@@ -47,7 +47,7 @@
 				</div>
 				<tramite-component :cartComponent="cartComponent" :type="type" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="tramite[0]" v-bind:key="index"  v-if="tramite.length == 1 && totalItems != 0"></tramite-component>
 			</div>
-            <div class="card mb-4" v-if="totalItems === 0">
+            <div class="card mb-4 pt-5" v-if="totalItems === 0">
                 <div class="card-body">
                     <h3 class="text-center">{{ message || '¡Lo sentimos! No se encuentran registros para mostrar.' }}</h3>
                     <p class="text-center w-75 m-auto" v-if="cartComponent">Para continuar puedes <a class="card-link m-0 cursor-pointer" v-on:click="redirect('/nuevo-tramite')">inciar un tramite nuevo</a> o agregar trámites desde el listado de <a class="card-link m-0 cursor-pointer" v-on:click="redirect('/tramites/pendiente-de-pago/99')">Pendientes de Pago</a></p>

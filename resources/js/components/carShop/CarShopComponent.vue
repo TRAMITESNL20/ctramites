@@ -1,5 +1,5 @@
 <template>                  
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-left:0px; padding-right:0px">
     <div class="row" v-if="informacion.length > 0 && false">
       <div class="col-lg-12">
         <div class="text-center">
@@ -33,13 +33,51 @@
     </div>
     <div class="row">
         <!--Grid column-->
+         <div class="col-lg-4 pagar-mobile" >
+            <v-container v-if="obteniendoTramites">
+              <v-row>
+                  <v-col cols="12" md="12">
+                      <v-skeleton-loader v-bind:key="i" type="list-item" v-for="(r,i) in [1]" height="150px" style="margin-bottom: 8px;"></v-skeleton-loader>
+                  </v-col>
+              </v-row>
+            </v-container>
+            <detalle-pago-component v-if="tramites.length > 0" 
+              :tramites="tramites" 
+              :obtenidoCostos="costosObtenidos" @updatingParent="recibirMetodosPago"  @cancelarPago="cancelarPago" >
+            </detalle-pago-component>
+            <transition name="slide-fade" appear>
+              <div class="mb-3 shadow-sm p-3 bg-white rounded" v-if="mostrarMetodos">  
+                <div class="pt-4">
+                  <b-table responsive  striped hover :items="tramites" :fields="camposTablaTramites">
+                    <template #cell(nombre)="data">
+                      {{ data.item.nombre }}
+                    </template>
+                    <template #cell(importe_tramite)="data">
+                      <div style="text-align: right;"  >
+                        {{ data.item.importe_tramite | toCurrency }}
+                      </div>
+                      
+                    </template>
+                  </b-table>
+                </div>
+              </div>
+             </transition>
+        </div>
+
         <div class="col-lg-8">
             <!-- Card -->
             <div v-if="!mostrarMetodos && !mostrarReciboPago0">
               <v-container v-if="obteniendoTramites">
                     <v-row>
                         <v-col cols="12" md="12">
-                            <v-skeleton-loader v-bind:key="i" type="list-item" v-for="(r,i) in [1,2,3,4,5,6]" height="90px" style="margin-bottom: 8px;"></v-skeleton-loader>
+                            <v-skeleton-loader
+                            class="card card-custom justify-content-center"
+                            type="list-item-two-line, button"
+                            v-for="(r,i) in [1,2,3,4,5,6]"
+                            v-bind:key="i"
+                            height="90px"
+                            style="margin-bottom: 8px;"
+                        ></v-skeleton-loader>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -104,7 +142,7 @@
                 </div>
 
                 <div v-else-if="!obteniendoTramites && items.length == 0">
-                  <div class="card" style="width: 100%;">
+                  <div class="card pt-2" style="width: 100%;">
                     <div class="card-body text-center">
                       <h5 class="card-title" >Aún no haz iniciado algún trámite</h5>
                         Para continuar da click <a  class="card-link"  v-on:click="iniciarTramite()"> <span style="cursor: pointer;"> aquí </span> </a>
@@ -122,7 +160,7 @@
         </div>
         <!--Grid column-->
         <!--Grid column-->
-        <div class="col-lg-4" >
+        <div class="col-lg-4 pagar-desktop"  >
             <v-container v-if="obteniendoTramites">
               <v-row>
                   <v-col cols="12" md="12">

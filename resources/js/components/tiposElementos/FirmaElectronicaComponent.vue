@@ -1,6 +1,6 @@
 <template>
     <div>
-        <iframe id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height:500px;" frameborder="0"> </iframe>
+        <iframe id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe>
     </div>
 </template>
 
@@ -27,6 +27,7 @@ export default {
 			urlFirmado: [],
 			guardado: false,
 			coutnLoad : 0
+            
 		}
 	},
 	mounted() {
@@ -67,10 +68,11 @@ export default {
 		this.encodeData();
     },
     methods: {
+      
     	validateSigned (evt) {
     		this.coutnLoad++;
             console.log(this.coutnLoad);
-    		if(this.coutnLoad == 3){
+    		if(this.coutnLoad >= 2  &&  this.coutnLoad <= 5  ){
     			fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
                     method : 'POST',
                     body: JSON.stringify({ ids : this.idFirmado, status : 1, type : 'firmado', urls : this.urlFirmado, user_id: user.id })
@@ -78,7 +80,10 @@ export default {
                 .then(res => res.json())
                 .then(res => {
                     if(res.code === 200) console.log('Firmado');
-                    else console.log('Something goes wrong!', res);
+                    else{
+                        console.log('On count n#'+ this.coutnLoad);
+                        console.log('Something goes wrong!', res);    
+                    } 
                 });
     		}
     	},
@@ -174,7 +179,7 @@ export default {
         
    
     },
- 
+  
 }
 
 

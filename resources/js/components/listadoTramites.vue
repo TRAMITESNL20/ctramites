@@ -1,5 +1,5 @@
 <template>
-    <div class="content d-flex flex-column flex-column-fluid">
+    <div class="content d-flex flex-column flex-column-fluid pt-0">
         <div class="subheader py-2 py-lg-4 subheader-transparent" id="kt_subheader">
             <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
                 <!--begin::Details-->

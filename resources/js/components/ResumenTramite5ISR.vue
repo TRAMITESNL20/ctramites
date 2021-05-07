@@ -87,19 +87,19 @@
                             </b-table>
                         </div>
                     </b-row> 
-                    <b-row v-if="datosComplementaria.length > 0">
+                    <b-row v-if="datosComplementaria && datosComplementaria.complementarias && datosComplementaria.complementarias.length > 0">
                         <div class="col-sm-12">
                             <h2 class="border-bottom my-3">Complementarias</h2>
                         </div>
                         <div class="col-sm-12">
-                            <b-table responsive striped hover :items="datosComplementaria" :fields="camposComplementarias">
+                            <b-table responsive striped hover :items="datosComplementaria.complementarias" :fields="camposComplementarias">
                                 <template #cell(enajenante)="data">
                                     <template-datos-personales-component :datosPersonales="data.item.enajenante.datosPersonales"></template-datos-personales-component>
                                 </template>
                                 <template #cell(detalle)="data" >
-                                    <div v-if="data.item.detalle && data.item.detalle.Complementaria">
+                                    <div v-if="data.item.detalle && data.item.detalle.Salidas">
                                         <div class="text-center">
-                                            {{currencyFormat('Cantidad a cargo', data.item.detalle.Complementaria['Cantidad a cargo'])}}
+                                            {{currencyFormat('Cantidad a cargo', data.item.detalle.Salidas['Cantidad a cargo'])}}
                                         </div>                          
                                     </div>
                                     <div v-else-if="!data.item.detalle || typeof data.item.detalle != 'object'">
@@ -119,32 +119,14 @@
                                     </div>
                                 </template> 
                                 <template #row-details="data" #title="Detalle">
-                                    <transition-group name="slide-fade" tag="div">
-                                        <div key="1">
-                                            <b-card no-body v-if="data"  title="Card Title">
+                                    <transition name="slide-fade" tag="b-card">
+                                        <b-card key="1" no-body v-if="data && data.item.detalle.Salidas">
                                                 <template #header>
                                                   <h4 class="mb-0">Complementaria</h4>
-                                                  <hr>
-                                                </template>
-                                                <b-card-body id="nav-scroller"ref="content"style="position:relative; height:200px; overflow-y:scroll;">
-                                                    <b-row v-for="(salida, key) in data.item.detalle.Complementaria" :key="key">
-                                                        <b-col class="text-left" style="width: 70%" >
-                                                            <strong>{{ key }}</strong>
-                                                        </b-col>
-                                                        <b-col class="text-right" >
-                                                            <span class="text-muted">   {{ currencyFormat(key, salida) }} </span>
-                                                        </b-col>
-                                                    </b-row>
-                                                </b-card-body> 
-                                            </b-card>
-                                        </div>
-                                        <div key="2">
-                                            <b-card no-body v-if="data"  title="Card Title">
-                                                <template #header>
-                                                  <h4 class="mb-0">Normal</h4>
-                                                  <hr>
                                                 </template>
                                                 <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
+                                                    
+  
                                                     <b-row v-for="(salida, key) in data.item.detalle.Salidas" :key="key">
                                                         <b-col class="text-left" style="width: 70%" >
                                                             <strong>{{ key }}</strong>
@@ -154,9 +136,8 @@
                                                         </b-col>
                                                     </b-row>
                                                 </b-card-body> 
-                                            </b-card>
-                                        </div>
-                                    </transition-group>
+                                        </b-card>
+                                    </transition>
                                 </template>   
                             </b-table>
                         </div>
@@ -174,6 +155,7 @@
 
         props: ['datosComplementaria','tipoTramite', 'files', 'usuario'],
         mounted() {
+
             this.obtenerInformacionDelTramite();
             
             this.camposGenerales = this.datosFormulario.campos;
@@ -236,7 +218,7 @@
                 let arr = ["Ganancia Obtenida","Monto obtenido conforme al art 127 LISR",
                             "Pago provisional conforme al art 126 LISR","Impuesto correspondiente a la entidad federativa",
                             "Parte actualizada del impuesto", "Recargos", "Multa corrección fiscal", "Importe total", "Cantidad a cargo",
-                            "Monto pagado en la declaracion inmediata anterior", "Pago en exceso"];
+                            "Monto pagado en la declaracion inmediata anterior", "Pago en exceso", "Diferencia de Impuesto correspondiente a la Entidad Federativa", "Importe total a pagar"];
                 if(arr.includes(campoName)){
                     let text = Vue.filter('toCurrency')(salida);
                     return text;
