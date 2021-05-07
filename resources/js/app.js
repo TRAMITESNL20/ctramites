@@ -160,4 +160,17 @@ Vue.directive('currency',
 
 const app = new Vue({
     el: '#app',
+    updated(){
+        console.log('se carga el js, sigue ...');
+        var height = $(".table")[0].clientHeight;
+        $(".border-table-left").css( "width" ,'12%');
+        $(".border-table-right").css( "width" ,'12%');
+        $(".border-table-left").css( "height" ,  height+"px" );
+        $(".border-table-right").css( "height" ,  height+"px" );
+        $('#scrollDiv').scroll( function() {    
+            ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
+
+            ( $('#scrollDiv').scrollLeft() > 0) ? $('.border-table-left').show() : $('#gradientBackgroundLeft').hide();
+        });
+    }
 });

@@ -1695,6 +1695,9 @@
 			<script src="{{ assets("js/dataTables.bootstrap4.min.js") }}"></script>
 
 			<script src="{{ assets("js/bundle.js") }}"></script>
+
+
+		
 		</body>
 	<!--end::Body-->
 </html>
