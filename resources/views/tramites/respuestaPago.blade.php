@@ -29,17 +29,17 @@
 									<div class="card-header">
 										Estado:
 										<strong>
-											{{ $respuestabanco['response']['datos']['mensaje'] }}
+											{{ $respuestabanco['mensaje'] }}
 											@if(isset($user->email))
-											<a href="mailto:{{$user->email}}?subject=Recibo de pago&body={{$respuestabanco['response']['datos']['url_recibo']}}" style="display: none;">
+											<a href="mailto:{{$user->email}}?subject=Recibo de pago&body={{$respuestabanco['url_recibo']}}" style="display: none;">
 												Enviar por correo <i class="fa fa-envelope-open-text "></i>
 											</a>
 											@endif
 										</strong>
-										@if($respuestabanco['response']['datos']['mensaje'] == 'Aprobada')
+										@if($respuestabanco['mensaje'] == 'Aprobada')
 		  									<span class="float-right"> 
 		  										<strong>Total:</strong> 
-		  										{{$respuestabanco['response']['datos']['importe_transaccion']}}
+		  										{{$respuestabanco['importe_transaccion']}}
 		  									</span>
 										@endif
 									</div>
@@ -49,8 +49,8 @@
 										<div class="row" >
 											<div class="col-lg-12 col-sm-12">
 												<div class="container">
-													@if($respuestabanco['response']['datos']['mensaje'] == 'Aprobada')
-										        		<iframe class="responsive-iframe" src="{{$respuestabanco['response']['datos']['url_recibo']}}" frameborder="0"  width="100%" height="600px"></iframe>
+													@if($respuestabanco['mensaje'] == 'Aprobada')
+										        		<iframe class="responsive-iframe" src="{{$respuestabanco['url_recibo']}}" frameborder="0"  width="100%" height="600px"></iframe>
 													@else
 											           	<div class="text-center">
 											           		<h1>  Lo sentimos, No se ha podido procesar el pago</h1>

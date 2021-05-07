@@ -414,7 +414,9 @@
               tramitesJson.importe_tramite = info.detalle.Complementaria['Cantidad a cargo'] ;
             } else {
               tramitesJson.importe_tramite = info.detalle && info.detalle.Salidas ?  info.detalle.Salidas['Importe total'] : info.costo_final ;
+
             }
+            tramitesJson.importe_tramite = Number(Number(tramitesJson.importe_tramite).toFixed(this.$const.PRECISION))
             tramitesJson.detalle = [];
 
             if(info && info.detalle && info.detalle.Salidas && info.tipoTramite != 'complementaria'){

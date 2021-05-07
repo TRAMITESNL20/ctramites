@@ -90,7 +90,7 @@
                     let data = {
                         "token": "DD0FDED2FE302392164520BF7090E1B3BEB7",
                         "referencia": "",
-                        "url_retorno": "url",
+                        "url_retorno": process.env.APP_URL + "/respuestaPago",//"url",
                         "importe_transaccion":  this.calcularTotal, //"4687",
                         "id_transaccion":  this.idSeguimiento,//uuid.v4(),//"BMU8605134I82915082020",rellenar con 0
                         "entidad": process.env.ENTIDAD_REPOSITORIO,
@@ -98,7 +98,6 @@
                         "es_referencia": "1",
                         "tramite": tramitesAEnviar
                     }
-                    
                     axios.post(url, data, {
                         headers:{
                             "Authorization":"Bearer " + process.env.PAYMENTS_KEY,
