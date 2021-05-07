@@ -1,13 +1,21 @@
 <?php
     $info = isset($tramite->info->campos->Escritura) ? $tramite->info->campos->Escritura : ( isset($tramite->info->campos->Expediente) ? $tramite->info->campos->Expediente : null );
     $camposConfigurados = [];
+    $results = [];
     setlocale(LC_TIME, "spanish");
     foreach($tramite->info->camposConfigurados as $campo){
         $name = strtolower($campo->nombre);
         $name = preg_replace("([^A-Za-z\ ])", '', $name);
         $name = preg_replace('/\s+/', '_', $name);
-        $camposConfigurados[$campo->alias] = isset($campo->documento) ? $campo->documento : (isset($campo->valor) ? $campo->valor : null);
+        if($campo->tipo == 'results'){
+            $results[$campo->alias]['name'] = $campo->nombre;
+            $results[$campo->alias]['value'] = isset($campo->documento) ? $campo->documento : (isset($campo->valor) ? $campo->valor : null);
+        }else{
+            $camposConfigurados[$campo->alias]['name'] = $campo->nombre;
+            $camposConfigurados[$campo->alias]['value'] = isset($campo->documento) ? $campo->documento : (isset($campo->valor) ? $campo->valor : null);
+        }
     }
+    // dd($tramite->info->camposConfigurados);
 ?>
 <div class="content d-flex flex-column flex-column-fluid" id="app">
     <div class="d-flex flex-column-fluid">
@@ -24,7 +32,7 @@
                 	<div class="card-body">
                 		<div class="row align-items-center">
                 			<div class="col">
-		                		<h3 class="m-0 text-uppercase">{{ $tramite->info->tipoTramite }}</h3>
+		                		<h3 class="m-0 text-uppercase">{{ $tramite->titulo }} {!! $tramite->tramite_id == getenv('TRAMITE_5_ISR') ? " - {$tramite->info->tipoTramite}" : "" !!}</h3>
 		                		<p class="text-muted m-0">{{ $tramite->clave }}</p>
                 			</div>
                 			<div class="col text-right">
@@ -35,24 +43,24 @@
                 </div>
                 <div class="card mt-5">
                     @if ($tramite->tramite_id == getenv('TRAMITE_5_ISR'))
-                        @foreach($camposConfigurados['expedientes']->expedientes as $ind => $expediente)
-                            <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>Expedientes Catastrales</strong><span class="btn btn-light ml-auto nowrap">{{ $ind+1 }} de {{ count($camposConfigurados['expedientes']->expedientes) }}</span></h5>
+                        @foreach($camposConfigurados['expedientes']['value']->expedientes as $ind => $expediente)
+                            <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>Expedientes Catastrales</strong><span class="btn btn-light ml-auto nowrap">{{ $ind+1 }} de {{ count($camposConfigurados['expedientes']['value']->expedientes) }}</span></h5>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <span class="text-muted">Número de escritura pública o minuta</span>
-                                        <p><strong>{{ $camposConfigurados['escritura'] }}</strong></p>
+                                        <p><strong>{{ $camposConfigurados['escritura']['value'] }}</strong></p>
                                     </div>
                                     <div class="col-md-4">
                                         <span class="text-muted">Fecha de escritura pública o minuta</span>
-                                        <p><strong>{{ $camposConfigurados['fecha_de_escritura_o_minuta'] }}</strong></p>
+                                        <p><strong>{{ $camposConfigurados['fecha_de_escritura_o_minuta']['value']['value'] }}</strong></p>
                                     </div>
                                     <div class="col-md-4">
                                         <span class="text-muted">Cálculo del ISR conforme al 126 LISR (Archivo)</span>
                                         <p>
-                                            @if($camposConfigurados['calculo_del_isr_conforme_al_lisr'] != null && count($camposConfigurados['calculo_del_isr_conforme_al_lisr']) > 0)
-                                                @foreach ($camposConfigurados['calculo_del_isr_conforme_al_lisr'] as $key => $documento)
-                                                    <a href="{{ $documento }}" target="_blank" class="btn btn-primary text-white mt-2"><i class="fas fa-download"></i> Ver Documento {{  count($camposConfigurados['calculo_del_isr_conforme_al_lisr']) > 1 ? $key+1 : '' }}</a>
+                                            @if($camposConfigurados['calculo_del_isr_conforme_al_lisr']['value'] != null && count($camposConfigurados['calculo_del_isr_conforme_al_lisr']['value']) > 0)
+                                                @foreach ($camposConfigurados['calculo_del_isr_conforme_al_lisr']['value'] as $key => $documento)
+                                                    <a href="{{ $documento }}" target="_blank" class="btn btn-primary text-white mt-2"><i class="fas fa-download"></i> Ver Documento {{  count($camposConfigurados['calculo_del_isr_conforme_al_lisr']['value']) > 1 ? $key+1 : '' }}</a>
                                                 @endforeach
                                             @else
                                             -
@@ -112,8 +120,8 @@
                         @endforeach
                         </div>
                         <div class="card mt-5">
-                            @foreach($camposConfigurados['listado_de_enajenantes']->enajenantes as $ind => $enajenante)
-                                <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>DATOS DEL ENAJENANTE</strong><span class="btn btn-light ml-auto">{{ $ind+1 }} de {{ count($camposConfigurados['listado_de_enajenantes']->enajenantes) }}</span></h5>
+                            @foreach($camposConfigurados['listado_de_enajenantes']['value']->enajenantes as $ind => $enajenante)
+                                <h5 class="card-header text-uppercase bg-secondary d-flex align-items-center"><strong>DATOS DEL ENAJENANTE</strong><span class="btn btn-light ml-auto">{{ $ind+1 }} de {{ count($camposConfigurados['listado_de_enajenantes']['value']->enajenantes) }}</span></h5>
                                 <div class="card-body mb-3">
                                     <div class="row">
                                         <div class="col-md-4">
@@ -202,11 +210,13 @@
                         <div class="card-body">
                             <div class="row">
                                 <?php
-                                    foreach($camposConfigurados as $campo => $value){
-                                        while(gettype($value) == "array"){
-                                            if(isset($value[0])) $value = $value[0];
-                                            if(!isset($value[0])) $value[0] = '-';
+                                    foreach($camposConfigurados as $value){
+                                        $campo = $value['name'];
+                                        $value = $value['value'];
 
+
+                                        while(gettype($value) == "array"){
+                                            if(!isset($value[0])) $value[0] = '-';
                                             $value = $value[0];
                                         }
 
@@ -214,6 +224,7 @@
                                             if(isset($value->nombre)) $value = $value->nombre;
                                             else continue;
                                         }
+
                                         echo "
                                             <div class=\"col-md-6\">
                                                 <span class=\"text-muted\">$campo</span>
@@ -225,6 +236,39 @@
                             </div>
                         </div>                        
                     @endif
+                </div>
+                <div class="card mt-5 <?= count($results) == 0 ? "d-none" : ""?>">
+                    <div class="card-header bg-secondary d-flex align-items-center">
+                        <p class="m-0">
+                            <strong>RESULTADOS</strong>
+                        </p>
+                    </div>
+                    <?php
+                        $resultInd = 0;
+                        foreach($results as $value){
+                            $campo = $value['name'];
+                            $value = $value['value'];
+
+
+                            while(gettype($value) == "array"){
+                                if(!isset($value[0])) $value[0] = '-';
+                                $value = $value[0];
+                            }
+
+                            if(gettype($value) == "object"){
+                                if(isset($value->nombre)) $value = $value->nombre;
+                                else continue;
+                            }
+
+                            echo "
+                                <h6 class=\"card-header text-uppercase d-flex align-items-center\"><strong>{$campo}</strong><span class=\"btn btn-light ml-auto\">".($resultInd+1)." de ".count($results)."</span></h6>
+                                <div class=\"card-body\">
+                                    <p><strong>".(!empty($value) ? $value : '-')."</strong></p>
+                                </div>
+                            ";
+                            $resultInd++;
+                        }
+                    ?>
                 </div>
                 <div class="card mt-5 <?= count($tramite->mensajes) == 0 ? "d-none" : ""?>">
                 	<div class="card-header d-flex align-items-center">
