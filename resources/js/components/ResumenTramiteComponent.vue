@@ -125,7 +125,7 @@
 
     export default {
 
-        props: ['datosComplementaria','tipoTramite'],
+        props: ['datosComplementaria','tipoTramite', 'infoGuardadaFull'],
         mounted() {
             this.obtenerInformacionDelTramite();
             if(this.tipoTramite == 'declaracionEn0'){
@@ -227,6 +227,10 @@
 
                             if( campoLote ){
                                 paramsCosto.lote = campoLote.valor
+                            }
+                            
+                            if(this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status == 3) {
+                                paramsCosto.id_ticket = this.infoGuardadaFull.id;
                             }
                         }                 
                     }
