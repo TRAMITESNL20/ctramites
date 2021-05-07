@@ -22,13 +22,13 @@ class DashboardController extends Controller
     		]
     	]);
 
-		$draft = $solicitudes[0];
-		$pendingPayment = $solicitudes[1];
-		$pendingPaymentReference = $solicitudes[2];
-		$waiting = $solicitudes[3];
-		$progress = $solicitudes[4];
-		$toSign = $solicitudes[5];
-		$closed = $solicitudes[6];
+		$draft = $solicitudes[0] ?? [];
+		$pendingPayment = $solicitudes[1] ?? [];
+		$pendingPaymentReference = $solicitudes[2] ?? [];
+		$waiting = $solicitudes[3] ?? [];
+		$progress = $solicitudes[4] ?? [];
+		$toSign = $solicitudes[5] ?? [];
+		$closed = $solicitudes[6] ?? [];
     	$total = 5;
 
 		set_layout_arg([
