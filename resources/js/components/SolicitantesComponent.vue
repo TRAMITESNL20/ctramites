@@ -22,16 +22,17 @@
                           <strong>CURP:</strong> <i class="ni business_briefcase-24 mr-2"></i>{{ sol.curp }}
                         </div>
                     </div>
-                    <!--
+                 
                     <div class="float-lg-right">
-                            <button type="button"  class="btn btn-danger"  id="btnEliminar" v-on:click="eliminar( index )">
-                                <i class="fa fa-times" id="iconBtnEliminar"></i> 
-                            </button>
-                            <button type="button"  class="btn btn-info"  id="btnEditar" v-on:click="mostrarEditarSolicitante( sol, index )">
-                                <i class="fa fa-edit" id="iconBtnEditar"></i>
-                            </button> 
+                    <!--
+                        <button type="button"  class="btn btn-danger"  id="btnEliminar" v-on:click="eliminar( index )">
+                            <i class="fa fa-times" id="iconBtnEliminar"></i> 
+                        </button>-->
+                        <button type="button"  class="btn btn-info"  id="btnEditar" v-on:click="mostrarEditarSolicitante( sol, index )">
+                            <i class="fa fa-edit" id="iconBtnEditar"></i>
+                        </button> 
                     </div> 
-                    -->
+                   
                 </div>
             </div>
             <div class="col-lg-12">
@@ -44,6 +45,7 @@
             </div>
         </div>
         <div v-else-if="listaSolicitantes.length == 0 || agregarMas">
+            <!--
             <div class="form-check-inline">
                 <label class="form-check-label">
                     <input type="radio" class="form-check-input" value="pf" name="tipoPersona"  v-model="solicitante.tipoPersona" key="tipoPersona">Persona Física
@@ -54,29 +56,36 @@
                     <input type="radio" class="form-check-input" value="pm" name="tipoPersona"  v-model="solicitante.tipoPersona" key="tipoPersona">Persona Moral
                 </label>
             </div>
+             -->  
                 <div class="row" id="divPF" v-if="solicitante.tipoPersona == 'pf'">
-                    <div class="col-xl-12">
+                    <div class="col-xl-6">
                         <div class="">
                             <label>RFC</label>
                             <input type="text" placeholder="RFC " id="rfc" class="form-control  form-control-lg "  style="background-color: #e5f2f5 !important"  v-model="solicitante.rfc">
                         </div>
                     </div>
-                    <div class="col-xl-12">
+                    <div class="col-xl-6">
+                        <div class="">
+                            <label>CURP</label>
+                            <input type="text" placeholder="CURP " id="curp" class="form-control  form-control-lg "  style="background-color: #e5f2f5 !important"  v-model="solicitante.curp">
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
                         <div class="">
                             <label>Nombre</label>
-                            <input type="text" placeholder="Nombre " id="nombreSolicitante" class="form-control form-control-lg" style="background-color: #e5f2f5 !important" v-model="solicitante.nombreSolicitante">
+                            <input type="text" placeholder="Nombre " id="nombreSolicitante" class="form-control form-control-lg" style="background-color: #e5f2f5 !important" v-model="solicitante.nombreSolicitante" :disabled="true">
                         </div>
                     </div>
                     <div class="col-xl-6">
                         <div class="">
                             <label>Apellido Paterno</label>
-                            <input type="text" placeholder="Apellido Paterno " id="apPatSolicitante" class="form-control form-control-lg" style="background-color: #e5f2f5 !important" v-model="solicitante.apPat">
+                            <input type="text" placeholder="Apellido Paterno " id="apPatSolicitante" class="form-control form-control-lg" style="background-color: #e5f2f5 !important" v-model="solicitante.apPat" :disabled="true">
                         </div>
                     </div>
                     <div class="col-xl-6">
                         <div class="">
                             <label>Apellido Materno</label>
-                            <input type="text" placeholder="Apellido Materno " id="apMatSolicitante" class="form-control  form-control-lg" style="background-color: #e5f2f5 !important" v-model="solicitante.apMat">
+                            <input type="text" placeholder="Apellido Materno " id="apMatSolicitante" class="form-control  form-control-lg" style="background-color: #e5f2f5 !important" v-model="solicitante.apMat" :disabled="true">
                         </div>
                     </div>
                 </div>
@@ -99,7 +108,7 @@
                     <button type="button"  class="btn btn-danger pull-rigth"  id="btnAddMoreCancel" v-on:click="agregarMas = false" v-if="listaSolicitantes.length > 0 ">
                         <i class="fa fa-times" id="iconBtnAddMoreCancel"></i> 
                         Cancelar
-                    </button>  
+                    </button>-->  
                     <button type="button"  class="btn btn-success green pull-rigth"  id="btnAdd" v-on:click="agregar()" v-if="!editando">
                         <i class="fa fa-check" id="iconBtnAdd"></i> 
                         Guardar
@@ -108,7 +117,7 @@
                         <i class="fa fa-check" id="iconBtnSi"></i> 
                         Editar
                     </button>
-                </div>-->
+                </div>
         </div>
     </div>
 </template>
