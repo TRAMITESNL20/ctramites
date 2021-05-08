@@ -21,6 +21,7 @@ use App\Repositories\PortalcostotramitesRepositoryEloquent;
 use App\Repositories\PortalsubsidiotramitesRepositoryEloquent;
 use App\Repositories\PortalumaRepositoryEloquent;
 use Illuminate\Support\Facades\Http;
+use App\Repositories\PortalsolicitudesticketRepositoryEloquent;
 
 class TramitesController extends Controller
 {
@@ -33,6 +34,7 @@ class TramitesController extends Controller
     protected $uma;
     protected $partidas;
     protected $group;
+    protected $ticket;
 
     public function __construct(
       TramitedetalleRepositoryEloquent $tramites,
@@ -43,7 +45,8 @@ class TramitesController extends Controller
       PortalsubsidiotramitesRepositoryEloquent $subsidiotramites,
       PortalumaRepositoryEloquent $uma,
       EgobiernopartidasRepositoryEloquent $partidas,
-      PortalcamposagrupacionesRepositoryEloquent $group
+      PortalcamposagrupacionesRepositoryEloquent $group,
+      PortalsolicitudesticketRepositoryEloquent $ticket
       )
       {
         parent::__construct();
@@ -57,6 +60,7 @@ class TramitesController extends Controller
         $this->uma = $uma;
         $this->partidas = $partidas;
         $this->group = $group;
+        $this->ticket = $ticket;
       }
 
     public function index ($type, $id) {
@@ -130,6 +134,17 @@ class TramitesController extends Controller
     */
     public function getcostoTramite(Request $request) {
       $tramite_id = $request->tramite_id;
+      $id_ticket = $request->id_ticket;
+
+      //si existe un ticket id se revisa el valor anterior del costo
+      if (!empty($id_ticket)){
+        $solicitudes = $this->ticket->findWhere(["id" =>$id_ticket])->first();
+
+        $info = json_decode($solicitudes->info);
+
+        $costoAnterior = $info->costo_final;
+      }
+
       //$tramite_id = 100;
       $dt = date("Y");
 
@@ -435,14 +450,29 @@ class TramitesController extends Controller
           }
         }
 
+        if (!empty($costoAnterior)){
+          if($costoAnterior < $costo_final){
+            $dif = $costo_final - $costoAnterior;
+          }else{
+            $dif = $costoAnterior - $costo_final;
 
-        //Se devuelve el arreglo con el valor del costo
-        $detalle []= array(
-          'tramite_id' => $tramite_id,
-          'costo_final' => $costo_final,
-          'descuentos' => $descuentos,
-        );
+          }
+          $detalle []= array(
+            'tramite_id' => $tramite_id,
+            'costo_final' => $dif,
+            'descuentos' => $descuentos,
+            'costo_anterior' => $costoAnterior,
+            'pago_total' => $costo_final,
+          );
 
+        }else{
+          //Se devuelve el arreglo con el valor del costo
+          $detalle []= array(
+            'tramite_id' => $tramite_id,
+            'costo_final' => $costo_final,
+            'descuentos' => $descuentos,
+          );
+        }
         return json_encode($detalle);
 
 
@@ -613,7 +643,7 @@ class TramitesController extends Controller
         if( isset( $json['response']["datos"]["url_recibo"]) ){
           $url_recibo = $json['response']["datos"]["url_recibo"];
         }
-        
+
         $responseCambioEstatus = Http::post( $urlTesoreria . '/solicitudes-update-status-tramite', [
             'id_transaccion_motor' => $id_transaccion_motor,
             'status' => $statusChange,
