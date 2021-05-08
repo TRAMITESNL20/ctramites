@@ -78,7 +78,8 @@
                                         <div v-else>
                                           <resumen-tramite-component v-if="currentStep == 3" 
                                           :tipoTramite="tipoTramite" 
-                                          :datosComplementaria="datosComplementaria" 
+                                          :datosComplementaria="datosComplementaria"
+                                          :infoGuardadaFull="infoGuardadaFull" 
                                           ></resumen-tramite-component>
                                         </div>
                                     </div>
@@ -360,7 +361,6 @@
 
                 this.tipoTramite = this.infoGuardada.tipoTramite;
                 
-
                 //this.tipoTramiteDisabled = !this.infoGuardada.campos ? 'normal' : 'complementaria';
 
                 this.camposGuardadosObtenidos = true;
