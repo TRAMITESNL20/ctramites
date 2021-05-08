@@ -18,8 +18,8 @@
             <div class="dashboard pt-0">
         <!-- <div class="container"> -->
                 <div class="pl-40 pb-20">
-                    <h2 class>Accede a trámites y servicios</h2>
-                    <h2>desde cualquier lugar</h2>
+                    <h2 style="color:#3ba3fb !important">Accede a trámites y servicios</h2>
+                    <h2 style="color:#3ba3fb !important">desde cualquier lugar</h2>
 
                     <div class="btn-group" style="width:35%">
                         <input type="search" class="ds-input form-control w-45"  
@@ -44,48 +44,48 @@
         <!-- </div> -->
                 <div class="d-flex w-100" style="background-color:#f1f8fe" >
                     <div class="col-4 px-25">
-                        <h4>Actas, inexistencias y copias certificadas</h4>
+                        <h4 style="color:#3ba3fb">Actas, inexistencias y copias certificadas</h4>
                         <ul style="font-size:10px">
-                            <li class="p-2">Copia certificada del acta de nacimiento</li>
-                            <li class="p-2">Copia certificada del acta de matrimonio</li>
-                            <li class="p-2">Copia certificada del acta de defuncion</li>
-                            <li class="p-2">Constancia de inexistencia de matrimonio</li>
-                            <li class="p-2">Constancia de inexistencia de defuncion</li>
-                            <li class="p-2">Constancia de inexistencia de nacimiento</li>
-                            <li class="p-2">Juicios de aclaracioon y correcion de actas</li>
+                            <li class="p-2"> <a href="" style="color:#3ba3fb !important">  Copia certificada del acta de nacimiento </a> </li>
+                            <li class="p-2"> <a href="" style="color:#3ba3fb !important"> Copia certificada del acta de matrimonio</a> </li>
+                            <li class="p-2"> <a href="" style="color:#3ba3fb !important">Copia certificada del acta de defuncion</a></li>
+                            <li class="p-2"> <a href=""style="color:#3ba3fb !important">Constancia de inexistencia de matrimonio</a></li>
+                            <li class="p-2"> <a href="" style="color:#3ba3fb !important"> Constancia de inexistencia de defuncion</a></li>
+                            <li class="p-2"> <a href="" style="color:#3ba3fb !important">Constancia de inexistencia de nacimiento</a></li>
+                            <li class="p-2"> <a href="" style="color:#3ba3fb !important">Juicios de aclaracioon y correcion de actas</a></li>
                         </ul>
                     </div>
                     <div class="col-4 px-25">
-                        <h4>Pago de impouestos y contribuciones</h4>
+                        <h4 style="color:#3ba3fb">Pago de impouestos y contribuciones</h4>
                         <ul style="font-size:10px">
-                            <li class="p-2">Pago de impuesto sobre nomina</li>
-                            <li class="p-2">Pago de impuesto a las tarifas efectivamente cobradas por las empresas de redes de transporte</li>
-                            <li class="p-2">Pago de impuesto sobre automoviles nuevos</li>
-                            <li class="p-2">Pago de impuestopor juegos con apuestas y obtencion de premios</li>
-                            <li class="p-2">Pago de impuesto sobre hospedaje</li>
-                            <li class="p-2">Pago de impuesto predial</li>
-                            <li class="p-2">Pago de 5% de ISR regimen intermedio</li>
-                            <li class="p-2">Declaracion del regimen de incorporacion fiscal</li>
-                            <li class="p-2">Registro estatal de contribuyentes</li>
-                            <li class="p-2">Consulta al registro estatal de contribuyentes</li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Pago de impuesto sobre nomina</a> </li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Pago de impuesto a las tarifas efectivamente cobradas por las empresas de redes de transporte</a> </li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Pago de impuesto sobre automoviles nuevos</a> </li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Pago de impuestopor juegos con apuestas y obtencion de premios</a></li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Pago de impuesto sobre hospedaje</a></li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Pago de impuesto predial</a></li>
+                            <li class="p-2"><a href="detalle-tramite/399" style="color:#3ba3fb !important">Pago de 5% de ISR regimen intermedio</a></li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Declaracion del regimen de incorporacion fiscal</a></li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Registro estatal de contribuyentes</a></li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Consulta al registro estatal de contribuyentes</a></li>
                         </ul>
                     </div>
                     <div class="col-4 px-25">
-                        <h4>Educacion</h4>
+                        <h4 style="color:#3ba3fb">Educacion</h4>
                         <ul style="font-size:10px">
-                            <li class="p-2">Expedicion de duplicados de educacion basica</li>
+                            <li class="p-2"><a href=""style="color:#3ba3fb !important">Expedicion de duplicados de educacion basica</a></li>
                         </ul>
 
-                        <h4>Control vehicular</h4>
+                        <h4 style="color:#3ba3fb">Control vehicular</h4>
                         <ul style="font-size:10px">
-                            <li class="p-2">Pago de regrendo vehicular</li>
-                            <li class="p-2">Renovacion de licencia de conducir</li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Pago de regrendo vehicular</a></li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Renovacion de licencia de conducir</a></li>
                         </ul>
 
-                        <h4>Parques y vida silvestre</h4>
+                        <h4 style="color:#3ba3fb">Parques y vida silvestre</h4>
                         <ul style="font-size:10px">
-                            <li class="p-2">Licencia de caza</li>
-                            <li class="p-2">Expedicion de cintillos</li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Licencia de caza</a></li>
+                            <li class="p-2"><a href="" style="color:#3ba3fb !important">Expedicion de cintillos</a></li>
                         </ul>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
         </div>
     </div>
 
-    <footer class="bg-light align-items-center px-3" style="position: fixed; bottom: 0px; width: 100%;backgorund-color: #a6e0fd">
+    <footer class="bg-light align-items-center px-3" style="position: fixed; bottom: 0px; width: 100%;backgorund-color: rgb(30 113 183)">
         <div class="col text-center" style="color:#56affb">
             <strong class="mr-2" style="color:#56affb">2021</strong> <strong class="mr-2" style="color:#56affb">Aviso de Privacidad</strong> <strong style="color:#56affb">Contacto</strong>
         </div>
