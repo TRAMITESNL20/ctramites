@@ -208,7 +208,7 @@
                   if(infoGuardada.complementoDe){
                     informacion.complementoDe =  infoGuardada.complementoDe;
                   }
-                } else if(this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status == 3) {
+                } else if(this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status == 8) {
                   informacion.complementoDe =  this.infoGuardadaFull.id;
                   tramite.id_seguimiento = uuid.v4();
                   tramite.grupo_clave = this.infoGuardadaFull.grupo_clave;

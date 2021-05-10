@@ -229,7 +229,7 @@
                                 paramsCosto.lote = campoLote.valor
                             }
                             
-                            if(this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status == 3) {
+                            if(this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status == 8) {
                                 paramsCosto.id_ticket = this.infoGuardadaFull.id;
                             }
                         }                 
