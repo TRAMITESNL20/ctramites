@@ -42,11 +42,8 @@
                 <div class="col-lg-4 cards-espace" > 
                     <div class="p-5" >
                           <div class="card-body">
-                                <h5 class="card-title">
-                                    <div style="padding-left: 1%">
-                                        <span class="titulo"> {{$categorias}} <span class="badge badge-secondary"> </span></span>
-                                    </div>
-                                </h5>
+                          <h4 style="color:#3ba3fb">Actas, inexistencias y copias certificadas</h4>
+
                                
                                 <div class="table-responsive">
                                     <ul style="font-size:10px">
@@ -66,11 +63,8 @@
                 <div class="col-lg-4 cards-espace" > 
                     <div class="p-5" >
                           <div class="card-body">
-                                <h5 class="card-title">
-                                    <div style="padding-left: 1%">
-                                        <span class="titulo">Pendientes de Pago <span class="badge badge-sm badge-secondary"> </span></span>
-                                    </div>
-                                </h5>
+                          <h4 style="color:#3ba3fb">Pago de impuestos</h4>
+                          <h4 style="color:#3ba3fb">Y contribuciones</h4>
                                 <div class="table-responsive">
                                     <ul style="font-size:10px">
                                         <li class="p-2"><a href="" style="color:#3ba3fb !important">Pago de impuesto sobre nomina</a> </li>
