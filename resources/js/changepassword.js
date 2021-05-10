@@ -54,40 +54,44 @@ document.addEventListener('DOMContentLoaded', function(e) {
 $('#kt_recovery_submit_change').on('click', function(e) {
     e.preventDefault();
     const url = window.location.href;
-    const email = new URL(url).searchParams.get('e');
+    const user_id =  $('#emailAux').val();
+    console.log(user_id);
     const password = $(document).find('input[name="password"]').val();
     const password_confirmation = $(document).find('input[name="confirmPassword"]').val();
     validation.validate().then(function(status) {
         if (status == 'Valid') {
-            $.ajaxSetup({
-                url: `${process.env.SESSION_HOSTNAME}/password/recovery`,
-                type: "POST",
-                data: {
-                    "email": email,
-                    "password": password,
-                    "password_confirmation": password_confirmation
-                },
-                success: function(res) {
-                    swal.fire({
-                        text: "Tu contraseña a sido actualizada",
-                        icon: "success",
-                        buttonsStyling: false,
-                        confirmButtonText: "Entendido",
-                        customClass: {
-                            confirmButton: "btn font-weight-bold btn-light-primary"
+            console.log('validado');
+                  $.ajaxSetup({
+                        url: `${process.env.SESSION_HOSTNAME}/users/`+ user_id,
+                        type: "PUT",
+                        data: {
+                            "password": password,
+                        },
+                        success: function(res) {
+                            console.log(res);
+                            console.log(url);
+                            swal.fire({
+                                text: "Tu contraseña a sido actualizada",
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Entendido",
+                                customClass: {
+                                    confirmButton: "btn font-weight-bold btn-light-primary"
+                                }
+                            }).then(function() {
+                                redirect("/logout");
+                            });
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            if (jqXHR.status == 401) {
+                                alert(".");
+                                // return redirect("/login");
+                            }
                         }
-                    }).then(function() {
-                        redirect("/login?e=" + btoa(res));
                     });
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    if (jqXHR.status == 401) {
-                        alert(".");
-                        return redirect("/login");
-                    }
-                }
-            });
-            $.ajax();
+                    $.ajax();
+        
+        
         } else {
             swal.fire({
                 text: "La contraseña no a sido actualizada, intenta nuevamente.",

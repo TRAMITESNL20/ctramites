@@ -17,7 +17,7 @@
                                 </div>
                                 <div class="d-flex flex-column">
                                 <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
-                                    <div class="text-muted mt-1">Frontend Development</div>
+                                <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role->description)) !!}</div>
                                     <div class="navi mt-2">
                                         <a href="mailto:alberto.salazars@nuevoleon.gob.mx" class="navi-item">
                                             <span class="navi-link p-0 pb-2">
@@ -37,8 +37,6 @@
                                                 <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user->email}}</span>
                                             </span>
                                         </a>
-                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm  btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
-                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a>
                                     </div>
                                 </div>
                             </div>
@@ -74,28 +72,14 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td style="vertical-align: middle">
-                                                    <div >
-                                                        <span>
-                                                            Ubicacion   
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td colspan="3">
-                                                    <span class="text-muted">
-                                                        Lorem ipsum dolor sit amet consectetur 
-                                                    </span>
-                                                
-                                                </td>
-                                            </tr>
+
                                             
                                         </tbody>
                                     </table>
                                     <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
                                 <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
                                 <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
-                                <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a>
+                                <!-- <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a> -->
                                 </div>
                             </div>
                     </div>

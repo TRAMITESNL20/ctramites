@@ -21,7 +21,7 @@
                           </div>
                           <div class="d-flex flex-column">
                               <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
-                              <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role_name)) !!}</div>
+                              <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role->description)) !!}</div>
                               <div class="navi mt-2">
                                   <a href="mailto:{{ $user->email}}" class="navi-item">
                                       <span class="navi-link p-0 pb-2">
@@ -79,21 +79,6 @@
                                               </span>
                                           </td>
                                       </tr>
-                                      {{-- <tr>
-                                          <td style="vertical-align: middle">
-                                              <div >
-                                                  <span>
-                                                      Ubicacion   
-                                                  </span>
-                                              </div>
-                                          </td>
-                                          <td colspan="3">
-                                              <span class="text-muted">
-                                                 Lorem ipsum dolor sit amet consectetur 
-                                              </span>
-                                         
-                                          </td>
-                                      </tr> --}}
                                       
                                   </tbody>
                               </table>
@@ -122,7 +107,7 @@
                                 </div>
                                 <div class="d-flex flex-column">
                                     <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
-                                    <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role_name)) !!}</div>
+                                    <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role->description)) !!}</div>
                                     <div class="navi mt-2">
                                         <a href="mailto:{{ $user->email }}" class="navi-item">
                                             <span class="navi-link p-0 pb-2">
@@ -180,28 +165,14 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            {{-- <tr>
-                                                <td style="vertical-align: middle">
-                                                    <div >
-                                                        <span>
-                                                            Ubicacion   
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td colspan="3">
-                                                    <span class="text-muted">
-                                                       Lorem ipsum dolor sit amet consectetur 
-                                                    </span>
-                                               
-                                                </td>
-                                            </tr> --}}
+
                                             
                                         </tbody>
                                     </table>
                                     <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
                                     <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
                                     <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
-                                    <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a>
+                                    <!-- <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a> -->
                                </div>
                           </div>
                     </div>
@@ -258,6 +229,12 @@
                                                 				<div class="fv-plugins-message-container"></div>
                                                     </div>
                                                 </div>
+                                                <div class="form-group row" id="" style="display:none">
+                                                    <div class="col-md-8 col-sm-12">
+                                                        <input class="form-control" type="email" placeholder="" id="emailAux" name="emailAux"  value="{{ $user->id }}"  />
+                                                				<div class="fv-plugins-message-container"></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </form>
                                 
@@ -283,6 +260,8 @@
       document.body.style.backgroundColor = "#f2f3f7";
 
     }
+
+    
 </script>
 
 
