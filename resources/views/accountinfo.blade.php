@@ -18,10 +18,10 @@
                               <i class="symbol-badge bg-success"></i>
                           </div>
                           <div class="d-flex flex-column">
-                              <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">Raymundo Salazar</a>
-                              <div class="text-muted mt-1">Frontend Development</div>
+                              <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
+                              <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role_name)) !!}</div>
                               <div class="navi mt-2">
-                                  <a href="mailto:alberto.salazars@nuevoleon.gob.mx" class="navi-item">
+                                  <a href="mailto:{{ $user->email}}" class="navi-item">
                                       <span class="navi-link p-0 pb-2">
                                           <span class="navi-icon mr-1">
                                               <span class="svg-icon svg-icon-lg svg-icon-primary">
@@ -36,11 +36,11 @@
                                                   <!--end::Svg Icon-->
                                               </span>
                                           </span>
-                                          <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">alberto.salazars@nuevoleon.gob.mx</span>
+                                          <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user->email}}</span>
                                       </span>
                                   </a>
-                                  <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
-                                  <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a>
+                                  {{-- <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
+                                  <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a> --}}
                               </div>
                           </div>
                       </div>
@@ -67,7 +67,7 @@
                                           <td style="vertical-align: middle">
                                               <div>
                                                   <span>
-                                                      Phone   
+                                                      Teléfono
                                                   </span>
                                               </div>
                                           </td>
@@ -77,7 +77,7 @@
                                               </span>
                                           </td>
                                       </tr>
-                                      <tr>
+                                      {{-- <tr>
                                           <td style="vertical-align: middle">
                                               <div >
                                                   <span>
@@ -91,14 +91,14 @@
                                               </span>
                                          
                                           </td>
-                                      </tr>
+                                      </tr> --}}
                                       
                                   </tbody>
                               </table>
                               <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
                               <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
                               <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
-                              <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a>
+                              {{-- <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a> --}}
                          </div>
                     </div>
               </div>  
@@ -117,9 +117,9 @@
                                 </div>
                                 <div class="d-flex flex-column">
                                 <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
-                                    <div class="text-muted mt-1">Frontend Development</div>
+                                    <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role_name)) !!}</div>
                                     <div class="navi mt-2">
-                                        <a href="mailto:alberto.salazars@nuevoleon.gob.mx" class="navi-item">
+                                        <a href="mailto:{{ $user->email}}" class="navi-item">
                                             <span class="navi-link p-0 pb-2">
                                                 <span class="navi-icon mr-1">
                                                     <span class="svg-icon svg-icon-lg svg-icon-primary">
@@ -137,8 +137,8 @@
                                                 <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user->email}}</span>
                                             </span>
                                         </a>
-                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm  btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
-                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a>
+                                        {{-- <a href="{{ url()->route("logout") }}" class="btn btn-sm  btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
+                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a> --}}
                                     </div>
                                 </div>
                             </div>
@@ -164,7 +164,7 @@
                                                 <td style="vertical-align: middle">
                                                     <div>
                                                         <span>
-                                                            Phone   
+                                                            Teléfono   
                                                         </span>
                                                     </div>
                                                 </td>
@@ -174,7 +174,7 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            {{-- <tr>
                                                 <td style="vertical-align: middle">
                                                     <div >
                                                         <span>
@@ -188,14 +188,14 @@
                                                     </span>
                                                
                                                 </td>
-                                            </tr>
+                                            </tr> --}}
                                             
                                         </tbody>
                                     </table>
                                     <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
                               <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
                               <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
-                              <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a>
+                              {{-- <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a> --}}
                                 </div>
                           </div>
                     </div>
@@ -231,27 +231,27 @@
                                                 <label  class="col-8 col-form-label">Informacion:</label>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        {{-- <div class="form-group row">
                                             <label  class="col-md-3 col-sm-12 col-form-label">Avatar</label>
                                             <div class="col-md-8 col-sm-12 text-center">
                                                 <div class="symbol symbol-100 mr-5">
-                                                    {{-- <div class="symbol-label" style="background-image:url('media/users/300_21.jpg')"></div> --}}
+                                                    <div class="symbol-label" style="background-image:url('media/users/300_21.jpg')"></div>
                                                     <span class="symbol-label font-size-h2 font-weight-bold bg-dark-o-30">RS</span>
                                                     <a href=""><i class="symbol-badge la la-pencil-alt"></i></a>
                                                 </div>   
                                                 <span class="form-text text-muted">Lorem ipsum dolor sit, amet consectetur adipisicing elit</span>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="form-group row">
                                             <label  class="col-md-3 col-sm-12 col-form-label">Nombre de la notaria</label>
                                             <div class="col-md-8 col-sm-12">
-                                                <input class="form-control" type="text" placeholder="Nombre de la notaria" id="example-text-input"/>
+                                                <input class="form-control" type="text" placeholder="Nombre de la notaria" id="example-text-input" value="Notaria {{ $user->notary->notary_number }}"/>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label  class="col-md-3 col-sm-12 col-form-label">Rol Asignado</label>
                                             <div class="col-md-8 col-sm-12">
-                                                <input class="form-control" type="text" value="{{ $user->role_name }}" />
+                                                <input class="form-control" type="text" value="{!! strtoupper(str_replace("/_/", " ", $user->role_name)) !!}" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -291,7 +291,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Curp </label>
+                                            <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">CURP </label>
                                             <div class="col-md-8 col-sm-12">
                                                 <input class="form-control" type="text"  value="{{ $user->curp }}" disabled />
                                             </div>
@@ -309,7 +309,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Persona Fisica/Moral </label>
+                                            <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Persona </label>
                                             <div class="col-md-8 col-sm-12">
                                                 <select class="form-control" id="exampleSelect1">
                                                     <option>Fisica</option>

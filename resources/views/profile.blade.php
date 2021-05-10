@@ -17,10 +17,10 @@
                               <i class="symbol-badge bg-success"></i>
                           </div>
                           <div class="d-flex flex-column">
-                              <a href="{{ url()->route("perfil") }}"  class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">Raymundo Salazar</a>
-                              <div class="text-muted mt-1">Frontend Development</div>
+                              <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
+                              <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role_name)) !!}</div>
                               <div class="navi mt-2">
-                                  <a href="mailto:alberto.salazars@nuevoleon.gob.mx" class="navi-item">
+                                  <a href="mailto:{{ $user->email }}" class="navi-item">
                                       <span class="navi-link p-0 pb-2">
                                           <span class="navi-icon mr-1">
                                               <span class="svg-icon svg-icon-lg svg-icon-primary">
@@ -35,11 +35,11 @@
                                                   <!--end::Svg Icon-->
                                               </span>
                                           </span>
-                                          <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">alberto.salazars@nuevoleon.gob.mx</span>
+                                          <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user->email }}</span>
                                       </span>
                                   </a>
-                                  <a href="{{ url()->route("logout") }}"class="btn btn-sm btn-sidevar btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
-                                  <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a>
+                                  {{-- <a href="{{ url()->route("logout") }}"class="btn btn-sm btn-sidevar btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
+                                  <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a> --}}
                               </div>
                           </div>
                       </div>
@@ -66,7 +66,7 @@
                                           <td style="vertical-align: middle">
                                               <div>
                                                   <span>
-                                                      Phone   
+                                                      Teléfono   
                                                   </span>
                                               </div>
                                           </td>
@@ -76,7 +76,7 @@
                                               </span>
                                           </td>
                                       </tr>
-                                      <tr>
+                                      {{-- <tr>
                                           <td style="vertical-align: middle">
                                               <div >
                                                   <span>
@@ -90,14 +90,14 @@
                                               </span>
                                          
                                           </td>
-                                      </tr>
+                                      </tr> --}}
                                       
                                   </tbody>
                               </table>
                               <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
                               <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
                               <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
-                              <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a>
+                              {{-- <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a> --}}
                          </div>
                     </div>
               </div>  
@@ -116,9 +116,9 @@
                                 </div>
                                 <div class="d-flex flex-column">
                                 <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
-                                    <div class="text-muted mt-1">Frontend Development</div>
+                                    <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role_name)) !!}</div>
                                     <div class="navi mt-2">
-                                        <a href="mailto:alberto.salazars@nuevoleon.gob.mx" class="navi-item">
+                                        <a href="mailto:{{ $user->email }}" class="navi-item">
                                             <span class="navi-link p-0 pb-2">
                                                 <span class="navi-icon mr-1">
                                                     <span class="svg-icon svg-icon-lg svg-icon-primary">
@@ -136,8 +136,8 @@
                                                 <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user->email}}</span>
                                             </span>
                                         </a>
-                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm  btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
-                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a>
+                                        {{-- <a href="{{ url()->route("logout") }}" class="btn btn-sm  btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
+                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a> --}}
                                     </div>
                                 </div>
                             </div>
@@ -163,7 +163,7 @@
                                                 <td style="vertical-align: middle">
                                                     <div>
                                                         <span>
-                                                            Phone   
+                                                            Teléfono   
                                                         </span>
                                                     </div>
                                                 </td>
@@ -173,7 +173,7 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            {{-- <tr>
                                                 <td style="vertical-align: middle">
                                                     <div >
                                                         <span>
@@ -187,14 +187,14 @@
                                                     </span>
                                                
                                                 </td>
-                                            </tr>
+                                            </tr> --}}
                                             
                                         </tbody>
                                     </table>
                                     <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
                               <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
                               <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
-                              <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a>
+                              {{-- <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a> --}}
                                 </div>
                           </div>
                     </div>
@@ -251,7 +251,7 @@
                                         </form>
                                 <div class="dropdown-divider"></div>
                                  <!--begin::Form-->
-                                 <form>
+                                 {{-- <form>
                                     <div class="card-body">
                                         <div class="form-group row">
                                             <label  class="col-md-3 col-sm-12 col-form-label"></label>
@@ -280,7 +280,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>
+                                </form> --}}
                     </div>
                 </div>
             </div>
