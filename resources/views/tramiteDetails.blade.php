@@ -53,7 +53,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <span class="text-muted">Fecha de escritura pública o minuta</span>
-                                        <p><strong>{{ $camposConfigurados['fecha_de_escritura_o_minuta']['value']['value'] }}</strong></p>
+                                        <p><strong>{{ $camposConfigurados['fecha_de_escritura_o_minuta']['value'] }}</strong></p>
                                     </div>
                                     <div class="col-md-4">
                                         <span class="text-muted">Cálculo del ISR conforme al 126 LISR (Archivo)</span>
