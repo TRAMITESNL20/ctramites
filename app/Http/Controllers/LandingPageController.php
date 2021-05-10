@@ -11,12 +11,14 @@ class LandingPageController extends Controller
 		set_layout_arg([
             "subtitle" => "Bienvenido",
 			"empty_layout" => true,
-			"background_content" => "#ffffff",
+			"background_content" => "#ffffff", 
 			"fluid_container" => true,
 			// "subtitle" => "perfil",
 			// "fluid_container"=> true
 		]);
+		$categorias = curlSendRequest("GET", "http://localhost:8080/getCategories");
+		dd($categorias);
 
-		return layout_view("landingPage");
+		return layout_view("landingPage" , ['categorias' => $categorias]);
     }
 }
