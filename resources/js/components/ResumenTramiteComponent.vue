@@ -176,7 +176,7 @@
                 let paramsCosto = {};
                 if(this.tipoTramite =='normal'  ){
                     if( consulta_api == "/getcostoImpuesto" ){
-                        // CAMPOS CALCULO IMPUESTO
+                        /*let CAMPOS CALCULO IMPUESTO
                         let campoMonto              = this.getCampoByName(CAMPO_MONTO_DE_OPERACIÓN);
                         let campoMulta              = this.getCampoByName(CAMPO_MULTA_POR_CORRECCION_FISCAL);
                         let campoFechaMinuta        = this.getCampoByName(CAMPO_FECHA_DE_ESCRITURA_O_MINUTA);
@@ -189,7 +189,7 @@
                         paramsCosto.pago_provisional_lisr = this.formatoNumero(campoPagoProvisional.valor);
                         if( campoMulta ){
                             paramsCosto.multa_correccion_fiscal = this.formatoNumero(campoMulta.valor);
-                        }
+                        }*/
                     } else {
 
                         if ( tipo_costo_obj.tipo_costo == '1' && (tipo_costo_obj.tipoCostoRadio == 'hoja'||tipo_costo_obj.tipoCostoRadio == 'lote') ){
@@ -240,13 +240,14 @@
                         //paramsCosto.divisa = campoDivisas.valor[0][0];
                     }
                 } else {
+                    /*
                     let params = {};
                     params.fecha_escritura = this.datosComplementaria.fecha_escritura.split("-").reverse().map(dato => Number(dato)).join("-");
                     params.ganancia_obtenida = this.formatoNumero(this.datosComplementaria.ganancia_obtenida);
                     params.monto_operacion = this.formatoNumero(this.datosComplementaria.monto_operacion);
                     params.multa_correccion_fiscal = this.formatoNumero(this.datosComplementaria.multa_correccion_fiscal);
                     params.pago_provisional_lisr = this.formatoNumero(this.datosComplementaria.pago_provisional_lisr);
-                    return params;
+                    return params;*/
                 }
 
                 return Object.assign(params, paramsCosto);

@@ -202,7 +202,7 @@
                 datosFormulario.campos = this.formatearCampos(datosFormulario.campos);
                 let informacion = this.getInformacion( tramite, datosFormulario );
                 let idEdicion = null;
-                if(  this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status != 3  ){
+                if(  this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status != 8  ){
                   idEdicion = this.infoGuardadaFull.id;
                   let infoGuardada =  JSON.parse( this.infoGuardadaFull.info );
                   if(infoGuardada.complementoDe){

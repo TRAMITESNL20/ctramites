@@ -448,8 +448,11 @@
 					if( this.infoGuardada && this.infoGuardada.campos ){
 						this.tipoPersona = this.infoGuardada.tipoPersona;
 						this.tipo_costo_obj = this.infoGuardada.tipo_costo_obj;
+
+						this.campos = this.infoGuardada.camposConfigurados;
+
 						this.campos.forEach( (campo, index) =>{	
-							campo.valor = this.infoGuardada.campos[ campo.campo_id ];
+							//campo.valor = this.infoGuardada.campos[ campo.campo_id ];
 							if( campo.tipo == 'file' && this.infoGuardada.archivosGuardados){
 								let infoArchivoGuardado = this.infoGuardada.archivosGuardados.find( archivo => archivo.mensaje == campo.nombre );
 								campo.archivoGuardado = true;

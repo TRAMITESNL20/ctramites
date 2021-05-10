@@ -160,7 +160,7 @@
 <script>
   import { uuid } from 'vue-uuid';
   import FirmaElectronicaComponent from './tiposElementos/FirmaElectronicaComponent.vue';
-
+  import adminCamposCostos from '../services/AdminCamposCostos.js';
     export default {
         props: ['tramite','idUsuario', 'clave', 'usuario'],
         computed:{
@@ -353,7 +353,10 @@
 
                 this.infoGuardadaFull = response.data[0];
 
-                this.infoGuardada =  JSON.parse( response.data[0].info );
+                this.infoGuardadaFull = new adminCamposCostos(this.infoGuardadaFull);
+                this.infoGuardada =  JSON.parse(this.infoGuardadaFull.info)
+
+                //this.infoGuardada =  JSON.parse( response.data[0].info );
 
                 if( response.data[0].archivos.length > 0 ){
                   this.infoGuardada.archivosGuardados = response.data[0].archivos;
@@ -363,10 +366,11 @@
                 
                 //this.tipoTramiteDisabled = !this.infoGuardada.campos ? 'normal' : 'complementaria';
 
+
                 this.camposGuardadosObtenidos = true;
 
                 this.solicitantesGuardados = response.data.map( solicitante => {
-                  let solicitanteNuevo = JSON.parse(solicitante.info).solicitante;
+                  let solicitanteNuevo = typeof solicitante.info == "string" ? JSON.parse(solicitante.info).solicitante : solicitante.info.solicitante;
                   if( solicitanteNuevo ){
                     solicitanteNuevo.id = solicitante.id;
                   }
