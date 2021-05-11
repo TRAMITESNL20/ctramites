@@ -13,7 +13,7 @@ class ConfirmPasswordController extends Controller
             "empty_layout" => true,
             "background_content" => "#ffffff",
             "script" => [
-              asset("js/confirmpassword.js"),
+              assets("js/confirmpassword.js"),
               asset("https://unpkg.com/bootstrap-show-password@1.2.1/dist/bootstrap-show-password.min.js")
             ]
 		]);
