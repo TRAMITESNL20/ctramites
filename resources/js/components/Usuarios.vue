@@ -14,6 +14,9 @@
                 </div>
             </div>
         </div>
+
+
+        
         <div v-if="usuarios.length != 0">
             <!-- busqueda y numero de usuarios por pagina -->
             <div class="row">
