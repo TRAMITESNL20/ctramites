@@ -206,7 +206,7 @@
                                         </div>
                                     </div> --}}
                                         <!--begin::Form-->
-                                        <form id="kt_confirm_password_form">
+                                        <form id="kt_confirm_password_form_log">
                                             <div class="card-body">
                                                 <div class="form-group row">
                                                     <label  class="col-md-3 col-sm-12 col-form-label">Contraseña actual</label>

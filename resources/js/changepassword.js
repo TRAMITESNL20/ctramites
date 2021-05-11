@@ -1,9 +1,8 @@
 var validation;
-
 document.addEventListener('DOMContentLoaded', function(e) {
-    const form = document.getElementById('kt_confirm_password_form');
-    validation = FormValidation.formValidation(
-        document.getElementById('kt_confirm_password_form'), {
+    const form = document.getElementById('kt_confirm_password_form_log');
+    const fv = FormValidation.formValidation(
+        document.getElementById('kt_confirm_password_form_log'), {
             fields: {
                 password: {
                     validators: {
