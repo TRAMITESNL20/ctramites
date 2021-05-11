@@ -123,7 +123,9 @@ Vue.prototype.$const = {
         CAMPO_SUBSIDIO: "Subsidio",
         CAMPO_VALOR_CATASTRAL: "Valor catastral",
         CAMPO_VALOR_OPERACION: "Valor de operacion"
-    }
+    },
+    STATUS_FALTA_PAGO: 8,
+    STATUS_ERROR_MUNICIPIO: 7,
 }
 
 Vue.filter('toNumber', function (value) {

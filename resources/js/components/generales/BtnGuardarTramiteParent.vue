@@ -202,13 +202,14 @@
                 datosFormulario.campos = this.formatearCampos(datosFormulario.campos);
                 let informacion = this.getInformacion( tramite, datosFormulario );
                 let idEdicion = null;
-                if(  this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status != 8  ){
+
+                if(  this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status != this.$const.STATUS_FALTA_PAGO  ){
                   idEdicion = this.infoGuardadaFull.id;
                   let infoGuardada =  JSON.parse( this.infoGuardadaFull.info );
                   if(infoGuardada.complementoDe){
                     informacion.complementoDe =  infoGuardada.complementoDe;
                   }
-                } else if(this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status == 8) {
+                } else if(this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO) {
                   informacion.complementoDe =  this.infoGuardadaFull.id;
                   tramite.id_seguimiento = uuid.v4();
                   tramite.grupo_clave = this.infoGuardadaFull.grupo_clave;

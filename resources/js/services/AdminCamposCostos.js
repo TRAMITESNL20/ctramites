@@ -1,11 +1,18 @@
-
+import Vue from 'vue';
 export default class AdminCamposCostos {
 
 	constructor(infoFull) {
         this.info = JSON.parse(infoFull.info);
-        this.camposParaCostos = ["Lote", "Hoja", "Subsidio", "Valor catastral", "Valor de operacion", "Cambio de divisas"];
+        this.camposParaCostos = [
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_LOTE, 
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_HOJA, 
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_SUBSIDIO, 
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_VALOR_CATASTRAL, 
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION, 
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_DIVISAS
+        ];
         let nuevaInfo = this.info;
-        if(infoFull.status == 8){
+        if(infoFull.status == Vue.prototype.$const.STATUS_FALTA_PAGO ){
             nuevaInfo = this.desabilidarCampos( this.info );
         }
         infoFull.info = JSON.stringify( nuevaInfo );
