@@ -20,10 +20,10 @@
                               <i class="symbol-badge bg-success"></i>
                           </div>
                           <div class="d-flex flex-column">
-                              <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">Raymundo Salazar</a>
-                              <div class="text-muted mt-1">Frontend Development</div>
+                              <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
+                              <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role->description)) !!}</div>
                               <div class="navi mt-2">
-                                  <a href="mailto:alberto.salazars@nuevoleon.gob.mx" class="navi-item">
+                                  <a href="mailto:{{ $user->email}}" class="navi-item">
                                       <span class="navi-link p-0 pb-2">
                                           <span class="navi-icon mr-1">
                                               <span class="svg-icon svg-icon-lg svg-icon-primary">
@@ -38,11 +38,11 @@
                                                   <!--end::Svg Icon-->
                                               </span>
                                           </span>
-                                          <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">alberto.salazars@nuevoleon.gob.mx</span>
+                                          <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user->email}}</span>
                                       </span>
                                   </a>
-                                  <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
-                                  <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a>
+                                  {{-- <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
+                                  <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a> --}}
                               </div>
                           </div>
                       </div>
@@ -69,7 +69,7 @@
                                           <td style="vertical-align: middle">
                                               <div>
                                                   <span>
-                                                      Phone   
+                                                      Teléfono
                                                   </span>
                                               </div>
                                           </td>
@@ -79,28 +79,13 @@
                                               </span>
                                           </td>
                                       </tr>
-                                      <tr>
-                                          <td style="vertical-align: middle">
-                                              <div >
-                                                  <span>
-                                                      Ubicacion   
-                                                  </span>
-                                              </div>
-                                          </td>
-                                          <td colspan="3">
-                                              <span class="text-muted">
-                                                 Lorem ipsum dolor sit amet consectetur 
-                                              </span>
-                                         
-                                          </td>
-                                      </tr>
                                       
                                   </tbody>
                               </table>
                               <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
                               <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
                               <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
-                              <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a>
+                              {{-- <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a> --}}
                          </div>
                     </div>
               </div>  
@@ -121,10 +106,10 @@
                                     <i class="symbol-badge bg-success"></i>
                                 </div>
                                 <div class="d-flex flex-column">
-                                    <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">Raymundo Salazar</a>
-                                    <div class="text-muted mt-1">Frontend Development</div>
+                                    <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
+                                    <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role->description)) !!}</div>
                                     <div class="navi mt-2">
-                                        <a href="mailto:alberto.salazars@nuevoleon.gob.mx" class="navi-item">
+                                        <a href="mailto:{{ $user->email }}" class="navi-item">
                                             <span class="navi-link p-0 pb-2">
                                                 <span class="navi-icon mr-1">
                                                     <span class="svg-icon svg-icon-lg svg-icon-primary">
@@ -139,11 +124,11 @@
                                                         <!--end::Svg Icon-->
                                                     </span>
                                                 </span>
-                                                <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">alberto.salazars@nuevoleon.gob.mx</span>
+                                                <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user->email }}</span>
                                             </span>
                                         </a>
-                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm  btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
-                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a>
+                                        {{-- <a href="{{ url()->route("logout") }}" class="btn btn-sm  btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
+                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a> --}}
                                     </div>
                                 </div>
                             </div>
@@ -180,28 +165,14 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td style="vertical-align: middle">
-                                                    <div >
-                                                        <span>
-                                                            Ubicacion   
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td colspan="3">
-                                                    <span class="text-muted">
-                                                       Lorem ipsum dolor sit amet consectetur 
-                                                    </span>
-                                               
-                                                </td>
-                                            </tr>
+
                                             
                                         </tbody>
                                     </table>
                                     <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
                                     <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
                                     <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
-                                    <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a>
+                                    <!-- <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a> -->
                                </div>
                           </div>
                     </div>
@@ -225,7 +196,7 @@
                         </div>
                         <div class="dropdown-divider"></div>
                           <div class="card-body">
-                                    <div class="alert alert-custom alert-light-danger fade show mb-5" role="alert">
+                                    {{-- <div class="alert alert-custom alert-light-danger fade show mb-5" role="alert">
                                         <div class="alert-icon"><i class="flaticon-warning"></i></div>
                                         <div class="alert-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corrupti consequuntur laudantium fugit harum, ex fugiat maiores libero nesciunt praesentium consectetur ab blanditiis distinctio.</div>
                                         <div class="alert-close">
@@ -233,7 +204,7 @@
                                                 <span aria-hidden="true"><i class="ki ki-close"></i></span>
                                             </button>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                         <!--begin::Form-->
                                         <form id="kt_confirm_password_form">
                                             <div class="card-body">
@@ -255,6 +226,18 @@
                                                     <label class="col-md-3 col-sm-12 col-form-label">Verificar Contraseña</label>
                                                     <div class="col-md-8 col-sm-12">
                                                         <input class="form-control" type="password" placeholder="Verificar Contraseña" id="confirmPassword" name="confirmPassword" data-toggle="password"/>
+                                                				<div class="fv-plugins-message-container"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" id="" style="display:none">
+                                                    <div class="col-md-8 col-sm-12">
+                                                        <input class="form-control" type="email" placeholder="" id="emailAux" name="emailAux"  value="{{ $user->id }}"  />
+                                                				<div class="fv-plugins-message-container"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" id="" style="display:none">
+                                                    <div class="col-md-8 col-sm-12">
+                                                        <input class="form-control" type="email" placeholder="" id="sesionAux" name="sesionAux"  value="{{ $sesion }}"  />
                                                 				<div class="fv-plugins-message-container"></div>
                                                     </div>
                                                 </div>
@@ -283,6 +266,8 @@
       document.body.style.backgroundColor = "#f2f3f7";
 
     }
+
+    
 </script>
 
 
