@@ -2,7 +2,7 @@
     <div class="d-flex flex-column-fluid">
         <div class="container view-usuarios">
             <span style="font-size: .8cm" class="6p">
-                Usuarios
+                perfil->Usuarios
             </span>
             <div class="row users-component">
                 <div class="nav col-lg-4 nav" style="margin-bottom: 30px;"> 

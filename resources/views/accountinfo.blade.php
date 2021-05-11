@@ -212,12 +212,14 @@
                                                 <span class="form-text text-muted">Lorem ipsum dolor sit, amet consectetur adipisicing elit</span>
                                             </div>
                                         </div> --}}
-                                        <div class="form-group row">
-                                            <label  class="col-md-3 col-sm-12 col-form-label">Nombre de la notaria</label>
-                                            <div class="col-md-8 col-sm-12">
-                                                <input class="form-control" disabled type="text" placeholder="Nombre de la notaria" id="example-text-input" value="Notaria {{ $user->notary->notary_number }}"/>
-                                            </div>
-                                        </div>
+                                        @if (isset($user->notary))
+                                          <div class="form-group row">
+                                              <label  class="col-md-3 col-sm-12 col-form-label">Nombre de la notaría</label>
+                                              <div class="col-md-8 col-sm-12">
+                                                  <input class="form-control" disabled type="text" placeholder="Nombre de la notaría" id="example-text-input" value="Notaría {{ $user->notary->notary_number }}"/>
+                                              </div>
+                                          </div>
+                                        @endif
                                         <div class="form-group row">
                                             <label  class="col-md-3 col-sm-12 col-form-label">Rol Asignado</label>
                                             <div class="col-md-8 col-sm-12">
@@ -225,15 +227,21 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="example-search-input" class="col-md-3 col-sm-12 col-form-label">Nombres(s)</label>
+                                            <label for="example-search-input" class="col-md-3 col-sm-12 col-form-label">Nombre(s)</label>
                                             <div class="col-md-8 col-sm-12">
-                                                <input class="form-control" type="text" value="{{ $user->name }}  {{ $user->fathers_surname }} {{ $user->mothers_surname}}" disabled/>
+                                                <input class="form-control" type="text" value="{{ $user->name }}" disabled/>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Apellido Paterno</label>
                                             <div class="col-md-8 col-sm-12">
                                                 <input class="form-control" type="text"  value="{{ $user->fathers_surname }}" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Apellido Materno</label>
+                                            <div class="col-md-8 col-sm-12">
+                                                <input class="form-control" type="text"  value="{{ $user->mothers_surname }}" disabled />
                                             </div>
                                         </div>
                                     </div>
@@ -254,12 +262,12 @@
                                                 <input class="form-control" type="text"  value="{{ $user->email }}" disabled id="example-text-input"/>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        {{-- <div class="form-group row">
                                             <label for="example-search-input" class="col-md-3 col-sm-12 col-form-label">Contraseña</label>
                                             <div class="col-md-8 col-sm-12">
                                                 <input class="form-control" disabled type="text" placeholder="Contraseña"/>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="form-group row">
                                             <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">CURP </label>
                                             <div class="col-md-8 col-sm-12">
@@ -272,12 +280,14 @@
                                                 <input class="form-control" type="text"  value="{{ $user->rfc }}" disabled />
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Número de Contacto </label>
-                                            <div class="col-md-8 col-sm-12">
-                                                <input class="form-control" type="text" value="{{ $user->phone }}" disabled />
-                                            </div>
-                                        </div>
+                                        @if (!empty($user->phone))
+                                          <div class="form-group row">
+                                              <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Número de Contacto </label>
+                                              <div class="col-md-8 col-sm-12">
+                                                  <input class="form-control" type="text" value="{{ $user->phone }}" disabled />
+                                              </div>
+                                          </div>
+                                        @endif
                                         <div class="form-group row">
                                             <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Persona </label>
                                             <div class="col-md-8 col-sm-12">
