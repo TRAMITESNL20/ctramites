@@ -195,11 +195,24 @@
                                         <form>
                                             <div class="card-body">
                                                 <div class="form-group row">
-                                                    <label  class="col-md-3 col-sm-12col-form-label"></label>
+                                                    <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Nombre(s)</label>
                                                     <div class="col-md-8 col-sm-12">
-                                                        <label  class="col-8 col-form-label">Cuenta:</label>
+                                                        <input class="form-control" type="text" value="{{ $user->name }}" disabled />
                                                     </div>
                                                 </div>
+                                                <div class="form-group row">
+                                                    <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Apellido Paterno</label>
+                                                    <div class="col-md-8 col-sm-12">
+                                                        <input class="form-control" type="text" value="{{ $user->fathers_surname }}" disabled />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Apellido Materno</label>
+                                                    <div class="col-md-8 col-sm-12">
+                                                        <input class="form-control" type="text" value="{{ $user->mothers_surname }}" disabled />
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-divider mb-10"></div>
                                                 <div class="form-group row">
                                                     <label  class="col-md-3 col-sm-12 col-form-label">Nombre de Usuario</label>
                                                     <div class="col-md-8 col-sm-12">
@@ -212,15 +225,8 @@
                                                         <input class="form-control" type="email"value="{{ $user->email }}" disabled/>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
-                                                    <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Apellido Paterno</label>
-                                                    <div class="col-md-8 col-sm-12">
-                                                        <input class="form-control" type="text" value="{{ $user->fathers_surname }}" disabled />
-                                                    </div>
-                                                </div>
                                             </div>
                                         </form>
-                                <div class="dropdown-divider"></div>
                                  <!--begin::Form-->
                                  {{-- <form>
                                     <div class="card-body">

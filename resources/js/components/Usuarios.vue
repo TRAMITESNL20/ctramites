@@ -41,7 +41,7 @@
                                 </div>
                             <div class="text-center pt-2">
                                 <div>
-                                        <span style="font-style: oblique;font-size: 15px">{{usuario.name }} {{usuario.mothers_surname}}  {{usuario.fathers_surname}}</span>
+                                        <span style="font-style: oblique;font-size: 15px">{{usuario.name }} {{usuario.fathers_surname}}  {{usuario.mothers_surname}}</span>
                                 </div>
                                 <div>
                                     <span class="form-text text-muted">{{usuario.email}} </span>
