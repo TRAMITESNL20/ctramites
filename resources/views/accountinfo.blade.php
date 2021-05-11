@@ -4,7 +4,7 @@
             <span class="col-sm-12 col-md-3 sideNavBtn" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
 
             <span class="col-sm-12 col-md-3">
-                perfil->Informacion de la cuenta
+                perfil->Información de la cuenta
             </span>
             <div id="Sidenav" class="sidenav">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">...</a>
@@ -19,7 +19,7 @@
                           </div>
                           <div class="d-flex flex-column">
                               <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
-                              <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role_name)) !!}</div>
+                              <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role->description)) !!}</div>
                               <div class="navi mt-2">
                                   <a href="mailto:{{ $user->email}}" class="navi-item">
                                       <span class="navi-link p-0 pb-2">
@@ -77,26 +77,11 @@
                                               </span>
                                           </td>
                                       </tr>
-                                      {{-- <tr>
-                                          <td style="vertical-align: middle">
-                                              <div >
-                                                  <span>
-                                                      Ubicacion   
-                                                  </span>
-                                              </div>
-                                          </td>
-                                          <td colspan="3">
-                                              <span class="text-muted">
-                                                 Lorem ipsum dolor sit amet consectetur 
-                                              </span>
-                                         
-                                          </td>
-                                      </tr> --}}
                                       
                                   </tbody>
                               </table>
-                              <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
-                              <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
+                              <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Información Personal</a>
+                              <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Información de la Cuenta</a>
                               <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
                               {{-- <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a> --}}
                          </div>
@@ -117,7 +102,7 @@
                                 </div>
                                 <div class="d-flex flex-column">
                                 <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
-                                    <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role_name)) !!}</div>
+                                    <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role->description)) !!}</div>
                                     <div class="navi mt-2">
                                         <a href="mailto:{{ $user->email}}" class="navi-item">
                                             <span class="navi-link p-0 pb-2">
@@ -174,26 +159,11 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            {{-- <tr>
-                                                <td style="vertical-align: middle">
-                                                    <div >
-                                                        <span>
-                                                            Ubicacion   
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td colspan="3">
-                                                    <span class="text-muted">
-                                                       Lorem ipsum dolor sit amet consectetur 
-                                                    </span>
-                                               
-                                                </td>
-                                            </tr> --}}
                                             
                                         </tbody>
                                     </table>
-                                    <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
-                              <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
+                                    <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Información Personal</a>
+                              <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Información de la Cuenta</a>
                               <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
                               {{-- <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a> --}}
                                 </div>
@@ -204,16 +174,16 @@
                     <div class="card" >
                         <div class="p-6">
                             <div  class="row">
-                                <div class="col-md-5 col-sm-12 pl-12">
-                                    <span style="font-size: .6cm">Informacion Personal</span>
+                                <div class="col-md-12 col-sm-12 pl-12">
+                                    <span style="font-size: .6cm">Información Personal</span>
                                     <br>
                                     <span >Cambiar la configuracion de la cuenta</span>
 
                                 </div>
-                                <div class="col-md-7 col-sm-12  pt-6  pt-sm-6 pt-md-0">
+                                <!-- <div class="col-md-7 col-sm-12  pt-6  pt-sm-6 pt-md-0">
                                     <a class="btn btn-icon btn-primary btn-cancelar ">Cancelar</a>
                                     <a class="btn btn-icon btn-primary btn-guardar" > Guardar cambios</a>
-                                </div>
+                                </div> -->
                             </div>
                             {{-- <div class="row">
                                 <div class="col-md-5 col-sm-12">
@@ -228,7 +198,7 @@
                                         <div class="form-group row">
                                             <label  class="col-3 col-form-label"></label>
                                             <div class="col-8">
-                                                <label  class="col-8 col-form-label">Informacion:</label>
+                                                <label  class="col-8 col-form-label">Información:</label>
                                             </div>
                                         </div>
                                         {{-- <div class="form-group row">
@@ -245,19 +215,19 @@
                                         <div class="form-group row">
                                             <label  class="col-md-3 col-sm-12 col-form-label">Nombre de la notaria</label>
                                             <div class="col-md-8 col-sm-12">
-                                                <input class="form-control" type="text" placeholder="Nombre de la notaria" id="example-text-input" value="Notaria {{ $user->notary->notary_number }}"/>
+                                                <input class="form-control" disabled type="text" placeholder="Nombre de la notaria" id="example-text-input" value="Notaria {{ $user->notary->notary_number }}"/>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label  class="col-md-3 col-sm-12 col-form-label">Rol Asignado</label>
                                             <div class="col-md-8 col-sm-12">
-                                                <input class="form-control" type="text" value="{!! strtoupper(str_replace("/_/", " ", $user->role_name)) !!}" />
+                                                <input class="form-control" disabled type="text" value="{!! strtoupper(str_replace("/_/", " ", $user->role->description)) !!}" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="example-search-input" class="col-md-3 col-sm-12 col-form-label">Nombres(s)</label>
                                             <div class="col-md-8 col-sm-12">
-                                                <input class="form-control" type="text" value="{{ $user->name }} {{ $user->mothers_surname}} {{ $user->fathers_surname }}" disabled/>
+                                                <input class="form-control" type="text" value="{{ $user->name }}  {{ $user->fathers_surname }} {{ $user->mothers_surname}}" disabled/>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -275,11 +245,11 @@
                                         <div class="form-group row">
                                             <label  class="col-md-3 col-sm-12 col-form-label"></label>
                                             <div class="col-md-8 col-sm-12">
-                                                <label  class="col-8 col-form-label">Informacion del contacto:</label>
+                                                <label  class="col-8 col-form-label">Información del contacto:</label>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label  class="col-md-3 col-sm-12 col-form-label">Correo Electronioco</label>
+                                            <label  class="col-md-3 col-sm-12 col-form-label">Correo Electrónico</label>
                                             <div class="col-md-8 col-sm-12">
                                                 <input class="form-control" type="text"  value="{{ $user->email }}" disabled id="example-text-input"/>
                                             </div>
@@ -287,7 +257,7 @@
                                         <div class="form-group row">
                                             <label for="example-search-input" class="col-md-3 col-sm-12 col-form-label">Contraseña</label>
                                             <div class="col-md-8 col-sm-12">
-                                                <input class="form-control" type="text" placeholder="Contraseña"/>
+                                                <input class="form-control" disabled type="text" placeholder="Contraseña"/>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -303,7 +273,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Numero de Contacto </label>
+                                            <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Número de Contacto </label>
                                             <div class="col-md-8 col-sm-12">
                                                 <input class="form-control" type="text" value="{{ $user->phone }}" disabled />
                                             </div>
@@ -311,7 +281,7 @@
                                         <div class="form-group row">
                                             <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Persona </label>
                                             <div class="col-md-8 col-sm-12">
-                                                <select class="form-control" id="exampleSelect1">
+                                                <select disabled class="form-control" id="exampleSelect1">
                                                     <option>Fisica</option>
                                                     <option>Moral</option>
                                                    </select>
