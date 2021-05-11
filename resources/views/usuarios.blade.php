@@ -2,7 +2,7 @@
     <div class="d-flex flex-column-fluid">
         <div class="container view-usuarios">
             <span style="font-size: .8cm" class="6p">
-                Usuarios
+                perfil->Usuarios
             </span>
             <div class="row users-component">
                 <div class="nav col-lg-4 nav" style="margin-bottom: 30px;"> 
@@ -19,7 +19,7 @@
                                 <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
                                 <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role->description)) !!}</div>
                                     <div class="navi mt-2">
-                                        <a href="mailto:alberto.salazars@nuevoleon.gob.mx" class="navi-item">
+                                        <a href="mailto:{{ $user->email }}" class="navi-item">
                                             <span class="navi-link p-0 pb-2">
                                                 <span class="navi-icon mr-1">
                                                     <span class="svg-icon svg-icon-lg svg-icon-primary">
@@ -62,7 +62,7 @@
                                                 <td style="vertical-align: middle">
                                                     <div>
                                                         <span>
-                                                            Phone   
+                                                            Teléfono   
                                                         </span>
                                                     </div>
                                                 </td>
@@ -76,10 +76,10 @@
                                             
                                         </tbody>
                                     </table>
-                                    <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
-                                <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
+                                    <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Información Personal</a>
+                                <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Información de la Cuenta</a>
                                 <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
-                                <!-- <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a> -->
+                                <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a>
                                 </div>
                             </div>
                     </div>
