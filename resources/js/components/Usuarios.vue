@@ -105,7 +105,7 @@ export default {
             }
             });
             // todo: agregar el rol_id dinamico 
-            let url = ('http://10.153.144.218/session-api/notary-offices/'+ this.notary +'/users'); 
+            let url = (`${process.env.SESSION_HOSTNAME}/notary-offices/${this.notary}/users`); 
             let response =axiosInstance.get(url)
                 .then((data) => {
                     this.usuarios = data.data.response.notary_office_users;
