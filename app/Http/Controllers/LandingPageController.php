@@ -17,8 +17,11 @@ class LandingPageController extends Controller
 			"fluid_container" => true,
 		]);
 		$user = session()->get("user")->config_id;
-			// $tramites = curlSendRequest("GET", "http://10.153.144.218/tramites-ciudadano/allTramites?config_id=4");
+		// $tramites = curlSendRequest("GET",  env("APP_URL") . "/allTramites?config_id=4");
 		
+		$client = new \GuzzleHttp\Client();
+		$res = $client->request('GET', "http://10.153.144.218/tramites-ciudadano/allTramites?config_id=4" );
+		dd($res);
 		// dd($user);
 		// $link = env("APP_URL")."/allTramites?config_id=". $user;
 		// 		$ch = curl_init();
@@ -27,7 +30,7 @@ class LandingPageController extends Controller
 		// 		$notary = curl_exec($ch);
 		// 		curl_close($ch);
 
-		dd();
+		// dd($tramites);
 
 		return layout_view("landingPage");
     }

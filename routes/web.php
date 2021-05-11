@@ -44,6 +44,8 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
 	Route::get("/email/template", "EmailController@index");
+	Route::get('/allTramites', 'SolicitudesController@getTramites')->name("allTramites");
+
 	Route::middleware(["validate_session", "validate_rol"])->group(function(){
 		Route::get('/', function () {
 			return redirect()->route("dashboard");
@@ -70,7 +72,6 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		Route::get('/getTramites', 'TramitesController@listaTramites')->name("getTramites");
 
 		//Solicitudes
-		Route::get('/allTramites', 'SolicitudesController@getTramites')->name("allTramites");
 		Route::get('/getCampos', 'SolicitudesController@getCampos')->name("getCampos");
 		Route::post('/crearSolicitud', 'TramitesController@crearSolicitud');
 		Route::get('/divisas', 'SolicitudesController@getDivisas');
