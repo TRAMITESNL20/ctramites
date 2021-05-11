@@ -64,9 +64,12 @@
 
                 this.tramites.forEach(  tr =>{
                     let tramite = Object.assign({}, tr);
+                    //tramite.id_seguimiento = tramite.calveTemp;
                     delete tramite.nombre;
                     delete tramite.idSolicitante;
                     delete tramite.calveTemp;
+                    delete tramite.claveIndividual;
+
                     tramitesAEnviar.push( tramite );
                 });
 
@@ -98,7 +101,6 @@
                         "es_referencia": "1",
                         "tramite": tramitesAEnviar
                     }
-                    
                     axios.post(url, data, {
                         headers:{
                             "Authorization":"Bearer " + process.env.PAYMENTS_KEY,

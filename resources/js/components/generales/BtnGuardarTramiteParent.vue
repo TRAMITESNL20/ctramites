@@ -203,7 +203,7 @@
                 let informacion = this.getInformacion( tramite, datosFormulario );
                 let idEdicion = null;
 
-                if(  this.infoGuardadaFull && this.infoGuardadaFull.id && ( this.infoGuardadaFull.status != this.$const.STATUS_FALTA_PAGO || this.infoGuardadaFull.status != this.$const.STATUS_ERROR_MUNICIPIO)  ){
+                if(  this.infoGuardadaFull && this.infoGuardadaFull.id && ( this.infoGuardadaFull.status != this.$const.STATUS_FALTA_PAGO && this.infoGuardadaFull.status != this.$const.STATUS_ERROR_MUNICIPIO)  ){
                   idEdicion = this.infoGuardadaFull.id;
                   let infoGuardada =  JSON.parse( this.infoGuardadaFull.info );
                   if(infoGuardada.complementoDe){
@@ -214,6 +214,9 @@
                   tramite.id_seguimiento = uuid.v4();
                   tramite.grupo_clave = this.infoGuardadaFull.grupo_clave;
                 }
+                console.log( JSON.parse( JSON.stringify(informacion) ) )
+                console.log( JSON.parse( JSON.stringify(tramite) ) )
+                console.log( JSON.parse( JSON.stringify(idEdicion) ) )
                 return this.buildFormData( informacion, listaSolicitantes, tramite, idEdicion,enajenantes );
             },
 
