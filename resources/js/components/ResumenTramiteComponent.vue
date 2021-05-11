@@ -228,8 +228,7 @@
                             if( campoLote ){
                                 paramsCosto.lote = campoLote.valor
                             }
-                            
-                            if(this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status == 8) {
+                            if(this.infoGuardadaFull && this.infoGuardadaFull.id && (this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO || this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO) ) {
                                 paramsCosto.id_ticket = this.infoGuardadaFull.id;
                             }
                         }                 
