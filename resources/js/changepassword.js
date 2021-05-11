@@ -1,7 +1,8 @@
 var validation;
+var fv;
 document.addEventListener('DOMContentLoaded', function(e) {
     const form = document.getElementById('kt_confirm_password_form_log');
-    const fv = FormValidation.formValidation(
+    fv = FormValidation.formValidation(
         document.getElementById('kt_confirm_password_form_log'), {
             fields: {
                 password: {
@@ -58,7 +59,7 @@ $('#kt_recovery_submit_change').on('click', function(e) {
     console.log(token_bearer);
     const password = $(document).find('input[name="password"]').val();
     const password_confirmation = $(document).find('input[name="confirmPassword"]').val();
-    validation.validate().then(function(status) {
+    fv.validate().then(function(status) {
         if (status == 'Valid') {
             console.log('validado');
                   $.ajaxSetup({
