@@ -3,7 +3,7 @@
         <div class="container">
             <span class="col-sm-12 col-md-3 sideNavBtn" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
             <span  class="col-sm-12 col-md-3">
-                perfil->Informacion de la cuenta
+                perfil->Información de la cuenta
             </span>
 
 
