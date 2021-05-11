@@ -129,16 +129,16 @@
 												<span class="menu-text m-0">Guía de Usuario</span>
 											</a>
 										</li>
-										<li class="menu-item">
+										<!-- <li class="menu-item">
 											<a href="#" class="menu-link">
 												<span class="menu-text m-0">Registro de Usuarios</span>
 											</a>
-										</li>
-										<li class="menu-item">
+										</li> -->
+										<!-- <li class="menu-item">
 											<a href="#" class="menu-link">
 												<span class="menu-text m-0">Noticias</span>
 											</a>
-										</li>
+										</li> -->
 										<li class="menu-item">
 											<a href="#" class="menu-link">
 												<span class="menu-text m-0">Nuevo Trámite</span>
