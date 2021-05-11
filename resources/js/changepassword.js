@@ -55,7 +55,8 @@ $('#kt_recovery_submit_change').on('click', function(e) {
     e.preventDefault();
     const url = window.location.href;
     const user_id =  $('#emailAux').val();
-    console.log(user_id);
+    const token_bearer =  $('#sesionAux').val();
+    console.log(token_bearer);
     const password = $(document).find('input[name="password"]').val();
     const password_confirmation = $(document).find('input[name="confirmPassword"]').val();
     validation.validate().then(function(status) {
@@ -63,6 +64,9 @@ $('#kt_recovery_submit_change').on('click', function(e) {
             console.log('validado');
                   $.ajaxSetup({
                         url: `${process.env.SESSION_HOSTNAME}/users/`+ user_id,
+                        headers: {
+                            Authorization: 'Bearer '+token_bearer
+                        },
                         type: "PUT",
                         data: {
                             "password": password,
@@ -84,7 +88,7 @@ $('#kt_recovery_submit_change').on('click', function(e) {
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             if (jqXHR.status == 401) {
-                                alert(".");
+                                alert(errorThrown);
                                 // return redirect("/login");
                             }
                         }

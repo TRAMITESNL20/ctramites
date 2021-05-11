@@ -235,6 +235,12 @@
                                                 				<div class="fv-plugins-message-container"></div>
                                                     </div>
                                                 </div>
+                                                <div class="form-group row" id="" style="display:none">
+                                                    <div class="col-md-8 col-sm-12">
+                                                        <input class="form-control" type="email" placeholder="" id="sesionAux" name="sesionAux"  value="{{ $sesion }}"  />
+                                                				<div class="fv-plugins-message-container"></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </form>
                                 
