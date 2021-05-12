@@ -32,7 +32,7 @@ export default class AdminCamposCostos {
 
     habilitarSoloMunicipio( info ){
         info.camposConfigurados.map( (campo, index) => {
-            let habilitar = campo.nombre.indexOf('Municipios') >= 0 ;
+            let habilitar = campo.nombre.indexOf('Municipio') >= 0 ;
             campo.disabled = !habilitar;
             return campo;
         });
