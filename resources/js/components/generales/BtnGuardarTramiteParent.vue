@@ -133,7 +133,7 @@
 
               if(tramite){
                 formData.append('clave', tramite.id_seguimiento );
-                formData.append('grupo_clave',  tramite.grupo_clave || tramite.id_seguimiento );
+                formData.append('grupo_clave',  tramite.grupo_clave || Date.now() );
                 formData.append('catalogo_id', tramite.id_tramite );
               }
 
@@ -168,7 +168,7 @@
               }
               if(tramite){
                 formData.append('clave', tramite.id_seguimiento );
-                formData.append('grupo_clave', tramite.grupo_clave || tramite.id_seguimiento );
+                formData.append('grupo_clave', tramite.grupo_clave || Date.now() );
                 formData.append('catalogo_id', tramite.id_tramite );
               }
 
@@ -214,9 +214,7 @@
                   tramite.id_seguimiento = uuid.v4();
                   tramite.grupo_clave = this.infoGuardadaFull.grupo_clave;
                 }
-                console.log( JSON.parse( JSON.stringify(informacion) ) )
-                console.log( JSON.parse( JSON.stringify(tramite) ) )
-                console.log( JSON.parse( JSON.stringify(idEdicion) ) )
+
                 return this.buildFormData( informacion, listaSolicitantes, tramite, idEdicion,enajenantes );
             },
 

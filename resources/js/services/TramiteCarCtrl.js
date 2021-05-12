@@ -6,8 +6,9 @@ export default class TramiteCar5ISRCtrl {
 	}
  
   	create( tramite, solicitud ) {
+
   		this.json.nombre = tramite.tramite;
-	  	this.json.id_seguimiento = tramite.tramite_id + "";
+	  	this.json.id_seguimiento = tramite.grupo_clave ? Number( tramite.grupo_clave ) : tramite.tramite_id + "";
 	  	this.json.id_tipo_servicio = tramite.tramite_id;//397;//
 	  	this.json.idSolicitante = solicitud.id; 
 	  	this.json.id_tramite = solicitud.id;
@@ -21,6 +22,7 @@ export default class TramiteCar5ISRCtrl {
 	    this.json.datos_factura = this.json.datos_solicitante;
 
 	    this.json.detalle = this.getDetalle(solicitud);
+
 	  	return this.json;
   	}
 
@@ -37,7 +39,6 @@ export default class TramiteCar5ISRCtrl {
 				return auxiliar_1 = auxiliar_1 + " - Notaria " + usuario.notary.notary_number;
 			}
 	  	} else if( solicitud.info.hasOwnProperty('complementoDe') ){
-            console.log("auxiliar complememto")
             return "[" + solicitud.info.complementoDe + "]";
         } else {
 	  		return "";

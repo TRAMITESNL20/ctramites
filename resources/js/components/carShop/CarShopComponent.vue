@@ -393,38 +393,6 @@
             let requestCostos = [];
             tramites.forEach(  tramiteInarray => {
             tramiteInarray.solicitudes.forEach(  soliciante => {
-              /*
-<<<<<<< HEAD
-            
-            
-            tramitesJson.calveTemp = soliciante.clave;//soliciante.clave;
-            if(soliciante.info.enajenante) soliciante.info = {...soliciante.info, ...soliciante.info.enajenante}
-            let info = (typeof soliciante.info) == 'string' ? JSON.parse(soliciante.info) : soliciante.info;
-
-            if(soliciante.info.hasOwnProperty('enajenante') && (soliciante.info.hasOwnProperty('solicitante') ) ){
-
-              let solicitanteInfo = soliciante.info.solicitante;
-              if( solicitanteInfo ){
-                tramitesJson.auxiliar_1  = (solicitanteInfo.nombreSolicitante || '') + " " + (solicitanteInfo.apPat || '' )+ " " + (solicitanteInfo.apMat || '');    
-              }
-              let usuario = window.user;
-              if(usuario && usuario.notary){
-                tramitesJson.auxiliar_1 = tramitesJson.auxiliar_1 + " - Notaria " + usuario.notary.notary_number
-              }
-            } else if ( info.complementoDe ) {
-              tramitesJson.auxiliar_1 =  "[" + info.complementoDe + "]";
-            } else {
-              tramitesJson.auxiliar_1 =  "";
-            }
-              
-            tramitesJson.auxiliar_2 = "";
-            tramitesJson.auxiliar_3 = "";
-            tramitesJson.importe_tramite = '';
-            
-            tramitesJson.datos_solicitante = this.obtenerDatosSolicitante(soliciante);
-            tramitesJson.datos_factura = tramitesJson.datos_solicitante;
-=======*/
-                //patron factory
                 let isrTramite = new tramite5isr();
                 let strategia = new tramiteStrategy();
                 strategia.setStrategy(isrTramite)
@@ -446,8 +414,6 @@
         chagenPorPage(){
           this.currentPage = 1;
         },
-//>>>>>>> feat/agrupacion-carshop
-
 
         onDrop (evt, list) {
           const clave = evt.dataTransfer.getData('clave');
@@ -458,8 +424,8 @@
 
 
         onDropFuera(evt, list){
-          let claveGrupo = uuid.v4();
-                    const clave = evt.dataTransfer.getData('clave');
+          let claveGrupo = /*uuid.v4()*/ Date.now();
+          const clave = evt.dataTransfer.getData('clave');
           this.tramites.map( tram =>{
               if( tram.claveIndividual == clave ){
                 tram.calveTemp = claveGrupo;
@@ -497,7 +463,7 @@
 
 
         agruparSeleccion(){
-          let claveGrupo = uuid.v4();
+          let claveGrupo = /*uuid.v4()*/ Date.now();
           this.tramites.forEach( tramite => { 
             if(this.elementosSeleccionados.includes( tramite.claveIndividual )){
               tramite.calveTemp = claveGrupo;            
@@ -509,7 +475,7 @@
         },
 
         evtRemoveElementoSeleccionado(claveIndividual){
-          let claveGrupo = uuid.v4();
+          let claveGrupo = /*uuid.v4()*/ Date.now()
           this.tramites.forEach( (tramite, index) => { 
             if( claveIndividual == tramite.claveIndividual ){
               tramite.calveTemp = claveGrupo; 
@@ -525,7 +491,7 @@
         },
 
         saveCambios(){
-          let claveGrupo = uuid.v4();
+          let claveGrupo = /*uuid.v4()*/ Date.now();
           let updateSolicitudes = [];
           this.tramites.forEach( tramite => {
             let solicitudUpdate = {
