@@ -8,7 +8,7 @@ export default class TramiteCar5ISRCtrl {
   	create( tramite, solicitud ) {
 
   		this.json.nombre = tramite.tramite;
-	  	this.json.id_seguimiento = tramite.grupo_clave ? Number( tramite.grupo_clave ) : tramite.tramite_id + "";
+	  	this.json.id_seguimiento = solicitud.grupo_clave ? Number( solicitud.grupo_clave ) + "" : "";
 	  	this.json.id_tipo_servicio = tramite.tramite_id;//397;//
 	  	this.json.idSolicitante = solicitud.id; 
 	  	this.json.id_tramite = solicitud.id;
