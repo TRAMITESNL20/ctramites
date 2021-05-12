@@ -3,7 +3,7 @@
         <div class="container">
             <span class="col-sm-12 col-md-3 sideNavBtn" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
             <span class="col-sm-12 col-md-3 ">
-                perfil->Informacion de la cuenta
+                perfil->Información de la cuenta
             </span>
             <div id="Sidenav" class="sidenav">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">...</a>
@@ -17,10 +17,10 @@
                               <i class="symbol-badge bg-success"></i>
                           </div>
                           <div class="d-flex flex-column">
-                              <a href="{{ url()->route("perfil") }}"  class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">Raymundo Salazar</a>
-                              <div class="text-muted mt-1">Frontend Development</div>
+                              <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
+                              <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role->description)) !!}</div>
                               <div class="navi mt-2">
-                                  <a href="mailto:alberto.salazars@nuevoleon.gob.mx" class="navi-item">
+                                  <a href="mailto:{{ $user->email }}" class="navi-item">
                                       <span class="navi-link p-0 pb-2">
                                           <span class="navi-icon mr-1">
                                               <span class="svg-icon svg-icon-lg svg-icon-primary">
@@ -35,11 +35,11 @@
                                                   <!--end::Svg Icon-->
                                               </span>
                                           </span>
-                                          <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">alberto.salazars@nuevoleon.gob.mx</span>
+                                          <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user->email }}</span>
                                       </span>
                                   </a>
-                                  <a href="{{ url()->route("logout") }}"class="btn btn-sm btn-sidevar btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
-                                  <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a>
+                                  {{-- <a href="{{ url()->route("logout") }}"class="btn btn-sm btn-sidevar btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
+                                  <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-sidevar btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a> --}}
                               </div>
                           </div>
                       </div>
@@ -66,7 +66,7 @@
                                           <td style="vertical-align: middle">
                                               <div>
                                                   <span>
-                                                      Phone   
+                                                      Teléfono   
                                                   </span>
                                               </div>
                                           </td>
@@ -76,26 +76,11 @@
                                               </span>
                                           </td>
                                       </tr>
-                                      <tr>
-                                          <td style="vertical-align: middle">
-                                              <div >
-                                                  <span>
-                                                      Ubicacion   
-                                                  </span>
-                                              </div>
-                                          </td>
-                                          <td colspan="3">
-                                              <span class="text-muted">
-                                                 Lorem ipsum dolor sit amet consectetur 
-                                              </span>
-                                         
-                                          </td>
-                                      </tr>
-                                      
+                                    
                                   </tbody>
                               </table>
-                              <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
-                              <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
+                              <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Información Personal</a>
+                              <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Información de la Cuenta</a>
                               <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
                               <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a>
                          </div>
@@ -116,9 +101,9 @@
                                 </div>
                                 <div class="d-flex flex-column">
                                 <a href="{{ url()->route("perfil") }}" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"> {{ $user->name }} {{$user->fathers_surname}}</a>
-                                    <div class="text-muted mt-1">Frontend Development</div>
+                                    <div class="text-muted mt-1">{!! strtoupper(str_replace("/_/", " ", $user->role->description)) !!}</div>
                                     <div class="navi mt-2">
-                                        <a href="mailto:alberto.salazars@nuevoleon.gob.mx" class="navi-item">
+                                        <a href="mailto:{{ $user->email }}" class="navi-item">
                                             <span class="navi-link p-0 pb-2">
                                                 <span class="navi-icon mr-1">
                                                     <span class="svg-icon svg-icon-lg svg-icon-primary">
@@ -136,8 +121,8 @@
                                                 <span class="navi-text text-muted text-hover-primary text-truncate col-8 pl-0">{{ $user->email}}</span>
                                             </span>
                                         </a>
-                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm  btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
-                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a>
+                                        {{-- <a href="{{ url()->route("logout") }}" class="btn btn-sm  btn-info font-weight-bolder text-white  text-hover-white py-2 px-5">Chat</a>
+                                        <a href="{{ url()->route("logout") }}" class="btn btn-sm btn-primary font-weight-bolder  text-white text-hover-white py-2 px-5">Seguir</a> --}}
                                     </div>
                                 </div>
                             </div>
@@ -163,7 +148,7 @@
                                                 <td style="vertical-align: middle">
                                                     <div>
                                                         <span>
-                                                            Phone   
+                                                            Teléfono   
                                                         </span>
                                                     </div>
                                                 </td>
@@ -173,26 +158,12 @@
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td style="vertical-align: middle">
-                                                    <div >
-                                                        <span>
-                                                            Ubicacion   
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td colspan="3">
-                                                    <span class="text-muted">
-                                                       Lorem ipsum dolor sit amet consectetur 
-                                                    </span>
-                                               
-                                                </td>
-                                            </tr>
+
                                             
                                         </tbody>
                                     </table>
-                                    <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion Personal</a>
-                              <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Informacion de la Cuenta</a>
+                                    <a href="{{ url()->route("perfil") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Información Personal</a>
+                              <a href="{{ url()->route("informacion-cuenta") }}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Información de la Cuenta</a>
                               <a href="{{ url()->route("cambiar-contraseña") }}"  type="checkbox" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Cambiar Contraseña</a>
                               <a href="{{ url()->route("usuarios")}}" type="button" class="btn btn-text-primary btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary">Usuario</a>
                                 </div>
@@ -203,16 +174,16 @@
                     <div class="card" >
                         <div class="p-6">
                             <div  class="row">
-                                <div class="col-md-5 col-sm-12">
-                                    <span style="font-size: .6cm">Informacion de la Cuenta</span>
+                                <div class="col-md-12 col-sm-12">
+                                    <span style="font-size: .6cm">Información de la Cuenta</span>
                                     <br>
                                     <span >Cambiar la configuracion de la cuenta</span>
 
                                 </div>
-                                <div class="col-md-7 col-sm-12 pt-6   pt-sm-6 pt-md-0">
+                                <!-- <div class="col-md-7 col-sm-12 pt-6   pt-sm-6 pt-md-0">
                                     <a class="btn btn-icon btn-primary btn-cancelar ">Cancelar</a>
                                     <a class="btn btn-icon btn-primary btn-guardar " > Guardar cambios</a>
-                                </div>
+                                </div> -->
                             </div>
                             {{-- <div class="row">
                                 <div class="col-5"> 
@@ -224,11 +195,24 @@
                                         <form>
                                             <div class="card-body">
                                                 <div class="form-group row">
-                                                    <label  class="col-md-3 col-sm-12col-form-label"></label>
+                                                    <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Nombre(s)</label>
                                                     <div class="col-md-8 col-sm-12">
-                                                        <label  class="col-8 col-form-label">Cuenta:</label>
+                                                        <input class="form-control" type="text" value="{{ $user->name }}" disabled />
                                                     </div>
                                                 </div>
+                                                <div class="form-group row">
+                                                    <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Apellido Paterno</label>
+                                                    <div class="col-md-8 col-sm-12">
+                                                        <input class="form-control" type="text" value="{{ $user->fathers_surname }}" disabled />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Apellido Materno</label>
+                                                    <div class="col-md-8 col-sm-12">
+                                                        <input class="form-control" type="text" value="{{ $user->mothers_surname }}" disabled />
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-divider mb-10"></div>
                                                 <div class="form-group row">
                                                     <label  class="col-md-3 col-sm-12 col-form-label">Nombre de Usuario</label>
                                                     <div class="col-md-8 col-sm-12">
@@ -241,17 +225,10 @@
                                                         <input class="form-control" type="email"value="{{ $user->email }}" disabled/>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
-                                                    <label for="example-email-input" class="col-md-3 col-sm-12 col-form-label">Apellido Paterno</label>
-                                                    <div class="col-md-8 col-sm-12">
-                                                        <input class="form-control" type="text" value="{{ $user->fathers_surname }}" disabled />
-                                                    </div>
-                                                </div>
                                             </div>
                                         </form>
-                                <div class="dropdown-divider"></div>
                                  <!--begin::Form-->
-                                 <form>
+                                 {{-- <form>
                                     <div class="card-body">
                                         <div class="form-group row">
                                             <label  class="col-md-3 col-sm-12 col-form-label"></label>
@@ -271,7 +248,7 @@
                                             <div class="col-md-9 col-sm-12 col-form-label">
                                                 <div class="checkbox-inline">
                                                     <label class="checkbox">
-                                                        <input type="checkbox"/> Se requiere su informacion  personal para restablecer su contraseña
+                                                        <input type="checkbox"/> Se requiere su información  personal para restablecer su contraseña
                                                         <span></span>
                                                     </label>
                                                 </div>
@@ -280,7 +257,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </form>
+                                </form> --}}
                     </div>
                 </div>
             </div>
