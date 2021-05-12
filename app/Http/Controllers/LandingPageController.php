@@ -8,7 +8,6 @@ use GuzzleHttp\Client;
 
 class LandingPageController extends Controller
 {
-    //
     public function index () {
 		set_layout_arg([
             "subtitle" => "Bienvenido",
@@ -16,22 +15,23 @@ class LandingPageController extends Controller
 			"background_content" => "#ffffff", 
 			"fluid_container" => true,
 		]);
-		$user = session()->get("user")->config_id;
-		// $tramites = curlSendRequest("GET",  env("APP_URL") . "/allTramites?config_id=4");
-		
-		$client = new \GuzzleHttp\Client();
-		$res = $client->request('GET', "http://10.153.144.218/tramites-ciudadano/allTramites?config_id=4" );
-		dd($res);
-		// dd($user);
-		// $link = env("APP_URL")."/allTramites?config_id=". $user;
-		// 		$ch = curl_init();
-		// 		curl_setopt($ch, CURLOPT_URL, $link);
-		// 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		// 		$notary = curl_exec($ch);
-		// 		curl_close($ch);
+		$tramitesAgrupados = [];
+		$id= session()->get("user")->config_id;
+		$allTramites = curlSendRequest("GET", env("APP_URL") . "/allTramites?config_id=" .env("COMUNIDAD_CIUDADANO") );
+		$tramitesAgrupados = [];
 
-		// dd($tramites);
-
-		return layout_view("landingPage");
+		foreach ($allTramites as $tramite) {
+			$category = isset($tramite->category[0]->categorias_id) ? $tramite->category[0]->categorias_id : $tramite->category;
+			$categoryName = isset($tramite->category[0]->nombre_categoria) ? $tramite->category[0]->nombre_categoria : 'Sin Asignar';
+			if(!isset($tramitesAgrupados[$category]))
+			$tramitesAgrupados[$category] = [
+				'id' => $category,
+				'name' => $categoryName,
+				'tramites' => []
+			];
+			$tramitesAgrupados[$category]['tramites'][] = $tramite;
+		}
+		// dd($allTramites);
+		return layout_view("landingPage" , [ "tramitesAgrupados" => $tramitesAgrupados ]);
     }
 }
