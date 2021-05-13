@@ -82,13 +82,13 @@
                     </v-row>
                 </v-container>
                 <div v-if="!obteniendoTramites && items.length > 0">
+
                   <div class="card list-item card-custom gutter-b col-lg-12"  v-for="(item, index) in items" :key="index"  
-                  v-bind:style="item.items.length > 1 ? 'background-color: rgb(217, 222, 226) !important;' : ''" id="cart-container"
+                  v-bind:style="item.items.length > 1 || !!item.isComplemento ? 'background-color: rgb(217, 222, 226) !important;' : ''" id="cart-container"
                                     @drop='onDrop($event, item)' 
                                     @dragover.prevent
                                     @dragenter.prevent >
-   
-                      <agrupacion-items-carrrito-component 
+                       <agrupacion-items-carrrito-component 
                         :agrupacion="item" 
                         :index="index" 
                         :idUsuario="idUsuario"
@@ -211,8 +211,9 @@
             items(){
               this.tramitesAgrupados = [];
               this.tramites.forEach( tramite => {
-                let item = { nombre: tramite.nombre, grupo_clave: tramite.calveTemp, items:[tramite], verDetalle:false, selected:false };
+                let item = { nombre: tramite.nombre, grupo_clave: tramite.calveTemp, items:[tramite], verDetalle:false, selected:false, isComplemento: tramite.isComplemento };
                 let indice = this.tramitesAgrupados.findIndex( agrupado => agrupado.grupo_clave == tramite.calveTemp );
+
                 if( indice < 0 || !tramite.calveTemp){
                   this.tramitesAgrupados.push( item );
                 } else {

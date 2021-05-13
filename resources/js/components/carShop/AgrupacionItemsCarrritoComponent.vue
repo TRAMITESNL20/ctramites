@@ -6,7 +6,7 @@
                 <div class="col-xl-6 col-sm-10">
                     <h4 >
                         <strong class="ml-3 text-uppercase text-truncate text-initial">
-                        {{  sameTramites ? agrupacion.nombre : 'Grupo de Tramites'  }} <span v-if="totalItemInGroup >1"> [ {{ agrupacion.grupo_clave }} ] </span>
+                        {{  sameTramites ? agrupacion.nombre : 'Grupo de Tramites'  }} <span v-if="totalItemInGroup >1 || !!agrupacion.isComplemento"> [ {{ agrupacion.grupo_clave }} ] </span>
                         </strong>
                     </h4>
                 </div>
@@ -14,7 +14,7 @@
                     <button class="close" type="button" data-toggle="collapse" :data-target="`#collapse-${index}`" aria-expanded="false" :aria-controls="`collapse-${index}`" v-if="totalItemInGroup >1 ">
                         <i class="fas fa-chevron-down p-0"></i>
                     </button>
-                    
+
                     <button type="button" class="close" aria-label="Close" title="Quitar"  v-on:click="showConfirm()" :disabled="desabilitar" :ref="'btnConfirm-' + index">
                       <span><i class="fas fa-trash" v-if="totalItemInGroup > 0" style="color:#808080;"></i> </span>
                     </button>

@@ -69,6 +69,7 @@
                     delete tramite.idSolicitante;
                     delete tramite.calveTemp;
                     delete tramite.claveIndividual;
+                    delete tramite.isComplemento;
 
                     tramitesAEnviar.push( tramite );
                 });

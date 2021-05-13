@@ -20,7 +20,7 @@ export default class TramiteCar5ISRCtrl {
 	    this.json.importe_tramite = this.getImporte(solicitud);
 	    this.json.datos_solicitante = this.obtenerDatosSolicitante(solicitud);
 	    this.json.datos_factura = this.json.datos_solicitante;
-
+        this.json.isComplemento = solicitud.info.complementoDe;
 	    this.json.detalle = this.getDetalle(solicitud);
 
 	  	return this.json;
