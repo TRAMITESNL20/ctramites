@@ -170,7 +170,7 @@ export default {
              if(this.searchTitle != null)  {
                  this.searchTitle = this.searchTitle.toUpperCase();
                  // parametros con los que se basa la busqueda
-                arr_aux = arr_aux .filter(search =>( search.name.includes(this.searchTitle) || search.mothers_surname.includes(this.searchTitle)  || search.fathers_surname.includes(this.searchTitle)  ))
+                arr_aux = arr_aux .filter(search =>( search.name.toUpperCase().includes(this.searchTitle) || search.mothers_surname.includes(this.searchTitle)  || search.fathers_surname.includes(this.searchTitle)  ))
                 this.totalPaginas = Math.ceil(arr_aux.length / this.porPagina);
              }   
             var filteredHelper = arr_aux.splice( inicio  , this.porPagina);
