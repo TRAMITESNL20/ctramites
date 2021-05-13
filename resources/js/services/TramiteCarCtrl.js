@@ -39,7 +39,7 @@ export default class TramiteCar5ISRCtrl {
 				return auxiliar_1 = auxiliar_1 + " - Notaria " + usuario.notary.notary_number;
 			}
 	  	} else if( solicitud.info.hasOwnProperty('complementoDe') ){
-            return "[" + solicitud.info.complementoDe + "]";
+            return "COMPLEMENTARIO: " + solicitud.info.complementoDe ;
         } else {
 	  		return "";
 	  	}
