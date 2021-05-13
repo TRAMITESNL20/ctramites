@@ -71,42 +71,9 @@
                                 <!-- boton de descarga  -->
                                 <a  href="mailto:usuario.email" target="_blank"  class="btn btn-primary font-weight-bolder text-uppercase text-white mr-5" >Enviar Correo </a>
                                 <!-- boton de collapse -->
-                                <button
-                                class="btn btn-secondary"
-                                type="button"
-                                data-toggle="collapse"
-                                :data-target="`#collapse-${index}`" 
-                                aria-expanded="false"
-                                :aria-controls="`collapse-${index}`"
-                                >
-                                <i class="fas fa-chevron-down p-0"></i>
-                                </button>
                             </div>
                             <!---->
                         </div>
-                        </div>
-                        <!-- ----- COLAPSABLE ---- -->
-                        <div  :id="`collapse-${index}`" class="collapse" style="" >
-                        <div class="card list-item card-custom gutter-b col-lg-12" >
-                            <div class="card-body p-0">
-                            <div class="d-flex">
-                                <div class="flex-grow-1">
-                                <div class="d-flex align-items-center justify-content-between flex-wrap" >
-                                    <!---->
-                                    <div class="mr-auto" style="width: 100%; height:350px; overflow:scroll">
-                                    <a class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column" ><!---->
-                                        <!---->
-
-
-                                    </a>
-                                    </div>
-                            
-                                </div>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                        
                         </div>
 
                     </div>
