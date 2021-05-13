@@ -418,24 +418,29 @@
 
         onDrop (evt, list) {
           const clave = evt.dataTransfer.getData('clave');
-          this.claveDroped = clave;
-          this.listDroped = list;
-          this.confirmarGrupo();
+          if( clave && !list.isComplemento){
+            this.claveDroped = clave;
+            this.listDroped = list;
+            this.confirmarGrupo();
+          }
+          
         },
 
-
         onDropFuera(evt, list){
-          let claveGrupo = /*uuid.v4()*/ Date.now();
+          let claveGrupo = Date.now();
           const clave = evt.dataTransfer.getData('clave');
-          this.tramites.map( tram =>{
-              if( tram.claveIndividual == clave ){
-                tram.calveTemp = claveGrupo;
-              }
-              return tram;
-          } )
+          if( clave && !list.isComplemento){
+            this.tramites.map( tram =>{
+                if( tram.claveIndividual == clave ){
+                  tram.calveTemp = claveGrupo;
+                }
+                return tram;
+            });
+            this.saveCambios();
+          }
           $("#elementDrop").hide();
 
-          this.saveCambios();
+          
         },
 
         dragEvent(data){
@@ -476,7 +481,7 @@
         },
 
         evtRemoveElementoSeleccionado(claveIndividual){
-          let claveGrupo = /*uuid.v4()*/ Date.now()
+          let claveGrupo = Date.now()
           this.tramites.forEach( (tramite, index) => { 
             if( claveIndividual == tramite.claveIndividual ){
               tramite.calveTemp = claveGrupo; 
@@ -492,7 +497,7 @@
         },
 
         saveCambios(){
-          let claveGrupo = /*uuid.v4()*/ Date.now();
+          let claveGrupo = Date.now();
           let updateSolicitudes = [];
           this.tramites.forEach( tramite => {
             let solicitudUpdate = {

@@ -24,7 +24,7 @@
             <div class="d-flex align-items-center mb-3" :id="idItem">
                 <!----> 
                 <div class="mr-3 ml-4">
-                    <input type="checkbox" style="width:18px; height:18px;" @change="addSelect(agrupacion)" v-model="agrupacion.selected">
+                    <input v-if="isAgrupable(agrupacion)" type="checkbox" style="width:18px; height:18px;" @change="addSelect(agrupacion)" v-model="agrupacion.selected">
                 </div>
                 <div class="mr-auto" style="width: 60%;">
 
@@ -161,16 +161,19 @@
                 let solicitudStartDrag = infoTramite.solicitudes.find( solicitud => {
                     return item.id_tramite == solicitud.id;
                 });
-                /*if(!this.isAgrupable(item)){
+                if(!this.isAgrupable(item)){
+                    evt.dataTransfer.dropEffect = 'none'
+                    evt.dataTransfer.effectAllowed = 'none'
                     return false;
-                }*/
+                } else {
 
-                this.$emit('dragEvent', {event:'startdrag'});
+                    this.$emit('dragEvent', {event:'startdrag'});
 
-                evt.dataTransfer.dropEffect = 'move'
-                evt.dataTransfer.effectAllowed = 'move'
-                evt.dataTransfer.setData('itemID', item.id_tramite)
-                evt.dataTransfer.setData('clave',  item.claveIndividual)
+                    evt.dataTransfer.dropEffect = 'move'
+                    evt.dataTransfer.effectAllowed = 'move'
+                    evt.dataTransfer.setData('itemID', item.id_tramite)
+                    evt.dataTransfer.setData('clave',  item.claveIndividual);
+                }
             },
 
             dragend(evt){
@@ -191,8 +194,9 @@
                 this.$emit('removeEvent', claveIndividual);  
             }, 
 
-            isAgrupable(item){
-                let infoTramite = null;
+            isAgrupable(agrupacion){
+                return !agrupacion.isComplemento;
+                /*let infoTramite = null;
                 this.tramitesServer.forEach( tramiteServer => {
                    let encontrado = tramiteServer.solicitudes.find( solicitud => solicitud.id == item.id_tramite );
                    if(encontrado) {
@@ -211,7 +215,8 @@
                     });
 
                 });
-                return clavesCantidad[item.clave || item.claveIndividual].cantidad == 1;
+console.log( JSON.parse( JSON.stringify( item ) ))
+                return (clavesCantidad[item.clave || item.claveIndividual].cantidad == 1) ;*/
             },
 
             showConfirm(){
