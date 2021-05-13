@@ -15,8 +15,9 @@ class ChangePassword extends Controller {
 			]
 		]);
 		$user = session()->get("user");
-
-		return layout_view("changePassword", ['user' => $user ]);
+		$session = session()->get("session")->token;
+	
+		return layout_view("changePassword", ['user' => $user , "sesion" => $session]);
 
 	}
 }

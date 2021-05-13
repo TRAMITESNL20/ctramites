@@ -1,8 +1,17 @@
 <template>
-    <div data-app class="col-lg-8" style="margin-bottom: 30px;">
-        <div v-if="usuarios.length == 0">
-            <div class="alert alert-warning d-flex justify-content-center mt-10 ml-25 mr-25">
-                NO SE ENCONTRO NINGUN USUARIO
+    <div data-app class="col-lg-8">
+        <div v-if="loading">
+            <div class="card d-flex justify-content-center">
+                <div class="card-body text-center">
+                    <i class="fas fa-circle-notch fa-spin mr-2"></i> BUSCANDO USUARIOS...
+                </div>
+            </div>
+        </div>
+        <div v-if="usuarios.length == 0 && !loading">
+            <div class="card bg-warning d-flex justify-content-center">
+                <div class="card-body text-center text-white">
+                    NO SE ENCONTRO NINGUN USUARIO
+                </div>
             </div>
         </div>
         <div v-if="usuarios.length != 0">
@@ -32,7 +41,7 @@
                                 </div>
                             <div class="text-center pt-2">
                                 <div>
-                                        <span style="font-style: oblique;font-size: 15px">{{usuario.name }} {{usuario.mothers_surname}}  {{usuario.fathers_surname}}</span>
+                                        <span style="font-style: oblique;font-size: 15px">{{usuario.name }} {{usuario.fathers_surname}}  {{usuario.mothers_surname}}</span>
                                 </div>
                                 <div>
                                     <span class="form-text text-muted">{{usuario.email}} </span>
@@ -90,7 +99,7 @@ export default {
 
             pageSizes: [12, 15, 21],
             notary : this.$attrs.notary,
-
+            loading: true
         }
     },
     // props: ['rol_id'],
@@ -105,12 +114,14 @@ export default {
             }
             });
             // todo: agregar el rol_id dinamico 
-            let url = ('http://10.153.144.218/session-api/notary-offices/'+ this.notary +'/users'); 
+            let url = (`${process.env.SESSION_HOSTNAME}/notary-offices/${this.notary}/users`); 
             let response =axiosInstance.get(url)
                 .then((data) => {
+                    this.loading=false;
                     this.usuarios = data.data.response.notary_office_users;
                     this.totalPaginas = Math.ceil(this.usuarios.length / this.porPagina);
                 }).catch((error)=> {
+                    this.loading=false;
                     console.log(error)
                     this.porPagina = 0 
                 })

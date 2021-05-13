@@ -28,9 +28,9 @@
                         <button type="button"  class="btn btn-danger"  id="btnEliminar" v-on:click="eliminar( index )">
                             <i class="fa fa-times" id="iconBtnEliminar"></i> 
                         </button>-->
-                        <button type="button"  class="btn btn-info"  id="btnEditar" v-on:click="mostrarEditarSolicitante( sol, index )">
+                        <!-- <button type="button"  class="btn btn-info"  id="btnEditar" v-on:click="mostrarEditarSolicitante( sol, index )">
                             <i class="fa fa-edit" id="iconBtnEditar"></i>
-                        </button> 
+                        </button>  -->
                     </div> 
                    
                 </div>
