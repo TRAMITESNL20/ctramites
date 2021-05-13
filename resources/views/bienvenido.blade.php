@@ -35,7 +35,7 @@
             </li>
             </ul>
             <span class="navbar-text pr-4">
-            Captura tu folio de seguimiento
+            Consulta folio pago
             </span>
             <form class="form-inline mr-4">
                 <input class="form-control mr-sm-2" type="search" placeholder="" aria-label="">
