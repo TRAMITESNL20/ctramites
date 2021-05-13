@@ -7,15 +7,15 @@
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
             <li class="nav-item active" style="padding-top:1%">
-                <a class="nav-link" href="#">VENTANILLA UNICA DIGITAL <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="#">VENTANILLA ÚNICA DIGITAL <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item pl-12" style="max-width: 130px;">
                 <img src="images/iconos-06.png" alt="" style="width:20px;">
-                <a class="nav-link x-small-font" href="http://egobierno.nl.gob.mx/egob/Reimpresion.php">Reimprecion de declaracion</a>
+                <a class="nav-link x-small-font" href="http://egobierno.nl.gob.mx/egob/Reimpresion.php">Reimpresión de declaración</a>
             </li>
             <li class="nav-item" style="max-width: 120px;">
                 <img src="images/iconos-07.png" alt="" style="width:20px;">
-                <a class="nav-link x-small-font" href="http://egobierno.nl.gob.mx/egob/ConsultaConstancia.php">Obten tu constancia de retencion</a>
+                <a class="nav-link x-small-font" href="http://egobierno.nl.gob.mx/egob/ConsultaConstancia.php">Obtén  tu constancia de retención</a>
             </li>
             <li class="nav-item">
                 <img src="images/iconos-08.png" alt="" style="width:20px;">
@@ -23,7 +23,7 @@
             </li>
             <li class="nav-item">
                 <img src="images/iconos-09.png" alt="" style="width:20px;">
-                <a class="nav-link x-small-font" href="http://cfdi.nl.gob.mx/">Obten tu CFDI</a>
+                <a class="nav-link x-small-font" href="http://cfdi.nl.gob.mx/">Obtén  tu CFDI</a>
             </li>
             <li class="nav-item">
                 <img src="images/homeacceso-11.png" alt="" style="width:20px;">
@@ -31,17 +31,17 @@
             </li>
             <li class="nav-item">
                 <img src="images/iconos-10.png" alt="" style="width:20px;">
-                <a class="nav-link x-small-font" href="#">Consulta a un asesor en linea</a>
+                <a class="nav-link x-small-font" href="#">Consulta a un asesor en línea</a>
             </li>
             </ul>
             <span class="navbar-text pr-4">
             Captura tu folio de seguimiento
             </span>
             <form class="form-inline mr-4">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="">
+                <input class="form-control mr-sm-2" type="search" placeholder="" aria-label="">
                 <i class="fas fa-search text-black"></i>
             </form>
-            <a class="btn btn-outline-success my-2  my-sm-0" href="/login">Iniciar Sesion</a>
+            <a class="btn btn-outline-success my-2  my-sm-0" href="/login">Iniciar Sesión</a>
         </div>
     </nav>
 </div>
