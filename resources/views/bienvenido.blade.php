@@ -6,9 +6,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarTextd">
             <ul class="navbar-nav mr-auto">
-            <li class="nav-item active" style="padding-top:1%">
-                <a class="nav-link" href="#">VENTANILLA ÚNICA DIGITAL <span class="sr-only">(current)</span></a>
-            </li>
+            <!-- <li class="nav-item active" style="padding-top:1%">
+                <a class="nav-link" href="#">VENTANILLA ÚNICA DIGITAL <span class="sr-only">(current)</span></a> -->
+            <!-- </li> -->
             <li class="nav-item pl-12" style="max-width: 130px;">
                 <img src="images/iconos-06.png" alt="" style="width:20px;">
                 <a class="nav-link x-small-font" href="http://egobierno.nl.gob.mx/egob/Reimpresion.php">Reimpresión de declaración</a>
@@ -47,11 +47,14 @@
 </div>
 
 <div class="w-100 " style="margin-top:30%;    background-color: aliceblue;">
-        <div class="pb-20" style="margin-top: -20%;margin-left:10% ">
-            <h2 style="color:#3ba3fb !important;font-weight: 600;">Accede a trámites y servicios</h2>
-            <h2 style="color:#3ba3fb !important;font-weight: 600;">desde cualquier lugar</h2>
 
-            <div class="btn-group" style="width:35%">
+        <div class="pb-20" style="margin-top: -20%;">
+            <a  style="margin-left:0%;position:absolute;margin-top:-6%" class="nav-link" href="#">VENTANILLA ÚNICA DIGITAL <span class="sr-only"></span></a>
+            <a  style="margin-right:0%;position:absolute;margin-top:-6%;right:11%" class="nav-link" href="#">TESORERÍA VIRTUAL <span class="sr-only"></span></a>
+            <h2 style="color:#3ba3fb !important;font-weight: 600;margin-left:10%;margin-top: 20px ">Accede a trámites y servicios</h2>
+            <h2 style="color:#3ba3fb !important;font-weight: 600;margin-left:10% ">desde cualquier lugar</h2>
+
+            <div class="btn-group" style="width:35%;margin-left:10% ">
                 <input type="search" class="ds-input form-control w-45"  
                 placeholder="¿cual trámite deseas realizar?" 
                 aria-label="¿cual trámite deseas realizar?" 
