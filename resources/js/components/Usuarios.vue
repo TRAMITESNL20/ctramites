@@ -37,7 +37,7 @@
             <!-- lista de usuarios -->
             
               <div>
-                <div class="w-100" v-for="(usuario, index) in usuarios" >
+                <div class="w-100" v-for="(usuario, index) in filteredHelper" >
                     <div class="card list-item card-custom mb-5 col-lg-12" style="background-color: rgb(217, 222, 226) !important" >
                         <div class="d-flex mobile-lista-multiple align-items-center mb-3">
                         <!---->
@@ -201,6 +201,7 @@ export default {
            var inicio= (this.porPagina*(this.page -1));
             var arr_aux = [...this.usuarios];
              if(this.searchTitle != null)  {
+                 this.searchTitle = this.searchTitle.toUpperCase();
                  // parametros con los que se basa la busqueda
                 arr_aux = arr_aux .filter(search =>( search.name.includes(this.searchTitle) || search.mothers_surname.includes(this.searchTitle)  || search.fathers_surname.includes(this.searchTitle)  ))
                 this.totalPaginas = Math.ceil(arr_aux.length / this.porPagina);
