@@ -49,8 +49,8 @@ export default {
 		
     },
     methods: {
-        
-    	validateSigned (evt) {
+      
+    		validateSigned (evt) {
     		this.coutnLoad++;
             var self = this;
             console.log(this.coutnLoad);
@@ -87,8 +87,7 @@ export default {
                                     console.log('no se encontro el archivo en insumos');
                                     console.log(error);
                             })
-                
-                        
+                 
                 }
     	},
         encodeData(){
