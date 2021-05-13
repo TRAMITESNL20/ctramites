@@ -31,7 +31,7 @@ class LandingPageController extends Controller
 			];
 			$tramitesAgrupados[$category]['tramites'][] = $tramite;
 		}
-		// dd($allTramites);
+		// dd( env("APP_URL") . "/allTramites?config_id=" .env("COMUNIDAD_CIUDADANO") );
 		return layout_view("landingPage" , [ "tramitesAgrupados" => $tramitesAgrupados ]);
     }
 }

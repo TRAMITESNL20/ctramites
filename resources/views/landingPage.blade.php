@@ -41,7 +41,7 @@
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="">
                 <i class="fas fa-search text-black"></i>
             </form>
-            <a class="btn btn-outline-success my-2  my-sm-0" type="submit">Iniciar Sesion</a>
+            <a class="btn btn-outline-success my-2  my-sm-0" href="/login">Iniciar Sesion</a>
         </div>
     </nav>
 </div>
@@ -86,7 +86,7 @@
                                         @php 
                                         $url =  env("APP_URL") . "/detalle-tramite/";
                                         @endphp
-                                        <li class="p-2"><a href="{{$url.$categoria['tramites'][$i]->id_tramite}}" ></a> {{ $categoria['tramites'][$i]->tramite }} </li>
+                                        <li class="p-2"><a href="{{$url.$categoria['tramites'][$i]->id_tramite}}" >{{ $categoria['tramites'][$i]->tramite }} </a> </li>
                                         @endfor
                                     </ul>
                                 </div>
