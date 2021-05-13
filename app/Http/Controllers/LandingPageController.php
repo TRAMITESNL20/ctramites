@@ -12,8 +12,8 @@ class LandingPageController extends Controller
 		set_layout_arg([
             "subtitle" => "Bienvenido",
 			"empty_layout" => true,
-			"background_content" => "#ffffff", 
-			"fluid_container" => true,
+			"background_content" => "#ffffff",
+			"fluid_container" => true,	
 		]);
 		$tramitesAgrupados = [];
 		$id= session()->get("user")->config_id;
@@ -32,6 +32,6 @@ class LandingPageController extends Controller
 			$tramitesAgrupados[$category]['tramites'][] = $tramite;
 		}
 		// dd( env("APP_URL") . "/allTramites?config_id=" .env("COMUNIDAD_CIUDADANO") );
-		return layout_view("landingPage" , [ "tramitesAgrupados" => $tramitesAgrupados ]);
+		return layout_view("bienvenido" , [ "tramitesAgrupados" => $tramitesAgrupados ]);
     }
 }

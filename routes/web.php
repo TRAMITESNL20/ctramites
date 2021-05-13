@@ -45,7 +45,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
 	Route::get("/email/template", "EmailController@index");
 	Route::get('/allTramites', 'SolicitudesController@getTramites')->name("allTramites");
-	Route::get('/landingPage', "LandingPageController@index")->name("landing-page");
+	Route::get('/bienvenido', "LandingPageController@index")->name("landing-page");
 
 	Route::middleware(["validate_session", "validate_rol"])->group(function(){
 		Route::get('/', function () {

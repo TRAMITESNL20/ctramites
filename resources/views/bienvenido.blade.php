@@ -1,10 +1,10 @@
 <div class="w-100 fixed " style="top:0;position:fixed;height:70px">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color:#3ba3fb">
         <img src="images/logo.svg" width="120" height="65" class="d-inline-block align-top" alt="" loading="lazy">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTextd" aria-controls="navbarTextd" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarText">
+        <div class="collapse navbar-collapse" id="navbarTextd">
             <ul class="navbar-nav mr-auto">
             <li class="nav-item active" style="padding-top:1%">
                 <a class="nav-link" href="#">VENTANILLA ÚNICA DIGITAL <span class="sr-only">(current)</span></a>
