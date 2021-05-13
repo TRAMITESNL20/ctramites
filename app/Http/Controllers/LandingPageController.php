@@ -16,7 +16,6 @@ class LandingPageController extends Controller
 			"fluid_container" => true,	
 		]);
 		$tramitesAgrupados = [];
-		$id= session()->get("user")->config_id;
 		$allTramites = curlSendRequest("GET", env("APP_URL") . "/allTramites?config_id=" .env("COMUNIDAD_CIUDADANO") );
 		$tramitesAgrupados = [];
 
