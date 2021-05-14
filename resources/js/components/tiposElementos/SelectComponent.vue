@@ -61,6 +61,9 @@
               return option;
             }); ; 
           }
+           if( this.campo.nombre == 'Distrito'){
+            console.log('tramite con distrito');
+          }
         },
         async obtenerOptions(url){
           let response = await axios.get(url);

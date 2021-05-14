@@ -215,6 +215,8 @@
  				</div>
 			</form>
 		</div>
+		<code>{{campos}}</code>
+
     </div>
 </template>
 <script>
@@ -435,6 +437,7 @@
 
 		    async obtenerCampos(){
 		    	let url = process.env.APP_URL + "/getCampos";
+				console.log('--se consultan los campus');
 				let promises = [];
 		    	let linksArchivos = [];
 		    	try {
