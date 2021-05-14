@@ -69,23 +69,45 @@ export default {
     },
     methods: {
       
-    	validateSigned (evt) {
+    		validateSigned (evt) {
     		this.coutnLoad++;
+            var self = this;
             console.log(this.coutnLoad);
-    		if(this.coutnLoad >= 2  &&  this.coutnLoad <= 5  ){
-    			fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
-                    method : 'POST',
-                    body: JSON.stringify({ ids : this.idFirmado, status : 1, type : 'firmado', urls : this.urlFirmado, user_id: user.id })
-                })
-                .then(res => res.json())
-                .then(res => {
-                    if(res.code === 200) console.log('Firmado');
-                    else{
-                        console.log('On count n#'+ this.coutnLoad);
-                        console.log('Something goes wrong!', res);    
-                    } 
-                });
-    		}
+                
+                if(this.coutnLoad >= 2  &&  this.coutnLoad <= 5  ){
+
+                        fetch(this.urlFirmado[0], { method: 'GET' })
+                        .then( function(response ) {
+                                        console.log(self.idFirmado);
+                                        console.log(response.status);
+                                         // then log it out    
+                                    if( response.status == 200 ){
+                                        fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+                                            method : 'POST',
+                                                body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
+                                            })
+                                            .then(res => res.json())
+                                                .then(res => {
+                                                    if(res.code === 200){
+                                                        console.log('Firmado');    
+                                                        self.tramiteFirmado = true;
+                                                        // self.$emit('docFirmadosPendientes', self.docFirmadosPendientes);
+                                                        self.$emit('docFirmadosListos', self.docFirmadosListos);
+                                                        self.$emit('docFirmado', 1);
+                                                        self.$emit('urlFirmado', self.urlFirmado);
+                                                    }
+                                                    else console.log('Something goes wrong!', res);
+                                            });
+
+                                    } 
+                                
+                            }) 
+                            .catch(function(error) {
+                                    console.log('no se encontro el archivo en insumos');
+                                    console.log(error);
+                            })
+                 
+                }
     	},
         encodeData(){
             var urlDataGeneric =  process.env.INSUMOS_API_HOSTNAME + '/data_generic';
