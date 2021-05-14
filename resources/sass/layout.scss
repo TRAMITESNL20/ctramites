@@ -234,8 +234,14 @@
 	width: 50% !important;
 }
 
-.theme--light.v-pagination .v-pagination__item--active{
-	color:#464E5F !important;
+table ::before,::after{
+		position:absolute ;
+        right :10px;
+        background: rgb(0,0,0);
+        background: linear-gradient(90deg, rgba(0,0,0,0.075) 0%, rgba(3,3,3,0) 100%);	
+    
+}::after {
+	transform:translateX(0px) rotate(180deg);
 }
 
 
