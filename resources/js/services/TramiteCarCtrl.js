@@ -21,10 +21,15 @@ export default class TramiteCar5ISRCtrl {
 	    this.json.datos_solicitante = this.obtenerDatosSolicitante(solicitud);
 	    this.json.datos_factura = this.json.datos_solicitante;
         this.json.isComplemento = solicitud.info.complementoDe;
+        this.json.isAgrupable = this.getIsAgrupable(solicitud, tramite);
 	    this.json.detalle = this.getDetalle(solicitud);
 
 	  	return this.json;
   	}
+
+    getIsAgrupable( solicitud, tramite ){
+        return !solicitud.info.complementoDe && process.env.TRAMITE_5_ISR != tramite.tramite_id;
+    }
 
   	getAuxiliar1(solicitud){
 
@@ -38,9 +43,9 @@ export default class TramiteCar5ISRCtrl {
 			if(usuario && usuario.notary){
 				return auxiliar_1 = auxiliar_1 + " - Notaria " + usuario.notary.notary_number;
 			}
-	  	} else if( solicitud.info.hasOwnProperty('complementoDe') ){
+	  	} /*else if( solicitud.info.hasOwnProperty('complementoDe') ){
             return "COMPLEMENTARIO: " + solicitud.info.complementoDe ;
-        } else {
+        } */else {
 	  		return "";
 	  	}
   	}
@@ -136,6 +141,10 @@ export default class TramiteCar5ISRCtrl {
                 partida: info.partidas ? info.partidas[0].id_partida : null,
                 importe_concepto:this.json.importe_tramite         
             }
+
+            if( solicitud.info.hasOwnProperty('complementoDe') ){
+                detalle[0].concepto = detalle[0].concepto + " COMPLEMENTARIO:  " + solicitud.info.complementoDe ;
+            } 
 
             let descuentosAplicados = [];
             if(info.detalle && info.detalle.descuentos && Array.isArray(info.detalle.descuentos )  && info.detalle.descuentos.length > 0  ){

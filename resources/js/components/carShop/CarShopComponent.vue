@@ -24,9 +24,6 @@
                     <button class="dropdown-item" type="button"  v-on:click="confirmarGrupo()" ref="confirGroup">
                       Agrupar Tramites
                     </button>
-                  <!--
-                    <button @click="agruparSeleccion()" class="dropdown-item" type="button">Agrupar Tramites</button>
-                  -->
                 </div>
           </div>
       </transition>
@@ -117,6 +114,7 @@
                     </div>
 
                   <div class="card card-custom" >
+
                         <div class="card-body py-7">
                             <!--begin::Pagination-->
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -213,17 +211,29 @@
               this.tramites.forEach( tramite => {
                 let item = { nombre: tramite.nombre, grupo_clave: tramite.calveTemp, items:[tramite], verDetalle:false, selected:false, isComplemento: tramite.isComplemento };
                 let indice = this.tramitesAgrupados.findIndex( agrupado => agrupado.grupo_clave == tramite.calveTemp );
-
                 if( indice < 0 || !tramite.calveTemp){
                   this.tramitesAgrupados.push( item );
                 } else {
                   this.tramitesAgrupados[indice].items.push( tramite )
                 }
               });
+
+              this.tramitesAgrupados = this.tramitesAgrupados.map( agrupado => {
+                let ids = agrupado.items.map( item => item.claveIndividual ).filter((val, index, self) =>  self.indexOf(val) === index);
+                let estanSeleccionado = true;
+                ids.forEach( clave => {
+                  estanSeleccionado = estanSeleccionado && this.elementosSeleccionados.includes(clave);
+                });
+                agrupado.selected = estanSeleccionado;
+                return agrupado;
+              });
               return this.tramitesAgrupados.slice((this.currentPage - 1) * this.porPage,this.currentPage * this.porPage);        
             },
             mostrarAcciones(){
-              return this.items.filter( item => item.selected ).length > 1
+              let tramitesEnSeleccion = this.tramites.filter( tramite => this.elementosSeleccionados.includes( tramite.claveIndividual ) );
+              let gruposSeleccionados = tramitesEnSeleccion.map(  tramite => tramite.calveTemp );
+              let gruposUnicos = gruposSeleccionados.filter((val, index, self) =>  self.indexOf(val) === index).filter(Boolean);;
+              return gruposUnicos.length > 1;
             }
         },
         data() {
@@ -244,7 +254,7 @@
               tramitesServer:[],
               elementosSeleccionados:[],
               claveDroped:'',
-              listDroped:null
+              listDroped:null,
             }
         },
   
@@ -418,7 +428,7 @@
 
         onDrop (evt, list) {
           const clave = evt.dataTransfer.getData('clave');
-          if( clave && !list.isComplemento){
+          if( clave && this.isAgrupable(list) ){
             this.claveDroped = clave;
             this.listDroped = list;
             this.confirmarGrupo();
@@ -426,10 +436,20 @@
           
         },
 
+        isAgrupable( grupo ){
+            let es_agrupable = false;
+            if( grupo.items && grupo.items.length > 0){
+                es_agrupable = !grupo.items.find( item => item.isAgrupable == false )
+            } else {
+                es_agrupable = grupo.isAgrupable;
+            }
+            return es_agrupable;                
+        },
+
         onDropFuera(evt, list){
           let claveGrupo = Date.now();
           const clave = evt.dataTransfer.getData('clave');
-          if( clave && !list.isComplemento){
+          if( clave && this.isAgrupable(list)  ){
             this.tramites.map( tram =>{
                 if( tram.claveIndividual == clave ){
                   tram.calveTemp = claveGrupo;
@@ -458,11 +478,7 @@
             let elementosNuevos = ids.filter( elem => !this.elementosSeleccionados.includes(elem))
             this.elementosSeleccionados = this.elementosSeleccionados.concat(elementosNuevos);
           } else {
-            data.items.forEach( (i, index)=>{
-              if(this.elementosSeleccionados.includes( i.claveIndividual )){
-                this.elementosSeleccionados.splice( index, 1 );
-              }
-            });
+            this.elementosSeleccionados = this.elementosSeleccionados.filter( clave => !ids.includes(clave) )
           }
     
         },
@@ -481,13 +497,14 @@
         },
 
         evtRemoveElementoSeleccionado(claveIndividual){
-          let claveGrupo = Date.now()
+          let claveGrupo = Date.now();
           this.tramites.forEach( (tramite, index) => { 
             if( claveIndividual == tramite.claveIndividual ){
               tramite.calveTemp = claveGrupo; 
               //let index = this.elementosSeleccionados.findIndex( tramite => tramite.id_tramite == item.id_tramite );
               if(this.elementosSeleccionados.length > 0){
-                this.elementosSeleccionados.splice( index, 1 );
+                let indexElm = this.elementosSeleccionados.findIndex( clave =>  clave ===  claveIndividual );
+                this.elementosSeleccionados.splice( indexElm, 1 );
               }           
             }
           });
@@ -524,7 +541,7 @@
               Command: toastr.error("Error!", error.message || "No fue posible guardar los cambios");
               this.obtenerTramitesAgregados();
             }).finally(() => {
-
+              this.chagenPorPage();
             });
           }
 

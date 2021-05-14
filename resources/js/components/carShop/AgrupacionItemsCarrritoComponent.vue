@@ -24,7 +24,7 @@
             <div class="d-flex align-items-center mb-3" :id="idItem">
                 <!----> 
                 <div class="mr-3 ml-4">
-                    <input v-if="isAgrupable(agrupacion)" type="checkbox" style="width:18px; height:18px;" @change="addSelect(agrupacion)" v-model="agrupacion.selected">
+                    <input v-if="isAgrupable" type="checkbox" style="width:18px; height:18px;" @change="addSelect(agrupacion)" v-model="agrupacion.selected">
                 </div>
                 <div class="mr-auto" style="width: 60%;">
 
@@ -120,6 +120,16 @@
                 });
                 return sameNameInAll ;
             },
+
+            isAgrupable(){
+                let es_agrupable = false;
+                if( this.agrupacion.items && this.agrupacion.items.length > 0){
+                    es_agrupable = !this.agrupacion.items.find( item => item.isAgrupable == false )
+                } else {
+                    es_agrupable = this.agrupacion.isAgrupable;
+                }
+                return es_agrupable;                
+            }
         },
         methods: {
             eliminar(){
@@ -161,7 +171,7 @@
                 let solicitudStartDrag = infoTramite.solicitudes.find( solicitud => {
                     return item.id_tramite == solicitud.id;
                 });
-                if(!this.isAgrupable(item)){
+                if(!item.isAgrupable){
                     evt.dataTransfer.dropEffect = 'none'
                     evt.dataTransfer.effectAllowed = 'none'
                     return false;
@@ -184,7 +194,8 @@
                 let data = { 
                     selected:agrupacion.selected,
                     items: agrupacion.items,
-                    index:this.index
+                    index:this.index,
+                    grupo_clave:agrupacion.grupo_clave
                 }
                 this.$emit('selectionEvent', data);
 
@@ -194,8 +205,17 @@
                 this.$emit('removeEvent', claveIndividual);  
             }, 
 
-            isAgrupable(agrupacion){
-                return !agrupacion.isComplemento;
+            //isAgrupable(agrupacion){
+
+            //    let es_agrupable = false;
+            //    if( agrupacion.items ){
+            //        es_agrupable = !agrupacion.items.find( item => item.isAgrupable == false )
+            //    } else {
+            //        es_agrupable = agrupacion.isAgrupable;
+            //   }
+
+            //    return es_agrupable;
+                //return !agrupacion.isComplemento ;
                 /*let infoTramite = null;
                 this.tramitesServer.forEach( tramiteServer => {
                    let encontrado = tramiteServer.solicitudes.find( solicitud => solicitud.id == item.id_tramite );
@@ -217,7 +237,7 @@
                 });
 console.log( JSON.parse( JSON.stringify( item ) ))
                 return (clavesCantidad[item.clave || item.claveIndividual].cantidad == 1) ;*/
-            },
+            //},
 
             showConfirm(){
                 this.$root.$emit('bv::show::modal', 'modalDelet-'+ this.index, '#btnConfirm-' +this.index)

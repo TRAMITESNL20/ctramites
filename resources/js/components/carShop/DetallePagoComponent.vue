@@ -70,6 +70,7 @@
                     delete tramite.calveTemp;
                     delete tramite.claveIndividual;
                     delete tramite.isComplemento;
+                    delete tramite.isAgrupable;
 
                     tramitesAEnviar.push( tramite );
                 });
