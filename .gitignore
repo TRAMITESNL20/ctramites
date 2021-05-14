@@ -16,3 +16,4 @@ compressed
 style
 _*
 package-lock.json
+composer.lock
