@@ -210,20 +210,20 @@
                 this.calcularTotalMontoOperacionDeEnajentantes();
             }
             this.validar();
-            $('#gradientBackgroundLeft').hide();
+            console.log('se monto la tabla de enajenantes');
             
 		},
         updated(){
-            var height = $("#tableEnajenantes")[0].clientHeight;
-            $("#gradientBackgroundLeft").css( "width" ,'12%');
-            $("#gradientBackgroundRight").css( "width" ,'12%');
-            $("#gradientBackgroundLeft").css( "height" ,  height+"px" );
-            $("#gradientBackgroundRight").css( "height" ,  height+"px" );
-            $('#scrollDiv').scroll( function() {
-                ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
+            // var height = $("#tableEnajenantes")[0].clientHeight;
+            // $("#gradientBackgroundLeft").css( "width" ,'12%');
+            // $("#gradientBackgroundRight").css( "width" ,'12%');
+            // $("#gradientBackgroundLeft").css( "height" ,  height+"px" );
+            // $("#gradientBackgroundRight").css( "height" ,  height+"px" );
+            // $('#scrollDiv').scroll( function() {
+            //     ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
 
-                ( $('#scrollDiv').scrollLeft() > 0) ? $('#gradientBackgroundLeft').show() : $('#gradientBackgroundLeft').hide();
-            });
+            //     ( $('#scrollDiv').scrollLeft() > 0) ? $('#gradientBackgroundLeft').show() : $('#gradientBackgroundLeft').hide();
+            // });
         },
         props:{
 
