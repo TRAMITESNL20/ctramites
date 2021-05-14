@@ -110,6 +110,7 @@
     const CAMPO_SUBSIDIO        = "Subsidio";
     const CAMPO_VALOR_CATASTRAL = "Valor catastral";
     const CAMPO_VALOR_OPERACION = "Valor de operacion";
+    const CAMPO_TIPO_OPERACION  = "Tipo de Operación";
 
     //CAMPOS CALCULO IMPUESTO
     const CAMPO_GANANCIA_OBTENIDA                               = "GANANCIA OBTENIDA";
@@ -202,7 +203,7 @@
                             let campoSubsidio       = this.getCampoByName(CAMPO_SUBSIDIO);
                             let campoCatastral      = this.getCampoByName(CAMPO_VALOR_CATASTRAL);
                             let campoValorOperacion = this.getCampoByName(CAMPO_VALOR_OPERACION);  
-
+                            let tipoOperacion       = this.getCampoByName(CAMPO_TIPO_OPERACION);
                             if( campoCatastral ){
                                 paramsCosto.valor_catastral = this.formatoNumero(campoCatastral.valor);
                             }
@@ -231,6 +232,10 @@
                             
                             if(this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status == 3) {
                                 paramsCosto.id_ticket = this.infoGuardadaFull.id;
+                            }
+
+                            if(tipoOperacion){
+                                paramsCosto.tipoOperacion = tipoOperacion.valor.clave;
                             }
                         }                 
                     }
