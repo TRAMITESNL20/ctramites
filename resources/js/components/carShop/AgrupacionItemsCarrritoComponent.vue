@@ -51,7 +51,7 @@
                         
                             <div class="d-flex align-items-center justify-content-between flex-wrap" >
     
-                                <div class="mr-3 ml-4" style="cursor:pointer;">
+                                <div class="mr-3 ml-4" style="cursor:pointer;" v-if="isAgrupable">
                                     <i class="fas fa-undo" title="Qutar del grupo" style="width:18px; height:18px;"  @click="quitarSelect(item.claveIndividual)"></i>
                                 </div>
                                  <div class="mr-auto" style="width: 60%;">
