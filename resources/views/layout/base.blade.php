@@ -45,6 +45,20 @@
 		<meta name="msapplication-TileImage" content="{{ assets("/images/favicon/mstile-144x144.png") }}">
 		<meta name="msapplication-config" content="{{ assets("/images/favicon/browserconfig.xml") }}">
 		<meta name="theme-color" content="#088cbc">
+
+		@if (getenv("HOTJAR_SITE_ID"))
+			<!-- Hotjar Tracking Code for tramites.nl.gob.mx -->
+			<script>
+				(function(h,o,t,j,a,r){
+					h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+					h._hjSettings={hjid:{{ getenv('HOTJAR_SITE_ID') }},hjsv:6};
+					a=o.getElementsByTagName('head')[0];
+					r=o.createElement('script');r.async=1;
+					r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+					a.appendChild(r);
+				})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+			</script>
+		@endif
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
@@ -1695,6 +1709,9 @@
 			<script src="{{ assets("js/dataTables.bootstrap4.min.js") }}"></script>
 
 			<script src="{{ assets("js/bundle.js") }}"></script>
+
+
+		
 		</body>
 	<!--end::Body-->
 </html>

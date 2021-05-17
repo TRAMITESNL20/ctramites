@@ -15,3 +15,5 @@ yarn-error.log
 compressed
 style
 _*
+package-lock.json
+composer.lock

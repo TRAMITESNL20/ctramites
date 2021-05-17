@@ -46,7 +46,7 @@
                             <a v-on:click="goTo(tramite.doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.doc_firmado && [2,3].includes(type)">VER DECLARACIÓN</a>
                             <!-- <modal-document-component  :tramitesdoc="tramitesdoc" v-if="tramite.required_docs === 0"   ></modal-document-component> -->
                             <a v-on:click="goTo(tramite.tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mt-2" v-if="tramite.tramites && tramite.tramites[0] && tramite.tramites[0].url_recibo && [2,3].includes(type) && !group">VER RECIBO DE PAGO</a>
-                            <div class="btn-group mt-2" v-if="tramite.info && !cartComponent && type != 2 && !group">
+                            <div class="btn-group mt-2" v-if="tramite.info && !cartComponent && type != 2 && !group && ![7,8].includes(tramite.status)">
                                 <a v-on:click="goTo(tramite)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="files.length == 0 ? 'rounded' : ''">
                                     <span class="text-white">VER DETALLES</span>
                                 </a>
@@ -57,6 +57,9 @@
                                     <a v-for="(file, ind) in files" class="dropdown-item" :href="file.href || file" :key="ind"><i class="fas fa-download mr-2"></i> {{ file.name || file }}</a>
                                 </div>
                             </div>
+                            <a v-on:click="goTo(`detalle-tramite/${tramite.tramite_id}?clave=${tramite.clave}`)" class="btn btn-sm btn-success font-weight-bolder text-uppercase text-white mt-2" v-if="[7,8].includes(tramite.status)">
+                                CONTINUAR
+                            </a>
                             <span v-if="cartComponent" class="btn btn-secondary mt-2">MX{{ new Intl.NumberFormat('es-MX', { style : 'currency', currency : 'MXN' }).format(tramite.importe_tramite) }}</span>
                         </div>
                         <!--end::Actions-->
@@ -118,6 +121,7 @@ import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue'
                     this.solicitante.tipoPersona = this.tramite.info.tipoPersona;
                 }
             }
+            console.log(this.tramite);
             // console.log('solicitante', Object.entries(this.solicitante).length);
         },
         methods:{
