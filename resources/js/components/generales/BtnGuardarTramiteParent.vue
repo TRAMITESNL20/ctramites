@@ -190,6 +190,9 @@
                 formData.append('required_docs', 0);  
               }
               
+              if(informacion.complementoDe && this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ){
+                formData.append('status', this.$const.STATUS_ERROR_MUNICIPIO); 
+              }
 
               return formData;
             },
@@ -203,18 +206,17 @@
                 let informacion = this.getInformacion( tramite, datosFormulario );
                 let idEdicion = null;
 
-                if(  this.infoGuardadaFull && this.infoGuardadaFull.id && ( this.infoGuardadaFull.status != this.$const.STATUS_FALTA_PAGO && this.infoGuardadaFull.status != this.$const.STATUS_ERROR_MUNICIPIO)  ){
+                if(  this.infoGuardadaFull && this.infoGuardadaFull.id && ( this.infoGuardadaFull.status != this.$const.STATUS_FALTA_PAGO && this.infoGuardadaFull.status != this.$const.STATUS_ERROR_MUNICIPIO )  ){
                   idEdicion = this.infoGuardadaFull.id;
                   let infoGuardada =  JSON.parse( this.infoGuardadaFull.info );
                   if(infoGuardada.complementoDe){
                     informacion.complementoDe =  infoGuardada.complementoDe;
                   }
-                } else if(this.infoGuardadaFull && this.infoGuardadaFull.id && ( this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO  || this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO )) {
+                } else if(this.infoGuardadaFull && this.infoGuardadaFull.id && ( this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO || this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO )) {
                   informacion.complementoDe =  this.infoGuardadaFull.id;
                   tramite.id_seguimiento = uuid.v4();
                   tramite.grupo_clave = this.infoGuardadaFull.grupo_clave;
                 }
-
                 return this.buildFormData( informacion, listaSolicitantes, tramite, idEdicion,enajenantes );
             },
 
