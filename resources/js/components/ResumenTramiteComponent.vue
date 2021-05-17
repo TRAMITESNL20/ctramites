@@ -146,6 +146,9 @@
         props: ['datosComplementaria','tipoTramite', 'infoGuardadaFull'],
         mounted() {
             this.obtenerInformacionDelTramite();
+
+
+            /*
             if(this.tipoTramite == 'declaracionEn0'){
                 this.obteniendoCosto= false;
                 this.tramite.detalle = {costo_final:0};
@@ -155,8 +158,17 @@
                 this.obteniendoCosto = false;
             } else {
                 this.obtenerCosto();    
+            }*/
+            if( this.infoGuardadaFull && this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ){
+                this.tramite.detalle = JSON.parse(  this.infoGuardadaFull.info ).detalle;
+                const parsed = JSON.stringify(this.tramite);
+                localStorage.setItem('tramite', parsed);  
+                this.$forceUpdate();
+                this.obteniendoCosto = false;
+            } else {
+                this.obtenerCosto();    
             }
-           
+            
         },
 
         data(){
