@@ -4,12 +4,12 @@ export default class AdminCamposCostos {
 	constructor(infoFull) {
         this.info = JSON.parse(infoFull.info);
         this.camposParaCostos = [
-            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_LOTE, 
-            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_HOJA, 
-            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_SUBSIDIO, 
-            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_VALOR_CATASTRAL, 
-            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION, 
-            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_DIVISAS
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_LOTE.toLocaleLowerCase(), 
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_HOJA.toLocaleLowerCase(), 
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_SUBSIDIO.toLocaleLowerCase(), 
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_VALOR_CATASTRAL.toLocaleLowerCase(), 
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION.toLocaleLowerCase(), 
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_DIVISAS.toLocaleLowerCase()
         ];
         let nuevaInfo = this.info;
         if(infoFull.status == Vue.prototype.$const.STATUS_FALTA_PAGO ){
@@ -23,7 +23,7 @@ export default class AdminCamposCostos {
 
     desabilidarCampos( info ){
     	info.camposConfigurados.map( (campo, index) => {
-            let esParaCosto = this.camposParaCostos.includes( campo.nombre )
+            let esParaCosto = this.camposParaCostos.includes( campo.nombre.toLocaleLowerCase() )
             campo.disabled = !esParaCosto;
             return campo;
         });

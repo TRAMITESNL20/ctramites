@@ -142,9 +142,11 @@ export default class TramiteCar5ISRCtrl {
                 importe_concepto:this.json.importe_tramite         
             }
 
-            if( solicitud.info.hasOwnProperty('complementoDe') ){
-                detalle[0].concepto = detalle[0].concepto + " COMPLEMENTARIO:  " + solicitud.info.complementoDe ;
-            } 
+            if( solicitud.info.hasOwnProperty('complementos')){
+                detalle[0].concepto = detalle[0].concepto + " COMPLEMENTARIO:  " + ( solicitud.info.complementos );
+            } else if (  solicitud.info.hasOwnProperty('complementoDe')  ){
+                detalle[0].concepto = detalle[0].concepto + " COMPLEMENTARIO:  " + ( solicitud.info.complementoDe );
+            }
 
             let descuentosAplicados = [];
             if(info.detalle && info.detalle.descuentos && Array.isArray(info.detalle.descuentos )  && info.detalle.descuentos.length > 0  ){
