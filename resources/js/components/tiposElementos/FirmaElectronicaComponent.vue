@@ -31,11 +31,12 @@ export default {
 		}
 	},
 	mounted() {
-
+		window.addEventListener("message", this.messageEvt, false);
 		let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
 		this.usuario.solicitudes.map((solicitud, ind) => {
 			this.multiple = this.usuario.solicitudes.length > 1;
-            var auxEnv = process.env.APP_URL;
+            // var auxEnv = process.env.APP_URL;
+            var auxEnv = APP_URL;
             if ( auxEnv == "https://tramites.nl.gob.mx") {
                 auxEnv = "http://tramites.nl.gob.mx";
             }
@@ -68,8 +69,7 @@ export default {
 		this.encodeData();
     },
     methods: {
-      
-    		validateSigned (evt) {
+    	validateSigned (evt) {
     		this.coutnLoad++;
             var self = this;
             console.log(this.coutnLoad);
@@ -163,12 +163,8 @@ export default {
             var encodedId = btoa(self.resultId); 
             var urlFinal = url+encodedId;
             this.firma = urlFinal;
-
-           
-
         },
-
-         accesToken(){
+        accesToken(){
             var self = this;
             let url =  process.env.INSUMOS_API_HOSTNAME + "/auth" ;  
             var data = { 'username' : process.env.INSUMOS_USERNAME , 'password':  process.env.INSUMOS_PASSWORD };
@@ -197,9 +193,11 @@ export default {
                 }
             });
         },
-
-        
-   
+        messageEvt (evt) {
+        	console.log('messageEvt', evt, evt.data);
+        }
+        // validateSigned (evt) {
+        // }
     },
   
 }
