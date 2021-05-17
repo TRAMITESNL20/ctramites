@@ -5,7 +5,8 @@
 </template>
 
 <script>
-var md5 = require('md5');
+const md5 = require('md5');
+const axios = require('axios');
 
 
 export default {
@@ -70,31 +71,31 @@ export default {
             var self = this;
             console.log('coutnLoad', this.coutnLoad);
             if(this.coutnLoad <= 100){
-                fetch(this.urlFirmado[0], { method: 'GET', mode: 'no-cors' })
-                .then(function(response ) {
-                    console.log('doc existe');
-                    if( response.status == 200 ){
-                        fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
-                            method : 'POST',
-                            body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
-                        })
-                        .then(res => res.json())
-                        .then(res => {
-                            if(res.code === 200){
-                                console.log('Firmado');    
-                                self.tramiteFirmado = true;
-                                self.$emit('docFirmadosListos', self.docFirmadosListos);
-                                self.$emit('docFirmado', 1);
-                                self.$emit('urlFirmado', self.urlFirmado);
-                            }
-                            else console.log('Something goes wrong!', res);
-                        });
-                    }
-                }) 
-                .catch(function(error) {
-                    console.log('no se encontro el archivo en insumos');
-                    console.log(error);
-                })
+                // fetch(this.urlFirmado[0], { method: 'GET', 'mode': 'cors', 'headers': { 'Access-Control-Allow-Origin': '*', } })
+                // .then(function(response ) {
+                //     console.log('doc existe', response);
+                //     if( response.status == 200 ){
+                //         fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+                //             method : 'POST',
+                //             body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
+                //         })
+                //         .then(res => res.json())
+                //         .then(res => {
+                //             if(res.code === 200){
+                //                 console.log('Firmado');    
+                //                 self.tramiteFirmado = true;
+                //                 self.$emit('docFirmadosListos', self.docFirmadosListos);
+                //                 self.$emit('docFirmado', 1);
+                //                 self.$emit('urlFirmado', self.urlFirmado);
+                //             }
+                //             else console.log('Something goes wrong!', res);
+                //         });
+                //     }
+                // }) 
+                // .catch(function(error) {
+                //     console.log('no se encontro el archivo en insumos');
+                //     console.log(error);
+                // })
             }
     	},
         encodeData(){
@@ -180,7 +181,25 @@ export default {
             });
         },
         messageEvt (evt) {
+            var self = this;
         	console.log('messageEvt', evt, evt.data);
+            if(evt.data === 'Terminó'){
+                fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+                    method : 'POST',
+                    body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if(res.code === 200){
+                        console.log('Firmado');    
+                        self.tramiteFirmado = true;
+                        self.$emit('docFirmadosListos', self.docFirmadosListos);
+                        self.$emit('docFirmado', 1);
+                        self.$emit('urlFirmado', self.urlFirmado);
+                    }
+                    else console.log('Something goes wrong!', res);
+                });
+            }
         }
         // validateSigned (evt) {
         // }
