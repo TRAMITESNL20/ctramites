@@ -135,10 +135,10 @@
                     if(window.user) data.id_usuario = window.user.id;
 
                     let response = await axios.post(url, data);
-                    response.data = response.data.map(res => {
-                        res.status = estatus;
-                        return res;
-                    })
+                    // response.data = response.data.map(res => {
+                    //     res.status = estatus;
+                    //     return res;
+                    // })
                     this.tramites = response.data;
                     // this.tramitesFiltrados = this.tramites;
                     this.tramitesFiltrados = this.tramites.filter( tramite => tramite.titulo.toLocaleLowerCase().includes(this.strBusqueda.toLocaleLowerCase()) ) ;

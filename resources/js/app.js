@@ -4,6 +4,9 @@ import Vue from 'vue'
 import UUID from "vue-uuid";
 import Vuetify from 'vuetify';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+
+import '@mdi/font/css/materialdesignicons.css'
+
 // import 'bootstrap/dist/css/bootstrap.css'
 // import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -63,6 +66,7 @@ Vue.component("file-component" , () => import( /* webpackChunkName: "js/componen
 Vue.component("results-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ResultsComponent.vue' ));
 Vue.component("firma-electronica-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/FirmaElectronicaComponent.vue' ));
 Vue.component("modal-document-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ModalDocumentComponent.vue' ));
+Vue.component("card-porfile-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/generales/CardPorfileComponent.vue' ));
 
 Vue.component("btn-guardar-tramite-parent" , () => import( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-parent" */ './components/generales/BtnGuardarTramiteParent.vue' ));
 
@@ -160,4 +164,19 @@ Vue.directive('currency',
 
 const app = new Vue({
     el: '#app',
+    updated(){
+        console.log('se carga el js, sigue ...');
+        if($(".table").length > 0){
+            var height = $(".table")[0].clientHeight;
+            $(".border-table-left").css( "width" ,'12%');
+            $(".border-table-right").css( "width" ,'12%');
+            $(".border-table-left").css( "height" ,  height+"px" );
+            $(".border-table-right").css( "height" ,  height+"px" );
+            $('#scrollDiv').scroll( function() {    
+                ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
+
+                ( $('#scrollDiv').scrollLeft() > 0) ? $('.border-table-left').show() : $('#gradientBackgroundLeft').hide();
+            });
+        }
+    }
 });
