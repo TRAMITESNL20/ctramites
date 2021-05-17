@@ -70,7 +70,7 @@ export default {
             var self = this;
             console.log('coutnLoad', this.coutnLoad);
             if(this.coutnLoad <= 100){
-                fetch(this.urlFirmado[0], { method: 'GET' })
+                fetch(this.urlFirmado[0], { method: 'GET', mode: 'no-cors' })
                 .then(function(response ) {
                     console.log('doc existe');
                     if( response.status == 200 ){
