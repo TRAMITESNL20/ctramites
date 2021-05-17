@@ -221,6 +221,12 @@ class TramitesController extends Controller
         }
       }
 
+      if($request->tipoOperacion == "I"){
+        $costoX = "I";
+      }elseif($request->tipoOperacion == "A"){
+        $costoX = "A";
+      }
+
       //Se calcula el costo del tramite
       try{
         if ($tipo == "F"){
@@ -304,6 +310,12 @@ class TramitesController extends Controller
             }
             //Se aplica redondeo al resultado final
             $costo_final = $this->redondeo($costo_final);
+          }
+          elseif($costoX == "A"){ //Calculamos costo Anual
+            $costo_final = $var_valor;
+          }
+          elseif($costoX == "I"){
+            $costo_final = $valor;
           }
           else{ //costo x millar
             //Se calculan los valores minimos y máximos del trámite
