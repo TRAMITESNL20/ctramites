@@ -2,16 +2,17 @@
 	<div class="pagination flex-column">
 		<div class="pagination-content">
 			<div v-for="(tramite, index) in tramitesPaginados" :class="!tramite[0].en_carrito && cartComponent ? 'd-none' : '' ">
-				<div class="card list-item card-custom gutter-b col-lg-12" style="background-color: #d9dee2 !important;" v-if="tramite.length > 1">
+				<div class="card list-item card-custom gutter-b col-lg-12" :data-test="JSON.stringify(tramite)" style="background-color: #d9dee2 !important;" v-if="tramite.length > 1">
 					<div class="d-flex mobile-lista-multiple align-items-center mb-3">
 						<div class="mr-3 ml-4  espace-checkbox" v-if="tramite[0].status && (tramite[0].status == 99 || tramite[0].status == 98) && !cartComponent && ['notary_titular', 'notary_substitute'].includes(user.role_name)"><input type="checkbox" :id="tramite[0].id" style="width:18px; height:18px;" v-on:change="processToCart(tramite[0], true)"></div>
 						<div class="mr-auto espace-checkbox-text desktop-agrupacion-width" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '70%' } ]">
 							<h4 class="ml-3 text-uppercase text-truncate"><strong>{{ tramite[0].nombre_servicio && (tramite[0].titulo && tramite[0].nombre_servicio.toLowerCase() != tramite[0].titulo.toLowerCase()) ? `${tramite[0].nombre_servicio} - ` : '' }}{{ (tramite[0].info && tramite[0].info.tipoTramite) || tramite[0].tramite || tramite[0].titulo | capitalize }}</strong></h4>
 							<h5 class="ml-3">
                                 <span style="font-weight: normal;" v-if="tramite[0].tramites[0] && tramite[0].tramites[0].id_transaccion_motor"><strong>FOLIO PAGO:</strong> {{ tramite[0].tramites[0].id_transaccion_motor ? `${tramite[0].tramites[0].id_transaccion_motor} -` : '' }}</span>
-                                <span style="font-weight: normal;" v-if="tramite[0].tramites[0] && tramite[0].tramites[0].id"><strong>FSE:</strong> {{ tramite[0].tramites[0].id ? `${tramite[0].tramites[0].id} -` : '' }}</span>
-                                {{ tramite[0].created_at }}
+                                <span style="font-weight: normal;" v-if="tramite[0].tramites[0] && tramite[0].tramites[0].id"><strong>FSE:</strong> {{ tramite[0].tramites[0].id ? `${tramite[0].tramites[0].id}` : '' }}</span>
                             </h5>
+                            <h5 class="ml-3"><span style="font-weight: normal;" v-if="tramite[0].grupo_clave"><strong>ID GRUPO:</strong> {{ tramite[0].grupo_clave }}</span></h5>
+                            <h5 class="ml-3"><span style="font-weight: normal;" v-if="tramite[0].grupo_clave"><strong>{{ tramite[0].created_at }}</strong></span></h5>
 						</div>
 						<div class="my-lg-0 my-1">
                             <a v-on:click="goTo(tramite[0].recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].recibo_referencia && [5].includes(type)">VER REFERENCIA</a>
@@ -42,7 +43,7 @@
 						</div>
 					</div>
                     <div class="collapse" :id="`collapse-${index}`" :class="!cartComponent ? 'show' : ''">
-    					<tramite-component :cartComponent="cartComponent" :group="true" :type="type" v-for="(solicitud, ind) in tramite" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="solicitud" v-bind:key="ind" v-if="totalItems != 0"></tramite-component>
+    					<tramite-component :cartComponent="cartComponent" :group="true" :type="type" v-for="(solicitud, ind) in tramite" :last="tramite[ind-1]" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="solicitud" v-bind:key="ind" v-if="totalItems != 0"></tramite-component>
                     </div>
 				</div>
 				<tramite-component :cartComponent="cartComponent" :type="type" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="tramite[0]" v-bind:key="index"  v-if="tramite.length == 1 && totalItems != 0"></tramite-component>
@@ -95,8 +96,6 @@
 		mounted(){
 			this.calcularPage()
             this.pagination(1);
-
-            console.log(this.tramitesPaginados);
 
             Object.entries(this.tramitesPaginados).map(obj => {
                 let [ind, tramite] = obj;
@@ -169,8 +168,9 @@
 
                 this.tramitesPaginados = this.items.slice(indiceInicial, indiceFinal);
                 this.tramitesPaginados.map(tramite => {
-                	if(groups[tramite.clave]) groups[tramite.clave].push(tramite);
-                	else groups[tramite.clave] = [tramite];
+                    let group = tramite.grupo_clave || tramite.clave;
+                	if(groups[group]) groups[group].push(tramite);
+                	else groups[group] = [tramite];
                 })
 
                 this.tramitesPaginados = groups;
