@@ -62,6 +62,7 @@
             }); ; 
           }
            if( this.campo.nombre == 'Distrito'){
+             
             console.log('tramite con distrito');
           }
         },
@@ -111,6 +112,12 @@
             }
           }
         }
+      },
+      distrito: function() {
+          if(this.campo.nombre == 'Distrito'){
+            this.options= [];
+              this.setOpciones(); 
+          }
       }
     }
 </script>
