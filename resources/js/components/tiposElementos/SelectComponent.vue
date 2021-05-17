@@ -63,17 +63,18 @@
                 }); ; 
             }
             if(this.distrito){
-
+                
             }
             
           }
            if( this.campo.nombre == 'Distrito'){
-              const index = this.campos.map(e => e.nombre).indexOf('Distrito');
+              // const index = this.campos.map(e => e.nombre).indexOf('Distrito');
 
-              console.log(index);
+              // console.log(index);
             console.log('tramite con distrito');
-
-            this.campo.nombre
+            console.log(this.campo.value );
+            console.log(this.distrito );
+            this.campo.value = this.distrito.clave;
           }
         },
         async obtenerOptions(url){
@@ -126,6 +127,7 @@
       distrito: function() {
           if(this.campo.nombre == 'Municipio'){
             console.log(this.options);
+            console.log('---');
             // this.options= [];
               // this.setOpciones(); 
           }

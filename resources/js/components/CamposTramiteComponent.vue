@@ -241,6 +241,7 @@
 				campos: [], 
 				agrupaciones:[], 
 				estado: {clave:19, nombre: "NUEVO LEÓN"},
+				distrito: '',
                 mostrar:false,
                 errors: {},
                 showMensajes:false,
@@ -306,6 +307,10 @@
 
         	gestionarCambioEstado(estado){
         		this.estado = estado;
+        	},
+
+        	gestionarCambioDistrito(distrito){
+        		this.distrito = distrito;
         	},
 
         	async updateForm(campo){
@@ -402,6 +407,10 @@
         		if(campo.nombre == 'Estado' && campo.valido){
         			this.gestionarCambioEstado(campo.valor);
         		}
+        		if(campo.nombre == 'Distrito' && campo.valido){
+        			this.gestionarCambioDistrito(campo.valor);
+        		}
+				
 
         		this.cambioModelo();
         	},
