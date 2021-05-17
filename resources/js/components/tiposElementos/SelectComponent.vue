@@ -18,7 +18,7 @@
             options:[],
           }
       },
-      props: ['campo', 'estadoFormulario', 'showMensajes', 'estado'],
+      props: ['campo', 'estadoFormulario', 'showMensajes', 'estado', 'distrito'],
 
       created(){
         let options = JSON.parse(this.campo.caracteristicas).opciones;
@@ -54,16 +54,26 @@
             this.options = options; 
           }
           if( this.campo.nombre == 'Municipio'){
-            let url =  process.env.TESORERIA_HOSTNAME + "/obtener-municipios/" + this.estado.clave ;  
-            let options = await this.obtenerOptions(url);
-            this.options = options.map( option => {
-              option.claveEstado = this.estado.clave;
-              return option;
-            }); ; 
+            if(this.estado){
+                let url =  process.env.TESORERIA_HOSTNAME + "/obtener-municipios/" + this.estado.clave ;  
+                let options = await this.obtenerOptions(url);
+                this.options = options.map( option => {
+                  option.claveEstado = this.estado.clave;
+                  return option;
+                }); ; 
+            }
+            if(this.distrito){
+
+            }
+            
           }
            if( this.campo.nombre == 'Distrito'){
-             
+              const index = this.campos.map(e => e.nombre).indexOf('Distrito');
+
+              console.log(index);
             console.log('tramite con distrito');
+
+            this.campo.nombre
           }
         },
         async obtenerOptions(url){
@@ -114,9 +124,10 @@
         }
       },
       distrito: function() {
-          if(this.campo.nombre == 'Distrito'){
-            this.options= [];
-              this.setOpciones(); 
+          if(this.campo.nombre == 'Municipio'){
+            console.log(this.options);
+            // this.options= [];
+              // this.setOpciones(); 
           }
       }
     }
