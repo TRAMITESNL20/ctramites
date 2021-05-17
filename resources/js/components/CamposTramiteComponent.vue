@@ -61,6 +61,7 @@
 													@updateForm="updateForm"
 													v-on:estadoSelected="estadoSelected($event)"
 													:estado="estado"
+													:distrito="distrito"
 													>
 												</select-component>
 												<option-component 
@@ -215,7 +216,7 @@
  				</div>
 			</form>
 		</div>
-		<code>{{campos}}</code>
+		<code>{{ typeof( campos) }}</code>
 
     </div>
 </template>
