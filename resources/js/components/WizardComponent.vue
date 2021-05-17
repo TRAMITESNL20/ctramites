@@ -118,7 +118,7 @@
                                               :idUsuario="idUsuario"
                                               :infoGuardadaFull="infoGuardadaFull"
                                               v-if="currentStep == 3 && ['notary_titular', 'notary_substitute', 'notary_payments', 'notary_capturist_payments'].includes(user.role_name)"
-                                              labelBtn="Pagar"
+                                              :labelBtn="labelBtnFInal"
                                               @tramiteAgregadoEvent="tramiteAgregadoEvent"
                                               ></btn-guardar-tramite-component>
                                             <button type="button" id="btnWizard" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4 arrow-desktop" data-wizard-type="action-next" v-on:click="next()" v-if="currentStep != 3">
@@ -166,6 +166,13 @@
         computed:{
             declararEn0(){
                 return this.tipoTramite == 'declaracionEn0';
+            },
+
+            labelBtnFInal(){
+              if( this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ) {
+                return "Guardar cambios";
+              }
+              return "Pagar";
             }
         },
         mounted() {
@@ -250,7 +257,11 @@
                   Command: toastr.success("Listo !", "El trámite ha sido agregado");
                 
                 if( data.type == "finalizar" ){
-                  redirect("/cart");
+                  if( this.infoGuardadaFull && this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ){
+                    redirect("/nuevo-tramite");
+                  } else {
+                    redirect("/cart");
+                  }
                 } if(data.type=="temporal"){
                   redirect("/tramites/borradores/80");
                 }else {
