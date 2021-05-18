@@ -54,7 +54,7 @@
             this.options = options; 
           }
           if( this.campo.nombre == 'Municipio'){
-            if(this.estado && !this.distrito){
+            if(this.estado && this.distrito.clave == 0){
                 let url =  process.env.TESORERIA_HOSTNAME + "/obtener-municipios/" + this.estado.clave ;  
                 let options = await this.obtenerOptions(url);
                 this.options = options.map( option => {
@@ -62,44 +62,43 @@
                   return option;
                 }); ; 
             }
-            if(this.distrito){
-              let url =  process.env.TESORERIA_HOSTNAME + "/obtener-municipios/19" ;  
+            if(this.distrito && this.estado.clave == 19 && this.distrito.clave != 0){
+              let url =  process.env.TESORERIA_HOSTNAME + "/obtener-municipios/" + this.estado.clave ;  
               let options = await this.obtenerOptions(url);
               switch (this.distrito.clave) {
-                case '1':
+                case 1:
                   options = options.filter(el => el.nombre == "Monterrey" || el.nombre == "Guadalupe" || el.nombre == "San Nicolás de los Garza" || el.nombre == "General Escobedo"  || el.nombre == "Santiago" || el.nombre == "Santa Catarina" || el.nombre == "Pesquería"  || el.nombre == "Villa de García"  || el.nombre == "Salinas Victoria" || el.nombre == "General Zuazua"  || el.nombre == "Ciénega de Flores"  || el.nombre == "El Carmen"  || el.nombre == "Hidalgo"  || el.nombre == "Mina" || el.nombre == "Abasolo" );
                   break;
 
-                case '2' :
+                case  2 :
                   options = options.filter(el => el.nombre == "Cadereyta Jiménez" || el.nombre == "Los Ramones" || el.nombre == "Juárez");
                   break;
 
-                case '3' :
-                  console.log('clave 3 filter pa 2 csas');
+                case 3 :
                   options = options.filter(el => el.nombre == "Linares" || el.nombre == "Hualahuises");
                   break;
 
-                case '4' :
+                case 4 :
                   options = options.filter(el => el.nombre == "Dr. Arroyo" || el.nombre == "Aramberri" || el.nombre == "General Zaragoza");
                   break;
 
-                case '5' :
+                case 5 :
                   options = options.filter(el => el.nombre == "Cerralvo" || el.nombre == "Dr. González" || el.nombre == "Melchor Ocampo" || el.nombre == "Agualeguas" || el.nombre == "Treviño" || el.nombre == "Marín" || el.nombre == "Parás" || el.nombre == "Higueras");
                   break;
 
-                case '6'  :
+                case 6  :
                   options = options.filter(el => el.nombre == "Villaldama" || el.nombre == "Bustamante" || el.nombre == "Vallecillo" || el.nombre == "Sabinas Hidalgo" || el.nombre == "Anáhuac" || el.nombre == "Colombia" || el.nombre == "Lampazos");
                   break;
 
-                case '7'  :
+                case 7  :
                   options = options.filter(el => el.nombre == "Montemorelos" || el.nombre == "Allende" || el.nombre == "Rayones" || el.nombre == "Terán" );
                   break;
 
-                case '8'  :
+                case 8  :
                   options = options.filter(el => el.nombre == "Galeana" || el.nombre == "Iturbide" );
                   break;
 
-                case '9'  :
+                case 9  :
                   options = options.filter(el => el.nombre == "China" || el.nombre == "Dr. Coss" || el.nombre == "Los Herrera" || el.nombre == "General Bravo" || el.nombre == "Los Aldama" );
                   break;
 
@@ -117,12 +116,9 @@
           }
            if( this.campo.nombre == 'Distrito'){
               // const index = this.campos.map(e => e.nombre).indexOf('Distrito');
+            this.options = [{clave:1 , nombre: "Distrito 1"},{clave:2 , nombre: "Distrito 2"},{clave:3 , nombre: "Distrito 3"},{clave:4 , nombre: "Distrito 4"},{clave:5 , nombre: "Distrito 5"},{clave:6 , nombre: "Distrito 6"},{clave:7 , nombre: "Distrito 7"},{clave:8 , nombre: "Distrito 8"},{clave:9, nombre: "Distrito 9"}]
+           
 
-              // console.log(index);
-            console.log('tramite con distrito');
-            console.log(this.campo.value );
-            console.log('-----distrito');
-            console.log(this.distrito );
               // this.campo.valor = this.distrito.clave;
 
             

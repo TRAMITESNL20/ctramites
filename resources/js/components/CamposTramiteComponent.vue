@@ -216,8 +216,6 @@
  				</div>
 			</form>
 		</div>
-		<code>{{ typeof( campos) }}</code>
-
     </div>
 </template>
 <script>
@@ -241,7 +239,7 @@
 				campos: [], 
 				agrupaciones:[], 
 				estado: {clave:19, nombre: "NUEVO LEÓN"},
-				distrito: {clave:1, nombre: "Distrito 1"},
+				distrito: {clave:0, nombre: "Distrito 0"},
                 mostrar:false,
                 errors: {},
                 showMensajes:false,
