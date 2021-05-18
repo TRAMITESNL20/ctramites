@@ -139,6 +139,17 @@
                     id:userTitular.notary.titular.id,
                     notary:userTitular.notary.notary_number
                 };                
+            } else if( userTitular ) {
+                this.solicitante = {
+                    rfc:userTitular.rfc,
+                    tipoPersona:"pf",
+                    nombreSolicitante:userTitular.name,
+                    apPat:userTitular.fathers_surname,
+                    apMat:userTitular.mothers_surname,
+                    curp:userTitular.curp,
+                    email:userTitular.email,
+                    id:userTitular.id
+                }; 
             }
             this.agregar();
 /*
