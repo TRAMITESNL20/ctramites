@@ -124,19 +124,22 @@
 
 <script>
     export default {
-        props: ['tramite', 'solicitantesGuardados', 'usuario'],
+        props: ['tramite', 'solicitantesGuardados'],
         mounted() {
-            this.solicitante = {
-                rfc:this.usuario.rfc,
-                tipoPersona:"pf",
-                nombreSolicitante:this.usuario.name,
-                apPat:this.usuario.fathers_surname,
-                apMat:this.usuario.mothers_surname,
-                curp:this.usuario.curp,
-                email:this.usuario.email,
-                id:this.usuario.id,
-                notary:this.usuario.notary
-            };
+            let userTitular = window.user;
+            if(userTitular && userTitular.notary && userTitular.notary.titular){
+                this.solicitante = {
+                    rfc:userTitular.notary.titular.rfc,
+                    tipoPersona:"pf",
+                    nombreSolicitante:userTitular.notary.titular.name,
+                    apPat:userTitular.notary.titular.fathers_surname,
+                    apMat:userTitular.notary.titular.mothers_surname,
+                    curp:userTitular.notary.titular.curp,
+                    email:userTitular.notary.titular.email,
+                    id:userTitular.notary.titular.id,
+                    notary:userTitular.notary.notary_number
+                };                
+            }
             this.agregar();
 /*
             let solicitantesGuardados = this.solicitantesGuardados.filter( Boolean );
