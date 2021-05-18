@@ -54,7 +54,7 @@
             this.options = options; 
           }
           if( this.campo.nombre == 'Municipio'){
-            if(this.estado){
+            if(this.estado && !this.distrito){
                 let url =  process.env.TESORERIA_HOSTNAME + "/obtener-municipios/" + this.estado.clave ;  
                 let options = await this.obtenerOptions(url);
                 this.options = options.map( option => {
@@ -63,7 +63,55 @@
                 }); ; 
             }
             if(this.distrito){
-                
+              let url =  process.env.TESORERIA_HOSTNAME + "/obtener-municipios/19" ;  
+              let options = await this.obtenerOptions(url);
+              switch (this.distrito.clave) {
+                case '1':
+                  options = options.filter(el => el.nombre == "Monterrey" || el.nombre == "Guadalupe" || el.nombre == "San Nicolás de los Garza" || el.nombre == "General Escobedo"  || el.nombre == "Santiago" || el.nombre == "Santa Catarina" || el.nombre == "Pesquería"  || el.nombre == "Villa de García"  || el.nombre == "Salinas Victoria" || el.nombre == "General Zuazua"  || el.nombre == "Ciénega de Flores"  || el.nombre == "El Carmen"  || el.nombre == "Hidalgo"  || el.nombre == "Mina" || el.nombre == "Abasolo" );
+                  break;
+
+                case '2' :
+                  options = options.filter(el => el.nombre == "Cadereyta Jiménez" || el.nombre == "Los Ramones" || el.nombre == "Juárez");
+                  break;
+
+                case '3' :
+                  console.log('clave 3 filter pa 2 csas');
+                  options = options.filter(el => el.nombre == "Linares" || el.nombre == "Hualahuises");
+                  break;
+
+                case '4' :
+                  options = options.filter(el => el.nombre == "Dr. Arroyo" || el.nombre == "Aramberri" || el.nombre == "General Zaragoza");
+                  break;
+
+                case '5' :
+                  options = options.filter(el => el.nombre == "Cerralvo" || el.nombre == "Dr. González" || el.nombre == "Melchor Ocampo" || el.nombre == "Agualeguas" || el.nombre == "Treviño" || el.nombre == "Marín" || el.nombre == "Parás" || el.nombre == "Higueras");
+                  break;
+
+                case '6'  :
+                  options = options.filter(el => el.nombre == "Villaldama" || el.nombre == "Bustamante" || el.nombre == "Vallecillo" || el.nombre == "Sabinas Hidalgo" || el.nombre == "Anáhuac" || el.nombre == "Colombia" || el.nombre == "Lampazos");
+                  break;
+
+                case '7'  :
+                  options = options.filter(el => el.nombre == "Montemorelos" || el.nombre == "Allende" || el.nombre == "Rayones" || el.nombre == "Terán" );
+                  break;
+
+                case '8'  :
+                  options = options.filter(el => el.nombre == "Galeana" || el.nombre == "Iturbide" );
+                  break;
+
+                case '9'  :
+                  options = options.filter(el => el.nombre == "China" || el.nombre == "Dr. Coss" || el.nombre == "Los Herrera" || el.nombre == "General Bravo" || el.nombre == "Los Aldama" );
+                  break;
+
+                default: 
+                  options = options
+                  break;
+              }
+               this.options = options.map( option => {
+                  option.claveEstado = this.estado.clave;
+                  return option;
+               });
+              // this.options= [{ clave: 1, municipio: 'mty' }]
             }
             
           }
@@ -73,8 +121,11 @@
               // console.log(index);
             console.log('tramite con distrito');
             console.log(this.campo.value );
+            console.log('-----distrito');
             console.log(this.distrito );
-            this.campo.value = this.distrito.clave;
+              // this.campo.valor = this.distrito.clave;
+
+            
           }
         },
         async obtenerOptions(url){
@@ -117,20 +168,22 @@
         estado: function() {
           if( this.campo.nombre == 'Municipio'){
             this.options = [];
-            //this.campo.valor = null; //si no se permiten municipios de diferentes estados descomentar esta linea
+            // this.campo.valor = null; //si no se permiten municipios de diferentes estados descomentar esta linea
             if( this.estado &&  this.estado.clave){
+              console.log('watcher estado');
+              this.setOpciones();
+            }
+          }
+        },
+        distrito: function() {
+          if(this.campo.nombre == 'Municipio'){
+            if(this.distrito && this.distrito.clave){
               this.setOpciones();
             }
           }
         }
       },
-      distrito: function() {
-          if(this.campo.nombre == 'Municipio'){
-            console.log(this.options);
-            console.log('---');
-            // this.options= [];
-              // this.setOpciones(); 
-          }
-      }
+      
+      
     }
 </script>

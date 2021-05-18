@@ -241,7 +241,7 @@
 				campos: [], 
 				agrupaciones:[], 
 				estado: {clave:19, nombre: "NUEVO LEÓN"},
-				distrito: '',
+				distrito: {clave:1, nombre: "Distrito 1"},
                 mostrar:false,
                 errors: {},
                 showMensajes:false,
@@ -308,6 +308,10 @@
         	gestionarCambioEstado(estado){
         		this.estado = estado;
         	},
+
+			distritoSelected(distrito){
+				this.distrito = distrito;
+			},
 
         	gestionarCambioDistrito(distrito){
         		this.distrito = distrito;
@@ -447,7 +451,6 @@
 
 		    async obtenerCampos(){
 		    	let url = process.env.APP_URL + "/getCampos";
-				console.log('--se consultan los campus');
 				let promises = [];
 		    	let linksArchivos = [];
 		    	try {
