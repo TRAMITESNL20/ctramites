@@ -3,11 +3,11 @@
         <div class="pt-4">
             
             <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between align-items-center px-0 pb-0" v-if="idSeguimiento">
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0 pb-0" v-if="metodoPagoSeleccionado && idSeguimiento">
                     <h3><strong>Folio Seguimiento</strong></h3>
                     <h3><span id="idSeguimiento">{{idSeguimiento}}</span></h3>
                 </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center px-0 pb-0" v-if="folioMotor">
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0 pb-0" v-if="metodoPagoSeleccionado && folioMotor">
                     <h3><strong>Folio Pago</strong></h3>
                     <h3><span id="folioMotor">{{folioMotor}}</span></h3>
                 </li>
@@ -27,9 +27,8 @@
                     </span>
                 </li>
             </ul>
-
             <button id="metodoPagoBtn" v-if="!mostrarCancelarPago"  type="button" class="btn btn-primary btn-block" v-on:click="metodoPago()" :disabled="!obtenidoCostos || consultandoMetodos">
-                Pagar
+                Pagar 
                 <div id="spinner-pago" class="spinner-border spinner-border-sm float-right" role="status" v-if="consultandoMetodos">
                     <span class="sr-only">Loading...</span>
                 </div>
@@ -41,7 +40,7 @@
 <script>
     import { uuid } from 'vue-uuid';
     export default {
-        props: ['tramites', 'obtenidoCostos'],
+        props: ['tramites', 'obtenidoCostos', 'metodoPagoSeleccionado'],
 
         data(){
             return {
