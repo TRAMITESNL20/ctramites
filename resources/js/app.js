@@ -162,7 +162,6 @@ Vue.directive('currency',
 const app = new Vue({
     el: '#app',
     updated(){
-        console.log('se carga el js, sigue ...');
         if($(".table").length > 0){
             var height = $(".table")[0].clientHeight;
             $(".border-table-left").css( "width" ,'12%');
