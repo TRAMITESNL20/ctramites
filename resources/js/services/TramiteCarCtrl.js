@@ -28,7 +28,11 @@ export default class TramiteCar5ISRCtrl {
   	}
 
     getIsAgrupable( solicitud, tramite ){
-        return !solicitud.info.complementoDe && process.env.TRAMITE_5_ISR != tramite.tramite_id;
+        if(solicitud.info.campos.Distrito == undefined){
+            return !solicitud.info.complementoDe && process.env.TRAMITE_5_ISR != tramite.tramite_id;
+        }else{
+            return !solicitud.info.complementoDe && process.env.TRAMITE_5_ISR != tramite.tramite_id && solicitud.info.campos.Distrito.clave == 1 ;
+        }
     }
 
   	getAuxiliar1(solicitud){
