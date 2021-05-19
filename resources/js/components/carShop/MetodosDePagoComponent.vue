@@ -93,6 +93,7 @@
                     id_transaccion_motor:this.folio,
                     status
                 }*/
+                this.$emit('metodoDePagoSeleccionado', { success:true });
                 let url = process.env.TESORERIA_HOSTNAME + "/solicitudes-update-status-tramite";
                 axios.post(url, data, {
                      headers:{
