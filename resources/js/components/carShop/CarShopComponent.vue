@@ -40,7 +40,8 @@
             </v-container>
             <detalle-pago-component v-if="tramites.length > 0" 
               :tramites="tramites" 
-              :obtenidoCostos="costosObtenidos" @updatingParent="recibirMetodosPago"  @cancelarPago="cancelarPago" >
+              :obtenidoCostos="costosObtenidos" @updatingParent="recibirMetodosPago"  @cancelarPago="cancelarPago"
+              :metodoPagoSeleccionado="metodoPagoSeleccionado" >
             </detalle-pago-component>
             <transition name="slide-fade" appear>
               <div class="mb-3 shadow-sm p-3 bg-white rounded" v-if="mostrarMetodos">  
@@ -150,7 +151,7 @@
             </div>
             <!-- Card -->
             <transition name="slide-fade" appear>
-              <metodos-pago-component :infoMetodosPago="infoMetodosPago" v-if="mostrarMetodos"></metodos-pago-component>
+              <metodos-pago-component :infoMetodosPago="infoMetodosPago" v-if="mostrarMetodos" @metodoDePagoSeleccionado="metodoDePagoSeleccionado"></metodos-pago-component>
             </transition>
             <b-row v-if="mostrarReciboPago0" >
               <iframe width="100%" height="880" :src="reciboPagoCeroURL"></iframe>
@@ -168,7 +169,9 @@
             </v-container>
             <detalle-pago-component v-if="tramites.length > 0" 
               :tramites="tramites" 
-              :obtenidoCostos="costosObtenidos" @updatingParent="recibirMetodosPago"  @cancelarPago="cancelarPago" >
+              :obtenidoCostos="costosObtenidos" @updatingParent="recibirMetodosPago"  @cancelarPago="cancelarPago" 
+              :metodoPagoSeleccionado="metodoPagoSeleccionado"
+              >
             </detalle-pago-component>
             <transition name="slide-fade" appear>
               <div class="mb-3 shadow-sm p-3 bg-white rounded" v-if="mostrarMetodos">  
@@ -255,6 +258,7 @@
               elementosSeleccionados:[],
               claveDroped:'',
               listDroped:null,
+              metodoPagoSeleccionado:false
             }
         },
   
@@ -561,7 +565,6 @@
                 return tram;
             } );
             $("#elementDrop").hide();
-
             this.saveCambios();
           } else {
             this.agruparSeleccion();
@@ -572,6 +575,16 @@
         cancel(){
           this.claveDroped = '';
           this.listDroped = null;
+        },
+
+        chagenPorPage(){
+          this.currentPage = 1;
+        },
+
+        metodoDePagoSeleccionado( data ){
+          if( data.success ){
+            this.metodoPagoSeleccionado = true;
+          }
         }
 
 

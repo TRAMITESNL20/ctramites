@@ -4,9 +4,6 @@ import Vue from 'vue'
 import UUID from "vue-uuid";
 import Vuetify from 'vuetify';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-
-import '@mdi/font/css/materialdesignicons.css'
-
 // import 'bootstrap/dist/css/bootstrap.css'
 // import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -167,7 +164,6 @@ Vue.directive('currency',
 const app = new Vue({
     el: '#app',
     updated(){
-        console.log('se carga el js, sigue ...');
         if($(".table").length > 0){
             var height = $(".table")[0].clientHeight;
             $(".border-table-left").css( "width" ,'12%');
