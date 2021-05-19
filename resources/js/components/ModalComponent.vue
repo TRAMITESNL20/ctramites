@@ -162,12 +162,12 @@
                     </b-form-group>
                   </b-col>        
                   <b-col cols="12" md="4">
-                    <b-form-group label="Clave de elector (INE)" label-for="claveIne-input" >
+                    <b-form-group label="Clave de Elector (INE)" label-for="claveIne-input" >
                       <b-form-input  id="claveIne-input" name="claveIne"  v-model="$v.form.datosPersonales.claveIne.$model" aria-describedby="claveIne-input-feedback" 
                       :state="$v.form.datosPersonales.claveIne.$dirty ? !$v.form.datosPersonales.claveIne.$error : null"  v-uppercase></b-form-input>
                       <b-form-invalid-feedback id="claveIne-input-feedback">
                         <span v-if="!$v.form.datosPersonales.claveIne.inePattern"  class="form-text text-danger">
-                          Clave INE incorrecta.
+                          Clave de Elector (INE) incorrecta.
                         </span>
                       </b-form-invalid-feedback>
                     </b-form-group>
