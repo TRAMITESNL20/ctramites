@@ -4,9 +4,6 @@ import Vue from 'vue'
 import UUID from "vue-uuid";
 import Vuetify from 'vuetify';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-
-import '@mdi/font/css/materialdesignicons.css'
-
 // import 'bootstrap/dist/css/bootstrap.css'
 // import 'bootstrap-vue/dist/bootstrap-vue.css'
 
