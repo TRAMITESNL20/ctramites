@@ -14,6 +14,7 @@
         v-model="campo.valor"
         @change="validar"
         @focus="validar"
+        :disabled="campo.disabled"
       />
     </span>
     <small  v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
