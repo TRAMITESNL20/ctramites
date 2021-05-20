@@ -35,7 +35,7 @@
 				var auxEnv = process.env.APP_URL;
 				if ( auxEnv == "https://tramites.nl.gob.mx") auxEnv = "http://tramites.nl.gob.mx";
 				var userEncoded =btoa(this.user.role.description + ' - ' +  this.user.name + ' ' +  this.user.fathers_surname + ' RFC: ' +  this.user.rfc ) ;
-				let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
+				let doc = `http://10.153.144.218/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
 				if(this.multiple){
 					if(typeof this.doc === 'string') this.doc = [];
 					this.doc.push(doc)
@@ -53,7 +53,7 @@
 				}
 
 				this.idFirmado.push(solicitud.id);
-				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
+				// this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
 			})
 
 			this.rfc = this.user.rfc;
@@ -131,8 +131,11 @@
 			},
 			messageEvt (evt) {
 				var self = this;
-				console.log('messageEvt', evt, evt.data);
-				if(evt.data === 'Terminó'){
+				console.log('messageEvt', evt.data);
+				console.log('tipo de dato', typeof(evt.data) );
+				console.log('lenght', evt.data.length );
+				this.urlFirmado = evt.data;
+				if(evt.data.length > 0 ){
 					fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
 						method : 'POST',
 						body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
