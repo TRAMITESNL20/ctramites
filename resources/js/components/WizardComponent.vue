@@ -62,7 +62,7 @@
                                     <!--end: Wizard Step 1-->
                                     <!--begin: Wizard Step 2-->
                                     <div class="pb-5" data-wizard-type="step-content" id="step2" >
-                                      <solicitantes-component v-if="currentStep == 2 && camposGuardadosObtenidos" @updatingSolicitante="updateSolicitante" :solicitantesGuardados="solicitantesGuardados" :usuario="usuario"></solicitantes-component>
+                                      <solicitantes-component v-if="currentStep == 2 && camposGuardadosObtenidos" @updatingSolicitante="updateSolicitante" :solicitantesGuardados="solicitantesGuardados"></solicitantes-component>
                                     </div>
                                     <!--end: Wizard Step 2-->
                                     <!--begin: Wizard Step 3-->
