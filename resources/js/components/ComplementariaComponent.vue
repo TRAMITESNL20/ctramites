@@ -1,12 +1,18 @@
 <template>
   <div class="row">
-        <div class="col-lg-6 fv-plugins-icon-container"> 
+        <div class="col-lg-4 fv-plugins-icon-container"> 
           <label>
             Folio
           </label>
             <b-form-input id="folio-input" v-model="folio" placeholder="Folio" @change="getInformacion()" :disabled="buscandoInformacion"></b-form-input>
         </div>
-        <div class="col-lg-6 fv-plugins-icon-container"">
+        <div class="col-lg-4 fv-plugins-icon-container"> 
+          <label>
+            Ticket
+          </label>
+            <b-form-input id="ticket-input" v-model="ticket" placeholder="Ticket" @change="getInformacion()" :disabled="buscandoInformacion"></b-form-input>
+        </div>
+        <div class="col-lg-4 fv-plugins-icon-container"">
           <label>
             Fecha de escritura o minuta
           </label>
@@ -92,7 +98,7 @@
       methods: {
         async getData(){
           try {
-            let url = process.env.TESORERIA_HOSTNAME + "/getInfoNormales/" + this.folio;
+            let url = process.env.TESORERIA_HOSTNAME + "/getInfoNormales/" + this.folio + "/" + this.ticket;
             let response = await axios.get(url);
             return response.data;
           } catch (error) {
@@ -101,7 +107,7 @@
         },
         getInformacion(){
           let self = this;
-          if( self.folio && self.folio.length > 0 ){
+          if( self.folio && self.folio.length > 0 && self.ticket && self.ticket.length > 0 ){
             let response = [];
             self.buscandoInformacion = true;
             (async () => {
