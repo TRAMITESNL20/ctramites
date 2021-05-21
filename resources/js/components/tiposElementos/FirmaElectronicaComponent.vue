@@ -53,7 +53,7 @@
 				}
 
 				this.idFirmado.push(solicitud.id);
-				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
+				// this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
 			})
 
 			this.rfc = this.user.rfc;
@@ -132,7 +132,8 @@
 			messageEvt (evt) {
 				var self = this;
 				console.log('messageEvt', evt, evt.data);
-				if(evt.data === 'Terminó'){
+				this.urlFirmado = evt.data;
+				if(evt.data.length > 0 ){
 					fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
 						method : 'POST',
 						body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
