@@ -35,7 +35,7 @@
 				var auxEnv = process.env.APP_URL;
 				if ( auxEnv == "https://tramites.nl.gob.mx") auxEnv = "http://tramites.nl.gob.mx";
 				var userEncoded =btoa(this.user.role.description + ' - ' +  this.user.name + ' ' +  this.user.fathers_surname + ' RFC: ' +  this.user.rfc ) ;
-				let doc = `http://10.153.144.218/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
+				let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
 				if(this.multiple){
 					if(typeof this.doc === 'string') this.doc = [];
 					this.doc.push(doc)
