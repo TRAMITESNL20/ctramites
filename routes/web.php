@@ -59,6 +59,7 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 
 		// LOGIN
 		Route::get('/login', "LoginController@index")->name("login");
+		Route::get('/registroCiudadano', "registroCiudadanoController@index")->name("registroCiudadano");
 		Route::post('/login', "LoginController@validation");
 		Route::get('/logout', "LoginController@logout")->name("logout");
 		Route::get('/password/recovery', "RecoveryController@index")->name("password/recovery");
