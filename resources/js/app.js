@@ -87,6 +87,8 @@ Vue.component("valuador-component" , () => import( /* webpackChunkName: "js/comp
 
 Vue.component("complementaria-component" , () => import( /* webpackChunkName: "js/components/complementaria-component" */ './components/ComplementariaComponent.vue' ));
 
+Vue.component("registro-ciudadano-component" , () => import( /* webpackChunkName: "js/components/complementaria-component" */ './components/RegistroCiudadanoComponent.vue' ));
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
