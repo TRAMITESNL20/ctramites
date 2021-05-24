@@ -63,64 +63,25 @@
                 }); ; 
             }
             if(this.distrito && this.estado.clave == 19 && this.distrito.clave != 0){
-              let url =  process.env.TESORERIA_HOSTNAME + "/obtener-municipios/" + this.estado.clave ;  
+              let url =  process.env.TESORERIA_HOSTNAME + "/obtener-distrito/distrito/" + this.distrito.clave ;  
               let options = await this.obtenerOptions(url);
-              switch (this.distrito.clave) {
-                case 1:
-                  options = options.filter(el => el.nombre == "Monterrey" || el.nombre == "Guadalupe" || el.nombre == "San Nicolás de los Garza" || el.nombre == "General Escobedo"  || el.nombre == "Santiago" || el.nombre == "Santa Catarina" || el.nombre == "Pesquería"  || el.nombre == "Villa de García"  || el.nombre == "Salinas Victoria" || el.nombre == "General Zuazua"  || el.nombre == "Ciénega de Flores"  || el.nombre == "El Carmen"  || el.nombre == "Hidalgo"  || el.nombre == "Mina" || el.nombre == "Abasolo" );
-                  break;
-
-                case  2 :
-                  options = options.filter(el => el.nombre == "Cadereyta Jiménez" || el.nombre == "Los Ramones" || el.nombre == "Juárez");
-                  break;
-
-                case 3 :
-                  options = options.filter(el => el.nombre == "Linares" || el.nombre == "Hualahuises");
-                  break;
-
-                case 4 :
-                  options = options.filter(el => el.nombre == "Dr. Arroyo" || el.nombre == "Aramberri" || el.nombre == "General Zaragoza");
-                  break;
-
-                case 5 :
-                  options = options.filter(el => el.nombre == "Cerralvo" || el.nombre == "Dr. González" || el.nombre == "Melchor Ocampo" || el.nombre == "Agualeguas" || el.nombre == "Treviño" || el.nombre == "Marín" || el.nombre == "Parás" || el.nombre == "Higueras");
-                  break;
-
-                case 6  :
-                  options = options.filter(el => el.nombre == "Villaldama" || el.nombre == "Bustamante" || el.nombre == "Vallecillo" || el.nombre == "Sabinas Hidalgo" || el.nombre == "Anáhuac" || el.nombre == "Colombia" || el.nombre == "Lampazos");
-                  break;
-
-                case 7  :
-                  options = options.filter(el => el.nombre == "Montemorelos" || el.nombre == "Allende" || el.nombre == "Rayones" || el.nombre == "Terán" );
-                  break;
-
-                case 8  :
-                  options = options.filter(el => el.nombre == "Galeana" || el.nombre == "Iturbide" );
-                  break;
-
-                case 9  :
-                  options = options.filter(el => el.nombre == "China" || el.nombre == "Dr. Coss" || el.nombre == "Los Herrera" || el.nombre == "General Bravo" || el.nombre == "Los Aldama" );
-                  break;
-
-                default: 
-                  options = options
-                  break;
-              }
+              
                this.options = options.map( option => {
                   option.claveEstado = this.estado.clave;
                   return option;
                });
-              // this.options= [{ clave: 1, municipio: 'mty' }]
             }
             
           }
            if( this.campo.nombre == 'Distrito'){
-              // const index = this.campos.map(e => e.nombre).indexOf('Distrito');
-            this.options = [{clave:1 , nombre: "Distrito 1"},{clave:2 , nombre: "Distrito 2"},{clave:3 , nombre: "Distrito 3"},{clave:4 , nombre: "Distrito 4"},{clave:5 , nombre: "Distrito 5"},{clave:6 , nombre: "Distrito 6"},{clave:7 , nombre: "Distrito 7"},{clave:8 , nombre: "Distrito 8"},{clave:9, nombre: "Distrito 9"}]
-           
 
-              // this.campo.valor = this.distrito.clave;
-
+             let url =  process.env.TESORERIA_HOSTNAME + "/obtener-distritos";  
+              let options = await this.obtenerOptions(url);
+              
+               this.options = options.map( option => {
+                  option.claveEstado = this.estado.clave;
+                  return option;
+               });
             
           }
         },
