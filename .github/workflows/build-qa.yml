@@ -13,6 +13,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@master
 
+    - name: Get Github Context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: |
+        echo "$GITHUB_CONTEXT"
+
     - name: Install Open VPN
       run: sudo apt install openvpn -y && sudo apt install expect
 
