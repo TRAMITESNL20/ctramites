@@ -111,6 +111,7 @@
     const CAMPO_VALOR_CATASTRAL = "Valor catastral";
     const CAMPO_VALOR_OPERACION = "Valor de operacion";
     const CAMPO_TIPO_OPERACION  = "Tipo de Operación";
+    const CAMPO_CANTIDAD = "Cantidad";
 
     //CAMPOS CALCULO IMPUESTO
     const CAMPO_GANANCIA_OBTENIDA                               = "GANANCIA OBTENIDA";
@@ -204,6 +205,8 @@
                             let campoCatastral      = this.getCampoByName(CAMPO_VALOR_CATASTRAL);
                             let campoValorOperacion = this.getCampoByName(CAMPO_VALOR_OPERACION);  
                             let tipoOperacion       = this.getCampoByName(CAMPO_TIPO_OPERACION);
+                            let cantidad            = this.getCampoByName(CAMPO_CANTIDAD);
+                            
                             if( campoCatastral ){
                                 paramsCosto.valor_catastral = this.formatoNumero(campoCatastral.valor);
                             }
@@ -236,6 +239,10 @@
 
                             if(tipoOperacion){
                                 paramsCosto.tipoOperacion = tipoOperacion.valor.clave;
+                            }
+
+                            if(cantidad){
+                                paramsCosto.cantidad = cantidad.valor;
                             }
                         }                 
                     }
