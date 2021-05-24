@@ -83,12 +83,14 @@
           mensaje:'',
           fechaEscritura:'', 
           complementarias:[],
-          panel:[]   
+          panel:[],
+          ticket:''   
         }
       },
       created() {
         if(this.infoGuardada && this.infoGuardada.datosComplementaria) {
           this.folio = this.infoGuardada.datosComplementaria.folio;
+          this.ticket = this.infoGuardada.datosComplementaria.ticket;
           this.fechaEscritura = this.infoGuardada.datosComplementaria.fechaEscritura;
           this.getInformacion();
         } else{
@@ -158,6 +160,7 @@
           this.tramitesObtenidos[response.info.index].detalle = response.detalle;          
           this.tramitesObtenidos[response.info.index].fechaEscritura = response.info.fechaEscritura;
           this.tramitesObtenidos[response.info.index].folio = response.info.folio;
+          this.tramitesObtenidos[response.info.index].ticket = response.info.ticket;
           this.tramitesObtenidos[response.info.index].formValid = response.valid;
           this.validar();
         },
@@ -194,7 +197,8 @@
             let info = {
               folio:this.folio,
               fechaEscritura:this.fechaEscritura,
-              complementarias:this.complementarias
+              complementarias:this.complementarias,
+              ticket:this.ticket
             }
             this.$emit('sendData', info);
           //}

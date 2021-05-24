@@ -132,27 +132,21 @@
                             json_recibo:error.response
                         }
                         this.guardarTransaccionMotor( dataMotor );
+
                         //this.mostrarMetodos = false;
-                        console.log("transaccion 0")
-                        console.log(JSON.parse(JSON.stringify(error)))
-                        //this.mostrarMetodos = false;
-                        Command: toastr.warning("Error!", error.message || "Ocurrió un error al guardar");
+                        let messageError = error.response.data && error.response.data.error && error.response.data.error.message ? error.response.data.error.message : ''
+                        Command: toastr.warning("Error!", messageError || error.message || "Ocurrió un error al guardar");
                         $("#metodoPagoBtn").fadeIn();
                     }).finally(() => {
                         this.consultandoMetodos = false;
                     });
                 }).catch((error)=> {
-                    console.log("transaccion 1")
-                    console.log(JSON.parse(JSON.stringify(error)))
                     //this.mostrarMetodos = false;
                     Command: toastr.warning("Error!", error.message || "Ocurrió un error al guardar");
                     $("#metodoPagoBtn").fadeIn();
                 }).finally(() => {
                     this.consultandoMetodos = false;
                 });
-
-
-
 
             },
 
