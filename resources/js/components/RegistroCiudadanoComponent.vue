@@ -1,11 +1,11 @@
 <template>
-  <div class="container-fluid p-0 w-75" >
+  <div class="container-fluid p-0 w-50" >
         <div class="card bg-transparent border-0" id="kt_login_signin_ciudadano_form">
             <div class="card-body justify-content-center align-items-center text-center">
                 <img style="margin-left: auto;margin-right: auto; display: block;" src="images/logo.svg" alt="" width="200">
                 <h3 class="mt-5"><strong>Datos de la cuenta</strong></h3>
                 <p>Ingresa tus datos de acceso:</p>
-                <form >
+                <form @submit.prevent="submit">
                     <div class="form-row">
                         <div class="form-group form-group--error col-md-6" >
                             <label for="inputEmail4">Nombre de usuario</label>
@@ -49,6 +49,8 @@
                             <label for="">RFC </label>
                             <input v-model="rfc" type="text" class="form-control" >
                             <div class="error" v-if="!$v.rfc.required">Campo requerido</div>
+                            <div class="error" v-if="!$v.rfc.rfc && tipoPersona =='Fisica'">Campo requerido</div>
+                            <div class="error" v-if="!$v.rfc.required &&  tipoPersona == 'Moral'">Campo requerido</div>
                         </div>
                     </div>                    
                     <div class="form-row">
@@ -79,7 +81,7 @@
                         <label for="inputAddress2">Confirmar Contraseña</label>
                         <input type="text" class="form-control" id="confirmPasswordCiudadano" placeholder="">
                     </div> 
-                    <button type="submit"  class="btn btn-primary">Registrarme</button>
+                    <button type="submit"  :disabled="submitStatus === 'PENDING'" class="btn btn-primary">Registrarme</button>
                 </form>
             </div>
         </div>
@@ -97,8 +99,8 @@ import {  required, minLength , maxLength,  helpers  } from 'vuelidate/lib/valid
 const alpha = helpers.regex('alpha', /^[a-zA-Z]*$/);
 const nunmber = helpers.regex('number', /^[0-9]*$/);
 const curp = helpers.regex('curp',  /^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/);
-// const rfc = helpers.regex("rfc", /^[A-ZÑ&]{3,4}\d{6}(?:[A-Z\d]{3})?$/);
-// const rfcMoral = helpers.regex("rfcMoral", /^[A-ZÑ&]{3,4}\d{6}(?:[A-Z\d]{3})?$/);
+const rfc = helpers.regex("rfc", /^[A-ZÑ&]{3,4}\d{6}(?:[A-Z\d]{3})?$/);
+const rfcMoral = helpers.regex("rfcMoral", /^[A-ZÑ&]{3,4}\d{6}(?:[A-Z\d]{3})?$/);
 
 export default {
     props:[],
@@ -112,6 +114,7 @@ export default {
             rfc: '',
             curp: '',
             tel: '',
+            submitStatus: '',
         }
     },
     methods:{
@@ -119,9 +122,8 @@ export default {
             console.log('submit!');
             this.$v.$touch()
             if (this.$v.$invalid) {
-                this.submitStatus = 'ERROR'
                 swal.fire({
-                        text: "Ocurrio un error inesperado por favor intente de nuevo.",
+                    text: "Ocurrio un error inesperado por favor intente de nuevo.",
                         icon: "error",
                         buttonsStyling: false,
                         confirmButtonText: "Ok!",
@@ -131,7 +133,55 @@ export default {
                 });
 
             } else {
-            // do your submit logic here
+                // do your submit logic here
+                this.submitStatus = 'PENDING'
+                $.ajax({
+					type: "POST",
+					data: {                                      
+                        username:"testeo0045",
+                        email:"testeo0045@correo.com",
+                        password:"zpvw3cx9BRhxy0G9",
+                        name:"test",
+                        mothers_surname:"test",
+                        fathers_surname:"test",
+                        curp:"CUBJ960215HHGRTN05",
+                        rfc:"CUBJ960215UIA",
+                        phone:"8888888888",
+                        person_type:"fisica",
+                        config_id: 11,
+                        role_id: 1
+					},
+					dataType: 'json', 
+					url: process.env.SESSION_HOSTNAME + '/signup',
+					async: false,
+					success:function(data){
+                        swal.fire({
+                                text: "Registro completado",
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "OK",
+                                customClass: {
+                                    confirmButton: "btn font-weight-bold btn-light-primary"
+                                }
+                        })
+                        console.log(data);
+					},
+					error:function(error){
+						swal.fire({
+                            text: error,
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok!",
+                            customClass: {
+                                confirmButton: "btn font-weight-bold btn-light-primary"
+                            }
+                        });
+					},
+					complete:function(){
+						// console.log('id a consultar en insumos: ', self.resultId);
+                        this.submitStatus = 'OK'
+					}
+				});
               
             }
         }
@@ -143,8 +193,13 @@ export default {
         apePat:{ required, alpha,  minLength: minLength(5) , maxLength: maxLength(25) },
         apeMat:{ required, alpha,  minLength: minLength(5) , maxLength: maxLength(25) },
         curp:{ required, curp,  minLength: minLength(5) , maxLength: maxLength(15) },
-        rfc:{ required, minLength: minLength(5) , maxLength: maxLength(15) },
+        rfc:{ required, rfc, rfcMoral, minLength: minLength(5) , maxLength: maxLength(15) },
         tel:{ required , nunmber,  minLength: minLength(10) , maxLength: maxLength(10) },
+    },
+    watch() {
+        $v:{
+            console.log('v actualizado');
+        }
     }
 }
 </script>
