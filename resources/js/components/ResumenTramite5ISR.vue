@@ -17,7 +17,7 @@
                             <div>Teléfono: {{usuario.phone}}</div>
                         </div>
                     </b-row>                                      
-                    <b-row v-if="listaEnajentantes.length > 0  && tipoTramite == 'normal'">
+                    <b-row v-if="listaEnajentantes.length > 0  && tipoTramite != 'complementaria'" >
                         <div class="col-sm-12">
                             <h2 class="border-bottom my-3">Enajenantes</h2>
                         </div>
@@ -75,7 +75,7 @@
                             </b-table>
                         </div>
                     </b-row>        
-                    <b-row v-if="files.length > 0 && tipoTramite == 'normal'">
+                    <b-row v-if="files.length > 0 && tipoTramite != 'complementaria'">
                         <div class="col-sm-12">
                             <h2 class="border-bottom my-3">Archivos</h2>
                         </div>
