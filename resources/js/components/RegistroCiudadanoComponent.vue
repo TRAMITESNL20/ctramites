@@ -115,17 +115,26 @@ export default {
         }
     },
     methods:{
-        // submit() {
-        //     console.log('submit!');
-        //     this.$v.$touch()
-        //     if (this.$v.$invalid) {
-        //         // this.submitStatus = 'ERROR'
-        //         console.log('error invalido algo en el form');
-        //     } else {
-        //     // do your submit logic here
+        submit() {
+            console.log('submit!');
+            this.$v.$touch()
+            if (this.$v.$invalid) {
+                this.submitStatus = 'ERROR'
+                swal.fire({
+                        text: "Ocurrio un error inesperado por favor intente de nuevo.",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok!",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                });
+
+            } else {
+            // do your submit logic here
               
-        //     }
-        // }
+            }
+        }
     },
     validations:{
         userName:{ required,  minLength: minLength(5) , maxLength: maxLength(15) },
