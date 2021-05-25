@@ -9,7 +9,7 @@
                         <div class="col-sm-6">
                             <h6 class="mb-3">Solicitante:</h6>
                             <div>
-                                <strong>{{usuario.name + ' ' + usuario.fathers_surname + ' ' + usuario.mothers_surname }}</strong>
+                                <strong>{{usuario.nombreSolicitante + ' ' + usuario.apPat + ' ' + usuario.apMat }}</strong>
                             </div>
                             <div>CURP: {{usuario.curp}}</div>
                             <div>RFC: {{usuario.rfc}}</div>
@@ -153,10 +153,10 @@
 
     export default {
 
-        props: ['datosComplementaria','tipoTramite', 'files', 'usuario'],
+        props: ['datosComplementaria','tipoTramite', 'files'],
         mounted() {
-
             this.obtenerInformacionDelTramite();
+            this.usuario = this.listaSolicitantes && this.listaSolicitantes.length > 0 ? this.listaSolicitantes[0] : {};
             
             this.camposGenerales = this.datosFormulario.campos;
             let campoEnajenantes = this.camposGenerales.find( campo =>  campo.tipo == 'enajenante');
@@ -194,14 +194,15 @@
                     { key: 'detalle', label: 'Total' },
                     { key: 'fechaEscritura', label:"Fecha Escritura" },
                     { key: 'status', label:"Acciones" }
-                ]
+                ],
+                usuario:{}
             }
         },
   
         methods: {
 
             obtenerInformacionDelTramite(){
-                let informacionEnStorage = ["datosFormulario"];
+                let informacionEnStorage = ["datosFormulario", "listaSolicitantes"];
                 informacionEnStorage.forEach( name => {
                     if (localStorage.getItem(name)) {
                       try {
