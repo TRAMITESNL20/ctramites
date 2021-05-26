@@ -38,10 +38,10 @@
                             </div>
                             <span v-if="cartComponent" class="btn btn-secondary mr-2">{{ new Intl.NumberFormat('es-MX', { style : 'currency', currency : 'MXN' }).format(tramite.map(ele => ele.importe_tramite).reduce((a,b) => a+b)) }} </span>
                             <span v-if="tramite[0].info && tramite[0].descripcion && !cartComponent" class="btn btn-secondary mr-2">{{ tramite[0].descripcion || "CERRADO" }} </span>
-                            <button class="btn btn-secondary" type="button" data-toggle="collapse" :data-target="`#collapse-${index}`" :aria-expanded="!cartComponent ? 'true' : 'false'" :aria-controls="`collapse-${index}`"><i class="fas fa-chevron-down p-0"></i></button>
+                            <button class="btn btn-secondary" type="button" data-toggle="collapse" :data-target="`#collapse-${index}`" :aria-expanded="type != 2 ? 'true' : 'false'" :aria-controls="`collapse-${index}`"><i class="fas fa-chevron-down p-0"></i></button>
 						</div>
 					</div>
-                    <div class="collapse" :id="`collapse-${index}`" :class="!cartComponent ? 'show' : ''">
+                    <div class="collapse" :id="`collapse-${index}`" :class="type != 2 ? 'show' : ''">
     					<tramite-component :cartComponent="cartComponent" :group="true" :type="type" v-for="(solicitud, ind) in tramite" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="solicitud" v-bind:key="ind" v-if="totalItems != 0"></tramite-component>
                     </div>
 				</div>
@@ -96,7 +96,7 @@
 			this.calcularPage()
             this.pagination(1);
 
-            console.log(this.tramitesPaginados);
+            console.log('type', this.type);
 
             Object.entries(this.tramitesPaginados).map(obj => {
                 let [ind, tramite] = obj;
@@ -110,7 +110,7 @@
                         }
                     })
                 }
-                if(tramite[0].doc_firmado) files.push({ name : 'Declaración', href : tramite[0].doc_firmado })
+                // if(tramite[0].doc_firmado) files.push({ name : 'Declaración', href : tramite[0].doc_firmado })
                 
                 tramite[0].files = files;
 
