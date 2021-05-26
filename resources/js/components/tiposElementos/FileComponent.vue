@@ -15,7 +15,7 @@
           type="file" @change="validar" :accept="accept" />
         <label class="custom-file-label" :for="[[campo.campo_id]] + '-' + [[campo.relationship]]">
           <span :id="[[campo.campo_id]]+ '-' + [[campo.relationship]]+'-namefile'">  
-            {{ campo.attach || 'Seleccione archivo' }}
+            {{ campo.attach || 'Seleccione archivo' }} 
           </span>
         </label>
       </div>
@@ -78,12 +78,17 @@
 
                 this.campo.valor = fileNew;
                 this.campo.valido =  true;
-                $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  this.campo.nombreArchivoGuardado );
+                let arrurl = this.campo.nombreArchivoGuardado.split("/");
+                if(arrurl.length  > 0 ){
+                  $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  arrurl[arrurl.length - 1]);
+                } else {
+                  $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  "" );
+                }
                 this.$emit('updateForm', this.campo);
 
               })
             }).catch(errors => {
-
+              $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  "" );
           }).finally(() => {
 
           });
