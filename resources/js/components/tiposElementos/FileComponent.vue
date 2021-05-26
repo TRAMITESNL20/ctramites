@@ -80,7 +80,10 @@
                 this.campo.valido =  true;
                 let arrurl = this.campo.nombreArchivoGuardado.split("/");
                 if(arrurl.length  > 0 ){
-                  $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  arrurl[arrurl.length - 1]);
+                  setTimeout(function(){ 
+                    $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  arrurl[arrurl.length - 1]) 
+                  }, 500);
+                  
                 } else {
                   $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  "" );
                 }
