@@ -82,7 +82,9 @@
                         <div class="col-sm-12">
                             <b-table responsive striped hover :items="files" :fields="camposArchivos">
                                 <template #cell(nombrreFile)="data">
-                                    {{ data.item.nombrreFile|| "No se selecciono ninguno"}}
+                                    <span v-if="data.item.nombrreFile && data.item.nombrreFile.split('/').length > 0">
+                                        {{ data.item.nombrreFile.split('/')[ data.item.nombrreFile.split("/").length - 1 ]  || "No se selecciono ninguno" }}
+                                    </span>
                                 </template>
                             </b-table>
                         </div>
