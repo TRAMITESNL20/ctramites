@@ -99,8 +99,7 @@ import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue'
                     }
                 })
             }
-            if(this.tramite.doc_firmado) this.files.push({ name : 'Declaración', href : this.tramite.doc_firmado })
-            // if(this.tramite.doc_firmado) this.files.push({ name : 'Declaración', href : this.tramite.doc_firmado })
+            
             this.tramite.loading = false;
             if(this.tramite.info && this.tramite.info.enajenante){
                 this.tramite.info = {
