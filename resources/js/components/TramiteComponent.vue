@@ -121,8 +121,6 @@ import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue'
                     this.solicitante.tipoPersona = this.tramite.info.tipoPersona;
                 }
             }
-            console.log(this.tramite);
-            // console.log('solicitante', Object.entries(this.solicitante).length);
         },
         methods:{
             goTo(tramite, _blank=false){
