@@ -26,10 +26,10 @@
                                 <span v-if="!tramite[0].loadingSign"><i :class="tramite[0].por_firmar == 1 ? 'fas fa-check-circle' : 'fas fa-plus-circle'"></i> {{ tramite[0].por_firmar == 1 ? 'DESELECCIONAR' : 'PREPARAR PARA FIRMAR' }}</span>
                             </button>
                             <div class="btn-group mr-2 mobile-detalles" v-if="tramite[0].info && !cartComponent">
-                                <a v-on:click="goTo(tramite[0], true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="tramite[0].files.length == 0 ? 'rounded' : ''">
+                                <a v-on:click="goTo(tramite[0], true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="!tramite[0].files || tramite[0].files.length == 0 ? 'rounded' : ''">
                                     <span class="text-white">VER DETALLES</span>
                                 </a>
-                                <button v-if="tramite[0].files.length > 0" type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button v-if="tramite[0].files && tramite[0].files.length > 0" type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
@@ -96,8 +96,6 @@
 			this.calcularPage()
             this.pagination(1);
 
-            console.log('type', this.type);
-
             Object.entries(this.tramitesPaginados).map(obj => {
                 let [ind, tramite] = obj;
                 let files = [];
@@ -110,7 +108,6 @@
                         }
                     })
                 }
-                // if(tramite[0].doc_firmado) files.push({ name : 'Declaración', href : tramite[0].doc_firmado })
                 
                 tramite[0].files = files;
 
@@ -167,17 +164,20 @@
                 let indiceInicial = (page - 1 ) * limitInt;
                 let indiceFinal = ( (page - 1 ) * limitInt  )  + limitInt;
 
+
                 this.tramitesPaginados = this.items.slice(indiceInicial, indiceFinal);
                 this.tramitesPaginados.map(tramite => {
                 	if(groups[tramite.clave]) groups[tramite.clave].push(tramite);
                 	else groups[tramite.clave] = [tramite];
                 })
 
+                console.log('items', this.items);
                 this.tramitesPaginados = groups;
                 this.totalItems = this.items.length;
             },
             goto( page ){ 
-                this.pagination( page );
+                console.log('pages', this.pages);
+                this.pagination(page);
                 this.currentPage = page;
             },
             addToCart(tramite, multiple=false, status=null){
