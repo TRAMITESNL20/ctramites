@@ -15,7 +15,7 @@
           type="file" @change="validar" :accept="accept" />
         <label class="custom-file-label" :for="[[campo.campo_id]] + '-' + [[campo.relationship]]">
           <span :id="[[campo.campo_id]]+ '-' + [[campo.relationship]]+'-namefile'">  
-            {{ campo.attach || 'Seleccione archivo' }}
+            {{ campo.attach || 'Seleccione archivo' }} 
           </span>
         </label>
       </div>
@@ -62,11 +62,10 @@
       },
       mounted(){
         let promises = [];
+
         if(this.campo.nombreArchivoGuardado){
-          let urlFile = process.env.TESORERIA_HOSTNAME + '/download/' + this.campo.nombreArchivoGuardado;
-
+          let urlFile = this.campo.nombreArchivoGuardado;
           promises.push(getFile( urlFile, this.campo.nombreArchivoGuardado, this.campo ));
-
 
           Promise.all(promises).then(( respuestas ) => {
             respuestas.forEach( (res) => {
@@ -79,12 +78,22 @@
 
                 this.campo.valor = fileNew;
                 this.campo.valido =  true;
-                $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  this.campo.nombreArchivoGuardado );
+                let arrurl = this.campo.nombreArchivoGuardado.split("/");
+                if(arrurl.length  > 0 ){
+                  let idCampo = this.campo.campo_id;
+                  let relation = this.campo.relationship;
+                  setTimeout(function(){ 
+                    $("#"+ idCampo + '-' + relation + '-namefile' ).text(  arrurl[arrurl.length - 1]) 
+                  }, 500);
+                  
+                } else {
+                  $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  "" );
+                }
                 this.$emit('updateForm', this.campo);
 
               })
             }).catch(errors => {
-
+              $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  "" );
           }).finally(() => {
 
           });
