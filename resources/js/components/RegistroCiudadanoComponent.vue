@@ -47,10 +47,10 @@
                         </div>
                         <div class="form-group col-md-6" >
                             <label for="">RFC </label>
-                            <input v-model="rfc" type="text" class="form-control" >
+                            <input  v-model="rfc" type="text" class="form-control" >
                             <div class="error" v-if="!$v.rfc.required">Campo requerido</div>
-                            <div class="error" v-if="!$v.rfc.rfc && tipoPersona =='Fisica'">Campo requerido</div>
-                            <div class="error" v-if="!$v.rfc.required &&  tipoPersona == 'Moral'">Campo requerido</div>
+                            <div class="error" v-if="!$v.rfc.rfc && tipoPersona =='Fisica'">Formato no valido</div>
+                            <div class="error" v-if="!$v.rfc.required &&  tipoPersona == 'Moral'">Formato no valido</div>
                         </div>
                     </div>                    
                     <div class="form-row">
@@ -71,15 +71,21 @@
 
                     <div class="form-group">
                         <label for="inputAddress">Correo electronico</label>
-                        <input type="text" class="form-control" id="inputAddress" placeholder="">
+                        <input type="text" v-model="email" class="form-control" placeholder="">
+                        <div class="error" v-if="!$v.email.required">Campo requerido</div>
+                        <div class="error" v-if="!$v.email.email">Campo requerido</div>
                     </div> 
                     <div class="form-group">
                         <label for="inputAddress2">Contraseña</label>
-                        <input type="text" class="form-control" id="passwordCiudadano" placeholder="">
+                        <input type="password" v-model="password" class="form-control" placeholder="">
+                        <div class="error" v-if="!$v.password.required">Campo requerido</div>
+                        <div class="error" v-if="!$v.password.maxLength">maximo 40 caracteres</div>
+                        <div class="error" v-if="!$v.password.minLength">minimo 7 caracteres</div>
                     </div> 
                     <div class="form-group">
                         <label for="inputAddress2">Confirmar Contraseña</label>
-                        <input type="text" class="form-control" id="confirmPasswordCiudadano" placeholder="">
+                        <input type="password" v-model="confirmPassword" class="form-control" placeholder="">
+                        <div class="error" v-if="!$v.confirmPassword.sameAs">Las contraseñas no coinciden</div>
                     </div> 
                     <button type="submit"  :disabled="submitStatus === 'PENDING'" class="btn btn-primary">Registrarme</button>
                 </form>
@@ -95,7 +101,7 @@
 import Vue from 'vue';
 import Vuelidate from 'vuelidate'
 Vue.use(Vuelidate);
-import {  required, minLength , maxLength,  helpers  } from 'vuelidate/lib/validators';
+import {  required, email, sameAs,  minLength , maxLength,  helpers  } from 'vuelidate/lib/validators';
 const alpha = helpers.regex('alpha', /^[a-zA-Z]*$/);
 const nunmber = helpers.regex('number', /^[0-9]*$/);
 const curp = helpers.regex('curp',  /^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/);
@@ -115,6 +121,9 @@ export default {
             curp: '',
             tel: '',
             submitStatus: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
         }
     },
     methods:{
@@ -123,7 +132,7 @@ export default {
             this.$v.$touch()
             if (this.$v.$invalid) {
                 swal.fire({
-                    text: "Ocurrio un error inesperado por favor intente de nuevo.",
+                    text: "Error en formulario.",
                         icon: "error",
                         buttonsStyling: false,
                         confirmButtonText: "Ok!",
@@ -195,6 +204,9 @@ export default {
         curp:{ required, curp,  minLength: minLength(5) , maxLength: maxLength(15) },
         rfc:{ required, rfc, rfcMoral, minLength: minLength(5) , maxLength: maxLength(15) },
         tel:{ required , nunmber,  minLength: minLength(10) , maxLength: maxLength(10) },
+        email:{ required , email,  minLength: minLength(5) , maxLength: maxLength(45) },
+        password:{ required , minLength: minLength(7) , maxLength: maxLength(40) },
+        confirmPassword:{ sameAs: sameAs('password') },
     },
     watch() {
         $v:{
