@@ -26,7 +26,7 @@
                                 <span v-if="!tramite[0].loadingSign"><i :class="tramite[0].por_firmar == 1 ? 'fas fa-check-circle' : 'fas fa-plus-circle'"></i> {{ tramite[0].por_firmar == 1 ? 'DESELECCIONAR' : 'PREPARAR PARA FIRMAR' }}</span>
                             </button>
                             <div class="btn-group mr-2 mobile-detalles" v-if="tramite[0].info && !cartComponent">
-                                <a v-on:click="goTo(tramite[0], true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="tramite[0].files && tramite[0].files.length == 0 ? 'rounded' : ''">
+                                <a v-on:click="goTo(tramite[0], true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="!tramite[0].files || tramite[0].files.length == 0 ? 'rounded' : ''">
                                     <span class="text-white">VER DETALLES</span>
                                 </a>
                                 <button v-if="tramite[0].files && tramite[0].files.length > 0" type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -108,7 +108,6 @@
                         }
                     })
                 }
-                // if(tramite[0].doc_firmado) files.push({ name : 'Declaración', href : tramite[0].doc_firmado })
                 
                 tramite[0].files = files;
 
