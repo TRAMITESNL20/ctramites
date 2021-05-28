@@ -45,7 +45,7 @@
 												</div>
 											</div>
 			 								<div v-for="(campo, j) in agrupacion.campos" :key="j" class="col-md-6 col-sm-6 col-xs-6"
-			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes', 'valuador'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
+			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes', 'valuador', 'table'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
 												<input-component
 													v-if="campo.tipo === 'input'" 
 													:campo="campo" 
@@ -124,15 +124,12 @@
 													@updateForm="updateForm" :configCostos="configCostos">
 														
 													</enajenantes-component>
-												<table-component 
-													:propietario="JSON.parse(campo.caracteristicas).propietario"
+												<aviso-enajenacion-component
 													:campo="campo"
-													:expediente="expediente"
-													v-on:porcentaje="updatePorcentaje($event)"
-													:porcentajeFinal="progress"
+													expediente="7001001001"
 													@updateForm="updateForm"
 													v-else-if="campo.tipo == 'table'">
-												</table-component>
+												</aviso-enajenacion-component>
 												<fecha-component v-if="campo.tipo === 'date'" 
 													:campo="campo" 
 													:showMensajes="showMensajes" 
@@ -457,7 +454,7 @@
 									campo.nombreArchivoGuardado = infoArchivoGuardado.attach;
 								}
 							}
-							if (campo.tipo == 'table' || campo.tipo == 'results') {
+							if (campo.tipo == 'results') {
 								this.campos[index].valido = true;
 							}
 
