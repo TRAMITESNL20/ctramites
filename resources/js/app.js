@@ -87,6 +87,14 @@ Vue.component("valuador-component" , () => import( /* webpackChunkName: "js/comp
 
 Vue.component("complementaria-component" , () => import( /* webpackChunkName: "js/components/complementaria-component" */ './components/ComplementariaComponent.vue' ));
 
+Vue.component("modal-aviso-enajenacion-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModule/modal-aviso-enajenacion-component" */ './components/AvisoEnajenacionModule/ModalAvisoEnajenacionComponent.vue' ));
+Vue.component("aviso-enajenacion-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModule/aviso-enajenacion-component" */ './components/AvisoEnajenacionModule/AvisoEnajenacionComponent.vue' ));
+Vue.component("formulario-datos-personales-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModuleformulario/formulario-datos-personales-component" */ './components/AvisoEnajenacionModule/FormularioDatosPersonalesComponent.vue' ));
+Vue.component("formulario-datos-aviso-enajenacion-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModuleformulario/formulario-datos-aviso-enajenacion-component" */ './components/AvisoEnajenacionModule/FormularioDatosAvisoEnajenacion.vue' ));
+Vue.component("formulario-direccion-notificacion-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModuleformulario/formulario-direccion-notificacion-component" */ './components/AvisoEnajenacionModule/FormularioDireccionNotificacionComponent.vue' ));
+
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
