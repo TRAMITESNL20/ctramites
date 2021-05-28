@@ -39,6 +39,7 @@ class RolValidator
             $disabledPath = ((getenv("APP_PREFIX") ? explode("/", getenv("APP_PREFIX"))[1]."" : "").$a);
             if(substr($disabledPath, -1) == "/") $disabledPath = substr($disabledPath, 0, -1);
             if(substr($disabledPath, 0, 1) == "/") $disabledPath = substr($disabledPath, 1);
+            $disabledPath = $this->parseUrlEncode($disabledPath);
 
             preg_match("/^".str_replace("/", "\/", $disabledPath)."$/", $path, $matchesDisabled);
             if(!empty($matchesDisabled)) return $a;
@@ -51,6 +52,7 @@ class RolValidator
             $whitePath = ((getenv("APP_PREFIX") ? explode("/", getenv("APP_PREFIX"))[1]."" : "").$a);
             if(substr($whitePath, -1) == "/") $whitePath = substr($whitePath, 0, -1);
             if(substr($whitePath, 0, 1) == "/") $whitePath = substr($whitePath, 1);
+            $whitePath = $this->parseUrlEncode($whitePath);
             preg_match("/^".str_replace("/", "\/", $whitePath)."$/", $path, $matches);
 
             if(!empty($matches) && empty($matchesDisabled)) return $a;
@@ -59,5 +61,13 @@ class RolValidator
 
         if(empty($pass)) return abort(403);
         else return $next($request);
+    }
+
+    protected function parseUrlEncode($path) {
+        $items = [ "ñ", "Ñ", "á", "é", "í", "ó", "ú", "ü", "Á", "É", "Í", "Ó", "Ú", "Ü" ];
+        foreach ($items as $item) {
+            $path = preg_replace("/{$item}/", urlencode($item), $path);
+        }
+        return $path;
     }
 }
