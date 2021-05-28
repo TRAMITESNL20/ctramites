@@ -5,8 +5,11 @@
 			    <div class="container">
                     <div class="card-body">
                         <div class="row" >
-                            <iframe v-if="tramiteFirmado == false" id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height: 550px;" frameborder="0"> </iframe>
+                            <iframe v-if="tramiteFirmado == false" id="the_frame" :src="firma" style="width:100%; height: 600px;" frameborder="0"> </iframe>
                         </div>
+                        <!-- <div>
+                            <iframe id="the_frame" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -23,6 +26,7 @@ var md5 = require('md5');
 export default {
     
 	props: ['datosComplementaria', 'tipoTramite','usuario', 'pago', 'id', 'user'],
+
 	data(){
 		return{
 			tramite : {},
@@ -41,55 +45,46 @@ export default {
 			coutnLoad : 0,
             docFirmadosListos: [],
             docFirmadosPendientes: [],
-            tramiteFirmado : false
+            tramiteFirmado : false,
+
+
 		}
 	},
 	mounted() {
 		this.rfc = this.user.rfc;
+        window.addEventListener("message", this.messageEvt, false);
+			// this.usuario.solicitudes.map((solicitud, ind) => {
+			// 	this.multiple = this.usuario.solicitudes.length > 1;
+			// 	var auxEnv = process.env.APP_URL;
+			// 	if ( auxEnv == "https://tramites.nl.gob.mx") auxEnv = "http://tramites.nl.gob.mx";
+			// 	var userEncoded =btoa(this.user.role.description + ' - ' +  this.user.name + ' ' +  this.user.fathers_surname + ' RFC: ' +  this.user.rfc ) ;
+			// 	let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
+			// 	if(this.multiple){
+			// 		if(typeof this.doc === 'string') this.doc = [];
+			// 		this.doc.push(doc)
+
+			// 		if(typeof this.llave === 'string') this.llave = [];
+			// 		this.llave.push(`${solicitud.id}`)
+
+			// 		if(typeof this.folio === 'string') this.folio = [];
+			// 		this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
+
+			// 	}else{
+			// 		this.doc = doc;
+			// 		this.llave = `${solicitud.id}`;
+			// 		this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
+			// 	}
+
+			// 	this.idFirmado.push(solicitud.id);
+			// 	this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
+			// })
+
+			this.accesToken();
+			this.encodeData();
 		
     },
     methods: {
       
-    		validateSigned (evt) {
-    		this.coutnLoad++;
-            var self = this;
-            console.log(this.coutnLoad);
-                
-                if(this.coutnLoad >= 2  &&  this.coutnLoad <= 5  ){
-
-                        fetch(this.urlFirmado[0], { method: 'GET' })
-                        .then( function(response ) {
-                                        console.log(self.idFirmado);
-                                        console.log(response.status);
-                                         // then log it out    
-                                    if( response.status == 200 ){
-                                        fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
-                                            method : 'POST',
-                                                body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
-                                            })
-                                            .then(res => res.json())
-                                                .then(res => {
-                                                    if(res.code === 200){
-                                                        console.log('Firmado');    
-                                                        self.tramiteFirmado = true;
-                                                        // self.$emit('docFirmadosPendientes', self.docFirmadosPendientes);
-                                                        self.$emit('docFirmadosListos', self.docFirmadosListos);
-                                                        self.$emit('docFirmado', 1);
-                                                        self.$emit('urlFirmado', self.urlFirmado);
-                                                    }
-                                                    else console.log('Something goes wrong!', res);
-                                            });
-
-                                    } 
-                                
-                            }) 
-                            .catch(function(error) {
-                                    console.log('no se encontro el archivo en insumos');
-                                    console.log(error);
-                            })
-                 
-                }
-    	},
         encodeData(){
             var urlDataGeneric =  process.env.INSUMOS_API_HOSTNAME + '/data_generic';
             var url =  process.env.INSUMOS_API_HOSTNAME + "/v2/signature/iframe?id=";
@@ -178,6 +173,29 @@ export default {
                 }
             });
         },
+
+        
+        messageEvt (evt) {
+            var self = this;
+            console.log('messageEvt', evt, evt.data);
+            if(evt.data.length >= 1 ){
+                fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+                    method : 'POST',
+                    body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if(res.code === 200){
+                        console.log('Firmado');    
+                        self.tramiteFirmado = true;
+                        self.$emit('docFirmadosListos', self.docFirmadosListos);
+                        self.$emit('docFirmado', 1);
+                        self.$emit('urlFirmado', self.urlFirmado);
+                    }
+                    else console.log('Something goes wrong!', res);
+                });
+            }
+        }
 
         
    

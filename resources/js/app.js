@@ -53,16 +53,17 @@ Vue.component("radio-option-component", () => import( /* webpackChunkName: "js/c
 Vue.component("formulario-complementaria-component" , () => import( /* webpackChunkName: "js/components/formulario-complementaria-component" */ './components/FormularioComplementariaComponent.vue' ));
 
 
-Vue.component("input-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/input-component" */ './components/tiposElementos/InputComponent.vue' ));
-Vue.component("select-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/select-component" */ './components/tiposElementos/SelectComponent.vue' ));
-Vue.component("option-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/option-component" */ './components/tiposElementos/OptionComponent.vue' ));
-Vue.component("textbox-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/textbox-component" */ './components/tiposElementos/TextBoxComponent.vue' ));
-Vue.component("checkbox-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/checkbox-component" */ './components/tiposElementos/CheckboxComponent.vue' ));
-Vue.component("expediente-excel-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/expediente-excel-component" */ './components/tiposElementos/ExpedienteExcelComponent.vue' ));
-Vue.component("file-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/file-component" */ './components/tiposElementos/FileComponent.vue' ));
-Vue.component("results-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ResultsComponent.vue' ));
-Vue.component("firma-electronica-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/FirmaElectronicaComponent.vue' ));
-Vue.component("modal-document-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ModalDocumentComponent.vue' ));
+Vue.component("input-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/input-component" */ './components/tiposElementos/InputComponent.vue' ));
+Vue.component("select-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/select-component" */ './components/tiposElementos/SelectComponent.vue' ));
+Vue.component("option-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/option-component" */ './components/tiposElementos/OptionComponent.vue' ));
+Vue.component("textbox-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/textbox-component" */ './components/tiposElementos/TextBoxComponent.vue' ));
+Vue.component("checkbox-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/checkbox-component" */ './components/tiposElementos/CheckboxComponent.vue' ));
+Vue.component("expediente-excel-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/expediente-excel-component" */ './components/tiposElementos/ExpedienteExcelComponent.vue' ));
+Vue.component("file-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/file-component" */ './components/tiposElementos/FileComponent.vue' ));
+Vue.component("results-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ResultsComponent.vue' ));
+Vue.component("firma-electronica-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/FirmaElectronicaComponent.vue' ));
+Vue.component("modal-document-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ModalDocumentComponent.vue' ));
+Vue.component("card-porfile-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/generales/CardPorfileComponent.vue' ));
 Vue.component("vue-pdf-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/VuePdfcomponent.vue' ));
 Vue.component("aux-firmado-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/AuxFirmadoComponent.vue' ));
 
@@ -162,4 +163,18 @@ Vue.directive('currency',
 
 const app = new Vue({
     el: '#app',
+    updated(){
+        if($(".table").length > 0){
+            var height = $(".table")[0].clientHeight;
+            $(".border-table-left").css( "width" ,'12%');
+            $(".border-table-right").css( "width" ,'12%');
+            $(".border-table-left").css( "height" ,  height+"px" );
+            $(".border-table-right").css( "height" ,  height+"px" );
+            $('#scrollDiv').scroll( function() {    
+                ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
+
+                ( $('#scrollDiv').scrollLeft() > 0) ? $('.border-table-left').show() : $('#gradientBackgroundLeft').hide();
+            });
+        }
+    }
 });
