@@ -6,9 +6,15 @@ use \Symfony\Component\HttpKernel\Exception\HttpException;
 use DB;
 
 class ReferenceController extends Controller {
+	public $actual_link;
+	public $method;
+	public function __construct(Request $request){
+		$this->actual_link = $request->fullUrl();
+		$this->method = $request->method();
+	}
+
 	public function paid (Request $request, $reference) {
-		$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-		Log::channel('apilog')->info("\n\nENDPOINT: [{$_SERVER['REQUEST_METHOD']}] - ".$actual_link);
+		Log::channel('apilog')->info("\n\nENDPOINT: [{$this->method}] - ".$this->actual_link);
 		$ref = $reference;
 		$reference = DB::connection('db_operacion')
 		->table('oper_transacciones')
@@ -88,8 +94,7 @@ class ReferenceController extends Controller {
 	}
 
 	public function cancel (Request $request, $reference=null) {
-		$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-		Log::channel('apilog')->info("\n\nENDPOINT: [{$_SERVER['REQUEST_METHOD']}] - ".$actual_link);
+		Log::channel('apilog')->info("\n\nENDPOINT: [{$this->method}] - ".$this->actual_link);
 		if(!$reference) $reference = request()->toArray();
 		if(gettype($reference) != 'array' && !isset($reference->service)) $reference = [$reference];
 		unset($reference["service"]);
