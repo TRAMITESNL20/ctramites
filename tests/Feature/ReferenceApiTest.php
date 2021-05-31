@@ -9,13 +9,12 @@ use Tests\TestCase;
 class ReferenceApiTest extends TestCase {
 
     public function testDeleteReference() {
-
         $response = $this->json('delete', 'api/reference-payment', ['referencia' => '3333']);
-
-        var_dump(json_encode($response));
         $VAR = $response->baseResponse->getOriginalContent();
-
-        var_dump($VAR);
+        
+        $response->assertStatus(200);
+        $this->assertEquals(1, count($VAR["message"]));
+        $this->assertEquals("La referencia \"3333\" no se encuentra en la base de datos de portal", $VAR["message"][0]);
     }
 
 }
