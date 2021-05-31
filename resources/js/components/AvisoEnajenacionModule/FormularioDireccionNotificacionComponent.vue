@@ -130,6 +130,7 @@
     import { required, between, email  } from 'vuelidate/lib/validators';
     export default {
         mixins: [validationMixin],
+        props: [ 'datosDireccion'],
         data(){
             return {
                 form: {
@@ -168,6 +169,9 @@
             }
         },
         mounted() {
+            if(Object.entries(this.datosDireccion).length > 0) {
+                this.form = this.datosDireccion;
+            }
             this.$emit('estadoFormulario', this.$v);
         },  
         methods: {

@@ -178,7 +178,7 @@
     import datosPersonalesRulesService from '../../services/DatosPersonalesRules.services.js';
     export default {
         mixins: [validationMixin],
-        //props: [ 'expediente', 'campo'],
+        props: [ 'datosPersonales'],
         data(){
             return {
                 form: {
@@ -236,6 +236,10 @@
             }
         },
         mounted() {
+            if(Object.entries(this.datosPersonales).length > 0) {
+                this.form = this.datosPersonales;
+            }
+
             this.getEstados();
         },
         methods: {
