@@ -17,3 +17,4 @@ style
 _*
 package-lock.json
 composer.lock
+/nbproject/private/
