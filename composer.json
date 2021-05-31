@@ -63,6 +63,7 @@
         "reset-build" : "sudo rm -rf ./vendor ./node_modules ./public/css ./public/images ./public/js ./public/plugins ./public/mix-manifest.json",
         "permissions-root" : "sudo chown -R root .",
         "permissions-nginx" : "sudo chown -R nginx .",
+        "local-test" : "phpunit ./tests/Feature",
         "sass-dev": "sass --watch resources/sass:public/css --style compressed",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
