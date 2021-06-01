@@ -75,6 +75,12 @@
                                           :usuario="usuario">
                                           </resumen-tramite-5-isr-component>
                                         </div>
+                                        <div v-if="tramite.id_tramite == TRAMITE_AVISO">
+                                          <resumen-aviso-enajenacion-component v-if="currentStep == 3"
+                                          :tipoTramite="tipoTramite"  >
+                                            
+                                          </resumen-aviso-enajenacion-component>
+                                        </div>
                                         <div v-else>
                                           <resumen-tramite-component v-if="currentStep == 3" 
                                           :tipoTramite="tipoTramite" 
@@ -227,7 +233,8 @@
                   wizardTitle:'Finalizar',
                   wizardDesc:'Revisar y completar',
                 }],
-                TRAMITE_5_ISR:process.env.TRAMITE_5_ISR
+                TRAMITE_5_ISR:process.env.TRAMITE_5_ISR,
+                TRAMITE_AVISO:process.env.TRAMITE_AVISO,
                 //declararEn0:false
             }
         },

@@ -238,6 +238,7 @@
         mounted() {
             if(Object.entries(this.datosPersonales).length > 0) {
                 this.form = this.datosPersonales;
+                this.$v.$touch()
             }
 
             this.getEstados();

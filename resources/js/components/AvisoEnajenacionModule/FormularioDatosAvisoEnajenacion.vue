@@ -25,9 +25,7 @@
                       </b-form-invalid-feedback>
                     </b-form-group>
                 </b-col> 
-
-
-                <b-col>
+                <b-col v-if="config.name == 'vendedor'">
                     <b-form-group label="Porcentaje de Venta" label-for="procentaje-venta-input" >
                       <b-input-group prepend="0" >
                         <template #append>
@@ -102,8 +100,8 @@
         data(){
             return {
                 form: {
-                    porcentajePropiedad:0,
-                    porcentajeVenta:0,
+                    porcentajePropiedad: 0,
+                    porcentajeVenta: this.config.name == 'vendedor' ? 0 : null,
                     porcentajeUsufructo:0,
                     presentaUsufructo:false,
                 },
@@ -122,15 +120,14 @@
                     this.minPorcentajeUPermitido = 1;
                     return {
                         porcentajePropiedad:{required,  between: between(this.minPorcentajePermitido, this.maxProcentajePermitido) },
-                        porcentajeVenta:{ required, between: between(this.minPorcentajeUPermitido, this.maxProcentajeVentaPermitido) },
-                        presentaUsufructo:{required }
+                        porcentajeVenta:{ required: this.config.name == 'vendedor', between: between(this.minPorcentajeUPermitido, this.maxProcentajeVentaPermitido) },
                     }
                 } else {
                     this.minPorcentajePermitido =  0;
                     this.minPorcentajeUPermitido = 0;
                     return {
                         porcentajePropiedad:{required,  between: between(this.minPorcentajePermitido, this.maxProcentajePermitido) },
-                        porcentajeVenta:{ required, between: between(this.minPorcentajePermitido, this.maxProcentajeVentaPermitido) },
+                        porcentajeVenta:{ required:this.config.name == 'vendedor', between: between(this.minPorcentajePermitido, this.maxProcentajeVentaPermitido) },
                         porcentajeUsufructo:{required,  between: between(0, this.maxProcentajeuPermitido) },
                         presentaUsufructo:{required }
                         

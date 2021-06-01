@@ -93,6 +93,8 @@ Vue.component("formulario-datos-personales-component" , () => import( /* webpack
 Vue.component("formulario-datos-aviso-enajenacion-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModuleformulario/formulario-datos-aviso-enajenacion-component" */ './components/AvisoEnajenacionModule/FormularioDatosAvisoEnajenacion.vue' ));
 Vue.component("formulario-direccion-notificacion-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModuleformulario/formulario-direccion-notificacion-component" */ './components/AvisoEnajenacionModule/FormularioDireccionNotificacionComponent.vue' ));
 
+Vue.component("resumen-aviso-enajenacion-component" , () => import( /* webpackChunkName: "js/components/resumen-aviso-enajenacion-component" */ './components/ResumenAvisoEnajenacion.vue' ));
+
 
 
 /**

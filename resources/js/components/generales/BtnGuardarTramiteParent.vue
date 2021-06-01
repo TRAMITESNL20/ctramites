@@ -81,10 +81,15 @@
                   });
                   informacion.campos=camposObj;
                   informacion.camposConfigurados = datosFormulario.campos;
-                  informacion.tipoPersona=datosFormulario.tipoPersona,
-                  //informacion.declararEn0 = this.declararEn0,
-                  informacion.motivoDeclaracion0 = datosFormulario.motivoDeclaracion0,
-                  informacion.tipo_costo_obj = datosFormulario.tipo_costo_obj
+                  if(datosFormulario && datosFormulario.tipoPersona){
+                    informacion.tipoPersona=datosFormulario.tipoPersona;
+                  }
+                  if(datosFormulario && datosFormulario.motivoDeclaracion0){
+                    informacion.motivoDeclaracion0 = datosFormulario.motivoDeclaracion0;
+                  }
+                  if(datosFormulario && datosFormulario.tipo_costo_obj){
+                    informacion.tipo_costo_obj = datosFormulario.tipo_costo_obj;
+                  }
                 } else {
                   informacion.camposComplementaria = this.datosComplementaria;
                 }

@@ -27,13 +27,15 @@
                     <v-expansion-panel>
                         <v-expansion-panel-header >
                             <span class="text-left">Dirección de notificación en el estado</span> 
-                            <span class="text-muted">(No obligatorio)</span>
+                            <span class="text-muted" >
+                                {{ config.name == 'vendedor' ? "(No obligatorio)" :  "" }}
+                            </span>
                             <template v-slot:actions >
                                 <i class="fa fa-angle-down" />
                             </template>
                         </v-expansion-panel-header>
                         <v-expansion-panel-content>
-                            <formulario-direccion-notificacion-component @estadoFormulario="estadoFormularioDireccion" :datosDireccion="datosDireccion"></formulario-direccion-notificacion-component>
+                            <formulario-direccion-notificacion-component @estadoFormulario="estadoFormularioDireccion" :datosDireccion="datosDireccion" :config="config"></formulario-direccion-notificacion-component>
                         </v-expansion-panel-content>
                     </v-expansion-panel>
                 </v-expansion-panels>
@@ -50,7 +52,7 @@ export default {
         return {
             idModal:'add_id' + this.config.name || uuid.v4() ,
             titleModal: this.config.titleModal || 'Agregar',
-            labelBtnAddItem: this.labelBtnAddItem || 'Agregar',
+            labelBtnAddItem: this.config.labelBtnAddItem || 'Agregar',
             btnOkLabel:'Guardar',
             classBtn : "btn bg-success w-80 mb-4",
             btnIcon: "la la-plus",
@@ -80,6 +82,9 @@ export default {
             this.classBtn = "btn-info";
             this.btnIcon = "la la-pencil"; 
         }
+        if(this.config.name == 'comprador'){
+            this.panel.push(1);
+        }
         
     },
     methods: {
@@ -100,6 +105,7 @@ export default {
             let data = {};
             data.datosPersonales = this.datosPersonales;
             data.datosPorcentajes = this.datosPorcentajes;
+            data.datosDireccion =  this.datosDireccion;
 
             if(this.item){
               let response = {

@@ -122,15 +122,18 @@
                 </b-col>
             </b-row>
         </form>
+        <pre>
+            {{$v.form.municipio}} here
+        </pre>
     </div>
 </template>
 
 <script>
     import { validationMixin } from 'vuelidate';
-    import { required, between, email  } from 'vuelidate/lib/validators';
+    import { required, between, email,requiredIf  } from 'vuelidate/lib/validators';
     export default {
         mixins: [validationMixin],
-        props: [ 'datosDireccion'],
+        props: [ 'datosDireccion', 'config'],
         data(){
             return {
                 form: {
@@ -151,31 +154,37 @@
 
         },
 
-        validations() {
+        validations(){
+            let isComprador = this.config.name == 'comprador';
+            //console.log(isComprador)
             return {
                 form:{
                     correo: {required:false, email },
                     telefonoFijo:{required:false},
                     telefonoCasa:{ required: false},
                     tipoVialidad:{required: false},
-                    nombreVialidad:{ required: false},
-                    nExt:{required: false },
+                    nombreVialidad:{required: requiredIf( this.isComprador ) },
+                    nExt:{required: requiredIf( this.isComprador ) },
                     nInt:{required: false},
-                    cp:{required: false},
+                    cp:{required: requiredIf( this.isComprador ) },
                     colonia:{required: false},
-                    municipio:{required: false},
+                    municipio:{required: requiredIf( this.isComprador ) },
                     referencia:{required: false},
                 }
             }
         },
         mounted() {
+            console.log( "DATOS DIRECCION" )
+            console.log(JSON.parse(JSON.stringify( this.datosDireccion )))
             if(Object.entries(this.datosDireccion).length > 0) {
                 this.form = this.datosDireccion;
             }
             this.$emit('estadoFormulario', this.$v);
         },  
         methods: {
-
+            isComprador(){
+                return this.config.name == 'comprador';
+            }
         },
         watch: {
             form:{
