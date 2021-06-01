@@ -111,7 +111,6 @@ Vue.use(Vuetify);
                 self = this;
  					Array.from(document.getElementsByClassName('radio')).forEach(function(row,index){
 						 if(document.getElementsByClassName('radio')[index].checked){
-							 console.log(row._value.costo_final);
 							//_value.costo_final no es el expediente catastral pero menciono ray que el armaria este para mostrarlo mas facil en la tabla
 							self.campo.valor= row._value.costo_final;
 							self.$emit('updateForm', self.campo);

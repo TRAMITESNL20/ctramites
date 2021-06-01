@@ -126,7 +126,7 @@
 													</enajenantes-component>
 												<aviso-enajenacion-component
 													:campo="campo"
-													expediente="7001001001"
+													:expediente="expediente"
 													@updateForm="updateForm"
 													v-else-if="campo.tipo == 'table'">
 												</aviso-enajenacion-component>
@@ -293,6 +293,7 @@
 			},
 			updateExpedienteSeleccionado(ex){
 				this.expediente = ex;
+				console.log(this.expediente);
 			},
 			estadoSelected(estado){
 				this.estado = estado;
@@ -306,6 +307,12 @@
 				const tramite = localStorage.getItem('tramite') && JSON.parse(localStorage.getItem('tramite')) ;
 
 				if (tramite && tramite.tramite === 'AVISO DE ENAJENACIÓN') {
+				
+					if(campo.tipo == 'results' && campo.valido){
+						//sustituir por campo.valor cuando se corrija el ws de los expedientes
+        				this.updateExpedienteSeleccionado(7001001001);
+        			}
+
 					this.fields = ['Expediente Catastral' ,	'Fólio', 	'Días Restantes', 	'Fecha pago informativo',	'Capturista',	'Accion'];
 						//  this.rows = [{expediente : 7001002010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001002011 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001001010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'}]
 					var self = this;
@@ -396,6 +403,7 @@
         		if(campo.nombre == 'Estado' && campo.valido){
         			this.gestionarCambioEstado(campo.valor);
         		}
+        		
 
         		this.cambioModelo();
         	},
