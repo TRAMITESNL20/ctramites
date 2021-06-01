@@ -305,8 +305,7 @@
 
         	async updateForm(campo){
 				const tramite = localStorage.getItem('tramite') && JSON.parse(localStorage.getItem('tramite')) ;
-
-				if (tramite && tramite.tramite === 'AVISO DE ENAJENACIÓN') {
+				if (tramite && tramite.id_tramite === process.env.TRAMITE_AVISO) {
 				
 					if(campo.tipo == 'results' && campo.valido){
 						//sustituir por campo.valor cuando se corrija el ws de los expedientes
