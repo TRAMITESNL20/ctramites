@@ -8,7 +8,7 @@
 <script>
 	const md5 = require('md5');
 	export default {
-		props: ['datosComplementaria', 'tipoTramite','usuario', 'pago', 'id', 'user'],
+		props: ['datosComplementaria', 'tipoTramite','usuario', 'pago', 'id', 'user', 'tramitesdoc'],
 		data(){
 			return{
 				tramite : {},
@@ -54,18 +54,20 @@
 
 				this.idFirmado.push(solicitud.id);
 				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
+			console.log('---');
+			console.log(this.tramitesdoc[ind].perfil);
+			this.encodeData(ind);
 			})
 
 			this.rfc = this.user.rfc;
 			this.accesToken();
-			this.encodeData();
 		},
 		methods: {
-			encodeData(){
+			encodeData(ind){
 				var urlDataGeneric =  process.env.INSUMOS_API_HOSTNAME + '/data_generic';
 				var url =  process.env.INSUMOS_API_HOSTNAME + "/v2/signature/iframe?id=";
 				var data = {
-					'perfil' : 'EI',
+					'perfil' : this.tramitesdoc[ind].perfil ,
 					'multiple' : this.multiple,
 					'tramite' :  this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id,
 					'llave' : this.llave,
