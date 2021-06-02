@@ -16,6 +16,7 @@
 				firma: '',
 				access_token: '',
 				resultId: '',
+				perfil: '',
 				multiple: '',
 				doc: '',
 				rfc: '',
@@ -54,20 +55,24 @@
 
 				this.idFirmado.push(solicitud.id);
 				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
-			console.log('---');
-			console.log(this.tramitesdoc[ind].perfil);
-			this.encodeData(ind);
 			})
 
 			this.rfc = this.user.rfc;
 			this.accesToken();
+			this.encodeData();
 		},
 		methods: {
 			encodeData(ind){
+				for (let i = 0; i <  this.tramitesdoc.length ; i++) {
+					if(this.usuario.tramite_id == this.tramitesdoc[i].tramite_id){
+						this.perfil = this.tramitesdoc[i].perfil;
+					}
+				}
+				console.log(this.perfil);
 				var urlDataGeneric =  process.env.INSUMOS_API_HOSTNAME + '/data_generic';
 				var url =  process.env.INSUMOS_API_HOSTNAME + "/v2/signature/iframe?id=";
 				var data = {
-					'perfil' : this.tramitesdoc[ind].perfil ,
+					'perfil' : this.perfil ,
 					'multiple' : this.multiple,
 					'tramite' :  this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id,
 					'llave' : this.llave,
