@@ -50,7 +50,7 @@ $('#kt_recovery_submit').on('click', function(e) {
                 error: function(jqXHR, textStatus, errorThrown) {
                     if (jqXHR.status == 401) {
                         swal.fire({
-                            text: "No se encontro una cuenta registrada con el correo ingresado.",
+                            text: "No se encontró una cuenta registrada con el correo ingresado.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Entendido",
