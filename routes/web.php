@@ -55,8 +55,8 @@ Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
 		Route::get('/perfil',  "AcountInfoController@index")->name("perfil");
 		Route::get('/informacion-cuenta', "ProfileController@index")->name("informacion-cuenta");
 		Route::get('/cambiar-contraseña', "changePassword@index")->name("cambiar-contraseña");
-		Route::get('/usuarios', "UsersController@index")->name("usuarios");
-		Route::get('/landingPage', "LandingPageController@index")->name("landing-page");
+		// Route::get('/usuarios', "UsersController@index")->name("usuarios");
+		// Route::get('/landingPage', "LandingPageController@index")->name("landing-page");
 
 		// LOGIN
 		Route::get('/login', "LoginController@index")->name("login");
