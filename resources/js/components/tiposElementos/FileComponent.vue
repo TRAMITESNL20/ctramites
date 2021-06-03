@@ -64,6 +64,7 @@
         let promises = [];
         if(this.campo.nombreArchivoGuardado){
           let urlFile = /*process.env.TESORERIA_HOSTNAME + '/download/' +*/ this.campo.nombreArchivoGuardado;
+        }
 
         if(this.campo.nombreArchivoGuardado){
           let urlFile = this.campo.nombreArchivoGuardado;
