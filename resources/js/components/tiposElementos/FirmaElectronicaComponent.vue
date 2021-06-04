@@ -8,7 +8,7 @@
 <script>
 	const md5 = require('md5');
 	export default {
-		props: ['datosComplementaria', 'tipoTramite','usuario', 'pago', 'id', 'user'],
+		props: ['datosComplementaria', 'tipoTramite','usuario', 'pago', 'id', 'user', 'tramitesdoc'],
 		data(){
 			return{
 				tramite : {},
@@ -16,6 +16,7 @@
 				firma: '',
 				access_token: '',
 				resultId: '',
+				perfil: '',
 				multiple: '',
 				doc: '',
 				rfc: '',
@@ -32,25 +33,42 @@
 			window.addEventListener("message", this.messageEvt, false);
 			this.usuario.solicitudes.map((solicitud, ind) => {
 				this.multiple = this.usuario.solicitudes.length > 1;
-				var auxEnv = process.env.APP_URL;
+				var auxEnv = 'http://10.153.144.218/';
 				if ( auxEnv == "https://tramites.nl.gob.mx") auxEnv = "http://tramites.nl.gob.mx";
 				var userEncoded =btoa(this.user.role.description + ' - ' +  this.user.name + ' ' +  this.user.fathers_surname + ' RFC: ' +  this.user.rfc ) ;
-				let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
-				if(this.multiple){
-					if(typeof this.doc === 'string') this.doc = [];
-					this.doc.push(doc)
-
-					if(typeof this.llave === 'string') this.llave = [];
-					this.llave.push(`${solicitud.id}`)
-
-					if(typeof this.folio === 'string') this.folio = [];
-					this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
-
-				}else{
-					this.doc = doc;
-					this.llave = `${solicitud.id}`;
-					this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
-				}
+				console.log(this.usuario.tramite_id);
+					
+					if(this.multiple){
+						if(typeof this.doc === 'string'){
+							if(this.usuario.tramite_id == process.env.TRAMITE_5_ISR){ 
+								let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
+								this.doc = [];
+								this.doc.push(doc)
+							}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO){
+								this.doc = [];
+								this.doc.push("http://www.africau.edu/images/default/sample.pdf");
+							}	
+							
+							
+						} 
+	
+						if(typeof this.llave === 'string') this.llave = [];
+						this.llave.push(`${solicitud.id}`)
+	
+						if(typeof this.folio === 'string') this.folio = [];
+						this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
+	
+					}else{
+						if(this.usuario.tramite_id == process.env.TRAMITE_5_ISR){
+							let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
+							this.doc = doc;
+						}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO){
+							this.doc = "http://www.africau.edu/images/default/sample.pdf";
+						}
+						this.llave = `${solicitud.id}`;
+						this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
+					}
+				
 
 				this.idFirmado.push(solicitud.id);
 				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
@@ -61,11 +79,17 @@
 			this.encodeData();
 		},
 		methods: {
-			encodeData(){
+			encodeData(ind){
+				for (let i = 0; i <  this.tramitesdoc.length ; i++) {
+					if(this.usuario.tramite_id == this.tramitesdoc[i].tramite_id){
+						this.perfil = this.tramitesdoc[i].perfil;
+					}
+				}
+				console.log(this.perfil);
 				var urlDataGeneric =  process.env.INSUMOS_API_HOSTNAME + '/data_generic';
 				var url =  process.env.INSUMOS_API_HOSTNAME + "/v2/signature/iframe?id=";
 				var data = {
-					'perfil' : 'EI',
+					'perfil' : this.perfil ,
 					'multiple' : this.multiple,
 					'tramite' :  this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id,
 					'llave' : this.llave,
