@@ -62,7 +62,6 @@
       },
       mounted(){
         let promises = [];
-
         if(this.campo.nombreArchivoGuardado){
           let urlFile = this.campo.nombreArchivoGuardado;
           promises.push(getFile( urlFile, this.campo.nombreArchivoGuardado, this.campo ));

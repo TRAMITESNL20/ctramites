@@ -266,7 +266,8 @@
                 let data = {  
                     id_seguimiento: this.tramite.id_seguimiento,
                     tramite_id: this.tramite.id_tramite,
-                    tipoPersona:this.listaSolicitantes[0].tipoPersona
+                    tipoPersona:this.listaSolicitantes[0].tipoPersona,
+                    campos: this.campos
                 }
                 
                 data = this.getParamsCalculoCosto(consulta_api, data, tipo_costo_obj);
