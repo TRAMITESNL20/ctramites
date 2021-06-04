@@ -83,6 +83,7 @@
                         "Content-type":"application/json"
                     }
                 } ).then(response => {
+                    
                     let url = process.env.PAYMENTS_HOSTNAME  + "/v1/pay";
                     let idTRansaccion = response.data.id_transaccion;
                     this.idSeguimiento = idTRansaccion;
@@ -147,8 +148,9 @@
                     //this.mostrarMetodos = false;
                     Command: toastr.warning("Error!", error.message || "Ocurrió un error al guardar");
                     $("#metodoPagoBtn").fadeIn();
-                }).finally(() => {
                     this.consultandoMetodos = false;
+                }).finally(() => {
+                    
                 });
 
 

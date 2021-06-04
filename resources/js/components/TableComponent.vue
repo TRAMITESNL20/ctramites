@@ -73,6 +73,7 @@ export default {
         }
     },
     mounted() {
+
         if(this.itemsPre && this.itemsPre.length > 0) {
             this.items = this.itemsPre;
         }
@@ -84,16 +85,31 @@ export default {
         }
         
         this.mapearDatos();
+        this.calcularPorcentajePropiedadAndUsufructo();
+    },
+
+    watch: {
+        itemsPre(newValue, oldValue) {
+            if(newValue && newValue.length > 0) {
+                this.items = newValue;
+                this.mapearDatos();
+                this.calcularPorcentajePropiedadAndUsufructo();
+            }  
+        }
     },
     methods: {
         addItem(data){
             this.items.push( data );
             this.mapearDatos();
+            this.calcularPorcentajePropiedadAndUsufructo();
+            this.notify();
         },
 
         editItem( res ){
             this.items[res.index] = res.item;
             this.mapearDatos();
+            this.calcularPorcentajePropiedadAndUsufructo();
+            this.notify();
         },
 
         mapearDatos(){
@@ -103,15 +119,17 @@ export default {
                 if(item.datosPersonales.nacionalidad=='mexicana'){
                     item.tipoPersona = item.datosPersonales.tipoPersona; 
                 }
-                
-                item.porcentajePropiedad =  item.datosPorcentajes.porcentajePropiedad;
-                item.porcentajeUsufructo = item.datosPorcentajes.porcentajeUsufructo;
-                item.porcentajeVenta = item.datosPorcentajes.porcentajeVenta;
+                if(item.datosPorcentajes){
+                    item.porcentajePropiedad =  item.datosPorcentajes.porcentajePropiedad;
+                    item.porcentajeUsufructo = item.datosPorcentajes.porcentajeUsufructo;
+                    item.porcentajeVenta = item.datosPorcentajes.porcentajeVenta;
+                } else {
+                    item.porcentajePropiedad =  0;
+                    item.porcentajeUsufructo = 0;
+                    item.porcentajeVenta = 0;
+                }
                 return item;
-            }); 
-            if(!this.config.onlyRead){
-                this.calcularPorcentajePropiedadAndUsufructo();
-            }           
+            });         
         },
 
         cleanData(){
@@ -134,27 +152,29 @@ export default {
         },
 
         calcularPorcentajePropiedadAndUsufructo(){
-            let totalPorcentajePropiedad = 0;
-            let totalPorcentajeUsufructo = 0;
-            let totalPorcentajeVentta = 0;
-            if(this.items && this.items.length > 0){
-                this.items.forEach( item  => {
-                    totalPorcentajePropiedad = Number(Number(Number(totalPorcentajePropiedad) + Number(item.datosPorcentajes.porcentajePropiedad)).toFixed(this.$const.PRECISION));
-                    totalPorcentajeUsufructo = Number(Number(Number(totalPorcentajeUsufructo) + Number(item.datosPorcentajes.porcentajeUsufructo)).toFixed(this.$const.PRECISION));
-                    if(this.config.name == 'vendedor'){
-                        totalPorcentajeVentta = Number(Number(Number(totalPorcentajeVentta) + Number(item.datosPorcentajes.porcentajeVenta)).toFixed(this.$const.PRECISION));
-                    }
-                });
-            }
+            if(!this.config.onlyRead){
+                let totalPorcentajePropiedad = 0;
+                let totalPorcentajeUsufructo = 0;
+                let totalPorcentajeVentta = 0;
+                if(this.items && this.items.length > 0){
+                    this.items.forEach( item  => {
+                        if(item.datosPorcentajes){
+                            totalPorcentajePropiedad = Number(Number(Number(totalPorcentajePropiedad) + Number(item.datosPorcentajes.porcentajePropiedad)).toFixed(this.$const.PRECISION));
+                            totalPorcentajeUsufructo = Number(Number(Number(totalPorcentajeUsufructo) + Number(item.datosPorcentajes.porcentajeUsufructo)).toFixed(this.$const.PRECISION));
+                            if(this.config.name == 'vendedor'){
+                                totalPorcentajeVentta = Number(Number(Number(totalPorcentajeVentta) + Number(item.datosPorcentajes.porcentajeVenta)).toFixed(this.$const.PRECISION));
+                            }
+                        }
+                    });
+                }
 
-            this.config.porcentajePropiedadAsignado = totalPorcentajePropiedad;
-            this.config.porcentajeUsufructoAsignado = totalPorcentajeUsufructo;
+                this.config.porcentajePropiedadAsignado = totalPorcentajePropiedad || 0;
+                this.config.porcentajeUsufructoAsignado = totalPorcentajeUsufructo || 0; 
 
-            if(this.config.name == 'vendedor'){
-                this.config.porcentajeVentaAsignado = totalPorcentajeVentta;                
-            }
-
-            this.notify();
+                if(this.config.name == 'vendedor'){
+                    this.config.porcentajeVentaAsignado = totalPorcentajeVentta;                
+                }
+            }      
         },
 
         notify(){
@@ -168,9 +188,9 @@ export default {
         eliminar(indice){
             this.items.splice(indice,1);
             this.mapearDatos();
+            this.calcularPorcentajePropiedadAndUsufructo();
+            this.notify();
         }
-
-
 
 
 
