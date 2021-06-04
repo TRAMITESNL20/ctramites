@@ -33,7 +33,7 @@
 			window.addEventListener("message", this.messageEvt, false);
 			this.usuario.solicitudes.map((solicitud, ind) => {
 				this.multiple = this.usuario.solicitudes.length > 1;
-				var auxEnv = 'http://10.153.144.218/';
+				var auxEnv = proces.env.AAPP_URL;
 				if ( auxEnv == "https://tramites.nl.gob.mx") auxEnv = "http://tramites.nl.gob.mx";
 				var userEncoded =btoa(this.user.role.description + ' - ' +  this.user.name + ' ' +  this.user.fathers_surname + ' RFC: ' +  this.user.rfc ) ;
 				console.log(this.usuario.tramite_id);
@@ -156,7 +156,7 @@
 			messageEvt (evt) {
 				var self = this;
 				console.log('messageEvt', evt, evt.data);
-				if(evt.data === 'Terminó'){
+				if( evt.data.length >= 1  ){
 					fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
 						method : 'POST',
 						body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
