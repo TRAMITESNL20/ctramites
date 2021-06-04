@@ -91,9 +91,10 @@ class ReferenceController extends Controller {
 		$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 		Log::channel('apilog')->info("\n\nENDPOINT: [{$_SERVER['REQUEST_METHOD']}] - ".$actual_link);
 		if(!$reference) $reference = request()->toArray();
-		if(gettype($reference) != 'array') $reference = [$reference];
-		if(count($reference) == 0) abort(409, "No hay referencias para validar.");
+		if(gettype($reference) != 'array' && !isset($reference->service)) $reference = [$reference];
+		unset($reference["service"]);
 		unset($reference["dev"]);
+		if(count($reference) == 0) abort(409, "No hay referencias para validar.");
 		$response = [];
 
 		foreach ($reference as $ref) {
@@ -296,11 +297,11 @@ class ReferenceController extends Controller {
 
 				if($reference->{'oper_transacciones-estatus'} == 65){
 					$changes = [
-						'solicitudes_ticket.status' => 99,
-						'recibo_referencia' => null,
-						'id_transaccion' => null,
-						'asignado_a' => null,
-						'en_carrito' => 0,
+						'solicitudes_ticket.status' => 9,
+						// 'recibo_referencia' => null,
+						// 'id_transaccion' => null,
+						// 'asignado_a' => null,
+						// 'en_carrito' => 0,
 						'updated_at' => date('Y-m-d H:i:s')
 					];
 				}
