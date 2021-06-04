@@ -195,6 +195,10 @@
                 formData.append('required_docs', 0);  
               }
               
+              let TRAMITE_AVISO = process.env.TRAMITE_AVISO; 
+              if( TRAMITE_AVISO && (TRAMITE_AVISO == tramite.id_tramite) ){
+                formData.append('sin_costo', true);
+              }
               
               return formData;
             },
