@@ -190,8 +190,15 @@
                 formData.append('required_docs', 0);  
               }
               
-              if(informacion.complementoDe && this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ){
-                formData.append('status', this.$const.STATUS_ERROR_MUNICIPIO); 
+              if(informacion.complementoDe ){
+                formData.append('ticket_anterior', informacion.complementoDe);
+                if( this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ){
+                  formData.append('status', this.$const.STATUS_ERROR_MUNICIPIO); 
+                }
+                if( this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO ){
+                  formData.append('status', this.$const.STATUS_FALTA_PAGO); 
+                }
+                
               }
 
               return formData;
