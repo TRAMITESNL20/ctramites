@@ -97,7 +97,21 @@ class CalculoimpuestosController extends Controller
       $this->inhabiles	= $this->getInhabiles(date('Y'));
    		// $this->fecha_vencimiento	= $this->getVencimiento();
       $this->fecha_vencimiento  = $this->prueba();
-   		$this->inpc_periodo			= $this->getInpc($this->fecha_escritura); // getInpcperiodo en caso de que sea la fecha acumulada del año vigente
+      //Validar si la fecha es muy antigua el inpc mas antiguo es de 5 años
+      $fe = explode("-",$this->fecha_escritura);
+      $ae 	= (integer)$fe[0]; //año de la escritura
+      $me = (integer)$fe[1];
+      $de =(integer)$fe[2];
+      $fa = explode("-",date("Y-n-j"));
+      $year = (integer)$fa[0];
+      $dif = $year - 5;
+      if($ae < $dif){ // si es menor se toma la fecha mas antigua hace 5 años
+        $fecha_escritura = $dif.'-'.$me.'-'.$de;
+      }else{ // se toma la fecha ingresada
+        $fecha_escritura = $this->fecha_escritura;
+      }
+
+   		$this->inpc_periodo			= $this->getInpc($fecha_escritura); // getInpcperiodo en caso de que sea la fecha acumulada del año vigente
    		$this->fecha_actual			= date("Y-m-d");
    		$this->inpc_reciente		= $this->getInpc($this->fecha_actual);
 
@@ -265,7 +279,20 @@ class CalculoimpuestosController extends Controller
 
       // $this->fecha_vencimiento  = $this->getVencimiento();
       $this->fecha_vencimiento  = $this->prueba();
-      $this->inpc_periodo       = $this->getInpc($this->fecha_escritura); // getInpcperiodo en caso de que sea la fecha acumulada del año vigente
+      //Validar si la fecha es muy antigua el inpc mas antiguo es de 5 años
+      $fe = explode("-",$this->fecha_escritura);
+      $ae 	= (integer)$fe[0]; //año de la escritura
+      $me = (integer)$fe[1];
+      $de =(integer)$fe[2];
+      $fa = explode("-",date("Y-n-j"));
+      $year = (integer)$fa[0];
+      $dif = $year - 5;
+      if($ae < $dif){ // si es menor se toma la fecha mas antigua hace 5 años
+        $fecha_escritura = $dif.'-'.$me.'-'.$de;
+      }else{ // se toma la fecha ingresada
+        $fecha_escritura = $this->fecha_escritura;
+      }
+      $this->inpc_periodo       = $this->getInpc($fecha_escritura); // getInpcperiodo en caso de que sea la fecha acumulada del año vigente
       $this->fecha_actual       = date("Y-m-d");
       $this->inpc_reciente      = $this->getInpc($this->fecha_actual);
 
