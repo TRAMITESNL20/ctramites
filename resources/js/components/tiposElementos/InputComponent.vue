@@ -154,6 +154,7 @@
         },
 
         padLeft(value, length) {
+            if(!value) return value;
             return (value.toString().length < length) ? this.padLeft("0" + value, length) : 
             value;
         }

@@ -91,9 +91,9 @@
                 }
                 if(informacion.camposConfigurados){
                   informacion.camposConfigurados = informacion.camposConfigurados.map(campo => { 
-                    if(campo.tipo == 'file' ){
+                    if(campo.tipo == 'file'){
                       let elfile = this.files.find( file => file.nombre == campo.nombre);
-                      campo.archivoCargado = !!elfile.valor;
+                      campo.archivoCargado = elfile && !!elfile.valor;
                     }
                     return campo;
                   });
