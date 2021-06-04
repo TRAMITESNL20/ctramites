@@ -61,6 +61,7 @@
 													@updateForm="updateForm"
 													v-on:estadoSelected="estadoSelected($event)"
 													:estado="estado"
+													:distrito="distrito"
 													>
 												</select-component>
 												<option-component 
@@ -240,6 +241,7 @@
 				campos: [], 
 				agrupaciones:[], 
 				estado: {clave:19, nombre: "NUEVO LEÓN"},
+				distrito: {clave:0, nombre: "Distrito 0"},
                 mostrar:false,
                 errors: {},
                 showMensajes:false,
@@ -304,6 +306,14 @@
 
         	gestionarCambioEstado(estado){
         		this.estado = estado;
+        	},
+
+			distritoSelected(distrito){
+				this.distrito = distrito;
+			},
+
+        	gestionarCambioDistrito(distrito){
+        		this.distrito = distrito;
         	},
 
         	async updateForm(campo){
@@ -402,6 +412,10 @@
         		if(campo.nombre == 'Estado' && campo.valido){
         			this.gestionarCambioEstado(campo.valor);
         		}
+        		if(campo.nombre == 'Distrito' && campo.valido){
+        			this.gestionarCambioDistrito(campo.valor);
+        		}
+				
 
         		this.cambioModelo();
         	},
@@ -451,8 +465,11 @@
 					if( this.infoGuardada && this.infoGuardada.campos ){
 						this.tipoPersona = this.infoGuardada.tipoPersona;
 						this.tipo_costo_obj = this.infoGuardada.tipo_costo_obj;
+
+						this.campos = this.infoGuardada.camposConfigurados;
+
 						this.campos.forEach( (campo, index) =>{	
-							campo.valor = this.infoGuardada.campos[ campo.campo_id ];
+							//campo.valor = this.infoGuardada.campos[ campo.campo_id ];
 							if( campo.tipo == 'file' && this.infoGuardada.archivosGuardados){
 								let infoArchivoGuardado = this.infoGuardada.archivosGuardados.find( archivo => archivo.mensaje == campo.nombre );
 								campo.archivoGuardado = true;

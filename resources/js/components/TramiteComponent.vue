@@ -87,8 +87,9 @@ import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue'
                 tramitesdoc: [this.tramite]
             }
         },
-        props: ['tramite', 'type', 'group', 'cartComponent'],
+        props: ['tramite', 'type', 'group', 'cartComponent', 'different'],
         mounted() {
+            console.log(this.different);
             this.files = [];
             if(this.tramite.info && typeof this.tramite.info === 'string')
                 this.tramite.info = JSON.parse(this.tramite.info)

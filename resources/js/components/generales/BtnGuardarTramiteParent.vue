@@ -1,4 +1,5 @@
 <script>
+  import { uuid } from 'vue-uuid';
     export default {
         name: 'BtnGuardarTramiteParent',
         props: ['tipoTramite', 'files', 'datosComplementaria', 'idUsuario', 'infoGuardadaFull', "type", "labelBtn"],
@@ -127,15 +128,12 @@
                 formData.append('info', JSON.stringify({}) );
                 formData.append("enajenantes", JSON.stringify(listaComplementarias));
               }
-                
-
-
               
               let tramite = datosTabs[1];
 
               if(tramite){
                 formData.append('clave', tramite.id_seguimiento );
-                formData.append('grupo_clave', tramite.id_seguimiento );
+                formData.append('grupo_clave',  tramite.grupo_clave || Date.now() );
                 formData.append('catalogo_id', tramite.id_tramite );
               }
 
@@ -170,8 +168,10 @@
               }
               if(tramite){
                 formData.append('clave', tramite.id_seguimiento );
+                formData.append('grupo_clave', tramite.grupo_clave || Date.now() );
                 formData.append('catalogo_id', tramite.id_tramite );
               }
+
               if(  idEdicion  ){
                 formData.append('id', idEdicion );
               }
@@ -190,7 +190,17 @@
                 formData.append('required_docs', 0);  
               }
               
-              
+              if(informacion.complementoDe ){
+                formData.append('ticket_anterior', informacion.complementoDe);
+                if( this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ){
+                  formData.append('status', this.$const.STATUS_ERROR_MUNICIPIO); 
+                }
+                if( this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO ){
+                  formData.append('status', this.$const.STATUS_FALTA_PAGO); 
+                }
+                
+              }
+
               return formData;
             },
 
@@ -199,12 +209,28 @@
                 let listaSolicitantes = datosTabs[0];
                 let tramite = datosTabs[1];
                 let datosFormulario = datosTabs[2];
-
                 datosFormulario.campos = this.formatearCampos(datosFormulario.campos);
                 let informacion = this.getInformacion( tramite, datosFormulario );
                 let idEdicion = null;
-                if(  this.infoGuardadaFull && this.infoGuardadaFull.id  ){
-                  idEdicion = this.infoGuardadaFull.id ;
+
+                if(  this.infoGuardadaFull && this.infoGuardadaFull.id && ( this.infoGuardadaFull.status != this.$const.STATUS_FALTA_PAGO && this.infoGuardadaFull.status != this.$const.STATUS_ERROR_MUNICIPIO )  ){
+                  idEdicion = this.infoGuardadaFull.id;
+                  let infoGuardada =  JSON.parse( this.infoGuardadaFull.info );
+                  if(infoGuardada.complementoDe){
+                    informacion.complementoDe =  infoGuardada.complementoDe;
+                    informacion.complementos = infoGuardada.complementos;
+                  }
+                } else if(this.infoGuardadaFull && this.infoGuardadaFull.id && ( this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO || this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO )) {
+                  if( this.infoGuardadaFull.info ){
+                    let info = JSON.parse(this.infoGuardadaFull.info );
+                    if(info && info.complementoDe ){
+                      informacion.complementos = info.complementoDe + ","  + this.infoGuardadaFull.id;
+                    }
+                  }
+                  informacion.complementoDe =  this.infoGuardadaFull.id;
+
+                  tramite.id_seguimiento = uuid.v4();
+                  tramite.grupo_clave = this.infoGuardadaFull.grupo_clave;
                 }
                 return this.buildFormData( informacion, listaSolicitantes, tramite, idEdicion,enajenantes );
             },
