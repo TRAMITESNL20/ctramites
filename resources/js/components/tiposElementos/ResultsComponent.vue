@@ -28,14 +28,14 @@
 					<tr v-if="loading"><td :colspan="fields.length" class="text-center"><i class="fas fa-spinner fa-spin mr-2"></i></td></tr>
 					<tr v-if="!loading && row.length != 0" v-for="(row, ind) in filteredHelper">
 						<td v-for="(item, ind) in row" :colspan=" row.length !== fields.length && ind === row.length - 1 && (fields.length - (row.length - 1)) " class="text-center">
-							{{ typeof item == 'object' ? item.label :item }}
-							<span class="text-muted ml-2 cursor-pointer" v-if="item.tooltip" v-b-tooltip.hover :id="`tooltip-${ind}`">(+ {{item.tooltip.listItems.length-1}})</span>
-							<b-tooltip :target="`tooltip-${ind}`" triggers="hover" v-if="item.tooltip">
+							{{ item }}
+							<!-- <span class="text-muted ml-2 cursor-pointer" v-if="item.tooltip" v-b-tooltip.hover :id="`tooltip-${ind}`">(+ {{item.tooltip.listItems.length-1}})</span> -->
+							<!-- <b-tooltip :target="`tooltip-${ind}`" triggers="hover" v-if="item.tooltip">
 								<h4 v-if="item.tooltip.title" class="text-uppercase"><strong>{{ item.tooltip.title }}</strong></h4>
 								<ul v-if="item.tooltip.listItems.length > 1" class="text-left ml-5">
 									<li v-for="(item, ind) in item.tooltip.listItems">{{ item }}</li>
 								</ul>
-							</b-tooltip>
+							</b-tooltip> -->
 						</td>
 						<td v-if="JSON.parse(campo.caracteristicas).formato == 'seleccion' ">
 						<input type="radio" @change="check($event)"  :value="row" name="checkbox" :id="row.expediente" class="text-center pl-4 radio" >
@@ -44,12 +44,13 @@
 				</tbody>
 			</table>
 			<div v-if="Object.entries(this.infoExtra).length > 0" class="col-md-3 col-12">
-				<ul v-if="infoExtra.listItems" class="list-group">
+				<!-- <ul v-if="infoExtra.listItems" class="list-group">
 					<li v-if="infoExtra.title" class="list-group-item bg-secondary"><h3>{{ infoExtra.title }}</h3></li>
 					<li v-for="item in infoExtra.listItems" class="list-group-item"><strong>{{ item.label }}:</strong> {{ item.value }}</li>
-				</ul>
+				</ul> -->
 			</div>
 		</div>
+		<code>{{filteredHelper}}</code>
 
 		<div  class="row">
 			<div class="col-md-12 col-sm-12">
@@ -87,6 +88,8 @@ Vue.use(Vuetify);
 				pageSizes: [5, 10, 20],
 		}},
 		mounted () {
+			console.log('====results===');
+			console.log(this.rows.length);
 			this.campo.valido = true;
 			this.$emit('updateForm', this.campo);
 		},
@@ -128,14 +131,17 @@ Vue.use(Vuetify);
 			filteredHelper(){ 
 				var inicio= (this.porPagina*(this.page -1));
 					var arr_aux = [...this.rows];
+					// arr_aux.camposConfigurados ? console.log('arr_aux.camposConfigurados.nombre') : console.log('naaa');;
 					if(this.searchTitle != null)  {
 						this.searchTitle = this.searchTitle.toUpperCase();
 						// parametros con los que se basa la busqueda
-						console.log(arr_aux);
-						arr_aux = arr_aux.filter(search =>( search.solicitante.rfc.toUpperCase().includes(this.searchTitle) || (search.costo_final + '').includes( this.searchTitle)    ))
+						// arr_aux = arr_aux.filter(search =>( search.solicitante.rfc.toUpperCase().includes(this.searchTitle) || (search.costo_final + '').includes( this.searchTitle)    ))
 						this.totalPaginas = Math.ceil(arr_aux.length / this.porPagina);
 					}   
+					
 					var filteredHelper = arr_aux.splice( inicio  , this.porPagina);
+					console.log( (filteredHelper[4]));
+					filteredHelper= []
 				return filteredHelper;
         	},
 		}
