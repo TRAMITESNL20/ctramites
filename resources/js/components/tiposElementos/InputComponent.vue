@@ -14,7 +14,6 @@
         v-model="campo.valor"
         @change="validar"
         @focus="validar"
-        :disabled="campo.disabled"
       />
     </span>
     <small  v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
@@ -57,11 +56,19 @@
       methods: {
         formatear(){
           let caracteristicas= this.getCaracteristicas();
+          if( caracteristicas.formato == "moneda" && this.campo.valido){
+            let style = this.$store.state.DEFAULT_DIVISA.STYLE;
+            let currency = this.$store.state.DEFAULT_DIVISA.CURRENCY;
+            let number =  this.campo.valor ? Vue.filter('toNumber')( this.campo.valor ) : '';
+            this.campo.valor = Vue.filter('toCurrency')( number, style, currency  );
+          }
           if(caracteristicas.formato == 'manzana'){
            this.campo.valor =  this.padLeft(this.campo.valor, 3);  
           }
           this.$forceUpdate();
         },
+
+
 
         getCaracteristicas(){
           let caracteristicas = {};
@@ -113,7 +120,7 @@
             }
           }
           this.campo.valido =  requeridoValido && exregValida;
-          //this.formatear();
+          this.formatear();
           this.$emit('updateForm', this.campo);
           
         },
