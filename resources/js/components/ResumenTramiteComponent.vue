@@ -127,6 +127,7 @@
 
         props: ['datosComplementaria','tipoTramite'],
         mounted() {
+ 
             this.obtenerInformacionDelTramite();
             if(this.tipoTramite == 'declaracionEn0'){
                 this.obteniendoCosto= false;
@@ -177,6 +178,7 @@
                 if(this.tipoTramite =='normal'  ){
                     if( consulta_api == "/getcostoImpuesto" ){
                         // CAMPOS CALCULO IMPUESTO
+
                         let campoMonto              = this.getCampoByName(CAMPO_MONTO_DE_OPERACIÓN);
                         let campoMulta              = this.getCampoByName(CAMPO_MULTA_POR_CORRECCION_FISCAL);
                         let campoFechaMinuta        = this.getCampoByName(CAMPO_FECHA_DE_ESCRITURA_O_MINUTA);
@@ -201,7 +203,8 @@
                             let campoHoja           = this.getCampoByName(CAMPO_HOJA);
                             let campoSubsidio       = this.getCampoByName(CAMPO_SUBSIDIO);
                             let campoCatastral      = this.getCampoByName(CAMPO_VALOR_CATASTRAL);
-                            let campoValorOperacion = this.getCampoByName(CAMPO_VALOR_OPERACION);  
+                            let campoValorOperacion = this.getCampoByName(CAMPO_VALOR_OPERACION);
+                            let campoCantidadLote   =  this.getCampoByName(Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_CANTIDAD_LOTES);  
 
                             if( campoCatastral ){
                                 paramsCosto.valor_catastral = this.formatoNumero(campoCatastral.valor);
@@ -225,9 +228,11 @@
                                 paramsCosto.hoja = campoHoja.valor; 
                             }
 
-                            if( campoLote ){
-                                paramsCosto.lote = campoLote.valor
-                            }
+                            if(campoCantidadLote) {
+                                paramsCosto.lote = campoCantidadLote.valor;
+                            } else if( campoLote ){
+                                paramsCosto.lote = campoLote.valor;
+                            } 
                         }                 
                     }
                     let campoDivisas              = this.getCampoByName(CAMPO_DIVISAS);

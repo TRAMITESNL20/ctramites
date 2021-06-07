@@ -123,7 +123,8 @@ Vue.prototype.$const = {
         CAMPO_HOJA: "Hoja",
         CAMPO_SUBSIDIO: "Subsidio",
         CAMPO_VALOR_CATASTRAL: "Valor catastral",
-        CAMPO_VALOR_OPERACION: "Valor de operacion"
+        CAMPO_VALOR_OPERACION: "Valor de operacion",
+        CAMPO_CANTIDAD_LOTES: "Cantidad de lotes"
     }
 }
 
