@@ -111,6 +111,7 @@
 													:loading="loading"
 													:infoExtra="infoExtra"
 													v-on:expedienteSeleccionado="updateExpedienteSeleccionado($event)"
+													:response="response"
 													>
 												</results-component>
 												<expediente-excel-component  
@@ -121,6 +122,7 @@
 													@updateForm="updateForm" :files="files"
 													@validarFormulario="validarFormulario"
 													@processGrupal="processGrupal"
+													:disabled="disabled"
 													>
 												</expediente-excel-component>
 												<enajenantes-component v-else-if="campo.tipo == 'enajenante'" 
@@ -296,7 +298,6 @@
 	        } else {
 				this.obtenerCampos();
 			}
-
         },
         methods: {
 			updatePorcentaje(porcentaje){	
@@ -399,6 +400,8 @@
 							this.panel = [0, 3];
 						break;
 					}
+
+					this.processCampo(campo);
 				}
 
         		if(campo.tipo == 'file' && campo.valido){
@@ -571,7 +574,7 @@
 
 				if(empty.length == 0){
 					this.panel = [0, 1, 4];
-					const exp = `${all['Municipio'].valor.clave.toString()}${all['Region'].valor}${all['Manzana'].valor}${all['Lote'].valor}`;
+					const exp = `${all['Municipio'].valor && all['Municipio'].valor.clave.toString()}${all['Region'] && all['Region'].valor}${all['Manzana'] && all['Manzana'].valor}${all['Lote'] && all['Lote'].valor}`;
 					const url = `${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/${exp}`;
 					if(this.ajax !== url){
 						this.ajax = url;
@@ -629,7 +632,7 @@
 							listItems : infoExtra
 						};
 
-						// this.rows = rows;
+						this.rows = rows;
 						this.loading = false;
 					}
 				}else{
@@ -696,6 +699,7 @@
 			},
 			async processGrupal({response, exp}){
 				let rows = [];
+				if(!response.data.expediente_catastral) response.data.expediente_catastral = exp;
 				this.response.push(response.data);
 				if(response.data.resultado) rows = [exp, response.data.resultado]
 				else if(response.data.datos_catastrales){
@@ -710,21 +714,21 @@
 				}else{
 					rows = [exp, 'Error al consultar WS. Por favor, intenta de nuevo.']
 				}
-				
-				const noValido = this.response.filter(ele => ele.cta_valida === '0');
+
+				const noValido = this.response.filter(ele => ele.bloqueado && ele.bloqueado !== '0');
 				const bloqueados = this.response.filter(ele => ele.bloqueado && ele.bloqueado !== '0');
-				const fallidos = this.response.filter(ele => ele.resultado === 'NO ENCONTRADO');
-				const autorizados = this.response.filter(ele => ele.datos_propietarios);
+				const fallidos = this.response.filter(ele => ele.resultado && ele.resultado === 'NO ENCONTRADO');
+				const autorizados = this.response.filter(ele => ele.bloqueado && ele.bloqueado === '0');
 
 				const infoExtra = [
 					{
 						label : 'Registros Consultados',
 						value : this.response.length
 					},
-					{
-						label : 'No Validos',
-						value : noValido ? noValido.length : 0
-					},
+					// {
+					// 	label : 'No Validos',
+					// 	value : noValido ? noValido.length : 0
+					// },
 					{
 						label : 'Bloqueados',
 						value : bloqueados ? bloqueados.length : 0
@@ -747,6 +751,7 @@
 				this.rows.push(rows);
 				this.loading = false;
 				this.panel = [0, 3, 4];
+				this.rows = this.rows.sort((a,b) => a[0]-b[0]);
 			},
 
 			listenCampos(campo){
@@ -755,6 +760,21 @@
 	        		this.$store.commit('change', divisaValue);
 	        		this.$root.$emit('chambioDivisa');
 	        	}
+			},
+			processCampo (campo) {
+				const disabled = this.agrupaciones.map((agrupacion, ind) => this.disabled.includes(ind) ? agrupacion.agrupacion_id : null).filter(ele => ele);
+				const actived = this.agrupaciones.map((agrupacion, ind) => this.panel.includes(ind) ? agrupacion.agrupacion_id : null).filter(ele => ele);
+
+				this.campos.map(campo => {
+					if(disabled.find(ele => ele === campo.agrupacion_id)) campo.valido = true;
+					if(actived.find(ele => ele === campo.agrupacion_id)){
+						let object = false;
+						if(typeof campo.caracteristicas == 'object') object = true;
+						if(typeof campo.caracteristicas == 'string') campo.caracteristicas = JSON.parse(campo.caracteristicas);
+						campo.caracteristicas.required = "true";
+						if(!object) campo.caracteristicas = JSON.stringify(campo.caracteristicas);
+					}
+				})
 			}
 		},
 		mounted(){
@@ -765,9 +785,10 @@
 		        handler: function (val, oldVal) {
 		         	this.$root.$emit('tipo_costo_obj_change', { activo: val.tipoCostoRadio != 'millar' });
 		        },
-		        deep: true	
-			}
-		}
+		        deep: true				
+			},
+
+		},
 	}
 
 
