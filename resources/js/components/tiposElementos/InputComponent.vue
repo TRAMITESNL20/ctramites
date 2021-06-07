@@ -1,5 +1,5 @@
 <template>
-  <div class=" fv-plugins-icon-container">
+  <div class=" fv-plugins-icon-container" v-if="visible">
     <label>
         {{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}
     </label>
@@ -30,6 +30,11 @@
     export default {
       
       props: ['campo', 'estadoFormulario', 'showMensajes'],
+      data() {
+        return {
+            visible:true
+        }
+      },
       created() {
         this.validar();
       },
@@ -48,7 +53,8 @@
           let caracteristicas= self.getCaracteristicas();
           if( self.campo.nombre == self.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION){
             self.campo.valido = false;
-            caracteristicas.required = !data.activo
+            caracteristicas.required = !data.activo;
+            self.visible = !data.activo;
             self.campo.caracteristicas = JSON.stringify(caracteristicas);
             self.validar()
           }
