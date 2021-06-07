@@ -164,7 +164,12 @@
                 this.tramite.detalle = JSON.parse(  this.infoGuardadaFull.info ).detalle;
                 const parsed = JSON.stringify(this.tramite);
                 localStorage.setItem('tramite', parsed);  
+                                
+                this.tramite.detalle.pago_total = this.tramite.detalle.costo_final;
+                this.tramite.detalle.costo_anterior =  this.tramite.detalle.costo_final;
+                this.tramite.detalle.costo_final = 0;
                 this.$forceUpdate();
+                                
                 this.obteniendoCosto = false;
             } else {
                 this.obtenerCosto();    
