@@ -28,7 +28,7 @@
 					<tr v-if="loading"><td :colspan="fields.length" class="text-center"><i class="fas fa-spinner fa-spin mr-2"></i></td></tr>
 					<tr v-if="!loading && row.length != 0" v-for="(row, ind) in filteredHelper">
 						<td v-for="(item, ind) in row" :colspan=" row.length !== fields.length && ind === row.length - 1 && (fields.length - (row.length - 1)) " class="text-center">
-							{{ item }}
+							{{ item.expediente_catastral }}
 							<!-- <span class="text-muted ml-2 cursor-pointer" v-if="item.tooltip" v-b-tooltip.hover :id="`tooltip-${ind}`">(+ {{item.tooltip.listItems.length-1}})</span> -->
 							<!-- <b-tooltip :target="`tooltip-${ind}`" triggers="hover" v-if="item.tooltip">
 								<h4 v-if="item.tooltip.title" class="text-uppercase"><strong>{{ item.tooltip.title }}</strong></h4>
@@ -36,6 +36,7 @@
 									<li v-for="(item, ind) in item.tooltip.listItems">{{ item }}</li>
 								</ul>
 							</b-tooltip> -->
+						<code>{{ item.expediente_catastral }}</code>
 						</td>
 						<td v-if="JSON.parse(campo.caracteristicas).formato == 'seleccion' ">
 						<input type="radio" @change="check($event)"  :value="row" name="checkbox" :id="row.expediente" class="text-center pl-4 radio" >
@@ -50,7 +51,6 @@
 				</ul> -->
 			</div>
 		</div>
-		<code>{{filteredHelper}}</code>
 
 		<div  class="row">
 			<div class="col-md-12 col-sm-12">
@@ -89,7 +89,7 @@ Vue.use(Vuetify);
 		}},
 		mounted () {
 			console.log('====results===');
-			console.log(this.rows.length);
+			// console.log( (  (this.rows[4].campos ) ) );
 			this.campo.valido = true;
 			this.$emit('updateForm', this.campo);
 		},
@@ -130,6 +130,20 @@ Vue.use(Vuetify);
 		computed:{
 			filteredHelper(){ 
 				var inicio= (this.porPagina*(this.page -1));
+				var x = [] 
+				for (let i = 0; i < this.rows.length; i++) {
+					if(this.rows[i].camposConfigurados){
+						
+						for (let k = 0; k < this.rows[i].camposConfigurados.length; k++) {
+							
+							if(this.rows[i].camposConfigurados[k].nombre === "Resultados Informativo Valor Catastral" && this.rows[i].camposConfigurados[k].valor ){
+								console.log(i,k);
+								console.log(this.rows[i].camposConfigurados[k].valor);
+								x = [ this.rows[i].camposConfigurados[k].valor[0] ]
+							}
+						}
+					}
+				}
 					var arr_aux = [...this.rows];
 					// arr_aux.camposConfigurados ? console.log('arr_aux.camposConfigurados.nombre') : console.log('naaa');;
 					if(this.searchTitle != null)  {
@@ -140,8 +154,8 @@ Vue.use(Vuetify);
 					}   
 					
 					var filteredHelper = arr_aux.splice( inicio  , this.porPagina);
-					console.log( (filteredHelper[4]));
-					filteredHelper= []
+					filteredHelper = x[0];
+					console.log(filteredHelper);
 				return filteredHelper;
         	},
 		}
