@@ -19,17 +19,22 @@ class ReferenceController extends Controller {
 			'solicitudes_tramite.id as solicitudes_tramite-id',
 			'solicitudes_tramite.id_transaccion_motor as solicitudes_tramite-id_transaccion_motor',
 			'solicitudes_tramite.estatus as solicitudes_tramite-estatus',
-			'solicitudes_tramite.url_recibo as solicitudes_tramite-url_recibo'
+			'solicitudes_tramite.url_recibo as solicitudes_tramite-url_recibo',
+			'solicitudes_tramite.id_ticket as solicitudes_tramite-id_ticket'
 		)
 		->join('portal.solicitudes_tramite', 'oper_transacciones.id_transaccion_motor', 'solicitudes_tramite.id_transaccion_motor')
 		->where('referencia', $reference)
 		->first();
+		Log::channel('apilog')->info("REFERENCES: ".json_encode($ref, JSON_PRETTY_PRINT));
 		Log::channel('apilog')->info("DATA: ".json_encode($reference, JSON_PRETTY_PRINT));
 
 		if(!isset($reference->{'solicitudes_tramite-id'})){
 			Log::channel('apilog')->error("RESPONSE: Esta referencia '{$ref}' no se encuentra en la base de datos de portal");
 			return abort(409, "Esta referencia '{$ref}' no se encuentra en la base de datos de portal");
 		}
+
+		if(isset($reference->{'solicitudes_tramite-id_ticket'}))
+			$reference->{'solicitudes_tramite-id_ticket'} = json_decode($reference->{'solicitudes_tramite-id_ticket'});
 
 		$reference->solicitudes = DB::connection('db_portal')
 		->table('solicitudes_ticket')
@@ -43,7 +48,7 @@ class ReferenceController extends Controller {
 			'solicitudes_catalogo.atendido_por as solicitudes_catalogo-atendido_por'
 		)
 		->join('solicitudes_catalogo', 'solicitudes_ticket.catalogo_id', 'solicitudes_catalogo.id')
-		->where('id_transaccion', $reference->{'solicitudes_tramite-id'})
+		->whereIn('solicitudes_ticket.id', $reference->{'solicitudes_tramite-id_ticket'})
 		->get();
 
 		if($reference->{'oper_transacciones-estatus'} != 0 && !$request->has('dev')){
@@ -51,21 +56,28 @@ class ReferenceController extends Controller {
 			return abort(409, "El estatus actual de la referencia '{$ref}' es diferente de pagado (0).");
 		}
 
+		$recibo = getenv('FORMATO_RECIBO').$reference->{'solicitudes_tramite-id_transaccion_motor'};
 		$update = DB::connection('db_portal')
 		->table('solicitudes_tramite')
 		->where('id', $reference->{'solicitudes_tramite-id'})
 		->update([
 			'solicitudes_tramite.estatus' => $request->has('dev') ? 0 : $reference->{'oper_transacciones-estatus'},
-			'solicitudes_tramite.url_recibo' => getenv('FORMATO_RECIBO').$reference->{'solicitudes_tramite-id_transaccion_motor'},
+			'solicitudes_tramite.url_recibo' => $recibo,
 		]);
+		$affected = DB::connection('db_portal')
+		->table('solicitudes_tramite')
+		->select('id', 'estatus', 'url_recibo')
+		->where('id', $reference->{'solicitudes_tramite-id'})
+		->first();
 
-		if($update){
+		if($affected->estatus == 0 && $affected->url_recibo == $recibo){
 			foreach($reference->solicitudes as $solicitud){
 				$update = DB::connection('db_portal')
 				->table('solicitudes_ticket')
 				->where('id', $solicitud->id)
 				->update([
-					'solicitudes_ticket.status' => $solicitud->{'solicitudes_catalogo-atendido_por'} == 1 ? 2 : 3
+					'solicitudes_ticket.status' => $solicitud->{'solicitudes_catalogo-atendido_por'} == 1 ? 2 : 3,
+					'id_transaccion' => $reference->{'solicitudes_tramite-id'}
 				]);
 
 				if($update && $solicitud->{'solicitudes_catalogo-atendido_por'} == 1){
@@ -254,12 +266,19 @@ class ReferenceController extends Controller {
 			'solicitudes_tramite.id as solicitudes_tramite-id',
 			'solicitudes_tramite.id_transaccion_motor as solicitudes_tramite-id_transaccion_motor',
 			'solicitudes_tramite.estatus as solicitudes_tramite-estatus',
-			'solicitudes_tramite.url_recibo as solicitudes_tramite-url_recibo'
+			'solicitudes_tramite.url_recibo as solicitudes_tramite-url_recibo',
+			'solicitudes_tramite.id_ticket as solicitudes_tramite-id_ticket'
 		)
 		->join('portal.solicitudes_tramite', 'oper_transacciones.id_transaccion_motor', 'solicitudes_tramite.id_transaccion_motor')
 		->where('referencia', $reference)
 		->first();
+
 		if(!isset($reference->{'solicitudes_tramite-id'})) return abort(409, "La referencia \"{$ref}\" no se encuentra en la base de datos de portal");
+		if($reference->{'oper_transacciones-estatus'} != 99 && $reference->{'oper_transacciones-estatus'} != 65 && !$request->has('dev'))
+			return abort(409, 'El estatus actual de la referencia es diferente de cancelado (65) o devuelto (99).');
+
+		if(isset($reference->{'solicitudes_tramite-id_ticket'}))
+			$reference->{'solicitudes_tramite-id_ticket'} = json_decode($reference->{'solicitudes_tramite-id_ticket'});
 		
 		$reference->solicitudes = DB::connection('db_portal')
 		->table('solicitudes_ticket')
@@ -273,12 +292,8 @@ class ReferenceController extends Controller {
 			'solicitudes_catalogo.atendido_por as solicitudes_catalogo-atendido_por'
 		)
 		->join('solicitudes_catalogo', 'solicitudes_ticket.catalogo_id', 'solicitudes_catalogo.id')
-		->where('id_transaccion', $reference->{'solicitudes_tramite-id'})
+		->whereIn('solicitudes_ticket.id', $reference->{'solicitudes_tramite-id_ticket'})
 		->get();
-
-
-		if($reference->{'oper_transacciones-estatus'} != 99 && $reference->{'oper_transacciones-estatus'} != 65 && !$request->has('dev'))
-			return abort(409, 'El estatus actual de la referencia es diferente de cancelado (60) o devuelto (65).');
 
 		// SI ES STATUS 65 HAY QUE PASAR LA TRANSACCIÓN A PENDIENTE DE PAGO
 		// VALIDAR QUE SE NECESITARA MODIFICAR PARA QUE SE PUEDA EDITAR
@@ -292,6 +307,7 @@ class ReferenceController extends Controller {
 		if($update){
 			foreach($reference->solicitudes as $solicitud){
 				$changes = [
+					'id_transaccion' => $reference->{'solicitudes_tramite-id'},
 					'solicitudes_ticket.status' => 5
 				];
 
