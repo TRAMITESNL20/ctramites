@@ -29,6 +29,8 @@
 					<tr v-if="!loading && row.length != 0" v-for="(row, ind) in filteredHelper">
 						<td v-for="(item, ind) in row" :colspan=" row.length !== fields.length && ind === row.length - 1 && (fields.length - (row.length - 1)) " class="text-center">
 							{{ item.expediente_catastral }}
+							<!-- {{ typeof item == 'object' ? item.label :item }} -->
+
 							<!-- <span class="text-muted ml-2 cursor-pointer" v-if="item.tooltip" v-b-tooltip.hover :id="`tooltip-${ind}`">(+ {{item.tooltip.listItems.length-1}})</span> -->
 							<!-- <b-tooltip :target="`tooltip-${ind}`" triggers="hover" v-if="item.tooltip">
 								<h4 v-if="item.tooltip.title" class="text-uppercase"><strong>{{ item.tooltip.title }}</strong></h4>
@@ -36,7 +38,7 @@
 									<li v-for="(item, ind) in item.tooltip.listItems">{{ item }}</li>
 								</ul>
 							</b-tooltip> -->
-						<code>{{ item.expediente_catastral }}</code>
+						<!-- <code>{{ item.expediente_catastral }}</code> -->
 						</td>
 						<td v-if="JSON.parse(campo.caracteristicas).formato == 'seleccion' ">
 						<input type="radio" @change="check($event)"  :value="row" name="checkbox" :id="row.expediente" class="text-center pl-4 radio" >
@@ -44,6 +46,7 @@
 					</tr>
 				</tbody>
 			</table>
+			<code>{{ filteredHelper[0] }}</code>
 			<div v-if="Object.entries(this.infoExtra).length > 0" class="col-md-3 col-12">
 				<!-- <ul v-if="infoExtra.listItems" class="list-group">
 					<li v-if="infoExtra.title" class="list-group-item bg-secondary"><h3>{{ infoExtra.title }}</h3></li>
@@ -136,10 +139,10 @@ Vue.use(Vuetify);
 						
 						for (let k = 0; k < this.rows[i].camposConfigurados.length; k++) {
 							
-							if(this.rows[i].camposConfigurados[k].nombre === "Resultados Informativo Valor Catastral" && this.rows[i].camposConfigurados[k].valor ){
+							if(this.rows[i].camposConfigurados[k].nombre === "Resultados Informativo Valor Catastral"  && this.rows[i].camposConfigurados[k].valor  && this.rows[i].camposConfigurados[k].valor[0].expediente_catastral ){
 								console.log(i,k);
-								console.log(this.rows[i].camposConfigurados[k].valor);
-								x = [ this.rows[i].camposConfigurados[k].valor[0] ]
+								// console.log(this.rows[i].camposConfigurados[k].valor[0]);
+								x = [ this.rows[i].camposConfigurados[k].valor ]
 							}
 						}
 					}
@@ -154,8 +157,9 @@ Vue.use(Vuetify);
 					}   
 					
 					var filteredHelper = arr_aux.splice( inicio  , this.porPagina);
-					filteredHelper = x[0];
-					console.log(filteredHelper);
+					filteredHelper = x;
+					filteredHelper = [...filteredHelper];
+					console.log(filteredHelper[0]);
 				return filteredHelper;
         	},
 		}
