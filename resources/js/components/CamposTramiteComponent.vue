@@ -9,7 +9,7 @@
 			<form id="formularioDinamico">
 				<div class="panel panel-default" >
  					<div class="panel-heading">
- 						<div class="row">			
+ 						<div class="row">	
 							<v-expansion-panels accordion multiple hover style="z-index: inherit" v-model="panel">
 							    <v-expansion-panel v-for="(agrupacion, i) in agrupaciones" :key="i" close :disabled=" disabled.includes(i) ">
 							      	<v-expansion-panel-header >
@@ -52,7 +52,12 @@
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
 													@updateForm="updateForm">
-												</input-component>	
+												</input-component>
+												<divisa-component v-if="campo.tipo === 'select' && campo.nombre == 'Cambio de divisas'" 
+													:campo="campo" 
+													:showMensajes="showMensajes" 
+													:estadoFormulario="comprobarEstadoFormularioCount"
+													@updateForm="updateForm"></divisa-component>	
 												<select-component
 													v-else-if="campo.tipo === 'select' || campo.tipo === 'multiple'" 
 													:campo="campo" 
@@ -148,7 +153,6 @@
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
 													@updateForm="updateForm" :usuario="usuario"></listado-expedientes-5-i-s-r>
-
 												<div v-else-if="campo.tipo == 'question'">
 													¿Consigna valor?
 													<div class="col-md-12 col-lg-12">
@@ -221,6 +225,8 @@
     </div>
 </template>
 <script>
+	import Vue from 'vue';
+	import divisaCtrl from '../services/DivisasCtrl.js';
     export default {
         computed:{
             configCostos(){
@@ -258,8 +264,8 @@
 				loading : false,
 				infoExtra : {},
 				tipo_costo_obj: { tipo_costo:0 ,tipoCostoRadio:'millar',hojaInput:'', val_tipo_costo:'' },
-				tieneSeccionDocumentos: false,
-            }
+				tieneSeccionDocumentos: false
+			}
         },
         created() {
 			if (localStorage.getItem('datosFormulario')) {
@@ -415,7 +421,8 @@
         		if(campo.nombre == 'Distrito' && campo.valido){
         			this.gestionarCambioDistrito(campo.valor);
         		}
-				
+
+        		this.listenCampos( campo );				
 
         		this.cambioModelo();
         	},
@@ -746,6 +753,14 @@
 				this.panel = [0, 3, 4];
 				this.rows = this.rows.sort((a,b) => a[0]-b[0]);
 			},
+
+			listenCampos(campo){
+				if(campo.nombre == this.$const.NOMBRES_CAMPOS.CAMPO_DIVISAS && campo.valido){
+	        		let divisaValue = divisaCtrl.getSymbol(campo.valor); 
+	        		this.$store.commit('change', divisaValue);
+	        		this.$root.$emit('chambioDivisa');
+	        	}
+			},
 			processCampo (campo) {
 				const disabled = this.agrupaciones.map((agrupacion, ind) => this.disabled.includes(ind) ? agrupacion.agrupacion_id : null).filter(ele => ele);
 				const actived = this.agrupaciones.map((agrupacion, ind) => this.panel.includes(ind) ? agrupacion.agrupacion_id : null).filter(ele => ele);
@@ -763,7 +778,17 @@
 			}
 		},
 		mounted(){
-		}
+		},
+
+		watch: {
+			tipo_costo_obj:  {
+		        handler: function (val, oldVal) {
+		         	this.$root.$emit('tipo_costo_obj_change', { activo: val.tipoCostoRadio != 'millar' });
+		        },
+		        deep: true				
+			},
+
+		},
 	}
 
 

@@ -1,5 +1,5 @@
 <template>
-  <div class=" fv-plugins-icon-container">
+  <div class=" fv-plugins-icon-container" v-if="visible">
     <label>
         {{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}
     </label>
@@ -26,77 +26,56 @@
 </template>
 
 <script>
-
+  import Vue from 'vue';
     export default {
       
       props: ['campo', 'estadoFormulario', 'showMensajes'],
+      data() {
+        return {
+            visible:true
+        }
+      },
       created() {
         this.validar();
       },
+      mounted(){
+        let self = this;
+        this.$root.$on('chambioDivisa',  function (data) {
+          let caracteristicas= self.getCaracteristicas();
+          if( caracteristicas.formato == "moneda" && self.campo.valido){
+            let style = self.$store.state.DEFAULT_DIVISA.STYLE;
+            let currency = self.$store.state.DEFAULT_DIVISA.CURRENCY;
+            let number =  self.campo.valor ? Vue.filter('toNumber')( self.campo.valor ) : '';
+            self.campo.valor = Vue.filter('toCurrency')( number, style, currency  );
+          }
+        });
+        this.$root.$on('tipo_costo_obj_change',  function (data) {
+          let caracteristicas= self.getCaracteristicas();
+          if( self.campo.nombre == self.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION){
+            self.campo.valido = false;
+            caracteristicas.required = !data.activo;
+            self.visible = !data.activo;
+            self.campo.caracteristicas = JSON.stringify(caracteristicas);
+            self.validar()
+          }
+        });
+      },
       methods: {
         formatear(){
-          var number = this.campo.valor ? Number((this.campo.valor+"").replace(/[^0-9.-]+/g,"")) : "";
           let caracteristicas= this.getCaracteristicas();
           if( caracteristicas.formato == "moneda" && this.campo.valido){
-            const formatter  = new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'MXN',
-              minimumFractionDigits: 0
-            });
-          if( caracteristicas.formato == 'curp'){
-                var self = this;
-                let url = process.env.TESORERIA_HOSTNAME + "/consultar-curp/" + campo.valor ;  
-                // let url = process.env.TESORERIA_HOSTNAME + "/insumos-catastro-consulta/7090036008";  
-                $.ajax({
-                    type: "GET",
-                    dataType: 'json', 
-                    url,
-                    success:function(data){
-                        // self.rellenarForm(data);
-                        console.log('..se consulto el curp respuesta : ' + data );
-                        // this.$data = data.data.nombres;
-                    },
-                    error:function(error){
-                        console.log(error);
-                    },
-                    complete:function(){
-                        console.log('ya quedo');
-                    }
-                });
+            let style = this.$store.state.DEFAULT_DIVISA.STYLE;
+            let currency = this.$store.state.DEFAULT_DIVISA.CURRENCY;
+            let number =  this.campo.valor ? Vue.filter('toNumber')( this.campo.valor ) : '';
+            this.campo.valor = Vue.filter('toCurrency')( number, style, currency  );
           }
-            this.campo.valor = formatter.format(number);
-            
-          }
-          if (this.campo.valor) {
-            if( caracteristicas.formato == 'curp' && this.campo.valor.length  ==  18  ){
-              var self = this;
-                console.log('------');
-                let url = process.env.TESORERIA_HOSTNAME + "/consultar-curp/" + this.campo.valor ;  
-                $.ajax({
-                  type: "GET",
-                    dataType: 'json', 
-                    url,
-                    success:function(data){
-                      // self.rellenarForm(data);
-                        console.log('..se consulto el curp respuesta : ' + data );
-                        // this.$data = data.data.nombres;
-                        self.$emit('curpSearch', data)
-                    },
-                    error:function(error){
-                      console.log('error: ', error);
-                    },
-                    complete:function(){
-                      console.log('ya quedo');
-                    }
-                });
-            }
-          }
-
           if(caracteristicas.formato == 'manzana'){
            this.campo.valor =  this.padLeft(this.campo.valor, 3);  
           }
           this.$forceUpdate();
         },
+
+
 
         getCaracteristicas(){
           let caracteristicas = {};
@@ -137,7 +116,7 @@
             }
           } 
           // console.log(caracteristicas.hasOwnProperty('required') && caracteristicas.required === 'true');
-          if( caracteristicas.hasOwnProperty('required') && caracteristicas.required === 'true') {
+          if( caracteristicas.hasOwnProperty('required') &&  caracteristicas.required === 'true' || (typeof  caracteristicas.required == 'boolean' && caracteristicas.required)  ) {
             requeridoValido =  !!this.campo.valor && (this.campo.valor+"").length > 0;
             if( !requeridoValido ){
               let mensaje = { 
