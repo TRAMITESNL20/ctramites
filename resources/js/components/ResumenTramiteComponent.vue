@@ -295,6 +295,8 @@
                 let url = "";
                 let consulta_api =  this.datosFormulario.consulta_api;
                 let tipo_costo_obj = this.datosFormulario.tipo_costo_obj ;
+                let expedientesInformativo = this.datosFormulario.campos.find(ele => ele.nombre === "Resultados Informativo Valor Catastral");
+                console.log(expedientesInformativo);
                 
                 if( this.tipoTramite =='normal'  ){
                     url = process.env.APP_URL + (consulta_api ?  consulta_api :  "/getcostoTramite"); 
@@ -316,10 +318,14 @@
                     let response = await axios.post(url, data);
                     let detalleTramite = response.data;
 
+                    console.log('consulta_api', consulta_api);
+
                     if( consulta_api == "/getcostoImpuesto" || this.tipoTramite =='complementaria'  ){
                         this.tramite.detalle =  detalleTramite;
                     } else {
                         this.tramite.detalle =  detalleTramite[0];
+                        if(expedientesInformativo && expedientesInformativo.valor.length > 0)
+                            this.tramite.detalle.costo_final = this.tramite.detalle.costo_final * expedientesInformativo.valor.length;
                 
                     }
 
