@@ -283,7 +283,7 @@ class ReferenceController extends Controller {
 
 
 		if($reference->{'oper_transacciones-estatus'} != 99 && $reference->{'oper_transacciones-estatus'} != 65 && !$request->has('dev'))
-			return abort(409, 'El estatus actual de la referencia es diferente de cancelado (60) o devuelto (65).');
+			return abort(409, 'El estatus actual de la referencia es diferente de cancelado (65) o devuelto (99).');
 
 		// SI ES STATUS 65 HAY QUE PASAR LA TRANSACCIÓN A PENDIENTE DE PAGO
 		// VALIDAR QUE SE NECESITARA MODIFICAR PARA QUE SE PUEDA EDITAR
