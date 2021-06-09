@@ -26,8 +26,8 @@
 				</thead>
 				<tbody>
 					<tr v-if="loading"><td :colspan="fields.length" class="text-center"><i class="fas fa-spinner fa-spin mr-2"></i></td></tr>
-					<tr v-if="!loading && row.length != 0" v-for="(row, ind) in filteredHelper">
-						<td v-for="(item, ind) in row" :colspan=" row.length !== fields.length && ind === row.length - 1 && (fields.length - (row.length - 1)) " class="text-center">
+					<tr v-if="!loading && row.length != 0" v-for="(row, ind) in filteredHelper" :key="ind">
+						<td v-for="(item, ind) in row" :key="item.expediente_catastral" :colspan=" row.length !== fields.length && ind === row.length - 1 && (fields.length - (row.length - 1)) " class="text-center">
 							{{ item.expediente_catastral }}
 							<!-- {{ typeof item == 'object' ? item.label :item }} -->
 
@@ -91,7 +91,7 @@ Vue.use(Vuetify);
 				pageSizes: [5, 10, 20],
 		}},
 		mounted () {
-			console.log('====results===');
+			console.log('====results====');
 			// console.log( (  (this.rows[4].campos ) ) );
 			this.campo.valido = true;
 			this.$emit('updateForm', this.campo);
@@ -142,7 +142,7 @@ Vue.use(Vuetify);
 							if(this.rows[i].camposConfigurados[k].nombre === "Resultados Informativo Valor Catastral"  && this.rows[i].camposConfigurados[k].valor  && this.rows[i].camposConfigurados[k].valor[0].expediente_catastral ){
 								console.log(i,k);
 								// console.log(this.rows[i].camposConfigurados[k].valor[0]);
-								x = [ this.rows[i].camposConfigurados[k].valor ]
+								x = [{"expediente_catastral" : this.rows[i].camposConfigurados[k].valor }]
 							}
 						}
 					}

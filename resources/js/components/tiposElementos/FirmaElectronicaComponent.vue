@@ -36,7 +36,7 @@
 				var auxEnv = process.env.AAPP_URL;
 				if ( auxEnv == "https://tramites.nl.gob.mx") auxEnv = "http://tramites.nl.gob.mx";
 				var userEncoded =btoa(this.user.role.description + ' - ' +  this.user.name + ' ' +  this.user.fathers_surname + ' RFC: ' +  this.user.rfc ) ;
-				console.log(this.usuario.tramite_id);
+				console.log( JSON.stringify(solicitud) );
 					
 					if(this.multiple){
 						if(typeof this.doc === 'string'){
@@ -46,6 +46,8 @@
 								this.doc.push(doc)
 							}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO){
 								this.doc = [];
+								//se tiene que mandar el ws con el  paquete completo para los tramites  y ademas  y despues se busca el id que te regrese a buscar
+								this.getDocumentCatastro(solicitud);
 								this.doc.push("http://www.africau.edu/images/default/sample.pdf");
 							}	
 							
@@ -85,7 +87,7 @@
 						this.perfil = this.tramitesdoc[i].perfil;
 					}
 				}
-				console.log(this.perfil);
+				// console.log(this.perfil);
 				var urlDataGeneric =  process.env.INSUMOS_API_HOSTNAME + '/data_generic';
 				var url =  process.env.INSUMOS_API_HOSTNAME + "/v2/signature/iframe?id=";
 				var data = {
@@ -155,25 +157,172 @@
 			},
 			messageEvt (evt) {
 				var self = this;
-				console.log('messageEvt', evt, evt.data);
+				console.log('messageEvt', evt.data);
 				if( evt.data.length >= 1  ){
-					fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
-						method : 'POST',
-						body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
-					})
-					.then(res => res.json())
-					.then(res => {
-						if(res.code === 200){
-							console.log('Firmado');    
-							self.tramiteFirmado = true;
-							self.$emit('docFirmadosListos', self.docFirmadosListos);
-							self.$emit('docFirmado', 1);
-							self.$emit('urlFirmado', self.urlFirmado);
-						}
-						else console.log('Something goes wrong!', res);
-					});
+
+					if( env.data[0].includes(this.usuario.solicitudes[0].id)  ){
+
+						console.log("el id es: " + this.usuario.solicitudes[0].id );
+					
+						fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+							method : 'POST',
+							body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
+						})
+						.then(res => res.json())
+						.then(res => {
+							if(res.code === 200){
+								console.log('Firmado');    
+								self.tramiteFirmado = true;
+								self.$emit('docFirmadosListos', self.docFirmadosListos);
+								self.$emit('docFirmado', 1);
+								self.$emit('urlFirmado', self.urlFirmado);
+							}
+							else console.log('Something goes wrong!',  res);
+						});
+					}
+
+					
 				}
-			}
+			},
+			getDocumentCatastro(solicitud){
+				dataCatastro: [
+					{
+						"json":{
+							"expedientecatastral":"7001001001",
+							"pktramite":"9",
+							"pknotaria":1,
+							"estadonotaria":19,
+							"foliopago":123456,
+							"fechapago":"2021-06-07",
+							"montopago":"123",
+							"tipoventa":"Terreno y construcci\u00f3n",
+							"isai":12345,
+							"fechaprot":"2021-06-07",
+							"fechafirma":"2021-06-07",
+							"escriturapub":"",
+							"actafprot":"",
+							"avaluo":12345,
+							"operacion":12345,
+							"motivooperacion":"motivo",
+							"fiscal":12345678,
+							"folio_forma":"12345",
+							"descripcion_predio":"descripcion de estructura medidas y colindancias",
+							"adquirientes":[
+								{
+									"curprfc":"PRUE000111ISH",
+									"clasepro":2,
+									"tipopro":1,
+									"nombrerazon":"NOMBRE DE PRUEBA",
+									"apepat":"APATERNO",
+									"apemat":"AMATENRO",
+									"fecha_nac":"2021-01-01",
+									"telefono":1234567890,
+									"celular":1234567890,
+									"correo":"correo@correo.com",
+									"nuda":20,
+									"usufructo":10,
+									"direccion":{
+										"asentamiento":"colonia",
+										"cp":64000,
+										"pktipovialidad":1,
+										"calle":"calle",
+										"cruza1":"",
+										"cruza2":"",
+										"numext":"123",
+										"numint":"A",
+										"numextant":"",
+										"referencia":"",
+										"municipio":70
+									}
+								},
+								{
+									"curprfc":"PRUE000111ISH",
+									"clasepro":2,
+									"tipopro":1,
+									"nombrerazon":"NOMBRE DE PRUEBA",
+									"apepat":"APATERNO",
+									"apemat":"AMATENRO",
+									"fecha_nac":"2021-01-01",
+									"telefono":1234567890,
+									"celular":1234567890,
+									"correo":"correo@correo.com",
+									"nuda":20,
+									"usufructo":10,
+									"direccion":{
+										"asentamiento":"colonia",
+										"cp":64000,
+										"pktipovialidad":1,
+										"calle":"calle",
+										"cruza1":"",
+										"cruza2":"",
+										"numext":"123",
+										"numint":"A",
+										"numextant":"",
+										"referencia":"",
+										"municipio":70
+									}
+								}
+							],
+							"vendedores":[
+								{
+									"curprfc":"PRUE000111ISH",
+									"clasepro":2,
+									"tipopro":1,
+									"nombrerazon":"NOMBRE DE PRUEBA",
+									"apepat":"APATERNO",
+									"apemat":"AMATENRO",
+									"fecha_nac":"2021-01-01",
+									"telefono":1234567890,
+									"celular":1234567890,
+									"correo":"correo@correo.com",
+									"nuda":20,
+									"usufructo":10,
+									"direccion":{
+										"asentamiento":"colonia",
+										"cp":64000,
+										"pktipovialidad":1,
+										"calle":"calle",
+										"cruza1":"",
+										"cruza2":"",
+										"numext":"123",
+										"numint":"A",
+										"numextant":"",
+										"referencia":"",
+										"municipio":70
+										}
+									},
+									{
+										"curprfc":"PRUE000111ISH",
+										"clasepro":2,
+										"tipopro":1,
+										"nombrerazon":"NOMBRE DE PRUEBA",
+										"apepat":"APATERNO",
+										"apemat":"AMATENRO",
+										"fecha_nac":"2021-01-01",
+										"telefono":1234567890,
+										"celular":1234567890,
+										"correo":"correo@correo.com",
+										"nuda":20,
+										"usufructo":10,
+										"direccion":{
+											"asentamiento":"colonia",
+											"cp":64000,
+											"pktipovialidad":1,
+											"calle":"calle",
+											"cruza1":"",
+											"cruza2":"",
+											"numext":"123",
+											"numint":"A",
+											"numextant":"",
+											"referencia":"",
+											"municipio":70
+											}
+										}
+							]
+						}
+					}
+				]
+			},
 		},
 	}
 </script>
