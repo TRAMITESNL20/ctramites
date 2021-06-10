@@ -12,7 +12,7 @@
           :name="[[campo.campo_id]] + '-' + [[campo.relationship]]" 
           class="custom-file-input"  style="background-color: #e5f2f5 !important"
           ref="fileInput"
-          type="file" @change="validar" :accept="accept" />
+          type="file" @change="validar" :accept="accept" :disabled="campo.disabled" />
         <label class="custom-file-label" :for="[[campo.campo_id]] + '-' + [[campo.relationship]]">
           <span :id="[[campo.campo_id]]+ '-' + [[campo.relationship]]+'-namefile'">  
             {{ campo.attach || 'Seleccione archivo' }} 
@@ -62,6 +62,9 @@
       },
       mounted(){
         let promises = [];
+        if(this.campo.nombreArchivoGuardado){
+          let urlFile = /*process.env.TESORERIA_HOSTNAME + '/download/' +*/ this.campo.nombreArchivoGuardado;
+        }
 
         if(this.campo.nombreArchivoGuardado){
           let urlFile = this.campo.nombreArchivoGuardado;

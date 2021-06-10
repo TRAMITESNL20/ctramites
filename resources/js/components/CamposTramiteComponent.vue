@@ -9,7 +9,7 @@
 			<form id="formularioDinamico">
 				<div class="panel panel-default" >
  					<div class="panel-heading">
- 						<div class="row">			
+ 						<div class="row">	
 							<v-expansion-panels accordion multiple hover style="z-index: inherit" v-model="panel">
 							    <v-expansion-panel v-for="(agrupacion, i) in agrupaciones" :key="i" close :disabled=" disabled.includes(i) ">
 							      	<v-expansion-panel-header >
@@ -52,7 +52,12 @@
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
 													@updateForm="updateForm">
-												</input-component>	
+												</input-component>
+												<divisa-component v-if="campo.tipo === 'select' && campo.nombre == 'Cambio de divisas'" 
+													:campo="campo" 
+													:showMensajes="showMensajes" 
+													:estadoFormulario="comprobarEstadoFormularioCount"
+													@updateForm="updateForm"></divisa-component>	
 												<select-component
 													v-else-if="campo.tipo === 'select' || campo.tipo === 'multiple'" 
 													:campo="campo" 
@@ -61,6 +66,7 @@
 													@updateForm="updateForm"
 													v-on:estadoSelected="estadoSelected($event)"
 													:estado="estado"
+													:distrito="distrito"
 													>
 												</select-component>
 												<option-component 
@@ -105,6 +111,7 @@
 													:loading="loading"
 													:infoExtra="infoExtra"
 													v-on:expedienteSeleccionado="updateExpedienteSeleccionado($event)"
+													:response="response"
 													>
 												</results-component>
 												<expediente-excel-component  
@@ -115,6 +122,7 @@
 													@updateForm="updateForm" :files="files"
 													@validarFormulario="validarFormulario"
 													@processGrupal="processGrupal"
+													:disabled="disabled"
 													>
 												</expediente-excel-component>
 												<enajenantes-component v-else-if="campo.tipo == 'enajenante'" 
@@ -145,7 +153,6 @@
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
 													@updateForm="updateForm" :usuario="usuario"></listado-expedientes-5-i-s-r>
-
 												<div v-else-if="campo.tipo == 'question'">
 													¿Consigna valor?
 													<div class="col-md-12 col-lg-12">
@@ -218,6 +225,8 @@
     </div>
 </template>
 <script>
+	import Vue from 'vue';
+	import divisaCtrl from '../services/DivisasCtrl.js';
     export default {
         computed:{
             configCostos(){
@@ -227,7 +236,7 @@
                 	tipoPersona:this.tipoPersona,
                 	declararEn0:this.declararEn0
                 };
-            }
+            },
         },
         props: ['tramite','formularioValido', 'comprobarEstadoFormularioCount', 'infoGuardada', 'declararEn0', 'notary', 'usuario'],
         data() {
@@ -238,6 +247,7 @@
 				campos: [], 
 				agrupaciones:[], 
 				estado: {clave:19, nombre: "NUEVO LEÓN"},
+				distrito: {clave:0, nombre: "Distrito 0"},
                 mostrar:false,
                 errors: {},
                 showMensajes:false,
@@ -254,8 +264,8 @@
 				loading : false,
 				infoExtra : {},
 				tipo_costo_obj: { tipo_costo:0 ,tipoCostoRadio:'millar',hojaInput:'', val_tipo_costo:'' },
-				tieneSeccionDocumentos: false,
-            }
+				tieneSeccionDocumentos: false
+			}
         },
         created() {
 			if (localStorage.getItem('datosFormulario')) {
@@ -288,7 +298,6 @@
 	        } else {
 				this.obtenerCampos();
 			}
-
         },
         methods: {
 			updatePorcentaje(porcentaje){	
@@ -303,6 +312,14 @@
 
         	gestionarCambioEstado(estado){
         		this.estado = estado;
+        	},
+
+			distritoSelected(distrito){
+				this.distrito = distrito;
+			},
+
+        	gestionarCambioDistrito(distrito){
+        		this.distrito = distrito;
         	},
 
         	async updateForm(campo){
@@ -383,6 +400,8 @@
 							this.panel = [0, 3];
 						break;
 					}
+
+					this.processCampo(campo);
 				}
 
         		if(campo.tipo == 'file' && campo.valido){
@@ -399,6 +418,11 @@
         		if(campo.nombre == 'Estado' && campo.valido){
         			this.gestionarCambioEstado(campo.valor);
         		}
+        		if(campo.nombre == 'Distrito' && campo.valido){
+        			this.gestionarCambioDistrito(campo.valor);
+        		}
+
+        		this.listenCampos( campo );				
 
         		this.cambioModelo();
         	},
@@ -448,8 +472,11 @@
 					if( this.infoGuardada && this.infoGuardada.campos ){
 						this.tipoPersona = this.infoGuardada.tipoPersona;
 						this.tipo_costo_obj = this.infoGuardada.tipo_costo_obj;
+
+						this.campos = this.infoGuardada.camposConfigurados;
+
 						this.campos.forEach( (campo, index) =>{	
-							campo.valor = this.infoGuardada.campos[ campo.campo_id ];
+							//campo.valor = this.infoGuardada.campos[ campo.campo_id ];
 							if( campo.tipo == 'file' && this.infoGuardada.archivosGuardados){
 								let infoArchivoGuardado = this.infoGuardada.archivosGuardados.find( archivo => archivo.mensaje == campo.nombre );
 								campo.archivoGuardado = true;
@@ -547,7 +574,7 @@
 
 				if(empty.length == 0){
 					this.panel = [0, 1, 4];
-					const exp = `${all['Municipio'].valor.clave.toString()}${all['Region'].valor}${all['Manzana'].valor}${all['Lote'].valor}`;
+					const exp = `${all['Municipio'].valor && all['Municipio'].valor.clave.toString()}${all['Region'] && all['Region'].valor}${all['Manzana'] && all['Manzana'].valor}${all['Lote'] && all['Lote'].valor}`;
 					const url = `${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/${exp}`;
 					if(this.ajax !== url){
 						this.ajax = url;
@@ -605,7 +632,7 @@
 							listItems : infoExtra
 						};
 
-						// this.rows = rows;
+						this.rows = rows;
 						this.loading = false;
 					}
 				}else{
@@ -672,6 +699,7 @@
 			},
 			async processGrupal({response, exp}){
 				let rows = [];
+				if(!response.data.expediente_catastral) response.data.expediente_catastral = exp;
 				this.response.push(response.data);
 				if(response.data.resultado) rows = [exp, response.data.resultado]
 				else if(response.data.datos_catastrales){
@@ -686,21 +714,21 @@
 				}else{
 					rows = [exp, 'Error al consultar WS. Por favor, intenta de nuevo.']
 				}
-				
-				const noValido = this.response.filter(ele => ele.cta_valida === '0');
+
+				const noValido = this.response.filter(ele => ele.bloqueado && ele.bloqueado !== '0');
 				const bloqueados = this.response.filter(ele => ele.bloqueado && ele.bloqueado !== '0');
-				const fallidos = this.response.filter(ele => ele.resultado === 'NO ENCONTRADO');
-				const autorizados = this.response.filter(ele => ele.datos_propietarios);
+				const fallidos = this.response.filter(ele => ele.resultado && ele.resultado === 'NO ENCONTRADO');
+				const autorizados = this.response.filter(ele => ele.bloqueado && ele.bloqueado === '0');
 
 				const infoExtra = [
 					{
 						label : 'Registros Consultados',
 						value : this.response.length
 					},
-					{
-						label : 'No Validos',
-						value : noValido ? noValido.length : 0
-					},
+					// {
+					// 	label : 'No Validos',
+					// 	value : noValido ? noValido.length : 0
+					// },
 					{
 						label : 'Bloqueados',
 						value : bloqueados ? bloqueados.length : 0
@@ -723,10 +751,44 @@
 				this.rows.push(rows);
 				this.loading = false;
 				this.panel = [0, 3, 4];
+				this.rows = this.rows.sort((a,b) => a[0]-b[0]);
+			},
+
+			listenCampos(campo){
+				if(campo.nombre == this.$const.NOMBRES_CAMPOS.CAMPO_DIVISAS && campo.valido){
+	        		let divisaValue = divisaCtrl.getSymbol(campo.valor); 
+	        		this.$store.commit('change', divisaValue);
+	        		this.$root.$emit('chambioDivisa');
+	        	}
+			},
+			processCampo (campo) {
+				const disabled = this.agrupaciones.map((agrupacion, ind) => this.disabled.includes(ind) ? agrupacion.agrupacion_id : null).filter(ele => ele);
+				const actived = this.agrupaciones.map((agrupacion, ind) => this.panel.includes(ind) ? agrupacion.agrupacion_id : null).filter(ele => ele);
+
+				this.campos.map(campo => {
+					if(disabled.find(ele => ele === campo.agrupacion_id)) campo.valido = true;
+					if(actived.find(ele => ele === campo.agrupacion_id)){
+						let object = false;
+						if(typeof campo.caracteristicas == 'object') object = true;
+						if(typeof campo.caracteristicas == 'string') campo.caracteristicas = JSON.parse(campo.caracteristicas);
+						campo.caracteristicas.required = "true";
+						if(!object) campo.caracteristicas = JSON.stringify(campo.caracteristicas);
+					}
+				})
 			}
-		 },
-		 mounted(){
-		 }
+		},
+		mounted(){
+		},
+
+		watch: {
+			tipo_costo_obj:  {
+		        handler: function (val, oldVal) {
+		         	this.$root.$emit('tipo_costo_obj_change', { activo: val.tipoCostoRadio != 'millar' });
+		        },
+		        deep: true				
+			},
+
+		},
 	}
 
 
