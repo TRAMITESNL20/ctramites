@@ -147,8 +147,9 @@
                     //this.mostrarMetodos = false;
                     Command: toastr.warning("Error!", error.message || "Ocurrió un error al guardar");
                     $("#metodoPagoBtn").fadeIn();
-                }).finally(() => {
                     this.consultandoMetodos = false;
+                }).finally(() => {
+                    
                 });
 
 
