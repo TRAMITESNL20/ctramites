@@ -3,7 +3,7 @@
             <div class="card">
                  <div class="card-header">
                     <div v-if="tramite.detalle && tramite.detalle.Salidas"  class="row">
-                       
+
                         <button href="#" class="btn btn-sm btn-light-primary font-weight-bolder text-uppercase mr-2" v-on:click="toggleTabla()" >
                             Ver detalle <i class="fa fa-angle-down"></i>
                         </button>
@@ -33,7 +33,7 @@
                                             </td>
                                             <td class="right">
                                                     <span class="spinner-border spinner-border-sm" v-if="obteniendoCosto"></span>
-                                                    <span v-if="!obteniendoCosto"> 
+                                                    <span v-if="!obteniendoCosto">
                                                         {{ this.tramite.detalle.Salidas['Importe total'] | toCurrency }}
 
                                                     </span>
@@ -96,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-                                        
+
                     <div class="table-responsive-sm" v-if="listaSolicitantes.length > 0 && tipoTramite == 'normal'">
                         <table class="table table-striped">
                             <thead>
@@ -109,7 +109,7 @@
                                 <tr v-for="(sol, index) in listaSolicitantes" >
                                     <td class="left strong">{{ sol.rfc }}</td>
                                     <td class="center">
-                                        {{ sol.tipoPersona == "pm" ? sol.razonSocial : sol.nombreSolicitante + ' ' + sol.apPat + ' '  + sol.apMat  }} 
+                                        {{ sol.tipoPersona == "pm" ? sol.razonSocial : sol.nombreSolicitante + ' ' + sol.apPat + ' '  + sol.apMat  }}
                                     </td>
                                 </tr>
                             </tbody>
@@ -146,6 +146,7 @@
 
         props: ['datosComplementaria','tipoTramite', 'infoGuardadaFull'],
         mounted() {
+
             this.obtenerInformacionDelTramite();
 
 
@@ -154,27 +155,27 @@
                 this.obteniendoCosto= false;
                 this.tramite.detalle = {costo_final:0};
                 const parsed = JSON.stringify(this.tramite);
-                localStorage.setItem('tramite', parsed);  
+                localStorage.setItem('tramite', parsed);
                 this.$forceUpdate();
                 this.obteniendoCosto = false;
             } else {
-                this.obtenerCosto();    
+                this.obtenerCosto();
             }*/
             if( this.infoGuardadaFull && this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ){
                 this.tramite.detalle = JSON.parse(  this.infoGuardadaFull.info ).detalle;
                 const parsed = JSON.stringify(this.tramite);
-                localStorage.setItem('tramite', parsed);  
-                                
+                localStorage.setItem('tramite', parsed);
+
                 this.tramite.detalle.pago_total = this.tramite.detalle.costo_final;
                 this.tramite.detalle.costo_anterior =  this.tramite.detalle.costo_final;
                 this.tramite.detalle.costo_final = 0;
                 this.$forceUpdate();
-                                
+
                 this.obteniendoCosto = false;
             } else {
-                this.obtenerCosto();    
+                this.obtenerCosto();
             }
-            
+
         },
 
         data(){
@@ -185,7 +186,7 @@
                 obteniendoCosto:true
             }
         },
-  
+
         methods: {
             obtenerInformacionDelTramite(){
                 let informacionEnStorage = ["listaSolicitantes", "tramite", "datosFormulario"];
@@ -206,7 +207,7 @@
 
             getCampoByName( nameCampo ){
                 return this.datosFormulario.campos.find( campo => campo.nombre.toLowerCase()  === nameCampo.toLowerCase() );
-            }, 
+            },
 
             getParamsCalculoCosto( consulta_api , params, tipo_costo_obj){
                 let paramsCosto = {};
@@ -221,7 +222,7 @@
 
                         paramsCosto.fecha_escritura = campoFechaMinuta.valor.split("-").map(dato => Number(dato)).join("-");
                         paramsCosto.monto_operacion = this.formatoNumero(campoMonto.valor);
-                        paramsCosto.ganancia_obtenida = this.formatoNumero(campoGananciaObtenida.valor);    
+                        paramsCosto.ganancia_obtenida = this.formatoNumero(campoGananciaObtenida.valor);
                         paramsCosto.pago_provisional_lisr = this.formatoNumero(campoPagoProvisional.valor);
                         if( campoMulta ){
                             paramsCosto.multa_correccion_fiscal = this.formatoNumero(campoMulta.valor);
@@ -237,20 +238,22 @@
                             let campoHoja           = this.getCampoByName(CAMPO_HOJA);
                             let campoSubsidio       = this.getCampoByName(CAMPO_SUBSIDIO);
                             let campoCatastral      = this.getCampoByName(CAMPO_VALOR_CATASTRAL);
-                            let campoValorOperacion = this.getCampoByName(CAMPO_VALOR_OPERACION);  
+                            let campoValorOperacion = this.getCampoByName(CAMPO_VALOR_OPERACION);
+                            let campoCantidadLote   =  this.getCampoByName(Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_CANTIDAD_LOTES);
                             let tipoOperacion       = this.getCampoByName(CAMPO_TIPO_OPERACION);
+
                             if( campoCatastral ){
                                 paramsCosto.valor_catastral = this.formatoNumero(campoCatastral.valor);
                             }
 
-                            if(campoSubsidio){                            
+                            if(campoSubsidio){
                                 if( campoSubsidio.tipo == 'select'  ){
-                                    //paramsCosto.subsidio = campoSubsidio.valor[0][0];//62 
+                                    //paramsCosto.subsidio = campoSubsidio.valor[0][0];//62
                                     paramsCosto.subsidio = campoSubsidio.valor.clave;
                                 } else {
-                                    paramsCosto.subsidio = campoSubsidio.valor;//62    
+                                    paramsCosto.subsidio = campoSubsidio.valor;//62
                                 }
-                                
+
                             }
 
                             if(campoValorOperacion ){
@@ -258,11 +261,12 @@
                             }
 
                             if( campoHoja ){
-                                paramsCosto.hoja = campoHoja.valor; 
+                                paramsCosto.hoja = campoHoja.valor;
                             }
-
-                            if( campoLote ){
-                                paramsCosto.lote = campoLote.valor
+                            if(campoCantidadLote) {
+                                paramsCosto.lote = campoCantidadLote.valor;
+                            } else if( campoLote ){
+                                paramsCosto.lote = campoLote.valor;
                             }
                             if(this.infoGuardadaFull && this.infoGuardadaFull.id && (this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO || this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO) ) {
                                 paramsCosto.id_ticket = this.infoGuardadaFull.id;
@@ -271,7 +275,7 @@
                             if(tipoOperacion){
                                 paramsCosto.tipoOperacion = tipoOperacion.valor.clave;
                             }
-                        }                 
+                        }
                     }
                     let campoDivisas              = this.getCampoByName(CAMPO_DIVISAS);
                     if( campoDivisas ){
@@ -296,28 +300,28 @@
                 return  Vue.filter('toNumber')(numberStr +"");
             },
 
-            async obtenerCosto(){    
+            async obtenerCosto(){
                 let url = "";
                 let consulta_api =  this.datosFormulario.consulta_api;
                 let tipo_costo_obj = this.datosFormulario.tipo_costo_obj ;
                 let expedientesInformativo = this.datosFormulario.campos.find(ele => ele.nombre === "Resultados Informativo Valor Catastral");
                 console.log(expedientesInformativo);
-                
+
                 if( this.tipoTramite =='normal'  ){
-                    url = process.env.APP_URL + (consulta_api ?  consulta_api :  "/getcostoTramite"); 
+                    url = process.env.APP_URL + (consulta_api ?  consulta_api :  "/getcostoTramite");
                 } else if(this.tipoTramite =='complementaria'){
-                    url = process.env.APP_URL + "/getComplementaria"; 
+                    url = process.env.APP_URL + "/getComplementaria";
                 }
 
-                let data = {  
+                let data = {
                     id_seguimiento: this.tramite.id_seguimiento,
                     tramite_id: this.tramite.id_tramite,
                     tipoPersona:this.listaSolicitantes[0].tipoPersona,
                     campos: this.campos
                 }
-                
+
                 data = this.getParamsCalculoCosto(consulta_api, data, tipo_costo_obj);
-                
+
                 try {
                     // CONSULTA EL COSTO
                     let response = await axios.post(url, data);
@@ -331,11 +335,11 @@
                         this.tramite.detalle =  detalleTramite[0];
                         if(expedientesInformativo && expedientesInformativo.valor.length > 0)
                             this.tramite.detalle.costo_final = this.tramite.detalle.costo_final * expedientesInformativo.valor.length;
-                
+
                     }
 
                     const parsed = JSON.stringify(this.tramite);
-                    localStorage.setItem('tramite', parsed);  
+                    localStorage.setItem('tramite', parsed);
                     this.$forceUpdate();
                     this.obteniendoCosto = false;
                 } catch (error) {
@@ -343,14 +347,14 @@
                     console.log(error);
                     Command: toastr.error("Error!", error.message || "No fue posible obtener los costos");
                 }
-                
+
             },
 
             currencyFormat(campoName, salida){
                 let arr = ["Ganancia Obtenida","Monto obtenido conforme al art 127 LISR",
                             "Pago provisional conforme al art 126 LISR","Impuesto correspondiente a la entidad federativa",
                             "Parte actualizada del impuesto", "Recargos", "Multa corrección fiscal", "Importe total", 'Cantidad a cargo'];
-                return  arr.includes(campoName) ?  Vue.filter('toCurrency')(salida) : salida; 
+                return  arr.includes(campoName) ?  Vue.filter('toCurrency')(salida) : salida;
             }
 
 
@@ -358,4 +362,3 @@
         }
     }
 </script>
-
