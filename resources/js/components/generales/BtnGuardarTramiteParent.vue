@@ -82,10 +82,15 @@
                   });
                   informacion.campos=camposObj;
                   informacion.camposConfigurados = datosFormulario.campos;
-                  informacion.tipoPersona=datosFormulario.tipoPersona,
-                  //informacion.declararEn0 = this.declararEn0,
-                  informacion.motivoDeclaracion0 = datosFormulario.motivoDeclaracion0,
-                  informacion.tipo_costo_obj = datosFormulario.tipo_costo_obj
+                  if(datosFormulario && datosFormulario.tipoPersona){
+                    informacion.tipoPersona=datosFormulario.tipoPersona;
+                  }
+                  if(datosFormulario && datosFormulario.motivoDeclaracion0){
+                    informacion.motivoDeclaracion0 = datosFormulario.motivoDeclaracion0;
+                  }
+                  if(datosFormulario && datosFormulario.tipo_costo_obj){
+                    informacion.tipo_costo_obj = datosFormulario.tipo_costo_obj;
+                  }
                 } else {
                   informacion.camposComplementaria = this.datosComplementaria;
                 }
@@ -188,6 +193,11 @@
                 formData.append('required_docs', 1);  
               } else {
                 formData.append('required_docs', 0);  
+              }
+              
+              let TRAMITE_AVISO = process.env.TRAMITE_AVISO; 
+              if( TRAMITE_AVISO && (TRAMITE_AVISO == tramite.id_tramite) ){
+                formData.append('sin_costo', true);
               }
               
               if(informacion.complementoDe ){

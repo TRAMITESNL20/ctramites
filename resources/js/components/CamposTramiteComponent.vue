@@ -45,7 +45,7 @@
 												</div>
 											</div>
 			 								<div v-for="(campo, j) in agrupacion.campos" :key="j" class="col-md-6 col-sm-6 col-xs-6"
-			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes', 'valuador'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
+			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes', 'valuador', 'table'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
 												<input-component
 													v-if="campo.tipo === 'input'" 
 													:campo="campo" 
@@ -132,15 +132,12 @@
 													@updateForm="updateForm" :configCostos="configCostos">
 														
 													</enajenantes-component>
-												<table-component 
-													:propietario="JSON.parse(campo.caracteristicas).propietario"
+												<aviso-enajenacion-component
 													:campo="campo"
 													:expediente="expediente"
-													v-on:porcentaje="updatePorcentaje($event)"
-													:porcentajeFinal="progress"
 													@updateForm="updateForm"
 													v-else-if="campo.tipo == 'table'">
-												</table-component>
+												</aviso-enajenacion-component>
 												<fecha-component v-if="campo.tipo === 'date'" 
 													:campo="campo" 
 													:showMensajes="showMensajes" 
@@ -305,6 +302,7 @@
 			},
 			updateExpedienteSeleccionado(ex){
 				this.expediente = ex;
+				console.log(this.expediente);
 			},
 			estadoSelected(estado){
 				this.estado = estado;
@@ -324,18 +322,24 @@
 
         	async updateForm(campo){
 				const tramite = localStorage.getItem('tramite') && JSON.parse(localStorage.getItem('tramite')) ;
+				if (tramite && tramite.id_tramite === process.env.TRAMITE_AVISO) {
+				
+					if(campo.tipo == 'results' && campo.valido){
+						//sustituir por campo.valor cuando se corrija el ws de los expedientes
+        				this.updateExpedienteSeleccionado(7001001001);
+        			}
 
-				if (tramite && tramite.tramite === 'AVISO DE ENAJENACIÓN') {
 					this.fields = ['Expediente Catastral' ,	'Fólio', 	'Días Restantes', 	'Fecha pago informativo',	'Capturista',	'Accion'];
 						//  this.rows = [{expediente : 7001002010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001002011 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001001010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'}]
 					var self = this;
-						let url = process.env.TESORERIA_HOSTNAME + "/valor-catastral-notaria/6" // + self.notary;  
+						let url = process.env.TESORERIA_HOSTNAME + "/valor-catastral-notaria/  " + window.user.notary.id ;  
 						$.ajax({
 							type: "GET",
 							dataType: 'json', 
 							url,
 							success:function(data){
 								let rows = [];
+
 								for (let index = 0; index < data.length; index++) {
 									let row = [];
 									data[index]
@@ -418,6 +422,7 @@
         		if(campo.nombre == 'Estado' && campo.valido){
         			this.gestionarCambioEstado(campo.valor);
         		}
+
         		if(campo.nombre == 'Distrito' && campo.valido){
         			this.gestionarCambioDistrito(campo.valor);
         		}
@@ -484,7 +489,7 @@
 									campo.nombreArchivoGuardado = infoArchivoGuardado.attach;
 								}
 							}
-							if (campo.tipo == 'table' || campo.tipo == 'results') {
+							if (campo.tipo == 'results') {
 								this.campos[index].valido = true;
 							}
 
