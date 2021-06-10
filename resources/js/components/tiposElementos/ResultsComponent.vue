@@ -111,6 +111,7 @@ Vue.use(Vuetify);
 			},
 			response: function(response){
 				this.campo.valor = response.filter(ele => ele.bloqueado && ele.bloqueado === '0');
+				this.$emit('updateForm', this.campo);
 			}
 		},
 		methods: {

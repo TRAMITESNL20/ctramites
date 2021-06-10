@@ -123,7 +123,6 @@ Vue.filter('toCurrency', function (value, style, currency) {
     return formatter.format(value);
 });
 
-
 Vue.prototype.$const = {
     PRECISION: 3,
     NOMBRES_CAMPOS:{
@@ -132,7 +131,8 @@ Vue.prototype.$const = {
         CAMPO_HOJA: "Hoja",
         CAMPO_SUBSIDIO: "Subsidio",
         CAMPO_VALOR_CATASTRAL: "Valor catastral",
-        CAMPO_VALOR_OPERACION: "Valor de operacion"
+        CAMPO_VALOR_OPERACION: "Valor de operacion",
+        CAMPO_CANTIDAD_LOTES: "Cantidad de lotes"
     },
     STATUS_FALTA_PAGO: 8,
     STATUS_ERROR_MUNICIPIO: 7,
@@ -149,12 +149,12 @@ Vue.prototype.$const = {
 }
 
 Vue.filter('toNumber', function (value) {
-    return Number((value).replace(/[^0-9.-]+/g,""));   
+    return Number((value).replace(/[^0-9.-]+/g,""));
 });
 
 Vue.filter('formatoMoneda', function (value) {
     let numero = Vue.filter('toNumber')(value +"");
-    return Vue.filter('toCurrency')(numero +""); 
+    return Vue.filter('toCurrency')(numero +"");
 });
 
 Vue.directive('uppercase',
@@ -175,7 +175,7 @@ Vue.directive('currency',
             e.target.value = Vue.filter('toCurrency')(numero +"")
             vnode.componentInstance.$emit('input', e.target.value);
           })
-        
+
     }
 });
 
@@ -200,7 +200,7 @@ const app = new Vue({
             $(".border-table-right").css( "width" ,'12%');
             $(".border-table-left").css( "height" ,  height+"px" );
             $(".border-table-right").css( "height" ,  height+"px" );
-            $('#scrollDiv').scroll( function() {    
+            $('#scrollDiv').scroll( function() {
                 ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
 
                 ( $('#scrollDiv').scrollLeft() > 0) ? $('.border-table-left').show() : $('#gradientBackgroundLeft').hide();
