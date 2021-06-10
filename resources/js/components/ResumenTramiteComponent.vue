@@ -240,6 +240,7 @@
                             let campoCatastral      = this.getCampoByName(CAMPO_VALOR_CATASTRAL);
                             let campoValorOperacion = this.getCampoByName(CAMPO_VALOR_OPERACION);
                             let campoCantidadLote   =  this.getCampoByName(Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_CANTIDAD_LOTES);
+                            let tipoOperacion       = this.getCampoByName(CAMPO_TIPO_OPERACION);
 
                             if( campoCatastral ){
                                 paramsCosto.valor_catastral = this.formatoNumero(campoCatastral.valor);
@@ -262,12 +263,11 @@
                             if( campoHoja ){
                                 paramsCosto.hoja = campoHoja.valor;
                             }
-
                             if(campoCantidadLote) {
                                 paramsCosto.lote = campoCantidadLote.valor;
                             } else if( campoLote ){
                                 paramsCosto.lote = campoLote.valor;
-                            } 
+                            }
                             if(this.infoGuardadaFull && this.infoGuardadaFull.id && (this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO || this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO) ) {
                                 paramsCosto.id_ticket = this.infoGuardadaFull.id;
                             }
