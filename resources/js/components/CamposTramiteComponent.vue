@@ -325,8 +325,9 @@
 				if (tramite && tramite.id_tramite === process.env.TRAMITE_AVISO) {
 				
 					if(campo.tipo == 'results' && campo.valido){
+						this.expediente = 7001001001
 						//sustituir por campo.valor cuando se corrija el ws de los expedientes
-        				this.updateExpedienteSeleccionado(7001001001);
+        				this.updateExpedienteSeleccionado(this.expediente);
         			}
 
 					this.fields = ['Expediente Catastral' ,	'Fólio', 	'Días Restantes', 	'Fecha pago informativo',	'Capturista',	'Accion'];
