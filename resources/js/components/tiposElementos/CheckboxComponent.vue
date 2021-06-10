@@ -3,7 +3,7 @@
       <input type="checkbox"    
         :id="[[campo.campo_id]]"
         :name="[[campo.campo_id]]"
-        v-model="campo.valor" @change="validar" @focus="validar" >
+        v-model="campo.valor" @change="validar" @focus="validar" :disabled="campo.disabled">
         <label> {{ campo.nombre }}</label>
     </div>
 </template>

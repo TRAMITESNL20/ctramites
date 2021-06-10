@@ -79,7 +79,7 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 	export default {
 		vuetify: new Vuetify(),
-		props: ['campo', 'estadoFormulario', 'showMensajes', 'info', 'table', 'fields', 'rows', 'loading', 'infoExtra'],
+		props: ['campo', 'estadoFormulario', 'showMensajes', 'info', 'table', 'fields', 'rows', 'loading', 'infoExtra', 'response'],
 		data(){
 			return{
 				propaux: this.rows,
@@ -108,10 +108,12 @@ Vue.use(Vuetify);
 			},
 			infoExtra: function(newVal, oldVal) {
 				this.infoExtra = newVal;
+			},
+			response: function(response){
+				this.campo.valor = response.filter(ele => ele.bloqueado && ele.bloqueado === '0');
 			}
 		},
 		methods: {
-
 			check: function (e ) {
 				let total = 0;
                 self = this;
