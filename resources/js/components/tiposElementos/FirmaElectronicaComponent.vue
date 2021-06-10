@@ -65,6 +65,7 @@
 							let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
 							this.doc = doc;
 						}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO){
+							this.getDocumentCatastro(solicitud);
 							this.doc = "http://www.africau.edu/images/default/sample.pdf";
 						}
 						this.llave = `${solicitud.id}`;
