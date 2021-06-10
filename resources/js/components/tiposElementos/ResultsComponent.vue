@@ -10,7 +10,7 @@
 			<tbody>
 				<tr v-if="loading"><td :colspan="fields.length" class="text-center"><i class="fas fa-spinner fa-spin mr-2"></i></td></tr>
 				<tr v-if="!loading && row.length != 0" v-for="(row, ind) in rows">
-					<td v-for="(item, ind) in row" :colspan=" row.length !== fields.length && ind === row.length - 1 && (fields.length - (row.length - 1)) " class="text-center">
+					<td v-for="(item, ind) in row" :colspan=" row.length !== fields.length && ind === row.length - 1 && (fields.length - (row.length - 1)) " :class="row.length !== fields.length && ind === row.length - 1 ? 'text-left' : 'text-center'">
 						{{ typeof item == 'object' ? item.label :item }}
 						<span class="text-muted ml-2 cursor-pointer" v-if="item.tooltip" v-b-tooltip.hover :id="`tooltip-${ind}`">(+ {{item.tooltip.listItems.length-1}})</span>
 						<b-tooltip :target="`tooltip-${ind}`" triggers="hover" v-if="item.tooltip">
@@ -37,7 +37,7 @@
 
 <script>
 	export default {
-		props: ['campo', 'estadoFormulario', 'showMensajes', 'info', 'table', 'fields', 'rows', 'loading', 'infoExtra'],
+		props: ['campo', 'estadoFormulario', 'showMensajes', 'info', 'table', 'fields', 'rows', 'loading', 'infoExtra', 'response'],
 		data(){
 			return{
 				selectedId: '',
@@ -58,10 +58,13 @@
 			},
 			infoExtra: function(newVal, oldVal) {
 				this.infoExtra = newVal;
+			},
+			response: function(response){
+				this.campo.valor = response.filter(ele => ele.bloqueado && ele.bloqueado === '0');
+				this.$emit('updateForm', this.campo);
 			}
 		},
 		methods: {
-
 			check: function (e ) {
 				let total = 0;
                 self = this;

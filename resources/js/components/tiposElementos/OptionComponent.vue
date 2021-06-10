@@ -5,7 +5,7 @@
   			<input type="radio" class=" "    
   				:id="[[campo.campo_id]]"
   			 	:name="[[campo.campo_id]]"
-  			 	:value="[[Object.keys(opcion)[0] ]]" v-model="campo.valor" @change="validar" @focus="validar" >
+  			 	:value="[[Object.keys(opcion)[0] ]]" v-model="campo.valor" @change="validar" @focus="validar" :disabled="campo.disabled">
   			 	<label> {{ opcion[Object.keys(opcion)[0]] }}</label>
   		</div>
 	</div>

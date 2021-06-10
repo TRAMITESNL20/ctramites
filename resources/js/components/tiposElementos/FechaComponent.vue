@@ -12,7 +12,7 @@
             placeholder="DD-MM-AAAA"
             autocomplete="off" style="background-color: #e5f2f5 !important" 
             @focus="validar"
-            @change="cahngeEvent" 
+            @change="cahngeEvent" :disabled="campo.disabled"
           ></b-form-input>
           <b-input-group-append>
             <b-form-datepicker
