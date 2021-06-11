@@ -1,10 +1,15 @@
 <script>
   import { uuid } from 'vue-uuid';
+  import tramite5isr from '../../services/TramiteCarCtrl.js';
     export default {
         name: 'BtnGuardarTramiteParent',
         props: ['tipoTramite', 'files', 'datosComplementaria', 'idUsuario', 'infoGuardadaFull', "type", "labelBtn"],
+        data(){
+          return {
+            tramiteCtrl: new tramite5isr()
+          }
+        },
         mounted() {
-          console.log("montado")
         },
 
         methods:{
@@ -199,6 +204,11 @@
               if( TRAMITE_AVISO && (TRAMITE_AVISO == tramite.id_tramite) ){
                 formData.append('sin_costo', true);
               }
+              let solicitud = {
+                info : informacion
+              }
+              let costoTotal = this.tramiteCtrl.getImporte(solicitud);
+              formData.append('costoTtotal', costoTotal);
               
               if(informacion.complementoDe ){
                 formData.append('ticket_anterior', informacion.complementoDe);

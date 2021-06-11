@@ -125,6 +125,11 @@
                       inf.detalle = enajenante.detalle;
                       inf.enajenante = enajenante;
                       inf.id = 0;
+                      let solicitud = {
+                        info : enajenante
+                      }
+                      let costoTotal = this.tramiteCtrl.getImporte(solicitud);
+                      inf.costo_final = costoTotal;
                       inf.solicitante = listaSolicitantes[0];
                       listaEnajentantes.push(inf);
                       /*listaEnajentantes.push({
