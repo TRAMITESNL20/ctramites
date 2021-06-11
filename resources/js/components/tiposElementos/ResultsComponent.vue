@@ -29,7 +29,7 @@
 					<tr v-if="loading"><td :colspan="fields.length" class="text-center"><i class="fas fa-spinner fa-spin mr-2"></i></td></tr>
 					<tr v-if="!loading && row.length != 0" v-for="(row, ind) in filteredHelper" :key="ind">
 						<td v-for="(item, ind) in row" :key="item.expediente_catastral" :colspan=" row.length !== fields.length && ind === row.length - 1 && (fields.length - (row.length - 1)) " class="text-center">
-							{{ item.expediente_catastral }}
+							{{ item }}
 							<!-- {{ typeof item == 'object' ? item.label :item }} -->
 
 							<!-- <span class="text-muted ml-2 cursor-pointer" v-if="item.tooltip" v-b-tooltip.hover :id="`tooltip-${ind}`">(+ {{item.tooltip.listItems.length-1}})</span> -->
@@ -47,7 +47,7 @@
 					</tr>
 				</tbody>
 			</table>
-			<code>{{ filteredHelper[0] }}</code>
+			<code>{{ filteredHelper }}</code>
 			<div v-if="Object.entries(this.infoExtra).length > 0" class="col-md-3 col-12">
 				<!-- <ul v-if="infoExtra.listItems" class="list-group">
 					<li v-if="infoExtra.title" class="list-group-item bg-secondary"><h3>{{ infoExtra.title }}</h3></li>
@@ -147,7 +147,7 @@ Vue.use(Vuetify);
 							if(this.rows[i].camposConfigurados[k].nombre === "Resultados Informativo Valor Catastral"  && this.rows[i].camposConfigurados[k].valor  && this.rows[i].camposConfigurados[k].valor[0].expediente_catastral ){
 								console.log(i,k);
 								// console.log(this.rows[i].camposConfigurados[k].valor[0]);
-								x = [{"expediente_catastral" : this.rows[i].camposConfigurados[k].valor[0].expediente_catastral }]
+								x.push({"expediente_catastral" : this.rows[i].camposConfigurados[k].valor[0].expediente_catastral , "folio":"", "Días Restantes": "", "Fecha pago informativo": "", "Capturista" : "" })
 							}
 						}
 					}
