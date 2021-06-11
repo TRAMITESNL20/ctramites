@@ -168,12 +168,11 @@
                 this.solicitante = { tipoPersona:"pf" };
                 this.puedeEditar = true;
             }
-/*
             let solicitantesGuardados = this.solicitantesGuardados.filter( Boolean );
             if( solicitantesGuardados && solicitantesGuardados.length > 0){
                 this.listaSolicitantes = solicitantesGuardados;
                 this.guardarInStorage();
-            }*/
+            }
             if (localStorage.getItem('listaSolicitantes')) {
               try {
                 this.listaSolicitantes = JSON.parse(localStorage.getItem('listaSolicitantes'));

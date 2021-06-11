@@ -75,7 +75,7 @@
                                           :usuario="usuario">
                                           </resumen-tramite-5-isr-component>
                                         </div>
-                                        <div v-if="tramite.id_tramite == TRAMITE_AVISO">
+                                        <div v-else-if="tramite.id_tramite == TRAMITE_AVISO">
                                           <resumen-aviso-enajenacion-component v-if="currentStep == 3"
                                           :tipoTramite="tipoTramite"  >
                                             
