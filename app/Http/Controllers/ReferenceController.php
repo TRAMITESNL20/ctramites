@@ -73,7 +73,7 @@ class ReferenceController extends Controller {
 					->table('solicitudes_mensajes')
 					->insert([
 						'ticket_id'=> $solicitud->id,
-						'mensaje' => "Solicitud cerrada porque esta asignado al admin"
+						'mensaje' => "Solicitud cerrada porque esta asignado al admin - API Bancos"
 					]);
 				}
 			}
@@ -297,11 +297,11 @@ class ReferenceController extends Controller {
 
 				if($reference->{'oper_transacciones-estatus'} == 65){
 					$changes = [
-						'solicitudes_ticket.status' => 99,
-						'recibo_referencia' => null,
-						'id_transaccion' => null,
-						'asignado_a' => null,
-						'en_carrito' => 0,
+						'solicitudes_ticket.status' => 9,
+						// 'recibo_referencia' => null,
+						// 'id_transaccion' => null,
+						// 'asignado_a' => null,
+						// 'en_carrito' => 0,
 						'updated_at' => date('Y-m-d H:i:s')
 					];
 				}

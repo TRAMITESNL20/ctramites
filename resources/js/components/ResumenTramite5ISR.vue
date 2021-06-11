@@ -9,7 +9,7 @@
                         <div class="col-sm-6">
                             <h6 class="mb-3">Solicitante:</h6>
                             <div>
-                                <strong>{{usuario.name + ' ' + usuario.fathers_surname + ' ' + usuario.mothers_surname }}</strong>
+                                <strong>{{usuario.nombreSolicitante + ' ' + usuario.apPat + ' ' + usuario.apMat }}</strong>
                             </div>
                             <div>CURP: {{usuario.curp}}</div>
                             <div>RFC: {{usuario.rfc}}</div>
@@ -17,7 +17,7 @@
                             <div>Teléfono: {{usuario.phone}}</div>
                         </div>
                     </b-row>                                      
-                    <b-row v-if="listaEnajentantes.length > 0  && tipoTramite == 'normal'">
+                    <b-row v-if="listaEnajentantes.length > 0  && tipoTramite != 'complementaria'" >
                         <div class="col-sm-12">
                             <h2 class="border-bottom my-3">Enajenantes</h2>
                         </div>
@@ -75,14 +75,16 @@
                             </b-table>
                         </div>
                     </b-row>        
-                    <b-row v-if="files.length > 0 && tipoTramite == 'normal'">
+                    <b-row v-if="files.length > 0 && tipoTramite != 'complementaria'">
                         <div class="col-sm-12">
                             <h2 class="border-bottom my-3">Archivos</h2>
                         </div>
                         <div class="col-sm-12">
                             <b-table responsive striped hover :items="files" :fields="camposArchivos">
                                 <template #cell(nombrreFile)="data">
-                                    {{ data.item.nombrreFile|| "No se selecciono ninguno"}}
+                                    <span v-if="data.item.nombrreFile && data.item.nombrreFile.split('/').length > 0">
+                                        {{ data.item.nombrreFile.split('/')[ data.item.nombrreFile.split("/").length - 1 ]  || "No se selecciono ninguno" }}
+                                    </span>
                                 </template>
                             </b-table>
                         </div>
@@ -153,10 +155,10 @@
 
     export default {
 
-        props: ['datosComplementaria','tipoTramite', 'files', 'usuario'],
+        props: ['datosComplementaria','tipoTramite', 'files'],
         mounted() {
-
             this.obtenerInformacionDelTramite();
+            this.usuario = this.listaSolicitantes && this.listaSolicitantes.length > 0 ? this.listaSolicitantes[0] : {};
             
             this.camposGenerales = this.datosFormulario.campos;
             let campoEnajenantes = this.camposGenerales.find( campo =>  campo.tipo == 'enajenante');
@@ -194,14 +196,15 @@
                     { key: 'detalle', label: 'Total' },
                     { key: 'fechaEscritura', label:"Fecha Escritura" },
                     { key: 'status', label:"Acciones" }
-                ]
+                ],
+                usuario:{}
             }
         },
   
         methods: {
 
             obtenerInformacionDelTramite(){
-                let informacionEnStorage = ["datosFormulario"];
+                let informacionEnStorage = ["datosFormulario", "listaSolicitantes"];
                 informacionEnStorage.forEach( name => {
                     if (localStorage.getItem(name)) {
                       try {
