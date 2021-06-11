@@ -21,7 +21,7 @@
 			<table width="100%" class="table table-hover table-striped mt-3" :class="Object.entries(this.infoExtra).length > 0 && 'col-md-9 col-12' ">
 				<thead class="thead-light">
 					<tr v-if="fields.length != 0">
-						<th v-for="field in fields">{{ field }}</th>
+						<th v-for="(field , ind) in fields" :key="ind" >{{ field }}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -162,7 +162,7 @@ Vue.use(Vuetify);
 					var filteredHelper = arr_aux.splice( inicio  , this.porPagina);
 					filteredHelper = x;
 					filteredHelper = [...filteredHelper];
-					console.log(filteredHelper[0]);
+					console.log(filteredHelper);
 				return filteredHelper;
         	},
 		}
