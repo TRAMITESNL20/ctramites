@@ -146,7 +146,7 @@ Vue.use(Vuetify);
 							if(this.rows[i].camposConfigurados[k].nombre === "Resultados Informativo Valor Catastral"  && this.rows[i].camposConfigurados[k].valor  && this.rows[i].camposConfigurados[k].valor[0].expediente_catastral ){
 								console.log(i,k);
 								// console.log(this.rows[i].camposConfigurados[k].valor[0]);
-								x = [{"expediente_catastral" : this.rows[i].camposConfigurados[k].valor }]
+								x = [{"expediente_catastral" : this.rows[i].camposConfigurados[k].valor[0].expediente_catastral }]
 							}
 						}
 					}
@@ -162,7 +162,7 @@ Vue.use(Vuetify);
 					
 					var filteredHelper = arr_aux.splice( inicio  , this.porPagina);
 					filteredHelper = x;
-					filteredHelper = [...filteredHelper];
+					// filteredHelper = [...filteredHelper];
 					console.log(filteredHelper);
 				return filteredHelper;
         	},
