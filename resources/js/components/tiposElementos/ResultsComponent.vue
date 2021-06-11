@@ -132,6 +132,7 @@ Vue.use(Vuetify);
 				this.porPagina = newPorpagina;
 				this.totalPaginas = Math.ceil(this.rows.length / this.porPagina);
 				this.page = 1;
+				//test
         	},
 		},
 		computed:{
