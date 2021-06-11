@@ -9,7 +9,8 @@ export default class AdminCamposCostos {
             Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_SUBSIDIO.toLocaleLowerCase(), 
             Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_VALOR_CATASTRAL.toLocaleLowerCase(), 
             Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION.toLocaleLowerCase(), 
-            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_DIVISAS.toLocaleLowerCase()
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_DIVISAS.toLocaleLowerCase(),
+            Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_CANTIDAD_LOTES.toLocaleLowerCase()
         ];
         let nuevaInfo = this.info;
         if(infoFull.status == Vue.prototype.$const.STATUS_FALTA_PAGO ){
