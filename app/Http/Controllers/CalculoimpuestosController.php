@@ -773,15 +773,24 @@ class CalculoimpuestosController extends Controller
     */
     private function getPorcentajeregargos()
     {
-    	/*
-    	$this->fecha_escritura
-  		$this->fecha_vencimiento
-  		$this->fecha_actual
-  		*/
+      //Validar si la fecha es muy antigua el inpc mas antiguo es de 5 años
+      $fe = explode("-",$this->fecha_vencimiento);
+      $ae 	= (integer)$fe[0]; //año de la escritura
+      $me = (integer)$fe[1];
+      $de =(integer)$fe[2];
+      $fa = explode("-",date("Y-n-j"));
+      $year = (integer)$fa[0];
+      $dif = $year - 5;
+      if($ae < $dif){ // si es menor se toma la fecha mas antigua hace 5 años
+        $fecha_vencimiento = $dif.'-'.$me.'-'.$de;
+      }else{ // se toma la fecha ingresada
+        $fecha_vencimiento = $this->fecha_vencimiento;
+      }
+
   		$total = 0;
 
   		$fa = strtotime($this->fecha_actual . " 00:00:00");
-  		$fv = strtotime($this->fecha_vencimiento . " 00:00:00");
+  		$fv = strtotime($fecha_vencimiento . " 00:00:00");
 
   		if($fa <= $fv){
   			return $total;
@@ -791,7 +800,7 @@ class CalculoimpuestosController extends Controller
   			$yi = $fa[0];  // año de inicio
   			$mi = $fa[1];  // mes de inicio
         $di = $fa[2];
-   			$fe = explode("-",$this->fecha_vencimiento);
+   			$fe = explode("-",$fecha_vencimiento);
    			$yf = $fe[0];  // año de inicio
   			$mf = $fe[1];  // mes de inicio
         $df = $fe[2];
