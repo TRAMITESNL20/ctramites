@@ -23,6 +23,7 @@
 					<tr v-if="fields.length != 0">
 						<th v-for="(field , ind) in fields" :key="ind" >{{ field }}</th>
 					</tr>
+					
 				</thead>
 				<tbody>
 					<tr v-if="loading"><td :colspan="fields.length" class="text-center"><i class="fas fa-spinner fa-spin mr-2"></i></td></tr>
