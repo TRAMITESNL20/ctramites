@@ -73,7 +73,7 @@ class ReferenceController extends Controller {
 					->table('solicitudes_mensajes')
 					->insert([
 						'ticket_id'=> $solicitud->id,
-						'mensaje' => "Solicitud cerrada porque esta asignado al admin"
+						'mensaje' => "Solicitud cerrada porque esta asignado al admin - API Bancos"
 					]);
 				}
 			}
