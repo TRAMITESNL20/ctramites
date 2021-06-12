@@ -46,14 +46,22 @@
 											</div>
 			 								<div v-for="(campo, j) in agrupacion.campos" :key="j" class="col-md-6 col-sm-6 col-xs-6"
 			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes', 'valuador', 'table'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
+			 									<input-currency-component 
+			 										v-if="campo.tipo === 'input' && JSON.parse(campo.caracteristicas).formato === 'moneda'" 
+													:campo="campo" 
+													:showMensajes="showMensajes" 
+													:estadoFormulario="comprobarEstadoFormularioCount"
+													@updateForm="updateForm" :divisa="divisa">
+			 										
+			 									</input-currency-component>
 												<input-component
-													v-if="campo.tipo === 'input'" 
+													v-else-if="campo.tipo === 'input'" 
 													:campo="campo" 
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
 													@updateForm="updateForm">
 												</input-component>
-												<divisa-component v-if="campo.tipo === 'select' && campo.nombre == 'Cambio de divisas'" 
+												<divisa-component v-else-if="campo.tipo === 'select' && campo.nombre == 'Cambio de divisas'" 
 													:campo="campo" 
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
@@ -261,7 +269,8 @@
 				loading : false,
 				infoExtra : {},
 				tipo_costo_obj: { tipo_costo:0 ,tipoCostoRadio:'millar',hojaInput:'', val_tipo_costo:'' },
-				tieneSeccionDocumentos: false
+				tieneSeccionDocumentos: false,
+				divisa:this.$store.state.DEFAULT_DIVISA
 			}
         },
         created() {
@@ -762,9 +771,9 @@
 
 			listenCampos(campo){
 				if(campo.nombre == this.$const.NOMBRES_CAMPOS.CAMPO_DIVISAS && campo.valido){
-	        		let divisaValue = divisaCtrl.getSymbol(campo.valor); 
+					let divisaValue = divisaCtrl.getSymbol(campo.valor); 
 	        		this.$store.commit('change', divisaValue);
-	        		this.$root.$emit('chambioDivisa');
+	        		this.divisa = this.$store.state.DEFAULT_DIVISA
 	        	}
 			},
 			processCampo (campo) {

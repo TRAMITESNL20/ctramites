@@ -1,7 +1,7 @@
 <template>
 	<div class=" fv-plugins-icon-container">
-		<label>{{ campo.nombre }} divisa  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}</label>
-    <multiselect v-model="campo.valor" :options="options" :multiple="campo.tipo == 'multiple'" label="nombre" track-by="clave" :searchable="true" @input="validar" :disabled="campo.disabled" ></multiselect>
+		<label>{{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}</label>
+    <multiselect v-model="campo.valor" :options="options" :multiple="campo.tipo == 'multiple'" label="nombre" track-by="clave" :searchable="true" @input="validar" :disabled="campo.disabled" @change="validar" ></multiselect>
 		<small v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
         <p  class="form-text text-danger">
           {{ campo.mensajes[0].mensajeStr }} 
@@ -35,8 +35,6 @@
             });
           }
         }
-        
-        this.validar();
       },
       mounted(){
         this.campo.valor = {clave: this.$store.state.DEFAULT_DIVISA.CLAVE, nombre: this.$store.state.DEFAULT_DIVISA.NAME} 
