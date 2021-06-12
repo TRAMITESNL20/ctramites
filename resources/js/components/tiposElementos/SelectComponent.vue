@@ -22,7 +22,7 @@
 
       created(){
         let options = JSON.parse(this.campo.caracteristicas).opciones;
-        if(options.length > 0){
+        if(options && options.length > 0){
           if(options && options[0]["clave"] && options[0]["nombre"]){
             this.options = options;
           } else {

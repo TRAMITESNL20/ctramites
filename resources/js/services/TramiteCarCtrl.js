@@ -59,6 +59,10 @@ export default class TramiteCar5ISRCtrl {
             return this.extraerDatosPersonalesEnajentante(solicitud.info.enajenante);
         } else if(solicitud.info.hasOwnProperty('solicitante')){
             return this.extraerDatosPersonalesSolicitante(solicitud.info.solicitante);
+        } else if(solicitud.info.hasOwnProperty('solicitantes')){
+            let solicitantes = solicitud.info.solicitantes
+            let solicitante = solicitantes.length > 0 ? solicitantes[0] : {} 
+            return this.extraerDatosPersonalesSolicitante(solicitante);
         } else {
             return {};
         }

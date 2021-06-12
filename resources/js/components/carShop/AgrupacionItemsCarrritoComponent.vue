@@ -6,7 +6,7 @@
                 <div class="col-xl-6 col-sm-10">
                     <h4 >
                         <strong class="ml-3 text-uppercase text-truncate text-initial">
-                        {{  sameTramites ? agrupacion.nombre : 'Grupo de Tramites'  }} <span v-if="totalItemInGroup >1 || !!agrupacion.isComplemento"> [ {{ agrupacion.grupo_clave }} ] </span>
+                        {{  sameTramites ? agrupacion.nombre : 'Grupo de Tramites'  }} <span v-if="totalItemInGroup >1 || !!agrupacion.isComplemento"> </span>
                         </strong>
                     </h4>
                 </div>
