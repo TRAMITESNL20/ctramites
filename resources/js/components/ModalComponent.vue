@@ -181,7 +181,7 @@
                         <template #append>
                           <b-input-group-text >{{porcentajeVenta}}</b-input-group-text>
                         </template>
-                        <b-form-input  id="procentaje-compra-range" name="procentaje-compra"  v-model="$v.form.porcentajeCompra.$model" :state="$v.form.porcentajeCompra.$dirty ? !$v.form.porcentajeCompra.$error : null" aria-describedby="porcentajeCompra-input-feedback" type="range" :max="porcentajeVenta" @change="calcularMontoOperacion($v.form.porcentajeCompra.$model)"></b-form-input>
+                        <b-form-input  id="procentaje-compra-range" name="procentaje-compra"  v-model="$v.form.porcentajeCompra.$model" :state="$v.form.porcentajeCompra.$dirty ? !$v.form.porcentajeCompra.$error : null" aria-describedby="porcentajeCompra-input-feedback" type="range" :max="porcentajeVenta" @change="calcularMontoOperacion($v.form.porcentajeCompra.$model)" step="any"></b-form-input>
                       </b-input-group>
                       <b-form-input  id="procentaje-compra-input" name="procentaje-compra"  v-model="$v.form.porcentajeCompra.$model" :state="$v.form.porcentajeCompra.$dirty ? !$v.form.porcentajeCompra.$error : null" aria-describedby="porcentajeCompra-input-feedback" 
                       @change="calcularMontoOperacion($v.form.porcentajeCompra.$model)"></b-form-input>
