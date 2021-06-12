@@ -125,7 +125,7 @@
                 }
                 formData.append('info', JSON.stringify(informacion) );
                 formData.append('enajenantes',[]);
-                formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
+                //formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
               } else {
                 this.datosComplementaria.complementarias.forEach( complementaria => {
                   let inf = Object.assign({} , complementaria);
@@ -168,13 +168,14 @@
       
               formData.append('user_id', this.idUsuario );
               if(!enajenantes){
+                informacion.solicitantes = listaSolicitantes;
                 formData.append('info', JSON.stringify(informacion) );
               } else {
                 formData.append('info', JSON.stringify({}) );
                 formData.append("enajenantes", JSON.stringify(enajenantes));
               }
               if( listaSolicitantes && listaSolicitantes.length > 0 ){
-                formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
+                //formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
               }
               if(tramite){
                 formData.append('clave', tramite.id_seguimiento );
@@ -208,7 +209,7 @@
                 info : informacion
               }
               let costoTotal = this.tramiteCtrl.getImporte(solicitud);
-              formData.append('costoTtotal', costoTotal);
+              formData.append('costoTotal', costoTotal);
               
               if(informacion.complementoDe ){
                 formData.append('ticket_anterior', informacion.complementoDe);

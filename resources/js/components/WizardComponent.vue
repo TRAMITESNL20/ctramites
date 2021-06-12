@@ -382,18 +382,19 @@
 
                 this.tipoTramite = this.infoGuardada.tipoTramite;
                 
-                //this.tipoTramiteDisabled = !this.infoGuardada.campos ? 'normal' : 'complementaria';
-
 
                 this.camposGuardadosObtenidos = true;
-
-                this.solicitantesGuardados = response.data.map( solicitante => {
-                  let solicitanteNuevo = typeof solicitante.info == "string" ? JSON.parse(solicitante.info).solicitante : solicitante.info.solicitante;
-                  if( solicitanteNuevo ){
-                    solicitanteNuevo.id = solicitante.id;
-                  }
-                  return solicitanteNuevo;
-                });
+                if( this.tramite.id_tramite == this.TRAMITE_5_ISR ){
+                  this.solicitantesGuardados = response.data.map( solicitante => {
+                    let solicitanteNuevo = typeof solicitante.info == "string" ? JSON.parse(solicitante.info).solicitante : solicitante.info.solicitante;
+                    if( solicitanteNuevo ){
+                      //solicitanteNuevo.id = solicitante.id;
+                    }
+                    return solicitanteNuevo;
+                  });
+                } else {
+                  this.solicitantesGuardados = this.infoGuardada.solicitantes || [];
+                }
 
               } catch (error) {
                   console.log(error);

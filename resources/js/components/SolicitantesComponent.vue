@@ -27,10 +27,9 @@
                     </div>
                  
                     <div class="float-lg-right" v-if="puedeEditar">
-                    <!--
                         <button type="button"  class="btn btn-danger"  id="btnEliminar" v-on:click="eliminar( index )">
                             <i class="fa fa-times" id="iconBtnEliminar"></i> 
-                        </button>-->
+                        </button>
                         <button type="button"  class="btn btn-info"  id="btnEditar" v-on:click="mostrarEditarSolicitante( sol, index )">
                             <i class="fa fa-edit" id="iconBtnEditar"></i>
                         </button> 
@@ -38,13 +37,11 @@
                    
                 </div>
             </div>
-            <div class="col-lg-12">
-                <!--
-                    <button type="button"  class="btn"  id="btnAddMore" v-on:click="mostrarAgregarSolicitante()">
-                        <i class="fa fa-check" id="iconBtnAddMore"></i> 
-                        Agregar Solicitante
-                    </button>  
-                    -->   
+            <div class="col-lg-12" v-if="!isISR">
+                <button type="button"  class="btn"  id="btnAddMore" v-on:click="mostrarAgregarSolicitante()">
+                    <i class="fa fa-check" id="iconBtnAddMore"></i> 
+                    Agregar Solicitante
+                </button>  
             </div>
         </div>
         <div v-else-if="listaSolicitantes.length == 0 || agregarMas">
@@ -108,12 +105,13 @@
                     </div>
                 </div>
             </div>
-                <!--
+
                 <div class="text-right">
                     <button type="button"  class="btn btn-danger pull-rigth"  id="btnAddMoreCancel" v-on:click="agregarMas = false" v-if="listaSolicitantes.length > 0 ">
                         <i class="fa fa-times" id="iconBtnAddMoreCancel"></i> 
                         Cancelar
-                    </button>-->
+                    </button>
+                </div>
             <div class="row">
                 <div class="text-right">  
                     <button type="button"  class="btn btn-success green pull-rigth"  id="btnAdd" v-on:click="agregar()" v-if="!editando">
@@ -136,7 +134,7 @@
         props: ['solicitantesGuardados'],
         mounted() {
             let tramite = JSON.parse(localStorage.getItem('tramite'));
-
+            this.isISR = tramite && tramite.id_tramite == process.env.TRAMITE_5_ISR; 
             if( tramite && tramite.id_tramite == process.env.TRAMITE_5_ISR ){
                 let userTitular = window.user;
                 if(userTitular && userTitular.notary && userTitular.notary.titular){
@@ -192,7 +190,8 @@
                 agregarMas: false,
                 editando: false,
                 indiceEditando:null,
-                puedeEditar:false
+                puedeEditar:false,
+                isISR:false
             }
         },
   
