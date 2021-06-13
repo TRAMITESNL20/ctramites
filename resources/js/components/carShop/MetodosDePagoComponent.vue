@@ -6,24 +6,23 @@
                     <h6 class="mb-3"><strong>Pago Referenciado</strong></h6>
 
                     <div class="text-center">
-                        <button type="button" class="btn btn-success btn-metodopago" id="metodopagoBtnRef"  v-on:click="obtenerReciboPagoVentanilla()"> 
-                            Pago Referenciado  
-                            <div id="spinner-ref" class="spinner-border spinner-border-sm float-right" role="status" v-if="obteniendoRecibo">
+                        <button type="button" class="btn btn-success btn-metodopago" id="metodopagoBtnRef"  v-on:click="obtenerReciboPagoVentanilla()" :disabled="obteniendoRecibo">
+                            <span v-if="!obteniendoRecibo" class="text-white"> Pago Referenciado  </span>
+                            <div id="spinner-ref" class="spinner-border spinner-border-sm float-right text-white" role="status" v-if="obteniendoRecibo">
                                 <span class="sr-only">Loading...</span>
                             </div>
                         </button>
                     </div>
                 </div>
             </div>
-
             <div class="card border-secondary shadow p-3 mb-5 bg-white rounded metodopago"" id="idNetPay" v-if="tienePagoNetPay">
                 <div class="pt-4" >
                     <h6 class="mb-3"><strong>Pago en linea</strong></h6>
 
                     <div class="text-center">
-                        <button type="button" class="btn btn-success btn-metodopago" id="metodopagoBtnNP"  v-on:click="pagoNetPay()"> 
-                            NetPay 
-                            <div id="spinner-ref" class="spinner-border spinner-border-sm float-right" role="status" v-if="obteniendoPagoEnLinea">
+                        <button type="button" class="btn btn-success btn-metodopago" id="metodopagoBtnNP"  v-on:click="pagoNetPay()" :disabled="obteniendoPagoEnLinea"> 
+                            <span v-if="!obteniendoPagoEnLinea"  class="text-white"> NetPay  </span> 
+                            <div id="spinner-ref" class="spinner-border spinner-border-sm float-right text-white" role="status" v-if="obteniendoPagoEnLinea">
                                 <span class="sr-only">Loading...</span>
                             </div>
                         </button>
@@ -39,9 +38,10 @@
                 <div class="pt-4" >
                     <h6 class="mb-3"><strong>Pago en Bancomer</strong></h6>
                     <div class="text-center">
-                        <button type="button" class="btn btn-success btn-metodopago" id="metodopagoBtnBancomer"  v-on:click="pagoBancomer()"> 
-                            Bancomer 
-                            <div id="spinner-ref" class="spinner-border spinner-border-sm float-right" role="status" v-if="obteniendoPagoBancomer">
+                        <button type="button" class="btn btn-success btn-metodopago" id="metodopagoBtnBancomer"  v-on:click="pagoBancomer()"  :disabled="obteniendoPagoBancomer"> 
+                            
+                            <span v-if="!obteniendoPagoBancomer"  class="text-white"> Bancomer  </span> 
+                            <div id="spinner-ref" class="spinner-border spinner-border-sm float-right text-white" role="status" v-if="obteniendoPagoBancomer">
                                 <span class="sr-only">Loading...</span>
                             </div>
                         </button>
@@ -136,6 +136,7 @@
                 }).fail((rror)=> {
                     console.log( rror)
                 }).always(() => {
+                    this.obteniendoRecibo = false;
                     $("#spinner-ref").remove();
                 });
 
@@ -169,8 +170,9 @@
                     }, 3000);
                 }).catch((error)=> {
                     console.log(error)
-                }).finally(() => {
                     this.obteniendoPagoEnLinea = false;
+                }).finally(() => {
+                    
                 });
             },
 
