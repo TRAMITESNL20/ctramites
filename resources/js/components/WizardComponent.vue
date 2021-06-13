@@ -101,7 +101,8 @@
                                               :files="files"
                                               :datosComplementaria="datosComplementaria"
                                               :idUsuario="idUsuario"
-                                              :infoGuardadaFull="infoGuardadaFull" v-if="currentStep != 3" labelBtn="Guardar y Continuar después "
+                                              :infoGuardadaFull="infoGuardadaFull" 
+                                              v-if="!hideBtnSaveAndContinue" labelBtn="Guardar y Continuar después "
                                               @tramiteAgregadoEvent="tramiteAgregadoEvent"
                                               ></btn-guardar-tramite-component>
 
@@ -157,7 +158,6 @@
                     </div>
                   </div>
             </div>
-
         </div>
 
     </div>
@@ -179,6 +179,9 @@
                 return "Guardar cambios";
               }
               return "Pagar";
+            },
+            hideBtnSaveAndContinue(){
+              return this.currentStep == 3 ||  this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO  || this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO;
             }
         },
         mounted() {
