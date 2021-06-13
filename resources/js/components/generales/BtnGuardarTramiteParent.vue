@@ -245,7 +245,7 @@
                   if( this.infoGuardadaFull.info ){
                     let info = JSON.parse(this.infoGuardadaFull.info );
                     if(info && info.complementoDe ){
-                      informacion.complementos = info.complementoDe + ","  + this.infoGuardadaFull.id;
+                      informacion.complementos = info.complementos + ","  + this.infoGuardadaFull.id;
                     }
                   }
                   informacion.complementoDe =  this.infoGuardadaFull.id;
