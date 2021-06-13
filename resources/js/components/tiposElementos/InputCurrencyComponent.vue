@@ -49,8 +49,10 @@
         modelFormat(value){
           let style = this.divisa.STYLE;
           let currency = this.divisa.CURRENCY;
-          let number =  Vue.filter('toNumber')( this.campo.valor );
-          this.campo.valor =  Vue.filter('toCurrency')( number, style, currency  );
+          if(this.campo.valor){
+            let number =  Vue.filter('toNumber')( this.campo.valor + "" );
+            this.campo.valor =  Vue.filter('toCurrency')( number, style, currency  );
+          }
         },
         getCaracteristicas(){
           let caracteristicas = {};
@@ -73,7 +75,6 @@
           }catch(err){
             console.log(err);
           }
-          //this.campo.valor = Vue.filter('toNumber')( this.modelFormat.valueOf() ) ;
           if( this.campo.valor && caracteristicas.expreg ){
             var regex = new RegExp(caracteristicas.expreg, "i");
             exregValida = regex.test(this.campo.valor)
@@ -86,7 +87,6 @@
               this.campo.mensajes.push( mensaje );
             }
           } 
-          // console.log(caracteristicas.hasOwnProperty('required') && caracteristicas.required === 'true');
           if( caracteristicas.hasOwnProperty('required') &&  caracteristicas.required === 'true' || (typeof  caracteristicas.required == 'boolean' && caracteristicas.required)  ) {
             requeridoValido =  !!this.campo.valor && (this.campo.valor+"").length > 0;
             if( !requeridoValido ){
