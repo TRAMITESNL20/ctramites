@@ -24,15 +24,29 @@ export default class TramiteCar5ISRCtrl {
         this.json.isAgrupable = this.getIsAgrupable(solicitud, tramite);
 	    this.json.detalle = this.getDetalle(solicitud);
 
+                console.log("json")
+                console.log(JSON.parse(JSON.stringify(this.json)))
 	  	return this.json;
   	}
 
     getIsAgrupable( solicitud, tramite ){
+        //solo son agrupable los tramites con distrito 1
+        if(solicitud && solicitud.info && solicitud.info.camposConfigurados){
+            let campoDistrito = solicitud.info.camposConfigurados.find( campo => campo.nombre == "Distrito" );
+            if( campoDistrito ){
+                return campoDistrito.valor ? campoDistrito.valor.clave == 1 : false
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        /*
         if(solicitud.info.campos.Distrito == undefined){
             return !solicitud.info.complementoDe && process.env.TRAMITE_5_ISR != tramite.tramite_id;
         }else{
             return !solicitud.info.complementoDe && process.env.TRAMITE_5_ISR != tramite.tramite_id && solicitud.info.campos.Distrito.clave == 1 ;
-        }
+        }*/
     }
 
   	getAuxiliar1(solicitud){

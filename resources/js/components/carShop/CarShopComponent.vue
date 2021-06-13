@@ -452,8 +452,10 @@
 
         onDropFuera(evt, list){
           let claveGrupo = Date.now();
+
           const clave = evt.dataTransfer.getData('clave');
-          if( clave && this.isAgrupable(list)  ){
+
+          if( clave /*&& this.isAgrupable(list)*/  ){
             this.tramites.map( tram =>{
                 if( tram.claveIndividual == clave ){
                   tram.calveTemp = claveGrupo;
