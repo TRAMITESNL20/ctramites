@@ -81,7 +81,19 @@
               } else {
                 if(tramite.detalle ||  this.type == 'temporal'){
                   formData = this.getFormData();
-                  this.guardarTramiteUnico(formData, url); 
+                  let datosTabs = JSON.parse( JSON.stringify(this.obtenerDatosTabs() ) );
+                  let tramite = datosTabs[1];
+                  if(this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO ){
+                    if(tramite.detalle && tramite.detalle.costo_final <= 0) {
+                      this.enviando = false;
+                      Command: toastr.warning("Aviso!", "Importe total debe ser mayor que 0");
+                    } else {
+                      this.guardarTramiteUnico(formData, url);                       
+                    }
+                  } else {
+                    this.guardarTramiteUnico(formData, url);   
+                  }
+
                 } else {
                   this.enviando = false;
                   Command: toastr.warning("Aviso!", "Importe total requerido");
@@ -91,7 +103,6 @@
             },
 
             async guardarTramiteUnico(formData, url){
-
               try {
                 if(this.type === 'finalizar') formData.append('en_carrito', 1);
                 let response = await axios.post(url, formData, {
@@ -102,9 +113,10 @@
                 this.$emit('tramiteAgregadoEvent', {type:this.type, respuesta:true, response});
               } catch (error) {
                 console.log(error);
+                this.enviando = false;
                 Command: toastr.warning("Error!", "No fue posible registrar intente de nuevo");
               }
-              this.enviando = false;
+              
             },
 
             tieneEnajentantes(datosFormulario){
