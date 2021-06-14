@@ -60,7 +60,7 @@
                 
                 let tramitesAEnviar = [];
                 this.consultandoMetodos = true;
-
+                this.$emit('consultandoMetodos', this.consultandoMetodos );
                 this.tramites.forEach(  tr =>{
                     let tramite = Object.assign({}, tr);
                     //tramite.id_seguimiento = tramite.calveTemp;
@@ -121,11 +121,13 @@
                             dataMotor.status = 0;
                         }
 
-                        this.folioMotor = dataMotor.id_transaccion_motor;
-                        this.guardarTransaccionMotor( dataMotor );
 
+                        this.folioMotor = dataMotor.id_transaccion_motor;
                         this.mostrarCancelarPago = true;
                         this.$emit('updatingParent', responseTransaccion);
+                        this.guardarTransaccionMotor( dataMotor );
+
+                        
 
 
                     }).catch(error=> {
@@ -144,7 +146,7 @@
                         Command: toastr.warning("Error!", error.message || "Ocurrió un error al guardar");
                         $("#metodoPagoBtn").fadeIn();
                     }).finally(() => {
-                        this.consultandoMetodos = false;
+
                     });
                 }).catch((error)=> {
                     console.log("transaccion 1")
@@ -153,12 +155,10 @@
                     Command: toastr.warning("Error!", error.message || "Ocurrió un error al guardar");
                     $("#metodoPagoBtn").fadeIn();
                     this.consultandoMetodos = false;
+                    this.$emit('consultandoMetodos', this.consultandoMetodos );
                 }).finally(() => {
                     
                 });
-
-
-
 
             },
 
@@ -176,6 +176,9 @@
                     }
                 } ).then(response => {
                     console.log("guardando transaccion motor")
+                }).finally( () => {
+                    this.consultandoMetodos = false;
+                    this.$emit('consultandoMetodos', this.consultandoMetodos );
                 });
             }
         },

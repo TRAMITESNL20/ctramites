@@ -63,8 +63,16 @@
         </div>
 
         <div class="col-lg-8">
-            <!-- Card -->
-            <div v-if="!mostrarMetodos && !mostrarReciboPago0">
+            <div v-if="estaConsultando">
+              <div class="card pt-2" style="width: 100%;">
+                <div class="card-body text-center">
+                  <div class="spinner-grow" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else-if="!mostrarMetodos && !mostrarReciboPago0">
               <v-container v-if="obteniendoTramites">
                     <v-row>
                         <v-col cols="12" md="12">
@@ -80,12 +88,8 @@
                     </v-row>
                 </v-container>
                 <div v-if="!obteniendoTramites && items.length > 0">
-
                   <div class="card list-item card-custom gutter-b col-lg-12"  v-for="(item, index) in items" :key="index"  
-                  v-bind:style="item.items.length > 1 || !!item.isComplemento ? 'background-color: rgb(217, 222, 226) !important;' : ''" id="cart-container"
-                                    @drop='onDrop($event, item)' 
-                                    @dragover.prevent
-                                    @dragenter.prevent >
+                  v-bind:style="item.items.length > 1 || !!item.isComplemento ? 'background-color: rgb(217, 222, 226) !important;' : ''" id="cart-container" @drop='onDrop($event, item)' @dragover.prevent @dragenter.prevent >
                        <agrupacion-items-carrrito-component 
                         :agrupacion="item" 
                         :index="index" 
@@ -95,24 +99,17 @@
                         :tramitesServer="tramitesServer"
                         @selectionEvent="evtElementoSeleccionado"
                         @removeEvent="evtRemoveElementoSeleccionado">
-                          
                       </agrupacion-items-carrrito-component>
    
                   </div>
 
-
-
-                    <div class="card list-item card-custom gutter-b col-lg-12" id="elementDrop" style="border-style: dotted; background-color: rgba(0,0,0,0.3); display: none;"  @drop='onDropFuera($event, false)' 
-                                @dragover.prevent
-                                @dragenter.prevent >
-                        <div class="card-body py-7" >
-
-                            <div>
-                                  Sacar...
-                                </div>
-
-                        </div>
-                    </div>
+                  <div class="card list-item card-custom gutter-b col-lg-12" id="elementDrop" style="border-style: dotted; background-color: rgba(0,0,0,0.3); display: none;"  @drop='onDropFuera($event, false)'  @dragover.prevent  @dragenter.prevent >
+                      <div class="card-body py-7" >
+                          <div>
+                            Sacar...
+                          </div>
+                      </div>
+                  </div>
 
                   <div class="card card-custom" >
 
@@ -137,7 +134,7 @@
                             </div>
                             <!--end:: Pagination-->
                         </div>
-                    </div>
+                  </div>
                 </div>
 
                 <div v-else-if="!obteniendoTramites && items.length == 0">
@@ -147,11 +144,12 @@
                         Para continuar da click <a  class="card-link"  v-on:click="iniciarTramite()"> <span style="cursor: pointer;"> aquí </span> </a>
                     </div>
                   </div>
-              </div>
+                </div>
+
             </div>
             <!-- Card -->
             <transition name="slide-fade" appear>
-              <metodos-pago-component :infoMetodosPago="infoMetodosPago" v-if="mostrarMetodos" @metodoDePagoSeleccionado="metodoDePagoSeleccionado"></metodos-pago-component>
+              <metodos-pago-component :infoMetodosPago="infoMetodosPago" v-if="mostrarMetodos " @metodoDePagoSeleccionado="metodoDePagoSeleccionado"></metodos-pago-component>
             </transition>
             <b-row v-if="mostrarReciboPago0" >
               <iframe width="100%" height="880" :src="reciboPagoCeroURL"></iframe>
@@ -161,7 +159,7 @@
         <!--Grid column-->
         <div class="col-lg-4 pagar-desktop"  >
             <v-container v-if="obteniendoTramites">
-              <v-row>
+              <v-row >
                   <v-col cols="12" md="12">
                       <v-skeleton-loader v-bind:key="i" type="list-item" v-for="(r,i) in [1]" height="150px" style="margin-bottom: 8px;"></v-skeleton-loader>
                   </v-col>
@@ -171,6 +169,7 @@
               :tramites="tramites" 
               :obtenidoCostos="costosObtenidos" @updatingParent="recibirMetodosPago"  @cancelarPago="cancelarPago" 
               :metodoPagoSeleccionado="metodoPagoSeleccionado"
+              @consultandoMetodos="consultandoMetodos"
               >
             </detalle-pago-component>
             <transition name="slide-fade" appear>
@@ -258,7 +257,8 @@
               elementosSeleccionados:[],
               claveDroped:'',
               listDroped:null,
-              metodoPagoSeleccionado:false
+              metodoPagoSeleccionado:false,
+              estaConsultando:false
             }
         },
   
@@ -587,6 +587,10 @@
           if( data.success ){
             this.metodoPagoSeleccionado = true;
           }
+        },
+
+        consultandoMetodos(consulta){
+          this.estaConsultando = consulta;
         }
 
 
