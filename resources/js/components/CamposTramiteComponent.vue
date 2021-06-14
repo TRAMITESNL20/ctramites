@@ -134,7 +134,7 @@
 													</enajenantes-component>
 												<aviso-enajenacion-component
 													:campo="campo"
-													:expediente="7001001001"
+													:expediente="expediente"
 													@updateForm="updateForm"
 													v-else-if="campo.tipo == 'table'">
 												</aviso-enajenacion-component>
