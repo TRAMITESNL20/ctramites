@@ -325,15 +325,13 @@
 				if (tramite && tramite.id_tramite === process.env.TRAMITE_AVISO) {
 				
 					if(campo.tipo == 'results' && campo.valido){
-						this.expediente = 7001001001
-						//sustituir por campo.valor cuando se corrija el ws de los expedientes
+						this.expediente = campo.valor
         				this.updateExpedienteSeleccionado(this.expediente);
         			}
 
 					this.fields = ['Expediente Catastral' ,	'Fólio', 	'Días Restantes', 	'Fecha pago informativo',	'Capturista',	'Accion'];
 						//  this.rows = [{expediente : 7001002010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001002011 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001001010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'}]
 					var self = this;
-						console.log(process.env.TESORERIA_HOSTNAME);
 						let url = process.env.TESORERIA_HOSTNAME + "/valor-catastral-notaria/  " + window.user.notary.id ;  
 						$.ajax({
 							type: "GET",
