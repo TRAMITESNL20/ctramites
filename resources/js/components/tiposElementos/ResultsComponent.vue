@@ -79,6 +79,7 @@
 				:length="totalPaginas"
 				circle
 				total-visible="7"
+				color="black"
 				next-icon="mdi-menu-right"
 				prev-icon="mdi-menu-left"
 				style="color:black !important"                
@@ -121,6 +122,7 @@ Vue.use(Vuetify);
 			},
 			info: function(newVal, oldVal) {
 				this.info = newVal;
+				console.log(this.info);
 			},
 			loading: function(newVal, oldVal) {
 				this.loading = newVal;
@@ -139,9 +141,10 @@ Vue.use(Vuetify);
 				if (document.getElementById(ind).classList.contains('btn-primary') ){
 						document.getElementById(ind).classList.remove('btn-primary');
 						document.getElementById(ind).classList.add('btn-danger');		
-						this.labelRadio = 'Deseleccionar'
+						this.labelRadio = 'Deseleccionar';
 						this.campo.valor= e.expediente_catastral;
-						this.seleccionado = true
+						this.seleccionado = true;
+						this.totalPaginas = 1;
 						this.expedienteSeleccionado = e;
 				}else{
 						document.getElementById(ind).classList.remove('btn-danger');		
@@ -167,30 +170,39 @@ Vue.use(Vuetify);
 			filteredHelper(e){ 
 				var inicio= (this.porPagina*(this.page -1));
 				var arrayFinal = []; 
-				this.propaux = this.rows;
-				if(this.propaux.length > 0){
-					for (let i = 0; i < this.propaux.length; i++) {
-						if(this.propaux[i].camposConfigurados){
-							for (let k = 0; k < this.propaux[i].camposConfigurados.length; k++) {	
-								if(this.propaux[i].camposConfigurados[k].nombre === "Resultados Informativo Valor Catastral"  && this.propaux[i].camposConfigurados[k].valor ){
-									for (let z = 0; z < this.propaux[i].camposConfigurados[k].valor.length ; z++) {
-										if(this.propaux[i].camposConfigurados[k].valor[z].expediente_catastral ){
-											arrayFinal.push({"expediente_catastral" : this.propaux[i].camposConfigurados[k].valor[z].expediente_catastral , "folio":"", "Días Restantes": "", "Fecha pago informativo": "", "Capturista" : "" })
-										}	
+				if(JSON.parse(this.campo.caracteristicas).formato == 'seleccion'){
+					this.propaux = this.rows;
+					if(this.propaux.length > 0){
+						for (let i = 0; i < this.propaux.length; i++) {
+							if(this.propaux[i].camposConfigurados){
+								for (let k = 0; k < this.propaux[i].camposConfigurados.length; k++) {	
+									if(this.propaux[i].camposConfigurados[k].nombre === "Resultados Informativo Valor Catastral"  && this.propaux[i].camposConfigurados[k].valor ){
+										for (let z = 0; z < this.propaux[i].camposConfigurados[k].valor.length ; z++) {
+											if(this.propaux[i].camposConfigurados[k].valor[z].expediente_catastral ){
+												arrayFinal.push({"expediente_catastral" : this.propaux[i].camposConfigurados[k].valor[z].expediente_catastral , "folio":"", "Días Restantes": "", "Fecha pago informativo": "", "Capturista" : "" })
+											}	
+										}
 									}
 								}
 							}
 						}
 					}
+					if(this.searchTitle != null)  {
+						this.searchTitle = this.searchTitle.toUpperCase();
+						// parametros con los que se basa la busqueda
+						if(JSON.parse(this.campo.caracteristicas).formato == 'seleccion'){
+							arrayFinal = arrayFinal.filter(search =>(  search.expediente_catastral + '').includes( this.searchTitle) )
+						}	
+						this.totalPaginas = Math.ceil(arrayFinal.length / this.porPagina);
+					}   
+					var filteredHelper = arrayFinal.splice( inicio  , this.porPagina);
+					
+				}else{
+					var filteredHelper = this.rows;
+					this.totalPaginas = Math.ceil(this.rows.length / this.porPagina);
+
 				}
-				if(this.searchTitle != null)  {
-					this.searchTitle = this.searchTitle.toUpperCase();
-					// parametros con los que se basa la busqueda
-					arrayFinal = arrayFinal.filter(search =>(  search.expediente_catastral + '').includes( this.searchTitle) )
-					this.totalPaginas = Math.ceil(arrayFinal.length / this.porPagina);
-				}   
 				
-				var filteredHelper = arrayFinal.splice( inicio  , this.porPagina);
 				return filteredHelper;
         	},
 		}
