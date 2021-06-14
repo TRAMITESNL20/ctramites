@@ -149,7 +149,7 @@
             </div>
             <!-- Card -->
             <transition name="slide-fade" appear>
-              <metodos-pago-component :infoMetodosPago="infoMetodosPago" v-if="mostrarMetodos " @metodoDePagoSeleccionado="metodoDePagoSeleccionado"></metodos-pago-component>
+              <metodos-pago-component :infoMetodosPago="infoMetodosPago" v-if="mostrarMetodos && !estaConsultando" @metodoDePagoSeleccionado="metodoDePagoSeleccionado"></metodos-pago-component>
             </transition>
             <b-row v-if="mostrarReciboPago0" >
               <iframe width="100%" height="880" :src="reciboPagoCeroURL"></iframe>
