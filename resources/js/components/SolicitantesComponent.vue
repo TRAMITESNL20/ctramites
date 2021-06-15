@@ -18,10 +18,10 @@
                         <h3 v-if="sol.razonSocial">
                             {{sol.razonSocial }}
                         </h3>
-                        <div class="h5 font-weight-300">
+                        <div class="h5 font-weight-300" v-if="sol.rfc">
                            <strong>RFC:</strong> <i class="ni location_pin mr-2"></i>{{ sol.rfc }}
                         </div>
-                        <div class="h5 mt-4" v-if="sol.curp">
+                        <div class="h5 mt-4" v-if="sol.curp" >
                           <strong>CURP:</strong> <i class="ni business_briefcase-24 mr-2"></i>{{ sol.curp }}
                         </div>
                     </div>
@@ -60,6 +60,7 @@
                 </div>
             </div>  
             <div class="row" id="divPF" v-if="solicitante.tipoPersona == 'pf'">
+                <!--
                 <div class="col-xl-6">
                     <div class="">
                         <label>RFC</label>
@@ -71,7 +72,7 @@
                         <label>CURP</label>
                         <input type="text" placeholder="CURP " id="curp" class="form-control  form-control-lg "  style="background-color: #e5f2f5 !important"  v-model="solicitante.curp">
                     </div>
-                </div>
+                </div>-->
                 <div class="col-xl-6">
                     <div class="">
                         <label>Nombre</label>
@@ -199,15 +200,17 @@
             agregar: function (event) {
                 this.solicitante.id=0;
                 if( this.solicitante.tipoPersona == 'pf' ){
-                    if(!!this.solicitante.rfc && !!this.solicitante.nombreSolicitante && !!this.solicitante.apPat){
+                    if(/*!!this.solicitante.rfc &&*/ !!this.solicitante.nombreSolicitante && !!this.solicitante.apPat){
+                        this.solicitante.rfc = "";
+                        this.solicitante.curp = "";
                         this.listaSolicitantes.push( this.solicitante );
                         this.solicitante = { tipoPersona:"pf" };
                         this.agregarMas = false;
                         this.guardarInStorage();
                     }  else {
-                        if(!this.solicitante.rfc ){
+                        /*if(!this.solicitante.rfc ){
                             Command: toastr.warning("Error!", "RFC Requerido");
-                        } else if( !this.solicitante.nombreSolicitante ) {
+                        } else*/ if( !this.solicitante.nombreSolicitante ) {
                             Command: toastr.warning("Error!", "Nombre Requerido");
                         } else {
                             Command: toastr.warning("Error!", "Apellido paterno Requerido");
@@ -239,7 +242,7 @@
             },
 
             editar(index, solicitanteNuevo){
-                if(!solicitanteNuevo.rfc ){
+                if(this.solicitante.tipoPersona == 'pm' && !solicitanteNuevo.rfc ){
                     Command: toastr.warning("Error!", "RFC Requerido");
                     return false;
                 } 
