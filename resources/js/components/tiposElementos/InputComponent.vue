@@ -39,19 +39,6 @@
         this.validar();
       },
       mounted(){
-        let self = this;
-
-        this.$root.$on('tipo_costo_obj_change',  function (data) {
-          console.log("#####################INICIO##############################")
-          let caracteristicas= self.getCaracteristicas();
-          if( self.campo.nombre == self.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION){
-            self.campo.valido = false;
-            caracteristicas.required = !data.activo;
-            self.visible = !data.activo;
-            self.campo.caracteristicas = JSON.stringify(caracteristicas);
-            self.validar()
-          }
-        });
       },
       methods: {
         formatear(){

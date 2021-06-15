@@ -83,6 +83,7 @@
         },
 
         validar(a){
+          console.log("validando")
           let exregValida = true;
           let requeridoValido = true;
           let caracteristicas = {};

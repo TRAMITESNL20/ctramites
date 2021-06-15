@@ -94,7 +94,11 @@
 	export default {
 		props: ['tramitesCart', 'type', 'cartComponent', 'items'],
 		mounted(){
-			this.calcularPage()
+            localStorage.removeItem('datosFormulario');
+            localStorage.removeItem('listaSolicitantes');
+            localStorage.removeItem('tramite');
+			
+            this.calcularPage()
             this.pagination(1);
 
             Object.entries(this.tramitesPaginados).map(obj => {
