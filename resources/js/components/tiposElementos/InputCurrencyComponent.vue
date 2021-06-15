@@ -1,7 +1,7 @@
 <template>
   <div class=" fv-plugins-icon-container">
     <label>
-        {{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}
+        {{ campo.nombre }}  {{ requerido == 'true' || requerido == true ? '*' : '' }}
     </label>
     <span class="currencyinput">
       <b-form-input
@@ -28,6 +28,11 @@
 <script>
   import Vue from 'vue';
   export default {
+    computed:{
+        requerido(){
+            return this.getCaracteristicas().required
+        },
+    },
     props: ['campo', 'estadoFormulario', 'showMensajes','divisa'],
 
       created() {
@@ -44,6 +49,19 @@
       },
       mounted(){
         this.modelFormat();
+        let self = this;
+
+        this.$root.$on('tipo_costo_obj_change',  function (data) {
+          let caracteristicas= self.getCaracteristicas();
+          if( self.campo.nombre == self.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION){
+            self.campo.valido = false;
+            caracteristicas.required = !data.activo;
+            self.visible = !data.activo;
+            self.campo.caracteristicas = JSON.stringify(caracteristicas);
+            this.$forceUpdate();
+            self.validar();
+          }
+        });
       },
       methods: {
         modelFormat(value){

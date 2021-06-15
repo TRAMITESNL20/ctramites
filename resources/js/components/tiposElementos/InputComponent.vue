@@ -40,16 +40,9 @@
       },
       mounted(){
         let self = this;
-        this.$root.$on('chambioDivisa',  function (data) {
-          let caracteristicas= self.getCaracteristicas();
-          if( caracteristicas.formato == "moneda" && self.campo.valido){
-            let style = self.$store.state.DEFAULT_DIVISA.STYLE;
-            let currency = self.$store.state.DEFAULT_DIVISA.CURRENCY;
-            let number =  self.campo.valor ? Vue.filter('toNumber')( self.campo.valor ) : '';
-            self.campo.valor = Vue.filter('toCurrency')( number, style, currency  );
-          }
-        });
+
         this.$root.$on('tipo_costo_obj_change',  function (data) {
+          console.log("#####################INICIO##############################")
           let caracteristicas= self.getCaracteristicas();
           if( self.campo.nombre == self.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION){
             self.campo.valido = false;
