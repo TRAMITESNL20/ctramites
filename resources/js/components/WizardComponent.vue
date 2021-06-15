@@ -371,16 +371,15 @@
               let url = process.env.TESORERIA_HOSTNAME + "/solicitudes-get-tramite/" + this.tramite.id_seguimiento;
               try {
                 let response = await axios.get(url);
-
-                this.infoGuardadaFull = response.data[0];
+                this.infoGuardadaFull = response.data[response.data.length - 1];
 
                 this.infoGuardadaFull = new adminCamposCostos(this.infoGuardadaFull);
                 this.infoGuardada =  JSON.parse(this.infoGuardadaFull.info)
 
                 //this.infoGuardada =  JSON.parse( response.data[0].info );
 
-                if( response.data[0].archivos.length > 0 ){
-                  this.infoGuardada.archivosGuardados = response.data[0].archivos;
+                if( this.infoGuardadaFull.archivos.length > 0 ){
+                  this.infoGuardada.archivosGuardados = this.infoGuardadaFull.archivos;
                 }
 
                 this.tipoTramite = this.infoGuardada.tipoTramite;
