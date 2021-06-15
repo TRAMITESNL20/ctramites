@@ -239,13 +239,13 @@
                   let infoGuardada =  JSON.parse( this.infoGuardadaFull.info );
                   if(infoGuardada.complementoDe){
                     informacion.complementoDe =  infoGuardada.complementoDe;
-                    informacion.complementos = infoGuardada.complementos;
+                    informacion.complementos = infoGuardada.complementos || informacion.complementoDe;
                   }
                 } else if(this.infoGuardadaFull && this.infoGuardadaFull.id && ( this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO || this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO )) {
                   if( this.infoGuardadaFull.info ){
                     let info = JSON.parse(this.infoGuardadaFull.info );
                     if(info && info.complementoDe ){
-                      informacion.complementos = info.complementos + ","  + this.infoGuardadaFull.id;
+                      informacion.complementos = (info.complementos || info.complementoDe)+ ","  + this.infoGuardadaFull.id;
                     }
                   }
                   informacion.complementoDe =  this.infoGuardadaFull.id;

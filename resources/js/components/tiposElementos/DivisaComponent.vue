@@ -37,7 +37,7 @@
         }
       },
       mounted(){
-        this.campo.valor = {clave: this.$store.state.DEFAULT_DIVISA.CLAVE, nombre: this.$store.state.DEFAULT_DIVISA.NAME} 
+        this.campo.valor = this.campo.valor || {clave: this.$store.state.DEFAULT_DIVISA.CLAVE, nombre: this.$store.state.DEFAULT_DIVISA.NAME} 
         this.validar();
       },
       methods: {
