@@ -458,6 +458,7 @@
           if( clave /*&& this.isAgrupable(list)*/  ){
             this.tramites.map( tram =>{
                 if( tram.claveIndividual == clave ){
+                  tram.id_seguimiento = claveGrupo;
                   tram.calveTemp = claveGrupo;
                 }
                 return tram;
@@ -494,6 +495,7 @@
           let claveGrupo = /*uuid.v4()*/ Date.now();
           this.tramites.forEach( tramite => { 
             if(this.elementosSeleccionados.includes( tramite.claveIndividual )){
+              tramite.id_seguimiento = claveGrupo;
               tramite.calveTemp = claveGrupo;            
             }
           });
@@ -506,6 +508,7 @@
           let claveGrupo = Date.now();
           this.tramites.forEach( (tramite, index) => { 
             if( claveIndividual == tramite.claveIndividual ){
+              tramite.id_seguimiento = claveGrupo;
               tramite.calveTemp = claveGrupo; 
               //let index = this.elementosSeleccionados.findIndex( tramite => tramite.id_tramite == item.id_tramite );
               if(this.elementosSeleccionados.length > 0){
@@ -562,6 +565,7 @@
  
             this.tramites.map( tram =>{
                 if( tram.claveIndividual == this.claveDroped ){
+                  tram.id_seguimiento  = this.listDroped.grupo_clave;
                   tram.calveTemp = this.listDroped.grupo_clave;
                 }
                 return tram;
