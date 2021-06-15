@@ -378,7 +378,7 @@
 
                 //this.infoGuardada =  JSON.parse( response.data[0].info );
 
-                if( this.infoGuardadaFull.archivos.length > 0 ){
+                if( this.infoGuardadaFull.archivos && this.infoGuardadaFull.archivos.length > 0 ){
                   this.infoGuardada.archivosGuardados = this.infoGuardadaFull.archivos;
                 }
 
