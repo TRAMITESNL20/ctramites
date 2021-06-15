@@ -165,7 +165,7 @@
 														    <div class="custom-control custom-radio custom-control-inline">
 														      	<input type="radio" value="millar"  name="radioInline" class="custom-control-input" id="millar1" v-model="tipo_costo_obj.tipoCostoRadio" key="millar" @change="cambioModelo">
 														      	<label class="custom-control-label" for="millar1">
-														      		Si (millar)	
+														      		Si<!-- (millar)-->	
 														      	</label>
 														    </div>
 
@@ -174,14 +174,14 @@
 														      	<input type="radio" value="hoja" name="radioInline" class="custom-control-input" id="hoja1" v-model="tipo_costo_obj.tipoCostoRadio" key="millar" @change="cambioModelo">
 
 														      	<label class="custom-control-label" for="hoja1">
-														      		No (hoja)
+														      		No <!-- (hoja)-->	
 														      	</label>
 														    </div>
 														    <div class="custom-control custom-radio custom-control-inline" v-if="tipo_costo_obj.val_tipo_costo === 'L'">
 														      	<input type="radio" value="lote" name="radioInline" class="custom-control-input" id="lote1" v-model="tipo_costo_obj.tipoCostoRadio" key="lote" @change="cambioModelo">
 
 														      	<label class="custom-control-label" for="lote1">
-														      		No (lote)
+														      		No <!--(lote)-->	
 														      	</label>
 														    </div>
 														    <div class=" fv-plugins-icon-container" v-if="tipo_costo_obj.tipoCostoRadio=== 'hoja'"  >
