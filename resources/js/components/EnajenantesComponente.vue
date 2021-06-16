@@ -210,7 +210,6 @@
                 this.calcularTotalMontoOperacionDeEnajentantes();
             }
             this.validar();
-            console.log('se monto la tabla de enajenantes');
             
 		},
         updated(){
@@ -354,7 +353,7 @@
                 let eltotal = 0;
                 
                 let campoExpedientes = this.configCostos.campos.find(campo => campo.nombre == "Expedientes");
-                console.log(JSON.parse(JSON.stringify(campoExpedientes)))
+                
                 if(campoExpedientes && campoExpedientes.valor){
                     if(campoExpedientes.valor.expedientes){
                       if( campoExpedientes.valor.expedientes.length > 0){
@@ -381,7 +380,8 @@
         watch: {
             'configCostos.declararEn0':function (val, oldVal){
                 if(this.enajentantes.length > 0) {
-                        this.enajentantes = this.enajentantes.map( enajentante => {
+                    this.enajentantes = this.enajentantes.map( enajentante => {
+                        enajentante.detalle = false;
                         enajentante.datosParaDeterminarImpuesto.gananciaObtenida = '0';
                         enajentante.datosParaDeterminarImpuesto.montoOperacion = '0';
                         enajentante.datosParaDeterminarImpuesto.multaCorreccion = '0';
