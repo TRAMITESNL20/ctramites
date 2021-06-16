@@ -705,7 +705,9 @@
           }
       },
 
-      calcularMontoOperacion(val){/*
+      calcularMontoOperacion(val){
+          this.form.porcentajeCompra = Number( Number( this.form.porcentajeCompra ).toFixed(this.$const.PRECISION)) ;
+      /*
           let procenttaje = (val / 100);
           let montoOperacionGbl =  Vue.filter('toNumber')(this.montoOperacionGbl);          
           let montoCorrespondiente =  montoOperacionGbl * (val / 100);
