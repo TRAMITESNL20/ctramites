@@ -31,7 +31,9 @@ export default class TramiteCar5ISRCtrl {
 
     getIsAgrupable( solicitud, tramite ){
         //solo son agrupable los tramites con distrito 1
-        if(solicitud && solicitud.info && solicitud.info.camposConfigurados){
+        if(solicitud.info.complementoDe){
+            return false;
+        } else if(solicitud && solicitud.info && solicitud.info.camposConfigurados){
             let campoDistrito = solicitud.info.camposConfigurados.find( campo => campo.nombre == "Distrito" );
             if( campoDistrito ){
                 return campoDistrito.valor ? campoDistrito.valor.clave == 1 : false
