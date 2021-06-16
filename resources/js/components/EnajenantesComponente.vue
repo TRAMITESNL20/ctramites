@@ -18,7 +18,7 @@
         <b-row > 
             <b-col>
                 <b-form-group label="Porcentaje que enajena" label-for="procentaje-venta-input" >
-                    <b-form-input  id="procentaje-venta-input" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" @input="validar"  :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback" max="100" type="number"  style="background-color: #e5f2f5 !important" step="any"></b-form-input>
+                    <b-form-input  id="procentaje-venta-input" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" @input="validar"  :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback" max="100" type="number"  style="background-color: #e5f2f5 !important" step="any" @change="precision()"></b-form-input>
                     <b-input-group prepend="0" append="100" >
                         <b-form-input  id="procentaje-venta-rango" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" type="range" max="100" @input="validar" :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback" step="any"></b-form-input>
                     </b-input-group>
@@ -203,7 +203,7 @@
             }
             if(this.campo.valor && this.campo.valor.enajenantes && this.campo.valor.enajenantes.length > 0){
                 this.enajentantes = this.campo.valor.enajenantes;
-                this.$v.porcentajeVenta.$model  = this.campo.valor.porcentajeVenta;
+                this.$v.porcentajeVenta.$model = Number( Number( this.campo.valor.porcentajeVenta ).toFixed(this.$const.PRECISION)) ;
                 this.motivo = this.campo.valor.motivo;
                 
                 this.calcularTotalPorcentaje();
@@ -373,6 +373,11 @@
                 }
                 this.totalMontoOperacionDeclarado = eltotal;
                 //return eltotal; 
+            }, 
+
+
+            precision(){
+                this.$v.porcentajeVenta.$model = Number( Number( this.$v.porcentajeVenta.$model ).toFixed(this.$const.PRECISION)) ;
             }
 
 		},

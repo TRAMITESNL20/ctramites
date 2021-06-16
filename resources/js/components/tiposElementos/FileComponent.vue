@@ -84,7 +84,7 @@
                   let relation = this.campo.relationship;
                   setTimeout(function(){ 
                     $("#"+ idCampo + '-' + relation + '-namefile' ).text(  arrurl[arrurl.length - 1]) 
-                  }, 500);
+                  }, 400);
                   
                 } else {
                   $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  "" );
