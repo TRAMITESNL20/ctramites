@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!-- <iframe id="the_frame" v-on:load="validateSigned()" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe> -->
         <iframe id="the_frame" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe>
     </div>
 </template>
@@ -31,29 +30,30 @@
 			}
 		},
 		mounted() {
+			console.log('=============');
+			console.log(this.usuario.tramite_id);
 			window.addEventListener("message", this.messageEvt, false);
 			console.log(this.usuario);
-			this.usuario.solicitudes.map((solicitud, ind) => {
-				console.log(solicitud);
+			if(this.usuario.tramite_id == process.env.TRAMITE_5_ISR || this.usuario.tramite_id == process.env.TRAMITE_AVISO ){
+				this.usuario.solicitudes.map((solicitud, ind) => {
+				// console.log(solicitud);
 				this.multiple = this.usuario.solicitudes.length > 1;
 				var auxEnv = process.env.AAPP_URL;
 				if ( auxEnv == "https://tramites.nl.gob.mx") auxEnv = "http://tramites.nl.gob.mx";
-				var userEncoded =btoa(this.user.role.description + ' - ' +  this.user.name + ' ' +  this.user.fathers_surname + ' RFC: ' +  this.user.rfc ) ;
-				console.log( JSON.stringify(solicitud) );
-					
+					var userEncoded =btoa(this.user.role.description + ' - ' +  this.user.name + ' ' +  this.user.fathers_surname + ' RFC: ' +  this.user.rfc ) ;
+
 					if(this.multiple){
 						if(typeof this.doc === 'string'){
 							if(this.usuario.tramite_id == process.env.TRAMITE_5_ISR){ 
 								let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
 								this.doc = [];
 								this.doc.push(doc)
-							}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO){
+							}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO ){
 								this.doc = [];
 								//se tiene que mandar el ws con el  paquete completo para los tramites  y ademas  y despues se busca el id que te regrese a buscar
 								this.getDocumentCatastro(solicitud, this.usuario);
-								this.doc.push("http://www.africau.edu/images/default/sample.pdf");
+								this.doc.push(this.responseCatastroDocument);
 							}	
-							
 							
 						} 
 	
@@ -67,19 +67,26 @@
 						if(this.usuario.tramite_id == process.env.TRAMITE_5_ISR){
 							let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
 							this.doc = doc;
-						}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO){
+						}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO  ){
 							this.getDocumentCatastro(solicitud);
-							this.doc = "http://www.africau.edu/images/default/sample.pdf";
+							this.doc = this.responseCatastroDocument;
 						}
 						this.llave = `${solicitud.id}`;
 						this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
 					}
-				
 
 				this.idFirmado.push(solicitud.id);
 				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
-			})
-
+				});
+			}else if(this.usuario.tramite_id == process.env.TRAMITE_INFORMATIVO){
+				this.usuario.solicitudes.map((solicitud, ind) => {
+					getDocumentCatastro(solicitud)
+				});
+			}	
+			console.log('====-----====');
+			console.log(this.usuario.tramite_id);
+			console.log(process.env.TRAMITE_INFORMATIVO);
+			console.log(this.usuario.tramite_id == process.env.TRAMITE_INFORMATIVO);
 			this.rfc = this.user.rfc;
 			this.accesToken();
 			this.encodeData();
@@ -191,115 +198,101 @@
 			getDocumentCatastro(solicitud , tramiteId){
 				var adquirientes = [];
 				var vendedores =[];
-				//se debe de recorrer el comprador 
-				for (let i = 0; i < solicitud.length; i++) {
-					adquirientes.push({
-									"curprfc":"PRUE000111ISH",
-									"clasepro":2,
+				//se debe de recorrer el vendedor 
+				for (let i = 0; i < solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores.length; i++) {
+					vendedores.push({
+									"curprfc": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.curp ?? '',
+									"clasepro": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].tipoPersona == 'pf' ? 1 : 2 ,
 									"tipopro":1,
-									"nombrerazon":"NOMBRE DE PRUEBA",
-									"apepat":"APATERNO",
-									"apemat":"AMATENRO",
-									"fecha_nac":"2021-01-01",
-									"telefono":1234567890,
-									"celular":1234567890,
-									"correo":"correo@correo.com",
+									"nombrerazon": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.razonSocial ?? '',
+									"apepat":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.apPat ?? '',
+									"apemat":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.apMat ?? '',
+									"fecha_nac":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.fechaNacimiento ?? '',
+									"telefono": '',
+									"celular": '',
+									"correo": '',
 									"nuda":20,
 									"usufructo":10,
 									"direccion":{
-										"asentamiento":"colonia",
-										"cp":64000,
-										"pktipovialidad":1,
-										"calle":"calle",
+										"asentamiento": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.colonia ?? '' : '',
+										"cp": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ? solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.cp ?? '' : '',
+										"pktipovialidad": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.tipoVialidad ?? '' : '',
+										"calle": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.nombreVialidad ?? '' : '',
 										"cruza1":"",
 										"cruza2":"",
-										"numext":"123",
-										"numint":"A",
+										"numext": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.nExt ?? '' : '',
+										"numint": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.nInt ?? '' : '',
 										"numextant":"",
-										"referencia":"",
-										"municipio":70
+										"referencia": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ? solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.referencia ?? '' : '',
+										"municipio":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ? solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.municipio ?? '' : '',
 									}
 								});
 				}
 
-				//se debe de recorrer el vendedor
-				for (let k = 0; k < solicitud.length; k++) {
-					vendedores.push({
-									"curprfc":"PRUE000111ISH",
-									"clasepro":2,
+				//se debe de recorrer el comprador / adquiriente
+				for (let k = 0; k < solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores.length; k++) {
+					adquirientes.push({
+									"curprfc": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.curp ?? '',
+									"clasepro": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].tipoPersona == 'pf' ? 1 : 2 ,
 									"tipopro":1,
-									"nombrerazon":"NOMBRE DE PRUEBA",
-									"apepat":"APATERNO",
-									"apemat":"AMATENRO",
-									"fecha_nac":"2021-01-01",
-									"telefono":1234567890,
-									"celular":1234567890,
-									"correo":"correo@correo.com",
+									"nombrerazon": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.razonSocial ?? '',
+									"apepat":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.apPat ?? '',
+									"apemat":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.apMat ?? '',
+									"fecha_nac":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.fechaNacimiento ?? '',
+									"telefono": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.telefonoCasa ?? '',
+									"celular": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.telefonoFijo ?? '',
+									"correo": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.correo ?? '',
 									"nuda":20,
 									"usufructo":10,
 									"direccion":{
-										"asentamiento":"colonia",
-										"cp":64000,
-										"pktipovialidad":1,
-										"calle":"calle",
+										"asentamiento": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.colonia ?? '',
+										"cp": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.cp ?? '',
+										"pktipovialidad": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.tipoVialidad ?? '',
+										"calle": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nombreVialidad ?? '',
 										"cruza1":"",
 										"cruza2":"",
-										"numext":"123",
-										"numint":"A",
+										"numext":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nExt ?? '',
+										"numint": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nInt ?? '',
 										"numextant":"",
-										"referencia":"",
-										"municipio":70
-										}
+										"referencia":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.referencia ?? '',
+										"municipio": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.municipio ?? '',
+									}
 								});
 				}
 
 				var dataCatastro = [
 					{
 						"json":{
-							"expedientecatastral": solicitud.info.campos.Expedientes.expedientes[0].direccion.datos_catastrales[0].expediente_catastral,
-							"pktramite": usuario.tramite_id == 517 ? '9' : '15' ,
-							"pknotaria":solicitud.info.solicitante.notary,
-							"estadonotaria": solicitud.info.campos.Expedientes.expedientes[0].direccion.clave_EntFed,
+							"expedientecatastral": solicitud.info.campos['No. EXP. CATASTRAL'] ?? '',
+							"pktramite": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? '9' : '15' ,
+							"pknotaria": this.user.notary.notary_number ?? '',
+							"estadonotaria": "19",
 							"foliopago":123456,
-							"fechapago":"2021-06-07",
-							"montopago":"123",
-							"tipoventa":"Terreno y construcci\u00f3n",
-							"isai":12345,
-							"fechaprot":"2021-06-07",
+							"fechapago": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? new Date().toISOString().slice(0, 10) : '' ,
+							"montopago": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? '' : solicitud.info.costo_final ?? '' ,
+							"tipoventa": solicitud.info.campos['Tipo de Operación'].nombre ?? '',
+							"isai": solicitud.info.campos.ISAI ?? '',
+							"fechaprot": this.usuario.tramite_id == process.env.TRAMITE_AVISO ?  solicitud.info.campos['Fecha de protocolización'] : '',
 							"fechafirma": new Date().toISOString().slice(0, 10),
-							"escriturapub":"",
-							"actafprot":"",
+							"escriturapub": solicitud.info.campos['Número de Escritura Pública'],
+							"actafprot": solicitud.info.campos['Acta Fuera Protocolo'],
 							"avaluo":12345,
-							"operacion":12345,
+							"operacion": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? 0 : 12345,
 							"motivooperacion":"motivo",
 							"fiscal":12345678,
-							"folio_forma":"12345",
-							"descripcion_predio":"descripcion de estructura medidas y colindancias",
+							"folioforma":"12345",
+							"descripcion_predio": solicitud.info.campos['Anexo descripción'] ?? '',
 							"adquirientes": adquirientes,
 							"vendedores": vendedores,
 						}
 					}
 				];
 
-				var url = "http://10.153.144.228/deployed-main-ws-catastro/registro-catastro";
-
-				$.ajax({
-					type: "POST",
-					data: dataCatastro,
-					dataType: 'json', 
-					url,
-					async: false,
-					success:function(data){
-						console.log('data--', data);
-						this.responseCatastroDocument = data;
-					},
-					error:function(error){
-						console.log(error);
-					},
-					complete:function(){
-						console.log('catastro ya termino' );
-					}
-				});
+				var url =  process.env.TESORERIA_HOSTNAME + "/registro-catastro";
+				console.log(dataCatastro);
+				fetch(url, { 'method': 'POST', 'body' : JSON.stringify(dataCatastro[0]) } )
+				 .then(response => console.log(response.URL))
+				 .catch( error => console.log(error));
 
 			},
 		},
