@@ -85,7 +85,7 @@
 			}	
 			console.log('====-----====');
 			console.log(this.usuario.tramite_id);
-			console.log(process.env.TRAMITE_INFORMATIVO);
+			console.log(process.env);
 			console.log(this.usuario.tramite_id == process.env.TRAMITE_INFORMATIVO);
 			this.rfc = this.user.rfc;
 			this.accesToken();
