@@ -25,13 +25,16 @@
 				idFirmado: [],
 				urlFirmado: [],
 				guardado: false,
-				coutnLoad : 0
+				coutnLoad : 0,
+				responseCatastroDocument: '',
 
 			}
 		},
 		mounted() {
 			window.addEventListener("message", this.messageEvt, false);
+			console.log(this.usuario);
 			this.usuario.solicitudes.map((solicitud, ind) => {
+				console.log(solicitud);
 				this.multiple = this.usuario.solicitudes.length > 1;
 				var auxEnv = process.env.AAPP_URL;
 				if ( auxEnv == "https://tramites.nl.gob.mx") auxEnv = "http://tramites.nl.gob.mx";
@@ -47,7 +50,7 @@
 							}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO){
 								this.doc = [];
 								//se tiene que mandar el ws con el  paquete completo para los tramites  y ademas  y despues se busca el id que te regrese a buscar
-								this.getDocumentCatastro(solicitud);
+								this.getDocumentCatastro(solicitud, this.usuario);
 								this.doc.push("http://www.africau.edu/images/default/sample.pdf");
 							}	
 							
@@ -185,21 +188,85 @@
 					
 				}
 			},
-			getDocumentCatastro(solicitud){
-				dataCatastro: [
+			getDocumentCatastro(solicitud , tramiteId){
+				var adquirientes = [];
+				var vendedores =[];
+				//se debe de recorrer el comprador 
+				for (let i = 0; i < solicitud.length; i++) {
+					adquirientes.push({
+									"curprfc":"PRUE000111ISH",
+									"clasepro":2,
+									"tipopro":1,
+									"nombrerazon":"NOMBRE DE PRUEBA",
+									"apepat":"APATERNO",
+									"apemat":"AMATENRO",
+									"fecha_nac":"2021-01-01",
+									"telefono":1234567890,
+									"celular":1234567890,
+									"correo":"correo@correo.com",
+									"nuda":20,
+									"usufructo":10,
+									"direccion":{
+										"asentamiento":"colonia",
+										"cp":64000,
+										"pktipovialidad":1,
+										"calle":"calle",
+										"cruza1":"",
+										"cruza2":"",
+										"numext":"123",
+										"numint":"A",
+										"numextant":"",
+										"referencia":"",
+										"municipio":70
+									}
+								});
+				}
+
+				//se debe de recorrer el vendedor
+				for (let k = 0; k < solicitud.length; k++) {
+					vendedores.push({
+									"curprfc":"PRUE000111ISH",
+									"clasepro":2,
+									"tipopro":1,
+									"nombrerazon":"NOMBRE DE PRUEBA",
+									"apepat":"APATERNO",
+									"apemat":"AMATENRO",
+									"fecha_nac":"2021-01-01",
+									"telefono":1234567890,
+									"celular":1234567890,
+									"correo":"correo@correo.com",
+									"nuda":20,
+									"usufructo":10,
+									"direccion":{
+										"asentamiento":"colonia",
+										"cp":64000,
+										"pktipovialidad":1,
+										"calle":"calle",
+										"cruza1":"",
+										"cruza2":"",
+										"numext":"123",
+										"numint":"A",
+										"numextant":"",
+										"referencia":"",
+										"municipio":70
+										}
+								});
+				}
+
+				var dataCatastro = [
 					{
 						"json":{
-							"expedientecatastral":"7001001001",
-							"pktramite":"9",
-							"pknotaria":1,
-							"estadonotaria":19,
+							"expedientecatastral": solicitud.info.campos.Expedientes.expedientes[0].direccion.datos_catastrales[0].expediente_catastral,
+							"pktramite": usuario.tramite_id == 517 ? '9' : '15' ,
+							"pknotaria":solicitud.info.solicitante.notary,
+							"estadonotaria": solicitud.info.campos.Expedientes.expedientes[0].direccion.clave_EntFed,
 							"foliopago":123456,
 							"fechapago":"2021-06-07",
 							"montopago":"123",
 							"tipoventa":"Terreno y construcci\u00f3n",
 							"isai":12345,
 							"fechaprot":"2021-06-07",
-							"fechafirma":"2021-06-07",
+							"fechafirma": new Date().toISOString().slice(0, 10),
 							"escriturapub":"",
 							"actafprot":"",
 							"avaluo":12345,
@@ -208,121 +275,32 @@
 							"fiscal":12345678,
 							"folio_forma":"12345",
 							"descripcion_predio":"descripcion de estructura medidas y colindancias",
-							"adquirientes":[
-								{
-									"curprfc":"PRUE000111ISH",
-									"clasepro":2,
-									"tipopro":1,
-									"nombrerazon":"NOMBRE DE PRUEBA",
-									"apepat":"APATERNO",
-									"apemat":"AMATENRO",
-									"fecha_nac":"2021-01-01",
-									"telefono":1234567890,
-									"celular":1234567890,
-									"correo":"correo@correo.com",
-									"nuda":20,
-									"usufructo":10,
-									"direccion":{
-										"asentamiento":"colonia",
-										"cp":64000,
-										"pktipovialidad":1,
-										"calle":"calle",
-										"cruza1":"",
-										"cruza2":"",
-										"numext":"123",
-										"numint":"A",
-										"numextant":"",
-										"referencia":"",
-										"municipio":70
-									}
-								},
-								{
-									"curprfc":"PRUE000111ISH",
-									"clasepro":2,
-									"tipopro":1,
-									"nombrerazon":"NOMBRE DE PRUEBA",
-									"apepat":"APATERNO",
-									"apemat":"AMATENRO",
-									"fecha_nac":"2021-01-01",
-									"telefono":1234567890,
-									"celular":1234567890,
-									"correo":"correo@correo.com",
-									"nuda":20,
-									"usufructo":10,
-									"direccion":{
-										"asentamiento":"colonia",
-										"cp":64000,
-										"pktipovialidad":1,
-										"calle":"calle",
-										"cruza1":"",
-										"cruza2":"",
-										"numext":"123",
-										"numint":"A",
-										"numextant":"",
-										"referencia":"",
-										"municipio":70
-									}
-								}
-							],
-							"vendedores":[
-								{
-									"curprfc":"PRUE000111ISH",
-									"clasepro":2,
-									"tipopro":1,
-									"nombrerazon":"NOMBRE DE PRUEBA",
-									"apepat":"APATERNO",
-									"apemat":"AMATENRO",
-									"fecha_nac":"2021-01-01",
-									"telefono":1234567890,
-									"celular":1234567890,
-									"correo":"correo@correo.com",
-									"nuda":20,
-									"usufructo":10,
-									"direccion":{
-										"asentamiento":"colonia",
-										"cp":64000,
-										"pktipovialidad":1,
-										"calle":"calle",
-										"cruza1":"",
-										"cruza2":"",
-										"numext":"123",
-										"numint":"A",
-										"numextant":"",
-										"referencia":"",
-										"municipio":70
-										}
-									},
-									{
-										"curprfc":"PRUE000111ISH",
-										"clasepro":2,
-										"tipopro":1,
-										"nombrerazon":"NOMBRE DE PRUEBA",
-										"apepat":"APATERNO",
-										"apemat":"AMATENRO",
-										"fecha_nac":"2021-01-01",
-										"telefono":1234567890,
-										"celular":1234567890,
-										"correo":"correo@correo.com",
-										"nuda":20,
-										"usufructo":10,
-										"direccion":{
-											"asentamiento":"colonia",
-											"cp":64000,
-											"pktipovialidad":1,
-											"calle":"calle",
-											"cruza1":"",
-											"cruza2":"",
-											"numext":"123",
-											"numint":"A",
-											"numextant":"",
-											"referencia":"",
-											"municipio":70
-											}
-										}
-							]
+							"adquirientes": adquirientes,
+							"vendedores": vendedores,
 						}
 					}
-				]
+				];
+
+				var url = "http://10.153.144.228/deployed-main-ws-catastro/registro-catastro";
+
+				$.ajax({
+					type: "POST",
+					data: dataCatastro,
+					dataType: 'json', 
+					url,
+					async: false,
+					success:function(data){
+						console.log('data--', data);
+						this.responseCatastroDocument = data;
+					},
+					error:function(error){
+						console.log(error);
+					},
+					complete:function(){
+						console.log('catastro ya termino' );
+					}
+				});
+
 			},
 		},
 	}

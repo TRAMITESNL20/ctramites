@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class PendienteFirmaController extends Controller
 {
@@ -17,7 +18,8 @@ class PendienteFirmaController extends Controller
 		$user = session()->get("user");
 		$tramites = curlSendRequest("GET", getenv("TESORERIA_HOSTNAME")."/solicitudes-info/{$user->id}/firma");
 
-        $tramites->tramites ? $idTramites = $tramites->tramites : $idTramites = [];
+        
+        ( is_object( $tramites )  &&  $tramites->tramites) ? $idTramites = $tramites->tramites : $idTramites = [];
         if( !empty($idTramites) ){
             for ($i=0; $i < count( $idTramites[0]->solicitudes );  $i++) { 
 

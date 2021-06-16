@@ -269,7 +269,6 @@
                   localStorage.removeItem('tramite'); 
                   localStorage.removeItem('listaSolicitantes');
                   localStorage.removeItem('datosFormulario');
-              
                   if( this.infoGuardadaFull && this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ){
                     redirect("/nuevo-tramite");
                   } else {

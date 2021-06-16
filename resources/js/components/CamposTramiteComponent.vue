@@ -142,7 +142,7 @@
 													</enajenantes-component>
 												<aviso-enajenacion-component
 													:campo="campo"
-													:expediente="7001001001"
+													:expediente="expediente"
 													@updateForm="updateForm"
 													v-else-if="campo.tipo == 'table'">
 												</aviso-enajenacion-component>
@@ -334,8 +334,7 @@
 				if (tramite && tramite.id_tramite === process.env.TRAMITE_AVISO) {
 				
 					if(campo.tipo == 'results' && campo.valido){
-						this.expediente = 7001001001
-						//sustituir por campo.valor cuando se corrija el ws de los expedientes
+						this.expediente = campo.valor
         				this.updateExpedienteSeleccionado(this.expediente);
         			}
 
