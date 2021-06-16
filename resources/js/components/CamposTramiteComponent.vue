@@ -464,9 +464,12 @@
                 camposValidables.forEach( (campo, indice) => {
 					formularioValido = formularioValido && !!campo.valido;
                 });
-                if(this.tipo_costo_obj && (this.tipo_costo_obj.tipoCostoRadio == 'hoja' || this.tipo_costo_obj.tipoCostoRadio == 'lote ' )){
-                	formularioValido = formularioValido && !!this.tipo_costo_obj.hojaInput;
+
+                if(!!this.tipo_costo_obj && (this.tipo_costo_obj.tipoCostoRadio == 'hoja' || this.tipo_costo_obj.tipoCostoRadio == 'lote' )){
+                	let hojaInputValid = !!this.tipo_costo_obj.hojaInput;
+                	formularioValido = formularioValido && hojaInputValid;
 				}
+
                 this.$emit('updatingScore', formularioValido);
                 return formularioValido;
 		    },
