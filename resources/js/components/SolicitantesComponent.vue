@@ -138,6 +138,7 @@
             this.isISR = tramite && tramite.id_tramite == process.env.TRAMITE_5_ISR; 
             if( tramite && tramite.id_tramite == process.env.TRAMITE_5_ISR ){
                 let userTitular = window.user;
+
                 if(userTitular && userTitular.notary && userTitular.notary.titular){
                     this.solicitante = {
                         rfc:userTitular.notary.titular.rfc,
@@ -162,6 +163,7 @@
                         id:userTitular.id
                     }; 
                 }
+                console.log(JSON.parse(JSON.stringify(this.solicitante)))
                 this.agregar();
             } else {
                 this.solicitante = { tipoPersona:"pf" };
@@ -201,8 +203,6 @@
                 this.solicitante.id=0;
                 if( this.solicitante.tipoPersona == 'pf' ){
                     if(/*!!this.solicitante.rfc &&*/ !!this.solicitante.nombreSolicitante && !!this.solicitante.apPat){
-                        this.solicitante.rfc = "";
-                        this.solicitante.curp = "";
                         this.listaSolicitantes.push( this.solicitante );
                         this.solicitante = { tipoPersona:"pf" };
                         this.agregarMas = false;
