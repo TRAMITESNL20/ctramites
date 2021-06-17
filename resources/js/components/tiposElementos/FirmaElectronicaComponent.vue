@@ -78,9 +78,9 @@
 				this.idFirmado.push(solicitud.id);
 				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
 				});
-			}else if(this.usuario.tramite_id == process.env.TRAMITE_INFORMATIVO){
+			}else if(this.usuario.tramite_id == 8 /*process.env.TRAMITE_INFORMATIVO*/){
 				this.usuario.solicitudes.map((solicitud, ind) => {
-					getDocumentCatastro(solicitud)
+					this.getDocumentCatastro(solicitud)
 				});
 			}	
 			console.log('====-----====');
@@ -196,6 +196,7 @@
 				}
 			},
 			getDocumentCatastro(solicitud , tramiteId){
+				console.log( JSON.stringify(solicitud) );
 				var adquirientes = [];
 				var vendedores =[];
 				//se debe de recorrer el vendedor 
