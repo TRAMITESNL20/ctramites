@@ -199,98 +199,101 @@
 				console.log( JSON.stringify(solicitud) );
 				var adquirientes = [];
 				var vendedores =[];
+				var tipoTramite= '';
+				this.usuario.tramite_id == process.env.TRAMITE_AVISO ? tipoTramite = "9" : tipoTramite = "15"
 				//se debe de recorrer el vendedor 
-				for (let i = 0; i < solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores.length; i++) {
-					vendedores.push({
-									"curprfc": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.curp ?? '',
-									"clasepro": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].tipoPersona == 'pf' ? 1 : 2 ,
-									"tipopro":1,
-									"nombrerazon": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.razonSocial ?? '',
-									"apepat":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.apPat ?? '',
-									"apemat":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.apMat ?? '',
-									"fecha_nac":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.fechaNacimiento ?? '',
-									"telefono": '',
-									"celular": '',
-									"correo": '',
-									"nuda":20,
-									"usufructo":10,
-									"direccion":{
-										"asentamiento": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.colonia ?? '' : '',
-										"cp": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ? solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.cp ?? '' : '',
-										"pktipovialidad": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.tipoVialidad ?? '' : '',
-										"calle": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.nombreVialidad ?? '' : '',
-										"cruza1":"",
-										"cruza2":"",
-										"numext": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.nExt ?? '' : '',
-										"numint": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.nInt ?? '' : '',
-										"numextant":"",
-										"referencia": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ? solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.referencia ?? '' : '',
-										"municipio":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ? solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.municipio ?? '' : '',
-									}
-								});
-				}
+				if(tipoTramite == "9"){
+					for (let i = 0; i < solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores.length; i++) {
+						vendedores.push({
+										"curprfc": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.curp ?? '',
+										"clasepro": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].tipoPersona == 'pf' ? 1 : 2 ,
+										"tipopro":1,
+										"nombrerazon": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.razonSocial ?? '',
+										"apepat":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.apPat ?? '',
+										"apemat":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.apMat ?? '',
+										"fecha_nac":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosPersonales.fechaNacimiento ?? '',
+										"telefono": '',
+										"celular": '',
+										"correo": '',
+										"nuda":20,
+										"usufructo":10,
+										"direccion":{
+											"asentamiento": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.colonia ?? '' : '',
+											"cp": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ? solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.cp ?? '' : '',
+											"pktipovialidad": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.tipoVialidad ?? '' : '',
+											"calle": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.nombreVialidad ?? '' : '',
+											"cruza1":"",
+											"cruza2":"",
+											"numext": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.nExt ?? '' : '',
+											"numint": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ?  solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.nInt ?? '' : '',
+											"numextant":"",
+											"referencia": solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ? solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.referencia ?? '' : '',
+											"municipio":solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion ? solicitud.info.campos['Datos de Propietarios'].seccionVendedores.vendedores[i].datosDireccion.municipio ?? '' : '',
+										}
+									});
+					}
 
-				//se debe de recorrer el comprador / adquiriente
-				for (let k = 0; k < solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores.length; k++) {
-					adquirientes.push({
-									"curprfc": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.curp ?? '',
-									"clasepro": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].tipoPersona == 'pf' ? 1 : 2 ,
-									"tipopro":1,
-									"nombrerazon": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.razonSocial ?? '',
-									"apepat":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.apPat ?? '',
-									"apemat":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.apMat ?? '',
-									"fecha_nac":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.fechaNacimiento ?? '',
-									"telefono": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.telefonoCasa ?? '',
-									"celular": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.telefonoFijo ?? '',
-									"correo": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.correo ?? '',
-									"nuda":20,
-									"usufructo":10,
-									"direccion":{
-										"asentamiento": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.colonia ?? '',
-										"cp": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.cp ?? '',
-										"pktipovialidad": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.tipoVialidad ?? '',
-										"calle": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nombreVialidad ?? '',
-										"cruza1":"",
-										"cruza2":"",
-										"numext":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nExt ?? '',
-										"numint": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nInt ?? '',
-										"numextant":"",
-										"referencia":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.referencia ?? '',
-										"municipio": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.municipio ?? '',
-									}
-								});
+					//se debe de recorrer el comprador / adquiriente
+					for (let k = 0; k < solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores.length; k++) {
+						adquirientes.push({
+										"curprfc": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.curp ?? '',
+										"clasepro": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].tipoPersona == 'pf' ? 1 : 2 ,
+										"tipopro":1,
+										"nombrerazon": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.razonSocial ?? '',
+										"apepat":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.apPat ?? '',
+										"apemat":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.apMat ?? '',
+										"fecha_nac":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.fechaNacimiento ?? '',
+										"telefono": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.telefonoCasa ?? '',
+										"celular": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.telefonoFijo ?? '',
+										"correo": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.correo ?? '',
+										"nuda":20,
+										"usufructo":10,
+										"direccion":{
+											"asentamiento": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.colonia ?? '',
+											"cp": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.cp ?? '',
+											"pktipovialidad": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.tipoVialidad ?? '',
+											"calle": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nombreVialidad ?? '',
+											"cruza1":"",
+											"cruza2":"",
+											"numext":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nExt ?? '',
+											"numint": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nInt ?? '',
+											"numextant":"",
+											"referencia":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.referencia ?? '',
+											"municipio": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.municipio ?? '',
+										}
+									});
+					}
 				}
-
 				var dataCatastro = [
 					{
 						"json":{
-							"expedientecatastral": solicitud.info.campos['No. EXP. CATASTRAL'] ?? '',
-							"pktramite": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? '9' : '15' ,
-							"pknotaria": this.user.notary.notary_number ?? '',
+							"expedientecatastral": solicitud.info.campos['No. EXP. CATASTRAL'] ? solicitud.info.campos['Resultados Informativo Valor Catastral'][0].expediente_catastral : '',
+							"pktramite": tipoTramite ,
+							"pknotaria": this.user.notary.id ?? '',
 							"estadonotaria": "19",
 							"foliopago":123456,
-							"fechapago": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? new Date().toISOString().slice(0, 10) : '' ,
+							"fechapago": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? new Date().toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10) ,
 							"montopago": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? '' : solicitud.info.costo_final ?? '' ,
-							"tipoventa": solicitud.info.campos['Tipo de Operación'].nombre ?? '',
-							"isai": solicitud.info.campos.ISAI ?? '',
+							"tipoventa": 'terreno ?',
+							"isai": solicitud.info.campos.ISAI ?? 'SIATEST',
 							"fechaprot": this.usuario.tramite_id == process.env.TRAMITE_AVISO ?  solicitud.info.campos['Fecha de protocolización'] : '',
 							"fechafirma": new Date().toISOString().slice(0, 10),
-							"escriturapub": solicitud.info.campos['Número de Escritura Pública'],
+							"escriturapub": solicitud.info.campos['Número de Escritura Pública'] ?? '12345',
 							"actafprot": solicitud.info.campos['Acta Fuera Protocolo'],
 							"avaluo":12345,
 							"operacion": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? 0 : 12345,
 							"motivooperacion":"motivo",
 							"fiscal":12345678,
 							"folioforma":"12345",
-							"descripcion_predio": solicitud.info.campos['Anexo descripción'] ?? '',
+							"descripcion_predio": solicitud.info.campos['Anexo descripción'] ?? 'descripcionTest',
 							"adquirientes": adquirientes,
 							"vendedores": vendedores,
 						}
 					}
 				];
 
-				var url =  process.env.TESORERIA_HOSTNAME + "/registro-catastro";
 				console.log(dataCatastro);
+				var url =  process.env.TESORERIA_HOSTNAME + "/registro-catastro";
 				fetch(url, { 'method': 'POST', 'body' : JSON.stringify(dataCatastro[0]) } )
 				 .then(response => console.log(response.URL))
 				 .catch( error => console.log(error));
