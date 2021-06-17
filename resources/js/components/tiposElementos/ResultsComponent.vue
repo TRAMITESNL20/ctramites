@@ -27,7 +27,7 @@
 				</thead>
 				<tbody>
 					<tr v-if="loading"><td :colspan="fields.length" class="text-center"><i class="fas fa-spinner fa-spin mr-2"></i></td></tr>
-					<tr v-if="!loading && row.length != 0 && !seleccionado" v-for="(row, ind) in filteredHelper" :key="ind">
+					<tr v-if="!loading && row.length != 0 && !expedienteSeleccionado" v-for="(row, ind) in filteredHelper" :key="ind">
 						<td v-for="(item, ind) in row" :key="item.expediente_catastral" :colspan=" row.length !== fields.length && ind === row.length - 1 && (fields.length - (row.length - 1)) " class="text-center">
 							{{ typeof item == 'object' ? item.label :item }}
 
@@ -50,7 +50,7 @@
 							<!-- <input type="radio" @change="check($event)"  :value="row" name="checkbox" :id="row.expediente_castastral" class="text-center pl-4 radio" > -->
 						</td>
 					</tr>
-					<tr v-if="seleccionado" >
+					<tr v-if="expedienteSeleccionado" >
 						<td v-for="(expediente, ind) in expedienteSeleccionado" :key="ind" class="text-center">
 							{{expediente}}
 						</td>
@@ -97,10 +97,10 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 	export default {
 		vuetify: new Vuetify(),
-		props: ['campo', 'estadoFormulario', 'showMensajes', 'info', 'table', 'fields', 'rows', 'loading', 'infoExtra', 'response'],
+		props: ['campo', 'estadoFormulario', 'showMensajes', 'info', 'table', 'rows', 'loading', 'infoExtra', 'response'],
 		data(){
 			return{
-				propaux: '',
+				rowAux: [],
 				selectedId: '',
 				searchTitle: null,
 				page: 1,
@@ -108,13 +108,23 @@ Vue.use(Vuetify);
 				totalPaginas:  JSON.parse(JSON.stringify(this.rows).length),
 				pageSizes: [5, 10, 20],
 				labelRadio: 'Seleccionar',
-				seleccionado: false,
 				expediente:'',
-				expedienteSeleccionado: ''
+				expedienteSeleccionado: '',
+				fields:'',
+				// filteredHelper: '',
 		}},
 		mounted () {
+			this.getExpedientes();
+			if(this.campo.expedienteSeleccionado){
+				document.getElementById(0).classList.remove('btn-primary');
+				document.getElementById(0).classList.add('btn-danger');	
+				this.labelRadio = 'Deseleccionar';
+				console.log('si hay uno seleccionado es este: ',this.campo.expedienteSeleccionado);
+			}
+
 			this.campo.valido = true;
 			this.$emit('updateForm', this.campo);
+			this.$forceUpdate();
 		},
 		watch : {
 			rows: function(newVal, oldVal) {
@@ -143,17 +153,17 @@ Vue.use(Vuetify);
 						document.getElementById(ind).classList.add('btn-danger');		
 						this.labelRadio = 'Deseleccionar';
 						this.campo.valor= e.expediente_catastral;
-						this.seleccionado = true;
 						this.totalPaginas = 1;
+						this.campo.expedienteSeleccionado = e;
 						this.expedienteSeleccionado = e;
 				}else{
 						document.getElementById(ind).classList.remove('btn-danger');		
 						document.getElementById(ind).classList.add('btn-primary');
 						this.labelRadio = 'Seleccionar'
 						this.campo.valor= null;
-						this.seleccionado = false;
-						this.searchTitle= '0'
-						this.expedienteSeleccionado= '0'
+						this.searchTitle= '0';
+						this.expedienteSeleccionado= null;
+						this.campo.expedienteSeleccionado= null;
 				}
 
 				this.$emit('updateForm', this.campo);
@@ -165,21 +175,48 @@ Vue.use(Vuetify);
 				this.page = 1;
 
         	},
+			getExpedientes(){
+
+					this.fields = ['Expediente Catastral' ,	'Fólio', 	'Días Restantes', 	'Fecha pago informativo',	'Capturista',	'Accion'];
+						//  this.rows = [{expediente : 7001002010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001002011 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001001010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'}]
+					var self = this;
+						let url = process.env.TESORERIA_HOSTNAME + "/valor-catastral-notaria/  " + window.user.notary.id ;  
+						$.ajax({
+							type: "GET",
+							dataType: 'json', 
+							url,
+							success:function(data){
+								// for (let index = 0; index < data.length; index++) {
+								// 	let row = [];
+								// 	data[index]
+								// 	self.rowAux.push(data[index].campos) ; 
+								// }
+								console.log(data);
+								self.rowAux = data;
+							},
+							error:function(error){
+								console.log('error');
+							},
+							complete:function(){
+							}
+						});
+			},
 		},
 		computed:{
 			filteredHelper(e){ 
 				var inicio= (this.porPagina*(this.page -1));
 				var arrayFinal = []; 
-				if(JSON.parse(this.campo.caracteristicas).formato == 'seleccion'){
-					this.propaux = this.rows;
-					if(this.propaux.length > 0){
-						for (let i = 0; i < this.propaux.length; i++) {
-							if(this.propaux[i].camposConfigurados){
-								for (let k = 0; k < this.propaux[i].camposConfigurados.length; k++) {	
-									if(this.propaux[i].camposConfigurados[k].nombre === "Resultados Informativo Valor Catastral"  && this.propaux[i].camposConfigurados[k].valor ){
-										for (let z = 0; z < this.propaux[i].camposConfigurados[k].valor.length ; z++) {
-											if(this.propaux[i].camposConfigurados[k].valor[z].expediente_catastral ){
-												arrayFinal.push({"expediente_catastral" : this.propaux[i].camposConfigurados[k].valor[z].expediente_catastral , "folio":"", "Días Restantes": "", "Fecha pago informativo": "", "Capturista" : "" })
+				var filteredHelper= [];
+				if(JSON.parse(this.campo.caracteristicas).formato == 'seleccion' && !this.campo.expedienteSeleccionado ){
+					// this.rowAux = this.rows;
+					if(this.rowAux.length > 0){
+						for (let i = 0; i < this.rowAux.length; i++) {
+							if(this.rowAux[i].camposConfigurados){
+								for (let k = 0; k < this.rowAux[i].camposConfigurados.length; k++) {	
+									if(this.rowAux[i].camposConfigurados[k].nombre === "Resultados Informativo Valor Catastral"  && this.rowAux[i].camposConfigurados[k].valor ){
+										for (let z = 0; z < this.rowAux[i].camposConfigurados[k].valor.length ; z++) {
+											if(this.rowAux[i].camposConfigurados[k].valor[z].expediente_catastral ){
+												arrayFinal.push({"expediente_catastral" : this.rowAux[i].camposConfigurados[k].valor[z].expediente_catastral , "folio":"", "Días Restantes": "", "Fecha pago informativo": "", "Capturista" : "" })
 											}	
 										}
 									}
@@ -195,15 +232,17 @@ Vue.use(Vuetify);
 						}	
 						this.totalPaginas = Math.ceil(arrayFinal.length / this.porPagina);
 					}   
-					var filteredHelper = arrayFinal.splice( inicio  , this.porPagina);
+					filteredHelper = arrayFinal.splice( inicio  , this.porPagina);
 					
-				}else{
-					var filteredHelper = this.rows;
-					this.totalPaginas = Math.ceil(this.rows.length / this.porPagina);
+				}else if(JSON.parse(this.campo.caracteristicas).formato == 'seleccion' && this.campo.expedienteSeleccionado ){
+					filteredHelper[0] = this.campo.expedienteSeleccionado;
+					console.log(filteredHelper);
 
+				}else{
+					filteredHelper = this.rows
+					this.totalPaginas = Math.ceil(this.rows.length / this.porPagina);
 				}
-				
-				return filteredHelper;
+					return filteredHelper;				
         	},
 		}
 	}

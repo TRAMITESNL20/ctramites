@@ -311,7 +311,6 @@
 			},
 			updateExpedienteSeleccionado(ex){
 				this.expediente = ex;
-				console.log(this.expediente);
 			},
 			estadoSelected(estado){
 				this.estado = estado;
@@ -338,31 +337,7 @@
         				this.updateExpedienteSeleccionado(this.expediente);
         			}
 
-					this.fields = ['Expediente Catastral' ,	'Fólio', 	'Días Restantes', 	'Fecha pago informativo',	'Capturista',	'Accion'];
-						//  this.rows = [{expediente : 7001002010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001002011 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001001010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'}]
-					var self = this;
-						let url = process.env.TESORERIA_HOSTNAME + "/valor-catastral-notaria/  " + window.user.notary.id ;  
-						$.ajax({
-							type: "GET",
-							dataType: 'json', 
-							url,
-							success:function(data){
-								let rows = [];
-
-								for (let index = 0; index < data.length; index++) {
-									let row = [];
-									data[index]
-									self.rows.push(data[index].campos) ; 
-									// console.log(self.rows);
-								}
-								self.rows = data;
-							},
-							error:function(error){
-								console.log('error');
-							},
-							complete:function(){
-							}
-						});
+					
 				}
 
 				const datosFormulario = localStorage.getItem('datosFormulario') && JSON.parse(localStorage.getItem('datosFormulario')) ;
