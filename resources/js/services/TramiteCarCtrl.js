@@ -173,10 +173,13 @@ export default class TramiteCar5ISRCtrl {
             }
 
             let descuentosAplicados = [];
+            console.log("los descuentos");
+        
             if(info.detalle && info.detalle.descuentos && Array.isArray(info.detalle.descuentos )  && info.detalle.descuentos.length > 0  ){
-                let losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "No aplica" );   
-                losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "El numero de oficio no coincide con el trámite" );   
-                losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "El valor de operación excede el monto válido para subsidio" );    
+                let losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "No aplica" ); 
+
+                losdescuentos = losdescuentos.filter( descuento => descuento.concepto_descuento != "El numero de oficio no coincide con el trámite" );   
+                losdescuentos = losdescuentos.filter( descuento => descuento.concepto_descuento != "El valor de operación excede el monto válido para subsidio" );    
                 if( losdescuentos && losdescuentos.length > 0 ){
                   	info.detalle.descuentos.forEach( descuento => {
 	                    let descuentoAplicado =  {
