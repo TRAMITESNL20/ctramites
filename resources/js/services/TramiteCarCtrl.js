@@ -165,7 +165,6 @@ export default class TramiteCar5ISRCtrl {
                 partida: info.partidas ? info.partidas[0].id_partida : null,
                 importe_concepto:this.json.importe_tramite         
             }
-
             if( solicitud.info.hasOwnProperty('complementos')){
                 detalle[0].concepto = detalle[0].concepto + " COMPLEMENTARIO:  " + ( solicitud.info.complementos );
             } else if (  solicitud.info.hasOwnProperty('complementoDe')  ){
@@ -173,9 +172,11 @@ export default class TramiteCar5ISRCtrl {
             }
 
             let descuentosAplicados = [];
-            console.log("los descuentos");
         
             if(info.detalle && info.detalle.descuentos && Array.isArray(info.detalle.descuentos )  && info.detalle.descuentos.length > 0  ){
+                
+                detalle[0].importe_concepto = info.detalle.descuentos.map( descuento => descuento.importe_total ).reduce((a, b) => a + b, 0);
+ 
                 let losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "No aplica" ); 
 
                 losdescuentos = losdescuentos.filter( descuento => descuento.concepto_descuento != "El numero de oficio no coincide con el trámite" );   
