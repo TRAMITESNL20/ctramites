@@ -1,6 +1,20 @@
 <template>
     <div>
-        <iframe id="the_frame" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe>
+        <!-- <iframe id="the_frame" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe> -->
+		   <div class="card">
+            <div class="col-lg-12 col-sm-12">
+			    <div class="container">
+                    <div class="card-body">
+                        <div class="row" >
+                            <iframe v-if="tramiteFirmado == false" id="the_frame" :src="firma" style="width:100%; height: 600px;" frameborder="0"> </iframe>
+                        </div>
+                        <!-- <div>
+                            <iframe id="the_frame" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -11,6 +25,7 @@
 		data(){
 			return{
 				tramite : {},
+				tramiteFirmado : false,
 				tramiteInfo: '',
 				firma: '',
 				access_token: '',
@@ -78,6 +93,7 @@
 				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
 				});
 			}else if(this.usuario.tramite_id == 8 /*process.env.TRAMITE_INFORMATIVO*/){
+				this.tramiteFirmado = true;
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
 					this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].map(( solicitud, indSolicitud) => {
 						console.log('aqi');
