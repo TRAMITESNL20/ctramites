@@ -51,21 +51,30 @@ class ReferenceController extends Controller {
 			return abort(409, "El estatus actual de la referencia '{$ref}' es diferente de pagado (0).");
 		}
 
-		$update = DB::connection('db_portal')
+		if($reference->{'solicitudes_tramite-estatus'} != 0){
+			$update = DB::connection('db_portal')
+			->table('solicitudes_tramite')
+			->where('id', $reference->{'solicitudes_tramite-id'})
+			->update([
+				'solicitudes_tramite.estatus' => $request->has('dev') ? 0 : $reference->{'oper_transacciones-estatus'},
+				'solicitudes_tramite.url_recibo' => getenv('FORMATO_RECIBO').$reference->{'solicitudes_tramite-id_transaccion_motor'},
+			]);
+		}
+
+		$tramite = DB::connection('db_portal')
 		->table('solicitudes_tramite')
 		->where('id', $reference->{'solicitudes_tramite-id'})
-		->update([
-			'solicitudes_tramite.estatus' => $request->has('dev') ? 0 : $reference->{'oper_transacciones-estatus'},
-			'solicitudes_tramite.url_recibo' => getenv('FORMATO_RECIBO').$reference->{'solicitudes_tramite-id_transaccion_motor'},
-		]);
+		->first();
 
-		if($update){
+		if($tramite->estatus == 0){
 			foreach($reference->solicitudes as $solicitud){
+				$atendido = explode(',', $solicitud->{'solicitudes_catalogo-atendido_por'});
+				$status = count($atendido) == 1 ? ($atendido[0] == 1 ? 2 : 1) : 1;
 				$update = DB::connection('db_portal')
 				->table('solicitudes_ticket')
 				->where('id', $solicitud->id)
 				->update([
-					'solicitudes_ticket.status' => $solicitud->{'solicitudes_catalogo-atendido_por'} == 1 ? 2 : 3
+					'solicitudes_ticket.status' => $status
 				]);
 
 				if($update && $solicitud->{'solicitudes_catalogo-atendido_por'} == 1){
