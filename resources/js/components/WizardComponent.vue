@@ -245,12 +245,17 @@
                 let totalCarritoActual = parseInt( $("#totalTramitesCarrito" ).text( ));
                 $("#totalTramitesCarrito" ).text( totalCarritoActual + totalAgregados  );
 
-             
-                  Command: toastr.success("Listo !", "El trámite ha sido agregado");
+                Command: toastr.success("Listo !", "El trámite ha sido agregado");
                 
                 if( data.type == "finalizar" ){
+                  localStorage.removeItem('tramite'); 
+                  localStorage.removeItem('listaSolicitantes');
+                  localStorage.removeItem('datosFormulario');
                   redirect("/cart");
                 } if(data.type=="temporal"){
+                  localStorage.removeItem('tramite'); 
+                  localStorage.removeItem('listaSolicitantes');
+                  localStorage.removeItem('datosFormulario');
                   redirect("/tramites/borradores/80");
                 }else {
                   localStorage.removeItem('listaSolicitantes');
