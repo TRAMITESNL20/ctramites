@@ -63,17 +63,31 @@
                 }
               } else if(!!this.tieneEnajentantes(datosFormulario) && this.type != 'temporal' && this.tipoTramite != 'complementaria' ){
                 let enajenantes = this.extraerEnajentantes(datosFormulario, tramite, informacion, listaSolicitantes );
+
                 formData = this.getFormData(enajenantes);
 
                 let detallesComplete = true;
+                let detallesValid = true;
        
                 enajenantes.forEach( enajenante => {
                   detallesComplete = detallesComplete && !!enajenante.detalle && typeof enajenante.detalle == 'object'; 
                 });
-
+                
+                if( detallesComplete && this.tipoTramite == 'normal' ){
+                  enajenantes.forEach( enajenante => {
+                    detallesValid = detallesValid && !!enajenante.detalle && enajenante.detalle.Salidas['Importe total'] > 0; 
+                  });
+                }
                 
                 if(detallesComplete ||  this.type == 'temporal'){
-                  this.guardarTramiteUnico(formData, url );
+                  
+                  if(detallesValid){
+                    this.guardarTramiteUnico(formData, url );
+                  } else {
+                    this.enviando = false;
+                    Command: toastr.warning("Aviso!", "Importe total debe ser mayor a 0");
+                  }
+                  //
                 } else {
                   this.enviando = false;
                   Command: toastr.warning("Aviso!", "Importe total requerido");
