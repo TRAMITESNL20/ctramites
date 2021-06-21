@@ -119,6 +119,7 @@
                         "Content-type":"application/json"
                     }
                 }).done((response) => {
+                    this.obteniendoRecibo = false;
                     if(typeof response === 'string') response = JSON.parse(response);
                     let params = {
                         recibo_referencia:response.response.datos.recibo.url,
@@ -134,10 +135,11 @@
 
                     }
                 }).fail((rror)=> {
+                    this.obteniendoRecibo = false;
                     console.log( rror)
                 }).always(() => {
                     this.obteniendoRecibo = false;
-                    $("#spinner-ref").remove();
+                    //$("#spinner-ref").remove();
                 });
 
             },

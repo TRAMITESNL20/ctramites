@@ -106,23 +106,25 @@
                     </div>
                 </div>
             </div>
-
-                <div class="text-right">
-                    <button type="button"  class="btn btn-danger pull-rigth"  id="btnAddMoreCancel" v-on:click="agregarMas = false" v-if="listaSolicitantes.length > 0 ">
-                        <i class="fa fa-times" id="iconBtnAddMoreCancel"></i> 
-                        Cancelar
-                    </button>
-                </div>
             <div class="row">
-                <div class="text-right">  
-                    <button type="button"  class="btn btn-success green pull-rigth"  id="btnAdd" v-on:click="agregar()" v-if="!editando">
-                        <i class="fa fa-check" id="iconBtnAdd"></i> 
-                        Guardar
-                    </button>
-                    <button type="button"  class="btn btn-success green pull-rigth"  id="btnEditSi" v-on:click="editar(indiceEditando, solicitante)" v-if="editando">
-                        <i class="fa fa-check" id="iconBtnSi"></i> 
-                        Editar
-                    </button>
+                <div class="col-lg-12">
+                    <div class="text-right">
+                        <button type="button"  class="btn btn-danger pull-rigth"  id="btnAddMoreCancel" v-on:click="agregarMas = false" v-if="listaSolicitantes.length > 0 ">
+                            <i class="fa fa-times" id="iconBtnAddMoreCancel"></i> 
+                            Cancelar
+                        </button>
+                    </div>
+            
+                    <div class="text-right">  
+                        <button type="button"  class="btn btn-success green pull-rigth"  id="btnAdd" v-on:click="agregar()" v-if="!editando">
+                            <i class="fa fa-check" id="iconBtnAdd"></i> 
+                            Guardar
+                        </button>
+                        <button type="button"  class="btn btn-success green pull-rigth"  id="btnEditSi" v-on:click="editar(indiceEditando, solicitante)" v-if="editando">
+                            <i class="fa fa-check" id="iconBtnSi"></i> 
+                            Editar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
