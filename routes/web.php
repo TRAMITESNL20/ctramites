@@ -39,8 +39,8 @@ Route::post("/ssl-proxy", function(){
 
 
 Route::group(["prefix" => getenv("APP_PREFIX") ?? "/"], function(){
-	Route::get('/pago-referencia', "ReferenceController@emulator")->name("pago-referencia");
-	Route::post('/pago-referencia', "ReferenceController@bankWs");
+	Route::get('/pago-referencia', "ReferenceController@emulator")->name("pago-referencia")->middleware('auth.basic.custom');
+	Route::post('/pago-referencia', "ReferenceController@bankWs")->middleware('auth.basic.custom');
 
 	Route::get("/formato-declaracion/{id}", "FormatoDeclaracionController@index");
 	Route::get("/email/template", "EmailController@index");
