@@ -187,7 +187,7 @@
 				console.log('messageEvt', evt.data);
 				if( evt.data.length >= 1  ){
 
-					if( env.data[0].includes(this.usuario.solicitudes[0].id)  ){
+					if( evt.data[0].includes(this.usuario.solicitudes[0].id)  ){
 
 						console.log("el id es: " + this.usuario.solicitudes[0].id );
 					
