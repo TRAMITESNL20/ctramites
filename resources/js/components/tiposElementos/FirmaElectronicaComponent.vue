@@ -131,7 +131,7 @@
 			},
 			messageEvt (evt) {
 				var self = this;
-				console.log('messageEvt', evt.data);
+				console.log('menssageEvt', evt.data);
 				if( evt.data.length >= 1  ){
 						console.log('aqui');
 					if( evt.data[0].includes(this.usuario.solicitudes[0].id)  ){
