@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\Cast\Object_;
 
@@ -10,16 +11,20 @@ class PendienteFirmaController extends Controller
     //
     public function index () {
         $idTramites = [];
+        $tramites= '';
 		set_layout_arg([
 			"subtitle" => "perfil",
 			"fluid_container"=> true
 		]);
         $tramitesDoc = [];
 		$user = session()->get("user");
-		$tramites = curlSendRequest("GET", getenv("TESORERIA_HOSTNAME")."/solicitudes-info/{$user->id}/firma");
+        $tramites = curlSendRequest("GET", getenv("TESORERIA_HOSTNAME")."/solicitudes-info/{$user->id}/firma");
 
-        
-        ( is_object( $tramites )  &&  $tramites->tramites) ? $idTramites = $tramites->tramites : $idTramites = [];
+       
+
+
+        // dd($tramites->Code != "400");
+        (is_object( $tramites )   &&  $tramites->Code != "400" &&  $tramites->tramites) ? $idTramites = $tramites->tramites : $idTramites = [];
         if( !empty($idTramites) ){
             for ($i=0; $i < count( $idTramites[0]->solicitudes );  $i++) { 
 
