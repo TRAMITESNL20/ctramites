@@ -132,9 +132,7 @@
 			messageEvt (evt) {
 				var self = this;
 				console.log('menssageEvt', evt.data);
-				console.log(evt.data.length);
 				if( evt.data.length >= 1  ){
-						console.log('aqui');
 					if( evt.data[0].includes(this.usuario.solicitudes[0].id)  ){
 
 						console.log("el id es: " + this.usuario.solicitudes[0].id );
