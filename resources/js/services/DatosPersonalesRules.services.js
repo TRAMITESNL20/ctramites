@@ -47,6 +47,7 @@ class DatosPersonalesRulesService {
       fechaNacimiento:{ required },
       genero:{ required:false },
       estado:{ required:false },
+      pais:{ required }
     }
   }
 

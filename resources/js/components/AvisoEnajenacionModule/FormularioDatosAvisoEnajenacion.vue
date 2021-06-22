@@ -156,12 +156,14 @@
         },
         methods: {
             changeUsufructo(){
-                this.form.porcentajeUsufructo = Number(100 - Number( this.config.porcentajeUsufructoAsignado ) );
-                this.$emit('estadoFormulario', this.$v);
+                this.form.porcentajeUsufructo = this.form.porcentajePropiedad;
+                //this.form.porcentajeUsufructo = Number(100 - Number( this.config.porcentajeUsufructoAsignado ) );
+                //this.$emit('estadoFormulario', this.$v);
             },
 
             changePorcentajeProp(){
                 this.form.porcentajeUsufructo = this.form.porcentajePropiedad;
+                //this.$emit('estadoFormulario', this.$v);
             }
         },
         watch: {
