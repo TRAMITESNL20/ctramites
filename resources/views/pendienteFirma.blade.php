@@ -14,29 +14,18 @@
 								<div class="card-header">
                                     TRAMITES POR FIRMAR:
 								</div>
-								<div class="card-body">
-									<div class="row" >
-										<div class="col-lg-12 col-sm-12">
-											<div class="container">
-                                            <div class="pt-10 ">
-                                                    <!-- <div class="pt-10 pl-10 pr-10"  v-if=" {{ strlen($tramitesDoc) }} != 2">
-                                                        <div >
-                                                            <p> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
-                                                            <modal-document-component :tramitesdoc="{{$tramitesDoc}}" ></modal-document-component>
-                                                        </div>
-                                                    </div> -->
 
-                                                    <div class="pt-10 "  v-for="idTramite in {{$idTramites}}">
-                                                        <firma-electronica-component :usuario="idTramite"  :tramitesdoc="{{$tramitesDoc}}"  :user="{{$user}}" ></firma-electronica-component>
-                                                    </div>
-
-                                                </div>
-									    	</div> 
-										</div>
-									</div>
-								</div>
 							
 							</div>
+                            
+                            <aux-firmado-component 
+                                                        :usuario="{{$idTramites}}" 
+                                                        :user="{{$user}}" 
+                                                        :tramitesdoc="{{$tramitesDoc}}"
+                                                    >
+                            </aux-firmado-component>    
+
+
 						</div>
 					</section>
 

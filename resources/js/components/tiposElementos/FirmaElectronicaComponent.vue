@@ -1,7 +1,6 @@
 <template>
-    <div>
-        <!-- <iframe id="the_frame" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe> -->
-		   <div class="card">
+        
+        <div class="card">
             <div class="col-lg-12 col-sm-12">
 			    <div class="container">
                     <div class="card-body">
@@ -41,6 +40,9 @@
 				guardado: false,
 				coutnLoad : 0,
 				responseCatastroDocument: '',
+				docFirmadosListos: [],
+				docFirmadosPendientes: [],
+				tramiteFirmado : false,
 
 			}
 		},
@@ -48,7 +50,7 @@
 			console.log('=============');
 			console.log(this.usuario.solicitudes);
 			window.addEventListener("message", this.messageEvt, false);
-			if(this.usuario.tramite_id == process.env.TRAMITE_5_ISR || this.usuario.tramite_id == process.env.TRAMITE_AVISO ){
+			if( this.usuario.tramite_id == process.env.TRAMITE_AVISO ){
 				this.usuario.solicitudes.map((solicitud, ind) => {
 				// console.log(solicitud);
 				this.multiple = this.usuario.solicitudes.length > 1;
@@ -321,5 +323,77 @@
 				
 			},
 		},
+		  watch:{
+            // usuario : (newVal) => console.log('newVal', newVal)
+				usuario: {
+					handler(newVal, oldVal) {
+						if(this.usuario.tramite_id == env.process.TRAMITE_5_ISR ){
+						
+							this.doc = [];
+							this.idFirmado = [];
+							this.folio = [];
+							this.llave = [];
+							this.urlFirmado = [];
+							this.docFirmadosListos= [];
+							this.docFirmadosPendientes= [];
+							console.log('Prop changed: ', newVal );
+							console.log('Prop changed| was: ', oldVal);
+							console.log('tramite actualizado en firma');
+							let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
+							this.usuario.solicitudes.map((solicitud, ind) => {
+								console.log(solicitud);
+								this.multiple = this.usuario.solicitudes.length > 1;
+								var auxEnv = process.env.APP_URL;
+								if ( auxEnv == "https://tramites.nl.gob.mx") {
+									auxEnv = "http://tramites.nl.gob.mx";
+								}
+								let doc = `${APP_URL}/formato-declaracion/${solicitud.id}`;
+								if(this.multiple){
+									if(typeof this.doc === 'string') this.doc = [];
+									this.doc.push(doc)
+									
+									if(typeof this.llave === 'string') this.llave = [];
+									this.llave.push(`${solicitud.id}`)
+									
+									if(typeof this.folio === 'string') this.folio = [];
+									this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
+								
+									if(solicitud.required_docs == 1){
+										console.log('/////');
+										console.log(solicitud);
+										solicitud['urlDocumentoFirmado'] = `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`;
+										this.docFirmadosListos.push(solicitud);
+									}else{
+										solicitud['urlDocumentoFirmado'] =  `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`;
+										this.docFirmadosListos.push(solicitud);
+									}
+
+								}else{
+									this.doc = doc;
+									this.llave = `${solicitud.id}`;
+									this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
+									if(solicitud.required_docs == 1){
+										solicitud['urlDocumentoFirmado'] = `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` ;
+										this.docFirmadosListos.push(solicitud);
+									}else{
+										solicitud['urlDocumentoFirmado'] = `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` ;
+										this.docFirmadosListos.push(solicitud);
+									}
+								}
+
+							this.rfc= this.user.rfc; 
+							this.idFirmado.push(solicitud.id);
+							console.log(this.idFirmado);
+							this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
+							})
+						}
+						this.accesToken();
+						this.encodeData();
+						},
+						immediate: true, 
+					
+				}
+    	}
 	}
+
 </script>

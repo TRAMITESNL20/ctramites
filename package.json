@@ -16,9 +16,9 @@
         "cross-env": "^7.0.3",
         "fs": "0.0.1-security",
         "laravel-mix": "^5.0.9",
-        "lodash": "^4.17.13",
+        "lodash": "^4.17.21",
         "resolve-url-loader": "^3.1.2",
-        "sass": "^1.32.6",
+        "sass": "^1.32.12",
         "sass-loader": "^8.0.0",
         "vue": "^2.6.12",
         "vue-template-compiler": "^2.6.12"
@@ -31,9 +31,10 @@
         "moment": "^2.29.1",
         "v-mask": "^2.2.4",
         "vue-multiselect": "^2.1.6",
+        "vue-pdf": "^4.2.0",
         "vue-uuid": "^2.0.2",
         "vuelidate": "^0.7.6",
-        "vuetify": "^2.3.15",
+        "vuetify": "^2.4.11",
         "vuex": "^3.5.1"
     }
 }
