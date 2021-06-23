@@ -3,7 +3,10 @@ require('./bootstrap');
 import Vue from 'vue'
 import UUID from "vue-uuid";
 import Vuetify from 'vuetify';
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import Vuex from 'vuex';
+
+Vue.use(Vuex);
 // import 'bootstrap/dist/css/bootstrap.css'
 // import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -85,7 +88,17 @@ Vue.component('tree-component', () => import( /* webpackChunkName: "js/component
 Vue.component('agrupacion-items-carrrito-component', () => import( /* webpackChunkName: "js/components/generales/agrupacion-items-carrrito-component" */ './components/carShop/AgrupacionItemsCarrritoComponent.vue'));
 Vue.component("valuador-component" , () => import( /* webpackChunkName: "js/components/valuador-component" */ './components/ValuadorComponet.vue' ));
 
-Vue.component("complementaria-component" , () => import( /* webpackChunkName: "js/components/complementaria-component" */ './components/ComplementariaComponent.vue' ));
+Vue.component("complementaria-component" , () => import( /* webpackChunkName: "js/components/complementaria-component" */ './components/ComplementariaComponent.vue' ))
+Vue.component("modal-aviso-enajenacion-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModule/modal-aviso-enajenacion-component" */ './components/AvisoEnajenacionModule/ModalAvisoEnajenacionComponent.vue' ));
+Vue.component("aviso-enajenacion-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModule/aviso-enajenacion-component" */ './components/AvisoEnajenacionModule/AvisoEnajenacionComponent.vue' ));
+Vue.component("formulario-datos-personales-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModuleformulario/formulario-datos-personales-component" */ './components/AvisoEnajenacionModule/FormularioDatosPersonalesComponent.vue' ));
+Vue.component("formulario-datos-aviso-enajenacion-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModuleformulario/formulario-datos-aviso-enajenacion-component" */ './components/AvisoEnajenacionModule/FormularioDatosAvisoEnajenacion.vue' ));
+Vue.component("formulario-direccion-notificacion-component" , () => import( /* webpackChunkName: "js/components/AvisoEnajenacionModuleformulario/formulario-direccion-notificacion-component" */ './components/AvisoEnajenacionModule/FormularioDireccionNotificacionComponent.vue' ));
+
+Vue.component("resumen-aviso-enajenacion-component" , () => import( /* webpackChunkName: "js/components/resumen-aviso-enajenacion-component" */ './components/ResumenAvisoEnajenacion.vue' ));
+Vue.component("divisa-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/divisa-component" */ './components/tiposElementos/DivisaComponent.vue' ));
+Vue.component("input-currency-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/input-currency-component" */ './components/tiposElementos/InputCurrencyComponent.vue' ));
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -99,20 +112,16 @@ Vue.filter("capitalize", function(value) {
     return value.charAt(0).toUpperCase() + value.slice(1);
 });
 
-Vue.filter('toCurrency', function (value) {
+Vue.filter('toCurrency', function (value, style, currency) {
     if (isNaN(Number(value))) {
         return value;
     }
     var formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'MXN',
+        style: style || 'currency',
+        currency: currency || 'MXN',
         minimumFractionDigits: 2
     });
     return formatter.format(value);
-});
-
-Vue.filter('toNumber', function (value) {
-    return Number((value).replace(/[^0-9.-]+/g,""));   
 });
 
 Vue.prototype.$const = {
@@ -123,17 +132,30 @@ Vue.prototype.$const = {
         CAMPO_HOJA: "Hoja",
         CAMPO_SUBSIDIO: "Subsidio",
         CAMPO_VALOR_CATASTRAL: "Valor catastral",
-        CAMPO_VALOR_OPERACION: "Valor de operacion"
-    }
+        CAMPO_VALOR_OPERACION: "Valor de operacion",
+        CAMPO_CANTIDAD_LOTES: "Cantidad de lotes"
+    },
+    STATUS_FALTA_PAGO: 8,
+    STATUS_ERROR_MUNICIPIO: 7,
+    DIVISAS:[
+        {CLAVE: "SF43718", NAME: "Pesos por Dólar. FIX.", CURRENCY:"USD", STYLE: "decimal"},
+        {CLAVE: "SF60653", NAME: "Pesos por Dólar. Fecha de liquidación.", CURRENCY:"USD",STYLE: "decimal"},
+        {CLAVE: "SF46410", NAME: "Euro.", CURRENCY:"EUR", STYLE: "currency"},
+        {CLAVE: "SF46406", NAME: "Yen japónes.", CURRENCY:'JPY', STYLE: "currency"},
+        {CLAVE: "PESOS", NAME: "Pesos", CURRENCY:'MXN', STYLE: "currency"},
+        {CLAVE: "SF46407", NAME: "Libra esterlina.", CURRENCY:"GBP", STYLE: "currency"},
+        {CLAVE: "SF60632", NAME: "Dólar Canadiense.", CURRENCY:"CAD", STYLE: "currency"},
+        {CLAVE: "SP68257", NAME: "Valor de UDIS.", CURRENCY:'MXN',STYLE: "decimal"},
+    ]
 }
 
 Vue.filter('toNumber', function (value) {
-    return Number((value).replace(/[^0-9.-]+/g,""));   
+    return Number((value).replace(/[^0-9.-]+/g,""));
 });
 
 Vue.filter('formatoMoneda', function (value) {
     let numero = Vue.filter('toNumber')(value +"");
-    return Vue.filter('toCurrency')(numero +""); 
+    return Vue.filter('toCurrency')(numero +"");
 });
 
 Vue.directive('uppercase',
@@ -144,7 +166,7 @@ Vue.directive('uppercase',
         vnode.componentInstance.$emit('input', e.target.value.toUpperCase())
       })
     }
-  })
+  });
 
 Vue.directive('currency',
   {
@@ -154,13 +176,24 @@ Vue.directive('currency',
             e.target.value = Vue.filter('toCurrency')(numero +"")
             vnode.componentInstance.$emit('input', e.target.value);
           })
-        
+
     }
 });
 
+const divisaStore = new Vuex.Store({
+  state: {
+    DEFAULT_DIVISA:{CLAVE: "PESOS", NAME: "Pesos", CURRENCY:'MXN', STYLE: "currency"}
+  },
 
+  mutations: {
+    change (state, divisa) {
+      state.DEFAULT_DIVISA = divisa
+    }
+  }
+})
 const app = new Vue({
     el: '#app',
+    store: divisaStore,
     updated(){
         if($(".table").length > 0){
             var height = $(".table")[0].clientHeight;
@@ -168,7 +201,7 @@ const app = new Vue({
             $(".border-table-right").css( "width" ,'12%');
             $(".border-table-left").css( "height" ,  height+"px" );
             $(".border-table-right").css( "height" ,  height+"px" );
-            $('#scrollDiv').scroll( function() {    
+            $('#scrollDiv').scroll( function() {
                 ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
 
                 ( $('#scrollDiv').scrollLeft() > 0) ? $('.border-table-left').show() : $('#gradientBackgroundLeft').hide();

@@ -1,10 +1,15 @@
 <script>
   import { uuid } from 'vue-uuid';
+  import tramite5isr from '../../services/TramiteCarCtrl.js';
     export default {
         name: 'BtnGuardarTramiteParent',
         props: ['tipoTramite', 'files', 'datosComplementaria', 'idUsuario', 'infoGuardadaFull', "type", "labelBtn"],
+        data(){
+          return {
+            tramiteCtrl: new tramite5isr()
+          }
+        },
         mounted() {
-          console.log("montado")
         },
 
         methods:{
@@ -82,18 +87,23 @@
                   });
                   informacion.campos=camposObj;
                   informacion.camposConfigurados = datosFormulario.campos;
-                  informacion.tipoPersona=datosFormulario.tipoPersona,
-                  //informacion.declararEn0 = this.declararEn0,
-                  informacion.motivoDeclaracion0 = datosFormulario.motivoDeclaracion0,
-                  informacion.tipo_costo_obj = datosFormulario.tipo_costo_obj
+                  if(datosFormulario && datosFormulario.tipoPersona){
+                    informacion.tipoPersona=datosFormulario.tipoPersona;
+                  }
+                  if(datosFormulario && datosFormulario.motivoDeclaracion0){
+                    informacion.motivoDeclaracion0 = datosFormulario.motivoDeclaracion0;
+                  }
+                  if(datosFormulario && datosFormulario.tipo_costo_obj){
+                    informacion.tipo_costo_obj = datosFormulario.tipo_costo_obj;
+                  }
                 } else {
                   informacion.camposComplementaria = this.datosComplementaria;
                 }
                 if(informacion.camposConfigurados){
                   informacion.camposConfigurados = informacion.camposConfigurados.map(campo => { 
-                    if(campo.tipo == 'file' ){
+                    if(campo.tipo == 'file'){
                       let elfile = this.files.find( file => file.nombre == campo.nombre);
-                      campo.archivoCargado = !!elfile.valor;
+                      campo.archivoCargado = elfile && !!elfile.valor;
                     }
                     return campo;
                   });
@@ -115,7 +125,7 @@
                 }
                 formData.append('info', JSON.stringify(informacion) );
                 formData.append('enajenantes',[]);
-                formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
+                //formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
               } else {
                 this.datosComplementaria.complementarias.forEach( complementaria => {
                   let inf = Object.assign({} , complementaria);
@@ -133,7 +143,7 @@
 
               if(tramite){
                 formData.append('clave', tramite.id_seguimiento );
-                formData.append('grupo_clave',  tramite.grupo_clave || tramite.id_seguimiento );
+                formData.append('grupo_clave',  tramite.grupo_clave || Date.now() );
                 formData.append('catalogo_id', tramite.id_tramite );
               }
 
@@ -158,17 +168,18 @@
       
               formData.append('user_id', this.idUsuario );
               if(!enajenantes){
+                informacion.solicitantes = listaSolicitantes;
                 formData.append('info', JSON.stringify(informacion) );
               } else {
                 formData.append('info', JSON.stringify({}) );
                 formData.append("enajenantes", JSON.stringify(enajenantes));
               }
               if( listaSolicitantes && listaSolicitantes.length > 0 ){
-                formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
+                //formData.append('solicitantes', JSON.stringify(listaSolicitantes) );
               }
               if(tramite){
                 formData.append('clave', tramite.id_seguimiento );
-                formData.append('grupo_clave', tramite.grupo_clave || tramite.id_seguimiento );
+                formData.append('grupo_clave', tramite.grupo_clave || Date.now() );
                 formData.append('catalogo_id', tramite.id_tramite );
               }
 
@@ -190,6 +201,26 @@
                 formData.append('required_docs', 0);  
               }
               
+              let TRAMITE_AVISO = process.env.TRAMITE_AVISO; 
+              if( TRAMITE_AVISO && (TRAMITE_AVISO == tramite.id_tramite) ){
+                formData.append('sin_costo', true);
+              }
+              let solicitud = {
+                info : informacion
+              }
+              let costoTotal = this.tramiteCtrl.getImporte(solicitud);
+              formData.append('costoTotal', costoTotal);
+              
+              if(informacion.complementoDe ){
+                formData.append('ticket_anterior', informacion.complementoDe);
+                if( this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ){
+                  formData.append('status', this.$const.STATUS_ERROR_MUNICIPIO); 
+                }
+                if( this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO ){
+                  formData.append('status', this.$const.STATUS_FALTA_PAGO); 
+                }
+                
+              }
 
               return formData;
             },
@@ -202,14 +233,23 @@
                 datosFormulario.campos = this.formatearCampos(datosFormulario.campos);
                 let informacion = this.getInformacion( tramite, datosFormulario );
                 let idEdicion = null;
-                if(  this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status != 3  ){
+
+                if(  this.infoGuardadaFull && this.infoGuardadaFull.id && ( this.infoGuardadaFull.status != this.$const.STATUS_FALTA_PAGO && this.infoGuardadaFull.status != this.$const.STATUS_ERROR_MUNICIPIO )  ){
                   idEdicion = this.infoGuardadaFull.id;
                   let infoGuardada =  JSON.parse( this.infoGuardadaFull.info );
                   if(infoGuardada.complementoDe){
                     informacion.complementoDe =  infoGuardada.complementoDe;
+                    informacion.complementos = infoGuardada.complementos || informacion.complementoDe;
                   }
-                } else if(this.infoGuardadaFull && this.infoGuardadaFull.id && this.infoGuardadaFull.status == 3) {
+                } else if(this.infoGuardadaFull && this.infoGuardadaFull.id && ( this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO || this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO )) {
+                  if( this.infoGuardadaFull.info ){
+                    let info = JSON.parse(this.infoGuardadaFull.info );
+                    if(info && info.complementoDe ){
+                      informacion.complementos = (info.complementos || info.complementoDe)+ ","  + this.infoGuardadaFull.id;
+                    }
+                  }
                   informacion.complementoDe =  this.infoGuardadaFull.id;
+
                   tramite.id_seguimiento = uuid.v4();
                   tramite.grupo_clave = this.infoGuardadaFull.grupo_clave;
                 }

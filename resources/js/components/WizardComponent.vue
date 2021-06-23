@@ -62,7 +62,7 @@
                                     <!--end: Wizard Step 1-->
                                     <!--begin: Wizard Step 2-->
                                     <div class="pb-5" data-wizard-type="step-content" id="step2" >
-                                      <solicitantes-component v-if="currentStep == 2 && camposGuardadosObtenidos" @updatingSolicitante="updateSolicitante" :solicitantesGuardados="solicitantesGuardados" :usuario="usuario"></solicitantes-component>
+                                      <solicitantes-component v-if="currentStep == 2 && camposGuardadosObtenidos" @updatingSolicitante="updateSolicitante" :solicitantesGuardados="solicitantesGuardados"></solicitantes-component>
                                     </div>
                                     <!--end: Wizard Step 2-->
                                     <!--begin: Wizard Step 3-->
@@ -74,6 +74,12 @@
                                           :files="files" 
                                           :usuario="usuario">
                                           </resumen-tramite-5-isr-component>
+                                        </div>
+                                        <div v-else-if="tramite.id_tramite == TRAMITE_AVISO">
+                                          <resumen-aviso-enajenacion-component v-if="currentStep == 3"
+                                          :tipoTramite="tipoTramite"  >
+                                            
+                                          </resumen-aviso-enajenacion-component>
                                         </div>
                                         <div v-else>
                                           <resumen-tramite-component v-if="currentStep == 3" 
@@ -95,7 +101,8 @@
                                               :files="files"
                                               :datosComplementaria="datosComplementaria"
                                               :idUsuario="idUsuario"
-                                              :infoGuardadaFull="infoGuardadaFull" v-if="currentStep != 3" labelBtn="Guardar y Continuar después "
+                                              :infoGuardadaFull="infoGuardadaFull" 
+                                              v-if="!hideBtnSaveAndContinue" labelBtn="Guardar y Continuar después "
                                               @tramiteAgregadoEvent="tramiteAgregadoEvent"
                                               ></btn-guardar-tramite-component>
 
@@ -118,7 +125,7 @@
                                               :idUsuario="idUsuario"
                                               :infoGuardadaFull="infoGuardadaFull"
                                               v-if="currentStep == 3 && ['notary_titular', 'notary_substitute', 'notary_payments', 'notary_capturist_payments'].includes(user.role_name)"
-                                              labelBtn="Pagar"
+                                              :labelBtn="labelBtnFInal"
                                               @tramiteAgregadoEvent="tramiteAgregadoEvent"
                                               ></btn-guardar-tramite-component>
                                             <button type="button" id="btnWizard" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4 arrow-desktop" data-wizard-type="action-next" v-on:click="next()" v-if="currentStep != 3">
@@ -151,7 +158,6 @@
                     </div>
                   </div>
             </div>
-
         </div>
 
     </div>
@@ -160,12 +166,22 @@
 <script>
   import { uuid } from 'vue-uuid';
   import FirmaElectronicaComponent from './tiposElementos/FirmaElectronicaComponent.vue';
-
+  import adminCamposCostos from '../services/AdminCamposCostos.js';
     export default {
         props: ['tramite','idUsuario', 'clave', 'usuario'],
         computed:{
             declararEn0(){
                 return this.tipoTramite == 'declaracionEn0';
+            },
+
+            labelBtnFInal(){
+              if( this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ) {
+                return "Guardar cambios";
+              }
+              return "Pagar";
+            },
+            hideBtnSaveAndContinue(){
+              return this.currentStep == 3 ||  this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO  || this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO;
             }
         },
         mounted() {
@@ -228,7 +244,8 @@
                   wizardTitle:'Finalizar',
                   wizardDesc:'Revisar y completar',
                 }],
-                TRAMITE_5_ISR:process.env.TRAMITE_5_ISR
+                TRAMITE_5_ISR:process.env.TRAMITE_5_ISR,
+                TRAMITE_AVISO:process.env.TRAMITE_AVISO,
                 //declararEn0:false
             }
         },
@@ -252,7 +269,11 @@
                   localStorage.removeItem('tramite'); 
                   localStorage.removeItem('listaSolicitantes');
                   localStorage.removeItem('datosFormulario');
-                  redirect("/cart");
+                  if( this.infoGuardadaFull && this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO ){
+                    redirect("/nuevo-tramite");
+                  } else {
+                    redirect("/cart");
+                  }
                 } if(data.type=="temporal"){
                   localStorage.removeItem('tramite'); 
                   localStorage.removeItem('listaSolicitantes');
@@ -355,28 +376,32 @@
               let url = process.env.TESORERIA_HOSTNAME + "/solicitudes-get-tramite/" + this.tramite.id_seguimiento;
               try {
                 let response = await axios.get(url);
+                this.infoGuardadaFull = response.data[0/*response.data.length - 1*/];
 
-                this.infoGuardadaFull = response.data[0];
+                this.infoGuardadaFull = new adminCamposCostos(this.infoGuardadaFull);
+                this.infoGuardada =  JSON.parse(this.infoGuardadaFull.info)
 
-                this.infoGuardada =  JSON.parse( response.data[0].info );
+                //this.infoGuardada =  JSON.parse( response.data[0].info );
 
-                if( response.data[0].archivos.length > 0 ){
-                  this.infoGuardada.archivosGuardados = response.data[0].archivos;
+                if( this.infoGuardadaFull.archivos && this.infoGuardadaFull.archivos.length > 0 ){
+                  this.infoGuardada.archivosGuardados = this.infoGuardadaFull.archivos;
                 }
 
                 this.tipoTramite = this.infoGuardada.tipoTramite;
                 
-                //this.tipoTramiteDisabled = !this.infoGuardada.campos ? 'normal' : 'complementaria';
 
                 this.camposGuardadosObtenidos = true;
-
-                this.solicitantesGuardados = response.data.map( solicitante => {
-                  let solicitanteNuevo = JSON.parse(solicitante.info).solicitante;
-                  if( solicitanteNuevo ){
-                    solicitanteNuevo.id = solicitante.id;
-                  }
-                  return solicitanteNuevo;
-                });
+                if( this.tramite.id_tramite == this.TRAMITE_5_ISR ){
+                  this.solicitantesGuardados = response.data.map( solicitante => {
+                    let solicitanteNuevo = typeof solicitante.info == "string" ? JSON.parse(solicitante.info).solicitante : solicitante.info.solicitante;
+                    if( solicitanteNuevo ){
+                      //solicitanteNuevo.id = solicitante.id;
+                    }
+                    return solicitanteNuevo;
+                  });
+                } else {
+                  this.solicitantesGuardados = this.infoGuardada.solicitantes || [];
+                }
 
               } catch (error) {
                   console.log(error);

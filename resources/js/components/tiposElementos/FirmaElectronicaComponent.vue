@@ -8,7 +8,7 @@
 <script>
 	const md5 = require('md5');
 	export default {
-		props: ['datosComplementaria', 'tipoTramite','usuario', 'pago', 'id', 'user'],
+		props: ['datosComplementaria', 'tipoTramite','usuario', 'pago', 'id', 'user', 'tramitesdoc'],
 		data(){
 			return{
 				tramite : {},
@@ -16,6 +16,7 @@
 				firma: '',
 				access_token: '',
 				resultId: '',
+				perfil: '',
 				multiple: '',
 				doc: '',
 				rfc: '',
@@ -24,33 +25,56 @@
 				idFirmado: [],
 				urlFirmado: [],
 				guardado: false,
-				coutnLoad : 0
+				coutnLoad : 0,
+				responseCatastroDocument: '',
 
 			}
 		},
 		mounted() {
 			window.addEventListener("message", this.messageEvt, false);
+			console.log(this.usuario);
 			this.usuario.solicitudes.map((solicitud, ind) => {
+				console.log(solicitud);
 				this.multiple = this.usuario.solicitudes.length > 1;
-				var auxEnv = process.env.APP_URL;
+				var auxEnv = process.env.AAPP_URL;
 				if ( auxEnv == "https://tramites.nl.gob.mx") auxEnv = "http://tramites.nl.gob.mx";
 				var userEncoded =btoa(this.user.role.description + ' - ' +  this.user.name + ' ' +  this.user.fathers_surname + ' RFC: ' +  this.user.rfc ) ;
-				let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
-				if(this.multiple){
-					if(typeof this.doc === 'string') this.doc = [];
-					this.doc.push(doc)
+				console.log( JSON.stringify(solicitud) );
 
-					if(typeof this.llave === 'string') this.llave = [];
-					this.llave.push(`${solicitud.id}`)
+					if(this.multiple){
+						if(typeof this.doc === 'string'){
+							if(this.usuario.tramite_id == process.env.TRAMITE_5_ISR){
+								let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
+								this.doc = [];
+								this.doc.push(doc)
+							}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO){
+								this.doc = [];
+								//se tiene que mandar el ws con el  paquete completo para los tramites  y ademas  y despues se busca el id que te regrese a buscar
+								this.getDocumentCatastro(solicitud, this.usuario);
+								this.doc.push("http://www.africau.edu/images/default/sample.pdf");
+							}
 
-					if(typeof this.folio === 'string') this.folio = [];
-					this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
 
-				}else{
-					this.doc = doc;
-					this.llave = `${solicitud.id}`;
-					this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
-				}
+						}
+
+						if(typeof this.llave === 'string') this.llave = [];
+						this.llave.push(`${solicitud.id}`)
+
+						if(typeof this.folio === 'string') this.folio = [];
+						this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
+
+					}else{
+						if(this.usuario.tramite_id == process.env.TRAMITE_5_ISR){
+							let doc = `${auxEnv}/formato-declaracion/${solicitud.id}?data=${userEncoded}`;
+							this.doc = doc;
+						}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO){
+							this.getDocumentCatastro(solicitud);
+							this.doc = "http://www.africau.edu/images/default/sample.pdf";
+						}
+						this.llave = `${solicitud.id}`;
+						this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
+					}
+
 
 				this.idFirmado.push(solicitud.id);
 				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
@@ -61,11 +85,17 @@
 			this.encodeData();
 		},
 		methods: {
-			encodeData(){
+			encodeData(ind){
+				for (let i = 0; i <  this.tramitesdoc.length ; i++) {
+					if(this.usuario.tramite_id == this.tramitesdoc[i].tramite_id){
+						this.perfil = this.tramitesdoc[i].perfil;
+					}
+				}
+				// console.log(this.perfil);
 				var urlDataGeneric =  process.env.INSUMOS_API_HOSTNAME + '/data_generic';
 				var url =  process.env.INSUMOS_API_HOSTNAME + "/v2/signature/iframe?id=";
 				var data = {
-					'perfil' : 'EI',
+					'perfil' : this.perfil ,
 					'multiple' : this.multiple,
 					'tramite' :  this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id,
 					'llave' : this.llave,
@@ -77,7 +107,7 @@
 
 				};
 
-				const headers = { 
+				const headers = {
 					"Authorization": "Bearer my-token",
 					'Content-Type': 'application/json',
 				};
@@ -89,7 +119,7 @@
 						value: JSON.stringify(data),
 						access_token : this.access_token
 					},
-					dataType: 'json', 
+					dataType: 'json',
 					url: urlDataGeneric,
 					async: false,
 					success:function(data){
@@ -103,19 +133,19 @@
 					}
 				});
 
-				var encodedId = btoa(self.resultId); 
+				var encodedId = btoa(self.resultId);
 				var urlFinal = url+encodedId;
 				this.firma = urlFinal;
 			},
 			accesToken(){
 				var self = this;
-				let url =  process.env.INSUMOS_API_HOSTNAME + "/auth" ;  
+				let url =  process.env.INSUMOS_API_HOSTNAME + "/auth" ;
 				var data = { 'username' : process.env.INSUMOS_USERNAME , 'password':  process.env.INSUMOS_PASSWORD };
 
 				$.ajax({
 					type: "POST",
 					data: data,
-					dataType: 'json', 
+					dataType: 'json',
 					url,
 					async: false,
 					success:function(data){
@@ -131,12 +161,13 @@
 			},
 			messageEvt (evt) {
 				var self = this;
-				console.log('menssageEvt', evt.data);
+				console.log('messageEvt', evt.data);
 				if( evt.data.length >= 1  ){
-					if( evt.data[0].includes(this.usuario.solicitudes[0].id)  ){
+
+					if( env.data[0].includes(this.usuario.solicitudes[0].id)  ){
 
 						console.log("el id es: " + this.usuario.solicitudes[0].id );
-					
+
 						fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
 							method : 'POST',
 							body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
@@ -144,7 +175,7 @@
 						.then(res => res.json())
 						.then(res => {
 							if(res.code === 200){
-								console.log('Firmado');    
+								console.log('Firmado');
 								self.tramiteFirmado = true;
 								self.$emit('docFirmadosListos', self.docFirmadosListos);
 								self.$emit('docFirmado', 1);
@@ -154,8 +185,122 @@
 						});
 					}
 
-					
+
 				}
+			},
+			getDocumentCatastro(solicitud , tramiteId){
+				var adquirientes = [];
+				var vendedores =[];
+				//se debe de recorrer el comprador
+				for (let i = 0; i < solicitud.length; i++) {
+					adquirientes.push({
+									"curprfc":"PRUE000111ISH",
+									"clasepro":2,
+									"tipopro":1,
+									"nombrerazon":"NOMBRE DE PRUEBA",
+									"apepat":"APATERNO",
+									"apemat":"AMATENRO",
+									"fecha_nac":"2021-01-01",
+									"telefono":1234567890,
+									"celular":1234567890,
+									"correo":"correo@correo.com",
+									"nuda":20,
+									"usufructo":10,
+									"direccion":{
+										"asentamiento":"colonia",
+										"cp":64000,
+										"pktipovialidad":1,
+										"calle":"calle",
+										"cruza1":"",
+										"cruza2":"",
+										"numext":"123",
+										"numint":"A",
+										"numextant":"",
+										"referencia":"",
+										"municipio":70
+									}
+								});
+				}
+
+				//se debe de recorrer el vendedor
+				for (let k = 0; k < solicitud.length; k++) {
+					vendedores.push({
+									"curprfc":"PRUE000111ISH",
+									"clasepro":2,
+									"tipopro":1,
+									"nombrerazon":"NOMBRE DE PRUEBA",
+									"apepat":"APATERNO",
+									"apemat":"AMATENRO",
+									"fecha_nac":"2021-01-01",
+									"telefono":1234567890,
+									"celular":1234567890,
+									"correo":"correo@correo.com",
+									"nuda":20,
+									"usufructo":10,
+									"direccion":{
+										"asentamiento":"colonia",
+										"cp":64000,
+										"pktipovialidad":1,
+										"calle":"calle",
+										"cruza1":"",
+										"cruza2":"",
+										"numext":"123",
+										"numint":"A",
+										"numextant":"",
+										"referencia":"",
+										"municipio":70
+										}
+								});
+				}
+
+				var dataCatastro = [
+					{
+						"json":{
+							"expedientecatastral": solicitud.info.campos.Expedientes.expedientes[0].direccion.datos_catastrales[0].expediente_catastral,
+							"pktramite": usuario.tramite_id == 517 ? '9' : '15' ,
+							"pknotaria":solicitud.info.solicitante.notary,
+							"estadonotaria": solicitud.info.campos.Expedientes.expedientes[0].direccion.clave_EntFed,
+							"foliopago":123456,
+							"fechapago":"2021-06-07",
+							"montopago":"123",
+							"tipoventa":"Terreno y construcci\u00f3n",
+							"isai":12345,
+							"fechaprot":"2021-06-07",
+							"fechafirma": new Date().toISOString().slice(0, 10),
+							"escriturapub":"",
+							"actafprot":"",
+							"avaluo":12345,
+							"operacion":12345,
+							"motivooperacion":"motivo",
+							"fiscal":12345678,
+							"folio_forma":"12345",
+							"descripcion_predio":"descripcion de estructura medidas y colindancias",
+							"adquirientes": adquirientes,
+							"vendedores": vendedores,
+						}
+					}
+				];
+
+				var url = "http://10.153.144.228/deployed-main-ws-catastro/registro-catastro";
+
+				$.ajax({
+					type: "POST",
+					data: dataCatastro,
+					dataType: 'json',
+					url,
+					async: false,
+					success:function(data){
+						console.log('data--', data);
+						this.responseCatastroDocument = data;
+					},
+					error:function(error){
+						console.log(error);
+					},
+					complete:function(){
+						console.log('catastro ya termino' );
+					}
+				});
+
 			},
 		},
 	}

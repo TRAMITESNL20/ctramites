@@ -9,6 +9,25 @@
           </div>
       </div>
     </div>
+    <b-modal id="modalAgrupar"  @ok="confirm" ok-title = "Si" @cancel="cancel">
+      <div class="d-block">
+        Los actos que agrupaste deberán ingresarse de manera simultánea en el Instituto Registral y Catastral para que les puedan asignar la misma fecha y hora de prelación.
+      </div>
+    </b-modal>
+    <div class="row">
+      <transition name="slide-fade" appear>
+          <div class="btn-group" v-if="mostrarAcciones">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Acciones
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <button class="dropdown-item" type="button"  v-on:click="confirmarGrupo()" ref="confirGroup">
+                      Agrupar Tramites
+                    </button>
+                </div>
+          </div>
+      </transition>
+    </div>
     <div class="row">
         <!--Grid column-->
          <div class="col-lg-4 pagar-mobile" >
@@ -44,9 +63,16 @@
         </div>
 
         <div class="col-lg-8">
-            <!-- Card -->
-            
-            <div v-if="!mostrarMetodos && !mostrarReciboPago0">
+            <div v-if="estaConsultando">
+              <div class="card pt-2" style="width: 100%;">
+                <div class="card-body text-center">
+                  <div class="spinner-grow" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else-if="!mostrarMetodos && !mostrarReciboPago0">
               <v-container v-if="obteniendoTramites">
                     <v-row>
                         <v-col cols="12" md="12">
@@ -62,22 +88,41 @@
                     </v-row>
                 </v-container>
                 <div v-if="!obteniendoTramites && items.length > 0">
-                <div class="card list-item card-custom gutter-b col-lg-12"  v-for="(item, index) in items" :key="index"  
-                v-bind:style="item.items.length > 1 ? 'background-color: rgb(217, 222, 226) !important;' : ''" id="cart-container">
-                  <agrupacion-items-carrrito-component :agrupacion="item" :index="index" :idUsuario="idUsuario"
-                  @updatingParent="updateList" ></agrupacion-items-carrrito-component>
-                </div>
-                <div class="card card-custom">
+                  <div class="card list-item card-custom gutter-b col-lg-12"  v-for="(item, index) in items" :key="index"  
+                  v-bind:style="item.items.length > 1 || !!item.isComplemento ? 'background-color: rgb(217, 222, 226) !important;' : ''" id="cart-container" @drop='onDrop($event, item)' @dragover.prevent @dragenter.prevent >
+                       <agrupacion-items-carrrito-component 
+                        :agrupacion="item" 
+                        :index="index" 
+                        :idUsuario="idUsuario"
+                        @updatingParent="updateList" 
+                        @dragEvent="dragEvent" 
+                        :tramitesServer="tramitesServer"
+                        @selectionEvent="evtElementoSeleccionado"
+                        @removeEvent="evtRemoveElementoSeleccionado">
+                      </agrupacion-items-carrrito-component>
+   
+                  </div>
+
+                  <div class="card list-item card-custom gutter-b col-lg-12" id="elementDrop" style="border-style: dotted; background-color: rgba(0,0,0,0.3); display: none;"  @drop='onDropFuera($event, false)'  @dragover.prevent  @dragenter.prevent >
+                      <div class="card-body py-7" >
+                          <div>
+                            Sacar...
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="card card-custom" >
+
                         <div class="card-body py-7">
                             <!--begin::Pagination-->
                             <div class="d-flex justify-content-between align-items-center flex-wrap">
                                 <div class="d-flex flex-wrap mr-3" >
-                    <b-pagination
-                      v-model="currentPage"
-                      :total-rows="totalListTramites"
-                      :per-page="porPage"
-                      aria-controls="cart-container"
-                      align="center"></b-pagination>
+                              <b-pagination
+                                v-model="currentPage"
+                                :total-rows="totalListTramites"
+                                :per-page="porPage"
+                                aria-controls="cart-container"
+                                align="center"></b-pagination>
                                 </div>
 
                                 <div class="d-flex align-items-center">
@@ -89,7 +134,7 @@
                             </div>
                             <!--end:: Pagination-->
                         </div>
-                    </div>
+                  </div>
                 </div>
 
                 <div v-else-if="!obteniendoTramites && items.length == 0">
@@ -99,11 +144,12 @@
                         Para continuar da click <a  class="card-link"  v-on:click="iniciarTramite()"> <span style="cursor: pointer;"> aquí </span> </a>
                     </div>
                   </div>
-              </div>
+                </div>
+
             </div>
             <!-- Card -->
             <transition name="slide-fade" appear>
-              <metodos-pago-component :infoMetodosPago="infoMetodosPago" v-if="mostrarMetodos" @metodoDePagoSeleccionado="metodoDePagoSeleccionado"></metodos-pago-component>
+              <metodos-pago-component :infoMetodosPago="infoMetodosPago" v-if="mostrarMetodos && !estaConsultando" @metodoDePagoSeleccionado="metodoDePagoSeleccionado"></metodos-pago-component>
             </transition>
             <b-row v-if="mostrarReciboPago0" >
               <iframe width="100%" height="880" :src="reciboPagoCeroURL"></iframe>
@@ -113,7 +159,7 @@
         <!--Grid column-->
         <div class="col-lg-4 pagar-desktop"  >
             <v-container v-if="obteniendoTramites">
-              <v-row>
+              <v-row >
                   <v-col cols="12" md="12">
                       <v-skeleton-loader v-bind:key="i" type="list-item" v-for="(r,i) in [1]" height="150px" style="margin-bottom: 8px;"></v-skeleton-loader>
                   </v-col>
@@ -123,6 +169,7 @@
               :tramites="tramites" 
               :obtenidoCostos="costosObtenidos" @updatingParent="recibirMetodosPago"  @cancelarPago="cancelarPago" 
               :metodoPagoSeleccionado="metodoPagoSeleccionado"
+              @consultandoMetodos="consultandoMetodos"
               >
             </detalle-pago-component>
             <transition name="slide-fade" appear>
@@ -151,7 +198,10 @@
 <script>
   //import costosApi from '../../services/costosApi.services.js';
   import actualizadorCostos from '../../services/actualizadorCostos.service.js';
+  import tramite5isr from '../../services/TramiteCarCtrl.js';
+  import tramiteStrategy from '../../services/TramiteCarStrategy.js';
 
+  import { uuid } from 'vue-uuid';
     export default {
       props: ['idUsuario'],
         computed:{
@@ -161,15 +211,31 @@
             items(){
               this.tramitesAgrupados = [];
               this.tramites.forEach( tramite => {
-                let item = { nombre: tramite.nombre, clave: tramite.calveTemp, items:[tramite], verDetalle:false };
-                let indice = this.tramitesAgrupados.findIndex( agrupado => agrupado.clave == tramite.calveTemp );
-                if( indice < 0 ){
+                let item = { nombre: tramite.nombre, grupo_clave: tramite.calveTemp, items:[tramite], verDetalle:false, selected:false, isComplemento: tramite.isComplemento };
+                let indice = this.tramitesAgrupados.findIndex( agrupado => agrupado.grupo_clave == tramite.calveTemp );
+                if( indice < 0 || !tramite.calveTemp){
                   this.tramitesAgrupados.push( item );
                 } else {
                   this.tramitesAgrupados[indice].items.push( tramite )
                 }
               });
+
+              this.tramitesAgrupados = this.tramitesAgrupados.map( agrupado => {
+                let ids = agrupado.items.map( item => item.claveIndividual ).filter((val, index, self) =>  self.indexOf(val) === index);
+                let estanSeleccionado = true;
+                ids.forEach( clave => {
+                  estanSeleccionado = estanSeleccionado && this.elementosSeleccionados.includes(clave);
+                });
+                agrupado.selected = estanSeleccionado;
+                return agrupado;
+              });
               return this.tramitesAgrupados.slice((this.currentPage - 1) * this.porPage,this.currentPage * this.porPage);        
+            },
+            mostrarAcciones(){
+              let tramitesEnSeleccion = this.tramites.filter( tramite => this.elementosSeleccionados.includes( tramite.claveIndividual ) );
+              let gruposSeleccionados = tramitesEnSeleccion.map(  tramite => tramite.calveTemp );
+              let gruposUnicos = gruposSeleccionados.filter((val, index, self) =>  self.indexOf(val) === index).filter(Boolean);;
+              return gruposUnicos.length > 1;
             }
         },
         data() {
@@ -187,7 +253,12 @@
                     { key: 'nombre', label: 'Nombre' },
                     { key: 'importe_tramite', label: 'Importe' },
               ],
-              metodoPagoSeleccionado:false
+              tramitesServer:[],
+              elementosSeleccionados:[],
+              claveDroped:'',
+              listDroped:null,
+              metodoPagoSeleccionado:false,
+              estaConsultando:false
             }
         },
   
@@ -214,8 +285,8 @@
                   this.informacion = "Obteniendo tramites";
                     let response = await axios.get(url);
 
-                    let tramites =  response.data.tramites ;
-                    this.construirJSONTramites( tramites );
+                    this.tramitesServer =  response.data.tramites ;
+                    this.construirJSONTramites( this.tramitesServer );
                    /*
                     let arrayPromesasActualizacionDeCostos = [];
 
@@ -331,160 +402,186 @@
                 console.log("cambiando estatus")
             });
           },
-          extraerDatosPersonalesSolicitante(solicitante){
-            let datos_solicitante = {
-              "nombre": solicitante.tipoPersona == "pm" ? "" : solicitante.nombreSolicitante || "",
-              "apellido_paterno": solicitante.tipoPersona == "pm" ? "" : solicitante.apPat || "",
-              "apellido_materno": solicitante.tipoPersona == "pm" ? "" : solicitante.apMat || "",
-              "razon_social": solicitante.tipoPersona == "pm" ? solicitante.razonSocial : "",
-              "rfc": solicitante.rfc,
-              "curp": solicitante.curp || "",
-              "email": solicitante.email|| "",
-              "calle": solicitante.calle|| "",
-              "colonia":solicitante.colonia|| "",
-              "numexterior": solicitante.numexterior|| "",
-              "numinterior": solicitante.numinterior|| "",
-              "municipio": solicitante.municipio|| "",
-              "codigopostal": solicitante.codigopostal|| "",
-            }
-            return datos_solicitante;
-          },
 
-          extraerDatosPersonalesEnajentante(enajenante){
-            let datos_solicitante = {
-              "nombre": enajenante.tipoPersona == "pm" ? "" : enajenante.datosPersonales.nombre || "",
-              "apellido_paterno": enajenante.tipoPersona == "pm" ? "" : enajenante.datosPersonales.apPat || "",
-              "apellido_materno": enajenante.tipoPersona == "pm" ? "" : enajenante.datosPersonales.apMat || "",
-              "razon_social": enajenante.tipoPersona == "pm" ? enajenante.datosPersonales.razonSocial : "",
-              "rfc": enajenante.datosPersonales.rfc,
-              "curp": enajenante.tipoPersona == "pm" ? "" : enajenante.datosPersonales.curp  || "",
-              "email": "-",
-              "calle": "-",
-              "colonia": "-",
-              "numexterior": "-",
-              "numinterior": "-",
-              "municipio":  "-",
-              "codigopostal":"-",
-            }
-            return datos_solicitante;
-          },
-          obtenerDatosSolicitante(soliciante){
-            if(soliciante.info.hasOwnProperty('enajenante')){
-              return this.extraerDatosPersonalesEnajentante(soliciante.info.enajenante);
-            } else if(soliciante.info.hasOwnProperty('solicitante')){
-              return this.extraerDatosPersonalesSolicitante(soliciante.info.solicitante);
-            } else {
-              return {};
-            }
-          },
           async construirJSONTramites( tramites ){
             let listadoTramites = [];
             let requestCostos = [];
             tramites.forEach(  tramiteInarray => {
             tramiteInarray.solicitudes.forEach(  soliciante => {
-            
-            let tramitesJson = {};
-            tramitesJson.nombre = tramiteInarray.tramite;
-            tramitesJson.id_seguimiento = tramiteInarray.tramite_id + "";
-            tramitesJson.id_tipo_servicio = tramiteInarray.tramite_id;//397;//
-            tramitesJson.idSolicitante = soliciante.id; 
-            tramitesJson.id_tramite = soliciante.id;//soliciante.clave;
-            tramitesJson.calveTemp = soliciante.clave;//soliciante.clave;
-            if(soliciante.info.enajenante) soliciante.info = {...soliciante.info, ...soliciante.info.enajenante}
-            let info = (typeof soliciante.info) == 'string' ? JSON.parse(soliciante.info) : soliciante.info;
-  
-            if(soliciante.info.hasOwnProperty('enajenante') && (soliciante.info.hasOwnProperty('solicitante') ) ){
-
-              let solicitanteInfo = soliciante.info.solicitante;
-              if( solicitanteInfo ){
-                tramitesJson.auxiliar_1  = (solicitanteInfo.nombreSolicitante || '') + " " + (solicitanteInfo.apPat || '' )+ " " + (solicitanteInfo.apMat || '');    
-              }
-              let usuario = window.user;
-              if(usuario && usuario.notary){
-                tramitesJson.auxiliar_1 = tramitesJson.auxiliar_1 + " - Notaria " + usuario.notary.notary_number
-              }
-            } else {
-              tramitesJson.auxiliar_1 =  "";//enviar como auxiliar el solicitante
-            }
-              
-            tramitesJson.auxiliar_2 = "";
-            tramitesJson.auxiliar_3 = "";
-            tramitesJson.importe_tramite = '';
-            
-            tramitesJson.datos_solicitante = this.obtenerDatosSolicitante(soliciante);
-            tramitesJson.datos_factura = tramitesJson.datos_solicitante;
-
-            if( info.tipoTramite == 'complementaria' && info.detalle && info.detalle.Complementaria){
-              tramitesJson.importe_tramite = info.detalle.Complementaria['Cantidad a cargo'] ;
-            } else {
-              tramitesJson.importe_tramite = info.detalle && info.detalle.Salidas ?  info.detalle.Salidas['Importe total'] : info.costo_final ;
-            }
-            tramitesJson.detalle = [];
-
-            if(info && info.detalle && info.detalle.Salidas && info.tipoTramite != 'complementaria'){
-              
-
-              
-              tramitesJson.detalle[0] = {
-                concepto : 'Impuesto correspondiente a la entidad federativa',
-                partida: 56754,
-                importe_concepto: Number(Number(info.detalle.Salidas['Impuesto correspondiente a la entidad federativa']).toFixed(this.$const.PRECISION))      
-              }
-              tramitesJson.detalle[1] = {
-                concepto : 'Parte actualizada del impuesto',
-                partida: 57910,
-                importe_concepto:  Number(Number(info.detalle.Salidas['Parte actualizada del impuesto']).toFixed(this.$const.PRECISION))  
-              }
-
-              tramitesJson.detalle[2] = {
-                concepto : 'Recargos',
-                partida: 57612,
-                importe_concepto: Number(Number(info.detalle.Salidas['Recargos']).toFixed(this.$const.PRECISION))  
-              }
-               tramitesJson.detalle[3] = {
-                concepto : 'Multa corrección fiscal',
-                partida: 57505,
-                importe_concepto: Number(Number(info.detalle.Salidas['Multa corrección fiscal']).toFixed(this.$const.PRECISION))     
-              }
-            } else {
-              tramitesJson.detalle[0] = { 
-                concepto : info.partidas ? info.partidas[0].descripcion : tramitesJson.nombre,//ponere nombre tramite
-                partida: info.partidas ? info.partidas[0].id_partida : null,
-                importe_concepto:tramitesJson.importe_tramite         
-              }
-
-              let descuentosAplicados = [];
-              if(info.detalle && info.detalle.descuentos && Array.isArray(info.detalle.descuentos )  && info.detalle.descuentos.length > 0  ){
-                let losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "No aplica" );   
-                losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "El numero de oficio no coincide con el trámite" );    
-                if( losdescuentos && losdescuentos.length > 0 ){
-                  info.detalle.descuentos.forEach( descuento => {
-                    let descuentoAplicado =  {
-                            concepto_descuento: descuento.concepto_descuento,
-                            importe_descuento: descuento.importe_subsidio,
-                            partida_descuento: descuento.partida_descuento
-                          }
-                          descuentosAplicados.push( descuentoAplicado )
-                  });
-                  tramitesJson.detalle[0].descuentos = descuentosAplicados;               
-                }
-              }
-            }
-
-            //console.log(JSON.parse(JSON.stringify(tramitesJson)))
-
- 
-            listadoTramites.push( tramitesJson );
-          });
+                let isrTramite = new tramite5isr();
+                let strategia = new tramiteStrategy();
+                strategia.setStrategy(isrTramite)
+                let info = (typeof soliciante.info) == 'string' ? JSON.parse(soliciante.info) : soliciante.info;
+                let tramitesJson =  strategia.create(tramiteInarray, soliciante); //str1.create(tramiteInarray, soliciante);
+                listadoTramites.push( tramitesJson );
+                
+            });
           });
           this.tramites = listadoTramites;
           this.obteniendoTramites = false;
           this.costosObtenidos = true;
+          
         },
         iniciarTramite(){
           redirect("/nuevo-tramite");
         },
 
+        chagenPorPage(){
+          this.currentPage = 1;
+        },
+
+        onDrop (evt, list) {
+          const clave = evt.dataTransfer.getData('clave');
+          if( clave && this.isAgrupable(list) ){
+            this.claveDroped = clave;
+            this.listDroped = list;
+            this.confirmarGrupo();
+          }
+          
+        },
+
+        isAgrupable( grupo ){
+            let es_agrupable = false;
+            if( grupo.items && grupo.items.length > 0){
+                es_agrupable = !grupo.items.find( item => item.isAgrupable == false )
+            } else {
+                es_agrupable = grupo.isAgrupable;
+            }
+            return es_agrupable;                
+        },
+
+        onDropFuera(evt, list){
+          let claveGrupo = Date.now();
+
+          const clave = evt.dataTransfer.getData('clave');
+
+          if( clave /*&& this.isAgrupable(list)*/  ){
+            this.tramites.map( tram =>{
+                if( tram.claveIndividual == clave ){
+                  tram.id_seguimiento = claveGrupo;
+                  tram.calveTemp = claveGrupo;
+                }
+                return tram;
+            });
+            this.saveCambios();
+          }
+          $("#elementDrop").hide();
+
+          
+        },
+
+        dragEvent(data){
+          if(data.event == 'startdrag'){
+            $("#elementDrop").show();
+          } else {
+            $("#elementDrop").hide();
+          } 
+            
+        },
+
+        evtElementoSeleccionado( data){
+          let ids = data.items.map( item => item.claveIndividual ).filter((val, index, self) =>  self.indexOf(val) === index);
+          if(data.selected){
+            let elementosNuevos = ids.filter( elem => !this.elementosSeleccionados.includes(elem))
+            this.elementosSeleccionados = this.elementosSeleccionados.concat(elementosNuevos);
+          } else {
+            this.elementosSeleccionados = this.elementosSeleccionados.filter( clave => !ids.includes(clave) )
+          }
+    
+        },
+
+
+        agruparSeleccion(){
+          let claveGrupo = /*uuid.v4()*/ Date.now();
+          this.tramites.forEach( tramite => { 
+            if(this.elementosSeleccionados.includes( tramite.claveIndividual )){
+              tramite.id_seguimiento = claveGrupo;
+              tramite.calveTemp = claveGrupo;            
+            }
+          });
+          this.elementosSeleccionados = [];
+
+          this.saveCambios();
+        },
+
+        evtRemoveElementoSeleccionado(claveIndividual){
+          let claveGrupo = Date.now();
+          this.tramites.forEach( (tramite, index) => { 
+            if( claveIndividual == tramite.claveIndividual ){
+              tramite.id_seguimiento = claveGrupo;
+              tramite.calveTemp = claveGrupo; 
+              //let index = this.elementosSeleccionados.findIndex( tramite => tramite.id_tramite == item.id_tramite );
+              if(this.elementosSeleccionados.length > 0){
+                let indexElm = this.elementosSeleccionados.findIndex( clave =>  clave ===  claveIndividual );
+                this.elementosSeleccionados.splice( indexElm, 1 );
+              }           
+            }
+          });
+
+     
+          this.saveCambios();
+        },
+
+        saveCambios(){
+          let claveGrupo = Date.now();
+          let updateSolicitudes = [];
+          this.tramites.forEach( tramite => {
+            let solicitudUpdate = {
+              id:tramite.id_tramite,
+              grupo_clave:tramite.calveTemp
+            }
+            updateSolicitudes.push(solicitudUpdate); 
+          });
+
+          if(updateSolicitudes.length > 0){
+            let url = process.env.TESORERIA_HOSTNAME + "/edit-solicitudes-info";
+            axios.post(url, {data:updateSolicitudes}, {
+                 headers:{
+                    "Content-type":"application/json"
+                }
+            }).then(response => {
+              if( response && response.data && response.data.Code == "400" ){
+                Command: toastr.error("Error!", response.data.message || "No fue posible guardar los cambios");
+                this.obtenerTramitesAgregados();
+              } 
+
+                this.elementosSeleccionados = [];
+            }).catch(errors => {
+              Command: toastr.error("Error!", error.message || "No fue posible guardar los cambios");
+              this.obtenerTramitesAgregados();
+            }).finally(() => {
+              this.chagenPorPage();
+            });
+          }
+
+        },
+
+        confirmarGrupo(){
+          this.$root.$emit('bv::show::modal', 'modalAgrupar', '#confirGroup')
+        },
+
+        confirm(){
+          if(this.claveDroped.length > 0){
+ 
+            this.tramites.map( tram =>{
+                if( tram.claveIndividual == this.claveDroped ){
+                  tram.id_seguimiento  = this.listDroped.grupo_clave;
+                  tram.calveTemp = this.listDroped.grupo_clave;
+                }
+                return tram;
+            } );
+            $("#elementDrop").hide();
+            this.saveCambios();
+          } else {
+            this.agruparSeleccion();
+          }
+          
+        },
+
+        cancel(){
+          this.claveDroped = '';
+          this.listDroped = null;
+        },
 
         chagenPorPage(){
           this.currentPage = 1;
@@ -494,7 +591,15 @@
           if( data.success ){
             this.metodoPagoSeleccionado = true;
           }
+        },
+
+        consultandoMetodos(consulta){
+          this.estaConsultando = consulta;
         }
+
+
+        
+
     }
-    }
+  }
 </script>

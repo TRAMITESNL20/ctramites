@@ -20,7 +20,7 @@
         </label>
         </div>
     </div>
-    <a v-if="/^{*}|Expediente$/.test(campo.nombre) == true" href="images\Formato.xlsx" download="Formato.xlsx">
+    <a v-if="/^{*}|Expediente|exp.$/.test(campo.nombre) == true" href="images\Formato.xlsx" download="Formato.xlsx">
       Descargar Formato
     </a>
   </div>
@@ -48,11 +48,12 @@
       });
     }
     export default {
-      props: ['campo', 'estadoFormulario', 'showMensajes'],
+      props: ['campo', 'estadoFormulario', 'showMensajes', 'disabled'],
       created() {
       },
       mounted(){
         let promises = [];
+        this.campo.valido = true;
         if(this.campo.nombreArchivoGuardado){
           let urlFile = process.env.TESORERIA_HOSTNAME + '/download/' + this.campo.nombreArchivoGuardado;
 
@@ -79,7 +80,6 @@
           }).finally(() => {
 
           });
-
         } else {
           this.validar();
         }
