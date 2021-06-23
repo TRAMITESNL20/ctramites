@@ -22,33 +22,33 @@
                                                 <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true">×</span></button></div>
                                     </div>
                                     <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body">
-                                        
+                                        <!-- aqui validar que el modal solo agarre del 5% -->
+                                        <div v-if="tramiteDoc">
                                         <h3>Tramite id: {{tramiteDoc.id}} </h3>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span id="inputGroupFileAddon01" class="input-group-text">
+                                                    CALCULO DEL ISR CONFORME AL 126 LISR
+                                                    </span>
+                                                </div>
+                                                <div class="custom-file">
+                                                    <input 
+                                                    type="file" 
+                                                    :id="tramiteDoc.id" 
+                                                    ref="myFiles" 
+                                                    class="custom-file-input" 
+                                                    accept=".pdf"
+                                                    @change="previewFiles(tramiteDoc.id , index)" >
 
-                                        <div class="input-group">
-
-                                            <div class="input-group-prepend">
-                                                <span id="inputGroupFileAddon01" class="input-group-text">
-                                                CALCULO DEL ISR CONFORME AL 126 LISR
-                                                </span>
-                                            </div>
-                                            <div class="custom-file">
-                                                <input 
-                                                type="file" 
-                                                :id="tramiteDoc.id" 
-                                                ref="myFiles" 
-                                                class="custom-file-input" 
-                                                accept=".pdf"
-                                                @change="previewFiles(tramiteDoc.id , index)" >
-
-                                                <label class="custom-file-label"
-                                                ><span>
-                                                    {{  fileName[index] ? fileName[index] : 'Seleccione el archivo' }}
-                                                </span>
-                                                </label>
+                                                    <label class="custom-file-label"
+                                                        ><span>
+                                                            {{  fileName[index] ? fileName[index] : 'Seleccione el archivo' }}
+                                                        </span>
+                                                    </label>
                                         
-                                            </div>
-                                        </div>      
+                                                </div>
+                                            </div>      
+                                        </div> 
                                     </div>
                                 
 
@@ -173,6 +173,3 @@ export default {
 
 };
 </script>
-
-<style>
-</style>

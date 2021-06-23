@@ -1,11 +1,11 @@
 <template>
         
-        <div class="card">
+        <div class="card" v-if="tramiteFirmado == false">
             <div class="col-lg-12 col-sm-12">
 			    <div class="container">
                     <div class="card-body">
                         <div class="row" >
-                            <iframe v-if="tramiteFirmado == false" id="the_frame" :src="firma" style="width:100%; height: 600px;" frameborder="0"> </iframe>
+                            <iframe  id="the_frame" :src="firma" style="width:100%; height: 430px;" frameborder="0"> </iframe>
                         </div>
                         <!-- <div>
                             <iframe id="the_frame" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe>
@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-    </div>
+		
 </template>
 
 <script>
@@ -95,13 +95,18 @@
 				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
 				});
 			}else if(this.usuario.tramite_id == 8 /*process.env.TRAMITE_INFORMATIVO*/){
-				this.tramiteFirmado = true;
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
 					this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].map(( solicitud, indSolicitud) => {
 						console.log('aqi');
 						this.getDocumentCatastro(solicitud, indSolicitud, i);
 					});					
 				}
+				
+				this.tramiteFirmado = true;
+				this.$emit('docFirmadosListos', this.docFirmadosListos);
+				//este puede que ste de mas? XD
+				// this.$emit('docFirmado', 1);
+
 
 			}	
 			console.log('====-----====');
@@ -315,9 +320,15 @@
 				await fetch(url, { 'method': 'POST', 'body' : JSON.stringify(dataCatastro[0]) } )
 				 .then(res =>  res.json())
 				 .then(res => {
-					 var responseJson = JSON.parse(res.response.replace('\ufeff', ''));
-					 console.log(responseJson.URL);
-					 this.firma = responseJson.URL;
+					 	var responseJson = JSON.parse(res.response.replace('\ufeff', ''));
+						console.log(responseJson.URL);
+						this.firma = responseJson.URL;
+						solicitud['tramite_id'] = this.usuario.tramite_id;
+						solicitud['required_docs'] = 1;
+						solicitud['urlDocumentoFirmado'] = 'http://www.africau.edu/images/default/sample.pdf'
+						this.docFirmadosListos.push(solicitud);
+							// self.$emit('docFirmado', 1);
+						// self.$emit('urlFirmado', self.urlFirmado);
 				 })
 				 .catch( error => console.log(error));
 				
@@ -327,7 +338,7 @@
             // usuario : (newVal) => console.log('newVal', newVal)
 				usuario: {
 					handler(newVal, oldVal) {
-						if(this.usuario.tramite_id == env.process.TRAMITE_5_ISR ){
+						if(this.usuario.tramite_id == process.env.TRAMITE_5_ISR ){
 						
 							this.doc = [];
 							this.idFirmado = [];
@@ -362,9 +373,11 @@
 										console.log('/////');
 										console.log(solicitud);
 										solicitud['urlDocumentoFirmado'] = `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`;
+										solicitud['tramite_id'] = this.usuario.tramite_id;
 										this.docFirmadosListos.push(solicitud);
 									}else{
 										solicitud['urlDocumentoFirmado'] =  `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`;
+										solicitud['tramite_id'] = this.usuario.tramite_id;
 										this.docFirmadosListos.push(solicitud);
 									}
 
@@ -374,9 +387,11 @@
 									this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
 									if(solicitud.required_docs == 1){
 										solicitud['urlDocumentoFirmado'] = `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` ;
+										solicitud['tramite_id'] = this.usuario.tramite_id;
 										this.docFirmadosListos.push(solicitud);
 									}else{
 										solicitud['urlDocumentoFirmado'] = `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` ;
+										solicitud['tramite_id'] = this.usuario.tramite_id;
 										this.docFirmadosListos.push(solicitud);
 									}
 								}

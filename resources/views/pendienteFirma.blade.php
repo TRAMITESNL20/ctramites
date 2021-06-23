@@ -12,10 +12,8 @@
 						<div class="container">
   							<div class="card">
 								<div class="card-header">
-                                    TRAMITES POR FIRMAR:
+                                    TRAMITES POR FIRMAR
 								</div>
-
-							
 							</div>
                             
                             <aux-firmado-component 

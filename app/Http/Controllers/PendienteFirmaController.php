@@ -24,7 +24,7 @@ class PendienteFirmaController extends Controller
 
 
         // dd($tramites->Code != "400");
-        (is_object( $tramites )   &&  $tramites->Code != "400" &&  $tramites->tramites) ? $idTramites = $tramites->tramites : $idTramites = [];
+        (is_object( $tramites )  &&  $tramites->tramites) ? $idTramites = $tramites->tramites : $idTramites = [];
         if( !empty($idTramites) ){
             for ($i=0; $i < count( $idTramites[0]->solicitudes );  $i++) { 
 

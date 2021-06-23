@@ -7,11 +7,16 @@
           <!---->
           <div class="mr-auto espace-checkbox-text desktop-agrupacion-width" style="width: 70%">
             <h4 class="ml-3 text-uppercase text-truncate">
-              <strong>ISR 5% POR ENAJENACIÓN DE INMUEBLES - Normal</strong>
+              <strong v-if="solicitud.tramite_id == TRAMITE_5_ISR">ISR 5% POR ENAJENACIÓN DE INMUEBLES - Normal</strong>
+              <strong v-if="solicitud.tramite_id == TRAMITE_AVISO">AVISO DE ENAJENACIÓN</strong>
+              <strong v-if="solicitud.tramite_id == 8">INFORMATIVO</strong>
             </h4>
             <h5 class="ml-3">
-              <span style="font-weight: normal" >
-                <strong> {{solicitud.info.enajenante.datosPersonales.nombre }} {{solicitud.info.enajenante.datosPersonales.apPat}} {{solicitud.info.enajenante.datosPersonales.apMat }} </strong>-{{solicitud.info.enajenante.datosPersonales.rfc}}
+              <span v-if="solicitud.tramite_id == TRAMITE_5_ISR" style="font-weight: normal" >
+                <strong > {{solicitud.info.enajenante.datosPersonales.nombre }} {{solicitud.info.enajenante.datosPersonales.apPat}} {{solicitud.info.enajenante.datosPersonales.apMat }} </strong>-{{solicitud.info.enajenante.datosPersonales.rfc}}
+              </span>
+              <span v-if="solicitud.tramite_id == 8" style="font-weight: normal" >
+                <strong > {{solicitud.datos_propietarios[0].nombrePro }} {{ solicitud.datos_propietarios[0].apePat  }} {{ solicitud.datos_propietarios[0].apeMat  }} </strong>-{{solicitud.expediente_catastral }}
               </span>
             </h5>
           </div>
@@ -32,7 +37,7 @@
 
                 <!-- boton de descarga  -->
                 <a  v-if="solicitud.required_docs != 1" :href="solicitud.urlDocumentoFirmado" target="_blank" :disabled="solicitud.required_docs != 1"  v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]"  style="border-top-left-radius:0px;border-bottom-left-radius:0px"  class="btn btn-primary font-weight-bolder text-uppercase text-white mr-5" >DESCARGAR</a>
-                <a  v-if="solicitud.required_docs == 1" :href="solicitud.urlDocumentoFirmado" target="_blank" v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]"   class="btn btn-primary font-weight-bolder text-uppercase text-white mr-5" >DESCARGAR</a>
+                <a  v-if="solicitud.required_docs == 1" :href="solicitud.urlDocumentoFirmado" target="_blank" v-bind:class="[ solicitud.required_docs== 1  ?  '' : 'disabled' ]"   class="btn btn-primary font-weight-bolder text-uppercase text-white mr-5" >DESCARGAR</a>
                 <!-- boton de collapse -->
                 <button
                   class="btn btn-secondary"
@@ -90,6 +95,9 @@ export default {
   },
   data() {
     return{
+      TRAMITE_5_ISR: process.env.TRAMITE_5_ISR,
+      TRAMITE_AVISO: process.env.TRAMITE_AVISO,
+      TRAMITE_INFORMATIVO: process.env.TRAMITE_INFORMATIVO,
       aDisabled: {
         color: 'currentColor',
             cursor: 'not-allowed',
@@ -104,6 +112,3 @@ export default {
 
 };
 </script>
-
-<style>
-</style>
