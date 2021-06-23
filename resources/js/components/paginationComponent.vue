@@ -232,7 +232,7 @@
 
             responseDelete(res){
                 if(res.data && res.data.Code == '200' && res.data.Message == 'Estatus actualizado'){
-                    Command: toastr.success("", "Item eliminado correcttamente");
+                    Command: toastr.success("", "Item eliminado correctamente");
                     this.$emit('updateListado', res);
                 }
             }
