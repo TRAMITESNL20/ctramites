@@ -36,7 +36,7 @@ jobs:
         password: ${{ secrets.PROD_PASSWORD }}
         script: |
           cd ${{ secrets.PROD_FOLDER }} &&
-          git pull origin ${{ secrets.QA_BRANCH }} &&
+          git pull origin ${{ secrets.PROD_BRANCH }} &&
           composer install &&
           composer dump-autoload &&
           npm install &&

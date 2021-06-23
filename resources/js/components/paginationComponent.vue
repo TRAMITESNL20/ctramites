@@ -26,10 +26,10 @@
                                 <span v-if="!tramite[0].loadingSign"><i :class="tramite[0].por_firmar == 1 ? 'fas fa-check-circle' : 'fas fa-plus-circle'"></i> {{ tramite[0].por_firmar == 1 ? 'DESELECCIONAR' : 'PREPARAR PARA FIRMAR' }}</span>
                             </button>
                             <div class="btn-group mr-2 mobile-detalles" v-if="tramite[0].info && !cartComponent">
-                                <a v-on:click="goTo(tramite[0], true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="tramite[0].files.length == 0 ? 'rounded' : ''">
+                                <a v-on:click="goTo(tramite[0], true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="!tramite[0].files || tramite[0].files.length == 0 ? 'rounded' : ''">
                                     <span class="text-white">VER DETALLES</span>
                                 </a>
-                                <button v-if="tramite[0].files.length > 0" type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button v-if="tramite[0].files && tramite[0].files.length > 0" type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
@@ -38,10 +38,10 @@
                             </div>
                             <span v-if="cartComponent" class="btn btn-secondary mr-2">{{ new Intl.NumberFormat('es-MX', { style : 'currency', currency : 'MXN' }).format(tramite.map(ele => ele.importe_tramite).reduce((a,b) => a+b)) }} </span>
                             <span v-if="tramite[0].info && tramite[0].descripcion && !cartComponent" class="btn btn-secondary mr-2">{{ tramite[0].descripcion || "CERRADO" }} </span>
-                            <button class="btn btn-secondary" type="button" data-toggle="collapse" :data-target="`#collapse-${index}`" :aria-expanded="!cartComponent ? 'true' : 'false'" :aria-controls="`collapse-${index}`"><i class="fas fa-chevron-down p-0"></i></button>
+                            <button class="btn btn-secondary" type="button" data-toggle="collapse" :data-target="`#collapse-${index}`" :aria-expanded="type != 2 ? 'true' : 'false'" :aria-controls="`collapse-${index}`"><i class="fas fa-chevron-down p-0"></i></button>
 						</div>
 					</div>
-                    <div class="collapse" :id="`collapse-${index}`" :class="!cartComponent ? 'show' : ''">
+                    <div class="collapse" :id="`collapse-${index}`" :class="type != 2 ? 'show' : ''">
     					<tramite-component :cartComponent="cartComponent" :group="true" :type="type" v-for="(solicitud, ind) in tramite" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="solicitud" v-bind:key="ind" v-if="totalItems != 0"></tramite-component>
                     </div>
 				</div>
@@ -93,10 +93,12 @@
 	export default {
 		props: ['tramitesCart', 'type', 'cartComponent', 'items'],
 		mounted(){
-			this.calcularPage()
+            localStorage.removeItem('datosFormulario');
+            localStorage.removeItem('listaSolicitantes');
+            localStorage.removeItem('tramite');
+			
+            this.calcularPage()
             this.pagination(1);
-
-            console.log(this.tramitesPaginados);
 
             Object.entries(this.tramitesPaginados).map(obj => {
                 let [ind, tramite] = obj;
@@ -110,7 +112,6 @@
                         }
                     })
                 }
-                if(tramite[0].doc_firmado) files.push({ name : 'Declaración', href : tramite[0].doc_firmado })
                 
                 tramite[0].files = files;
 
@@ -167,17 +168,20 @@
                 let indiceInicial = (page - 1 ) * limitInt;
                 let indiceFinal = ( (page - 1 ) * limitInt  )  + limitInt;
 
+
                 this.tramitesPaginados = this.items.slice(indiceInicial, indiceFinal);
                 this.tramitesPaginados.map(tramite => {
                 	if(groups[tramite.clave]) groups[tramite.clave].push(tramite);
                 	else groups[tramite.clave] = [tramite];
                 })
 
+                console.log('items', this.items);
                 this.tramitesPaginados = groups;
                 this.totalItems = this.items.length;
             },
             goto( page ){ 
-                this.pagination( page );
+                console.log('pages', this.pages);
+                this.pagination(page);
                 this.currentPage = page;
             },
             addToCart(tramite, multiple=false, status=null){

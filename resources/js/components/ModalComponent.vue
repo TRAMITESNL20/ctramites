@@ -181,10 +181,10 @@
                         <template #append>
                           <b-input-group-text >{{porcentajeVenta}}</b-input-group-text>
                         </template>
-                        <b-form-input  id="procentaje-compra-range" name="procentaje-compra"  v-model="$v.form.porcentajeCompra.$model" :state="$v.form.porcentajeCompra.$dirty ? !$v.form.porcentajeCompra.$error : null" aria-describedby="porcentajeCompra-input-feedback" type="range" :max="porcentajeVenta" @change="calcularMontoOperacion($v.form.porcentajeCompra.$model)"></b-form-input>
+                        <b-form-input  id="procentaje-compra-range" name="procentaje-compra"  v-model="$v.form.porcentajeCompra.$model" :state="$v.form.porcentajeCompra.$dirty ? !$v.form.porcentajeCompra.$error : null" aria-describedby="porcentajeCompra-input-feedback" type="range" :max="porcentajeVenta" @change="calcularMontoOperacion($v.form.porcentajeCompra.$model)" step="0.001"></b-form-input>
                       </b-input-group>
                       <b-form-input  id="procentaje-compra-input" name="procentaje-compra"  v-model="$v.form.porcentajeCompra.$model" :state="$v.form.porcentajeCompra.$dirty ? !$v.form.porcentajeCompra.$error : null" aria-describedby="porcentajeCompra-input-feedback" 
-                      @change="calcularMontoOperacion($v.form.porcentajeCompra.$model)"></b-form-input>
+                      @change="calcularMontoOperacion($v.form.porcentajeCompra.$model)" step="0.001"></b-form-input>
                       <b-form-invalid-feedback id="porcentajeCompra-input-feedback">
                         <span v-if="!$v.form.porcentajeCompra.required" class="form-text text-danger">
                           Valor requerido
@@ -357,7 +357,7 @@
   const rfcPattern = helpers.regex("mob", /^[A-ZÑ&]{3,4}\d{6}(?:[A-Z\d]{3})?$/);
   const rfcMoralPattern = helpers.regex("mob", /^[A-ZÑ&]{3,4}\d{6}$/);
 
-  const curpPattern = helpers.regex("mob", /^[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/);
+  const curpPattern = helpers.regex("mob", /^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/);
 
   const inePattern = helpers.regex("mob", /^[A-Za-z0-9_-]{18,18}$/);  
 
@@ -705,7 +705,9 @@
           }
       },
 
-      calcularMontoOperacion(val){/*
+      calcularMontoOperacion(val){
+          this.form.porcentajeCompra = Number( Number( this.form.porcentajeCompra ).toFixed(this.$const.PRECISION)) ;
+      /*
           let procenttaje = (val / 100);
           let montoOperacionGbl =  Vue.filter('toNumber')(this.montoOperacionGbl);          
           let montoCorrespondiente =  montoOperacionGbl * (val / 100);
