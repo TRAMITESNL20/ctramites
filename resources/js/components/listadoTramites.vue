@@ -49,6 +49,13 @@
                 <!--end::Details-->
             </div>
         </div>
+        <div v-if="estatusTramites == '5'">
+            <b-alert show> 
+                <div class="text-justify text-white">
+Si usted ya pago y valido ques su pago se halla efectuado, su referencia será actualiza en tramites finalizados en un máximo de 48 horas.
+                </div>
+            </b-alert>
+        </div>
         <div class="d-flex flex-column-fluid">
             <v-container v-if="loading">
                 <v-row>
@@ -65,7 +72,7 @@
                 </v-row>
             </v-container>
             <div class="w-100" v-if="!loading">
-                <pagination-component :type="type" @processToCart="processToCart" :items="tramitesFiltrados" :tramitesCart="tramitesCart"></pagination-component>
+                <pagination-component :type="type" @processToCart="processToCart" :items="tramitesFiltrados" :tramitesCart="tramitesCart" @updateListado="updateListado"></pagination-component>
             </div>
         </div>
     </div>
@@ -77,13 +84,15 @@
             return {
                 type : null,
                 tramites: [], loading:true, porPage : 30, pages:[0], currentPage :1, strBusqueda:"", totalTramites:0, tramitesFiltrados:[], tramitesCart : [],
-                ...this.$attrs
+                ...this.$attrs,estatusTramites:null
             }
         },
         created() {
             // localStorage.removeItem('datosFormulario');
             // localStorage.removeItem('listaSolicitantes');
             // localStorage.removeItem('tramite');
+            let url = window.location.href;
+            this.estatusTramites = url.split("/")[url.split("/").length - 1]
             this.obtenerTramites();
         },
         methods: {
@@ -155,7 +164,7 @@
                 } catch (error) {
                     console.log(error);
                 }
-
+                this.$forceUpdate()
                 this.loading = false;
             },
 
@@ -163,6 +172,14 @@
                 this.calcularPage()
                 this.currentPage = 1;
                 this.pagination(1);
+            },
+
+            updateListado(res){
+                this.loading = true;
+                this.tramites = [];
+                this.tramitesFiltrados = [];
+                this.tramitesCart = [];
+                this.obtenerTramites();
             }
 
         }
