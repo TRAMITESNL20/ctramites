@@ -25,16 +25,16 @@ class PendienteFirmaController extends Controller
 
         // dd($tramites->Code != "400");
         (is_object( $tramites )  &&  $tramites->tramites) ? $idTramites = $tramites->tramites : $idTramites = [];
+        // dd($idTramites);
         if( !empty($idTramites) ){
-            for ($i=0; $i < count( $idTramites[0]->solicitudes );  $i++) { 
-
-                for ($k=0; $k < count($tramites->tramites) ; $k++) { 
-                    # code...
-                    $aux = curlSendRequest("POST", getenv("TESORERIA_HOSTNAME")."/solicitudes-filtrar?required_docs=true&id_solicitud={$tramites->tramites[$k]->solicitudes[$i]->id}") ;
-                    if( !empty($aux) ){
-                        $tramitesDoc[] = $aux[0];
-                    };
-                }                
+            for ($i=0; $i < count( $idTramites );  $i++) {                     
+                    for ($k=0; $k < count($idTramites[$i]->solicitudes) ; $k++) { 
+                        # code...
+                        $aux = curlSendRequest("POST", getenv("TESORERIA_HOSTNAME")."/solicitudes-filtrar?required_docs=true&id_solicitud={$tramites->tramites[$i]->solicitudes[$k]->id}") ;
+                        if( !empty($aux) && $aux[0]->required_docs == 0 ){
+                            $tramitesDoc[] = $aux[0];
+                        };
+                    }                
                
             }
         }

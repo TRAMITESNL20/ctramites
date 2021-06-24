@@ -97,7 +97,6 @@
 			}else if(this.usuario.tramite_id == 8 /*process.env.TRAMITE_INFORMATIVO*/){
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
 					this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].map(( solicitud, indSolicitud) => {
-						console.log('aqi');
 						this.getDocumentCatastro(solicitud, indSolicitud, i);
 					});					
 				}
@@ -259,39 +258,38 @@
 					//se debe de recorrer el comprador / adquiriente
 					for (let k = 0; k < solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores.length; k++) {
 						adquirientes.push({
-										"curprfc": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.curp ?? '',
-										"clasepro": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].tipoPersona == 'pf' ? 1 : 2 ,
+										"curprfc": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosPersonales.curp ?? '',
+										"clasepro": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].tipoPersona == 'pf' ? 1 : 2 ,
 										"tipopro":1,
-										"nombrerazon": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.razonSocial ?? '',
-										"apepat":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.apPat ?? '',
-										"apemat":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.apMat ?? '',
-										"fecha_nac":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosPersonales.fechaNacimiento ?? '',
-										"telefono": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.telefonoCasa ?? '',
-										"celular": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.telefonoFijo ?? '',
-										"correo": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.correo ?? '',
+										"nombrerazon": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosPersonales.razonSocial ?? '',
+										"apepat":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosPersonales.apPat ?? '',
+										"apemat":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosPersonales.apMat ?? '',
+										"fecha_nac":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosPersonales.fechaNacimiento ?? '',
+										"telefono": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosDireccion.telefonoCasa ?? '',
+										"celular": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosDireccion.telefonoFijo ?? '',
+										"correo": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosDireccion.correo ?? '',
 										"nuda":20,
 										"usufructo":10,
 										"direccion":{
-											"asentamiento": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.colonia ?? '',
-											"cp": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.cp ?? '',
-											"pktipovialidad": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.tipoVialidad ?? '',
-											"calle": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nombreVialidad ?? '',
+											"asentamiento": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosDireccion.colonia ?? '',
+											"cp": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosDireccion.cp ?? '',
+											"pktipovialidad": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosDireccion.tipoVialidad ?? '',
+											"calle": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosDireccion.nombreVialidad ?? '',
 											"cruza1":"",
 											"cruza2":"",
-											"numext":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nExt ?? '',
-											"numint": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.nInt ?? '',
+											"numext":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosDireccion.nExt ?? '',
+											"numint": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosDireccion.nInt ?? '',
 											"numextant":"",
-											"referencia":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.referencia ?? '',
-											"municipio": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[i].datosDireccion.municipio ?? '',
+											"referencia":solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosDireccion.referencia ?? '',
+											"municipio": solicitud.info.campos['Datos de Propietarios'].seccionCompradores.compradores[k].datosDireccion.municipio ?? '',
 										}
 									});
 					}
 				}
-				console.log( 'aca');
 				var dataCatastro = [
 					{
 						"json":{
-							"expedientecatastral": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos['No. EXP. CATASTRAL'] ? solicitud.info.campos['Resultados Informativo Valor Catastral'][tramiteInd].expediente_catastral  : '' : solicitud.expediente_catastral ,
+							"expedientecatastral": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos['No. EXP. CATASTRAL'] : ''  ? solicitud.info.campos['Resultados Informativo Valor Catastral'][tramiteInd].expediente_catastral : solicitud.expediente_catastral ,
 							"pktramite": tipoTramite ,
 							"pknotaria": this.user.notary.id ?? '',
 							"estadonotaria": "19",
@@ -315,14 +313,13 @@
 						}
 					}
 				];
-				console.log(dataCatastro);
 				var url =  process.env.TESORERIA_HOSTNAME + "/registro-catastro";
 				await fetch(url, { 'method': 'POST', 'body' : JSON.stringify(dataCatastro[0]) } )
 				 .then(res =>  res.json())
 				 .then(res => {
 					 	var responseJson = JSON.parse(res.response.replace('\ufeff', ''));
 						console.log(responseJson.URL);
-						this.firma = responseJson.URL;
+						// this.firma = responseJson.URL;
 						solicitud['tramite_id'] = this.usuario.tramite_id;
 						solicitud['required_docs'] = 1;
 						solicitud['urlDocumentoFirmado'] = 'http://www.africau.edu/images/default/sample.pdf'

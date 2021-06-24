@@ -19,9 +19,9 @@
                                 class="btn btn-secondary"
                                 type="button"
                                 data-toggle="collapse"
-                                :data-target="`collapse-${index}`" 
+                                :data-target="`#collapse-${idTramite.tramite_id}`" 
                                 aria-expanded="false"
-                                :aria-controls="`collapse-${index}`"
+                                :aria-controls="`collapse-${idTramite.tramite_id}`"
                                 >
                                 <i class="fas fa-chevron-down p-0"></i>
                                 </button>
@@ -29,14 +29,14 @@
                          </div>
                          
                     </div>
-                    <div  :id="`collapse-${index}`" class="collapse" style="" >
+                    <div  :id="`collapse-${idTramite.tramite_id}`" class="collapse" style="" >
                         <div class="card list-item card-custom gutter-b col-lg-12" >
                             <div class="card-body p-0">
                             <div class="d-flex">
                                 <div class="flex-grow-1">
                                 <div class="d-flex align-items-center justify-content-between flex-wrap" >
                                     <!---->
-                                    <div class="mr-auto" style="width: 100%; height:350px; overflow:scroll">
+                                    <div class="mr-auto" style="width: 100%; height:470px; overflow:scroll">
                                     <a class="d-flex text-dark over-primary font-size-h5 font-weight-bold mr-3 flex-column" ><!---->
                                         <!---->
 
