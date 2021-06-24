@@ -87,7 +87,7 @@
 							this.getDocumentCatastro(solicitud);
 							//aqui sustituir por la repsuesta del servicio
 							// this.doc = this.responseCatastroDocument;
-							this.doc.push('http://www.africau.edu/images/default/sample.pdf');
+							this.doc = 'http://www.africau.edu/images/default/sample.pdf';
 						}
 						this.llave = `${solicitud.id}`;
 						this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
