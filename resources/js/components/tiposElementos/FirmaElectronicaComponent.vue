@@ -66,7 +66,9 @@
 								this.doc = [];
 								//se tiene que mandar el ws con el  paquete completo para los tramites  y ademas  y despues se busca el id que te regrese a buscar
 								this.getDocumentCatastro(solicitud, this.usuario);
-								this.doc.push(this.responseCatastroDocument);
+								//aqui sustituir por la repsuesta del servicio
+								// this.doc.push(this.responseCatastroDocument);
+								this.doc.push('http://www.africau.edu/images/default/sample.pdf');
 							}	
 							
 						} 
@@ -83,7 +85,9 @@
 							this.doc = doc;
 						}else if(this.usuario.tramite_id == process.env.TRAMITE_AVISO  ){
 							this.getDocumentCatastro(solicitud);
-							this.doc = this.responseCatastroDocument;
+							//aqui sustituir por la repsuesta del servicio
+							// this.doc = this.responseCatastroDocument;
+							this.doc.push('http://www.africau.edu/images/default/sample.pdf');
 						}
 						this.llave = `${solicitud.id}`;
 						this.folio = md5( (Date.now() % 1000) / 1000  ) + `${ind}`;
@@ -317,6 +321,7 @@
 				 .then(res => {
 					 	var responseJson = JSON.parse(res.response.replace('\ufeff', ''));
 						console.log(responseJson.URL);
+						this.responseCatastroDocument = responseJson.URL;
 						// this.firma = responseJson.URL;
 						solicitud['tramite_id'] = this.usuario.tramite_id;
 						solicitud['required_docs'] = 1;
