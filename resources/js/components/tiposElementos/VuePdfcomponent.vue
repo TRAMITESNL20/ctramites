@@ -107,6 +107,7 @@ export default {
   }
   },
   mounted(){
+    console.log(this.urlSourceListo);
     $('[data-toggle=tooltip]').tooltip()
   }
 

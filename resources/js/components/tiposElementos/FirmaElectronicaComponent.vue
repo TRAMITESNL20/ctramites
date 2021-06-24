@@ -47,8 +47,6 @@
 			}
 		},
 		mounted() {
-			console.log('=============');
-			console.log(this.usuario.solicitudes);
 			window.addEventListener("message", this.messageEvt, false);
 			if( this.usuario.tramite_id == process.env.TRAMITE_AVISO ){
 				this.usuario.solicitudes.map((solicitud, ind) => {
@@ -102,13 +100,12 @@
 				}
 				
 				this.tramiteFirmado = true;
-				this.$emit('docFirmadosListos', this.docFirmadosListos);
+				console.log('desde componente firma' ,this.docFirmadosListos );
 				//este puede que ste de mas? XD
 				// this.$emit('docFirmado', 1);
 
 
 			}	
-			console.log('====-----====');
 			this.rfc = this.user.rfc;
 			this.accesToken();
 			this.encodeData();
@@ -207,7 +204,7 @@
 								console.log('Firmado');    
 								self.tramiteFirmado = true;
 								self.$emit('docFirmadosListos', self.docFirmadosListos);
-								self.$emit('docFirmado', 1);
+								self.$emit('docFirmado', 1, this.usuario.tramite_id );
 								self.$emit('urlFirmado', self.urlFirmado);
 							}
 							else console.log('Something goes wrong!',  res);
@@ -219,6 +216,7 @@
 			},
 			async getDocumentCatastro(solicitud , tramiteInd, indTramite ){
 				// console.log( JSON.stringify(solicitud) );
+				console.log(tramiteInd);
 				var adquirientes = [];
 				var vendedores =[];
 				var tipoTramite= '';
@@ -324,10 +322,12 @@
 						solicitud['required_docs'] = 1;
 						solicitud['urlDocumentoFirmado'] = 'http://www.africau.edu/images/default/sample.pdf'
 						this.docFirmadosListos.push(solicitud);
+						tipoTramite == 15 && this.usuario.solicitudes.length == tramiteInd  ? this.$emit('docFirmadosListos', this.docFirmadosListos ) : '' ;
 							// self.$emit('docFirmado', 1);
 						// self.$emit('urlFirmado', self.urlFirmado);
 				 })
 				 .catch( error => console.log(error));
+				
 				
 			},
 		},
@@ -344,8 +344,8 @@
 							this.urlFirmado = [];
 							this.docFirmadosListos= [];
 							this.docFirmadosPendientes= [];
-							console.log('Prop changed: ', newVal );
-							console.log('Prop changed| was: ', oldVal);
+							// console.log('Prop changed: ', newVal );
+							// console.log('Prop changed| was: ', oldVal);
 							console.log('tramite actualizado en firma');
 							let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
 							this.usuario.solicitudes.map((solicitud, ind) => {
@@ -395,7 +395,7 @@
 
 							this.rfc= this.user.rfc; 
 							this.idFirmado.push(solicitud.id);
-							console.log(this.idFirmado);
+							// console.log(this.idFirmado);
 							this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
 							})
 						}

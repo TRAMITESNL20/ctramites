@@ -1,8 +1,8 @@
 <template>
   <div>
       <div>
-            <div v-for="(idTramite ,index) in solicitudes" :key="index" class="w-100">
-                <div v-if="docFirmado != 1 && idTramite.tramite_id != 8"  class="card list-item card-custom mb-5 col-lg-12" style="background-color: rgb(217, 222, 226) !important" >
+            <div v-for="(idTramite ,index) in solicitudes" :key="index" class="w-100" >
+                <div v-if="docFirmado != 1 && idTramite.tramite_id != 8" :id="idTramite.tramite_id"  class="card list-item card-custom mb-5 col-lg-12" style="background-color: rgb(217, 222, 226) !important" >
                     <div class="d-flex mobile-lista-multiple align-items-center mb-3">
           <!---->
                         <div class="mr-auto espace-checkbox-text desktop-agrupacion-width" style="width: 70%">
@@ -117,13 +117,25 @@ export default {
     },
     methods: {
         urlFirmadoListoMethod(urlArray) {
-           this.urlFirmadoListo = urlArray; 
+            console.log('-------------------');
+            var  hola = _.clone(urlArray);
+            console.log( 'hola',  hola);
+            console.log('length', urlArray.length );
+
+            for (let i = 0; i < urlArray.length; i++) {
+                console.log('///');
+                console.log( urlArray[i] );
+                this.urlFirmadoListo.push(urlArray[i]);
+            }
+            // this.urlFirmadoListo = (urlArray); 
+                console.log(this.urlFirmadoListo);
         },
         // urlFirmadoPendienteMethod(urlArray) {
         //    this.urlFirmadoPendiente = urlArray;
         // },
-        docFirmadoMethod(firmado){
-            this.docFirmado =  firmado;
+        docFirmadoMethod(firmado, tramite_id){
+            // this.docFirmado =  firmado;
+            document.getElementById(tramite_id).style.display="none";
         },
         updatedTramitesMethod(newTramites){
             console.log('tramites updateed en aux' );
