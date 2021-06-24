@@ -59,5 +59,17 @@ class CostosApi {
         console.log(error);
     }
   }
+
+  getISRRequest(params, headers){
+    let data = {
+      fecha_escritura: params.fecha_escritura,
+      ganancia_obtenida: Vue.filter('toNumber')(params.ganancia_obtenida +""),
+      monto_operacion: Vue.filter('toNumber')(params.monto_operacion +""),
+      multa_correccion_fiscal: Vue.filter('toNumber')(params.multa_correccion_fiscal +""),
+      pago_provisional_lisr: Vue.filter('toNumber')(params.pago_provisional_lisr +""),
+    }
+    let url = process.env.APP_URL +'/getcostoImpuesto';
+    return axios.post(url, data, {headers});
+  }
 }
 export default new CostosApi();
