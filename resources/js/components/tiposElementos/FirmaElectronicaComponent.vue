@@ -42,7 +42,6 @@
 				responseCatastroDocument: '',
 				docFirmadosListos: [],
 				docFirmadosPendientes: [],
-				tramiteFirmado : false,
 
 			}
 		},
@@ -102,8 +101,8 @@
 						this.getDocumentCatastro(solicitud, indSolicitud, i);
 					});					
 				}
-				
 				this.tramiteFirmado = true;
+				this.idFirmado.push(solicitud.id);
 				console.log('desde componente firma' ,this.docFirmadosListos );
 				//este puede que ste de mas? XD
 				// this.$emit('docFirmado', 1);
