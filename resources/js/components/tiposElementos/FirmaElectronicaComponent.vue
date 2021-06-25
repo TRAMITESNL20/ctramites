@@ -98,8 +98,8 @@
 			}else if(this.usuario.tramite_id == 8 /*process.env.TRAMITE_INFORMATIVO*/){
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
 					this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].map(( solicitud, indSolicitud) => {
+						this.idFirmado.push(this.usuario.solicitudes[i].id);
 						this.getDocumentCatastro(solicitud, indSolicitud, i);
-						this.idFirmado.push(solicitud.id);
 					});	
 					console.log(
 						'aqui estoy listo para firmar ? :',
@@ -135,7 +135,7 @@
 					'descargable': false,
 
 				};
-
+				this.usuario.tramite_id == process.env.TRAMITE_AVISO ? console.log('data', data) : '';
 				const headers = { 
 					"Authorization": "Bearer my-token",
 					'Content-Type': 'application/json',
