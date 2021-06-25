@@ -26,7 +26,7 @@
                         </div>
                     </div>
                  
-                    <div class="float-lg-right" v-if="puedeEditar">
+                    <div class="float-lg-right" v-if="puedeEditar && !isCorreccion">
                         <button type="button"  class="btn btn-danger"  id="btnEliminar" v-on:click="eliminar( index )">
                             <i class="fa fa-times" id="iconBtnEliminar"></i> 
                         </button>
@@ -37,7 +37,7 @@
                    
                 </div>
             </div>
-            <div class="col-lg-12" v-if="!isISR">
+            <div class="col-lg-12" v-if="!isISR && !isCorreccion">
                 <button type="button"  class="btn"  id="btnAddMore" v-on:click="mostrarAgregarSolicitante()">
                     <i class="fa fa-check" id="iconBtnAddMore"></i> 
                     Agregar Solicitante
@@ -134,7 +134,7 @@
 
 <script>
     export default {
-        props: ['solicitantesGuardados'],
+        props: ['solicitantesGuardados', 'infoGuardadaFull'],
         mounted() {
             let tramite = JSON.parse(localStorage.getItem('tramite'));
             this.isISR = tramite && tramite.id_tramite == process.env.TRAMITE_5_ISR; 
@@ -183,7 +183,9 @@
                 localStorage.removeItem('listaSolicitantes');
               }
             }
-            
+            if( this.infoGuardadaFull ){
+                this.isCorreccion = this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO || this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO;
+            }
             this.$emit('updatingSolicitante', this.listaSolicitantes.length > 0);
 
         },
@@ -196,7 +198,8 @@
                 editando: false,
                 indiceEditando:null,
                 puedeEditar:false,
-                isISR:false
+                isISR:false,
+                isCorreccion:false
             }
         },
   
