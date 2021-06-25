@@ -7,9 +7,9 @@
           <!---->
           <div class="mr-auto espace-checkbox-text desktop-agrupacion-width" style="width: 70%">
             <h4 class="ml-3 text-uppercase text-truncate">
-              <strong v-if="solicitud.tramite_id == TRAMITE_5_ISR">ISR 5% POR ENAJENACIÓN DE INMUEBLES - Normal</strong>
-              <strong v-if="solicitud.tramite_id == TRAMITE_AVISO">AVISO DE ENAJENACIÓN</strong>
-              <strong v-if="solicitud.tramite_id == 8">INFORMATIVO</strong>
+              <strong>{{solicitud.tramite}}</strong>
+              <!-- <strong v-if="solicitud.tramite_id == TRAMITE_AVISO">AVISO DE ENAJENACIÓN</strong>
+              <strong v-if="solicitud.tramite_id == 8">INFORMATIVO</strong> -->
             </h4>
             <h5 class="ml-3">
               <span v-if="solicitud.tramite_id == TRAMITE_5_ISR" style="font-weight: normal" >
@@ -23,7 +23,7 @@
           <div class="my-lg-0 my-1">
             <!---->
             <div  class="input-group-append">
-              <!-- alerta de que no puedes descargar el documento -->
+              <!-- alerta de que no puedes descargar el documento --> 
 
               <button 
                 v-if="solicitud.required_docs != 1"

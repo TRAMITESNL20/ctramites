@@ -99,13 +99,17 @@
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
 					this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].map(( solicitud, indSolicitud) => {
 						this.getDocumentCatastro(solicitud, indSolicitud, i);
-					});					
+						this.idFirmado.push(solicitud.id);
+					});	
+					console.log(
+						'aqui estoy listo para firmar ? :',
+						user.id, 'idFirmado',
+						this.idFirmado, 'urlFirmado',
+						this.urlFirmado
+					);				
 				}
 				this.tramiteFirmado = true;
-				this.idFirmado.push(solicitud.id);
 				console.log('desde componente firma' ,this.docFirmadosListos );
-				//este puede que ste de mas? XD
-				// this.$emit('docFirmado', 1);
 
 
 			}	
@@ -115,11 +119,7 @@
 		},
 		methods: {
 			encodeData(ind){
-				for (let i = 0; i <  this.tramitesdoc.length ; i++) {
-					if(this.usuario.tramite_id == this.tramitesdoc[i].tramite_id){
-						this.perfil = this.tramitesdoc[i].perfil;
-					}
-				}
+				this.perfil = this.usuario.solicitudes[0].perfil;
 				// console.log(this.perfil);
 				var urlDataGeneric =  process.env.INSUMOS_API_HOSTNAME + '/data_generic';
 				var url =  process.env.INSUMOS_API_HOSTNAME + "/v2/signature/iframe?id=";
@@ -217,9 +217,9 @@
 					
 				}
 			},
-			async getDocumentCatastro(solicitud , tramiteInd, indTramite ){
+			getDocumentCatastro(solicitud , tramiteInd, indTramite ){
 				// console.log( JSON.stringify(solicitud) );
-				console.log(tramiteInd);
+				console.log(solicitud.id);
 				var adquirientes = [];
 				var vendedores =[];
 				var tipoTramite= '';
@@ -315,13 +315,15 @@
 					}
 				];
 				var url =  process.env.TESORERIA_HOSTNAME + "/registro-catastro";
-				await fetch(url, { 'method': 'POST', 'body' : JSON.stringify(dataCatastro[0]) } )
-				 .then(res =>  res.json())
-				 .then(res => {
-					 	var responseJson = JSON.parse(res.response.replace('\ufeff', ''));
+
+				fetch(url, { 'method': 'POST', 'body' : JSON.stringify(dataCatastro[0]) } )
+				.then(res =>  res.json())
+				.then(res => {
+					 var responseJson = JSON.parse(res.response.replace('\ufeff', ''));
 						console.log(responseJson.URL);
 						this.responseCatastroDocument = responseJson.URL;
-						// this.firma = responseJson.URL;
+						this.urlFirmado.push(responseJson.URL);
+						solicitud['tramite'] = this.usuario.tramite;
 						solicitud['tramite_id'] = this.usuario.tramite_id;
 						solicitud['required_docs'] = 1;
 						solicitud['urlDocumentoFirmado'] = 'http://www.africau.edu/images/default/sample.pdf'
@@ -329,9 +331,8 @@
 						tipoTramite == 15 && this.usuario.solicitudes.length == tramiteInd  ? this.$emit('docFirmadosListos', this.docFirmadosListos ) : '' ;
 							// self.$emit('docFirmado', 1);
 						// self.$emit('urlFirmado', self.urlFirmado);
-				 })
-				 .catch( error => console.log(error));
-				
+				})
+				.catch( error => console.log(error));
 				
 			},
 		},

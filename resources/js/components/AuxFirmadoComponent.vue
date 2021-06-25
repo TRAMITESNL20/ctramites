@@ -2,7 +2,7 @@
   <div>
       <div>
             <div v-for="(idTramite ,index) in solicitudes" :key="index" class="w-100" >
-                <div v-if="docFirmado != 1 && idTramite.tramite_id != 8" :id="idTramite.tramite_id"  class="card list-item card-custom mb-5 col-lg-12" style="background-color: rgb(217, 222, 226) !important" >
+                <div v-if="docFirmado != 1 && idTramite.tramite_id != 8" :id="idTramite.tramite_id"  class="card list-item mt-5 card-custom col-lg-12" style="background-color: rgb(217, 222, 226) !important" >
                     <div class="d-flex mobile-lista-multiple align-items-center mb-3">
           <!---->
                         <div class="mr-auto espace-checkbox-text desktop-agrupacion-width" style="width: 70%">
@@ -10,7 +10,9 @@
                             <strong>{{idTramite.tramite}}</strong>
                             </h4>
                             <h5 class="ml-3">
-                                <span>Tramite ID:  </span> -<span v-for="(solicitud, ind) in idTramite.solicitudes" :key="ind">{{  idTramite.solicitudes[ind].id }} -   </span>
+                                <strong >Tramite ID:  -
+                                    <span style="font-weight: normal" v-for="(solicitud, ind) in idTramite.solicitudes" :key="ind"> {{ idTramite.solicitudes[ind].id }} -   </span> 
+                                </strong> 
                            </h5> 
                         </div>
                          <div class="my-lg-0 my-1">
@@ -90,7 +92,7 @@
         </div>
           
         <!-- {{solicitudes}} -->
-        <vue-pdf-component class="pt-10" 
+        <vue-pdf-component class="pt-5" 
                 :urlSourceListo="urlFirmadoListo" 
         >  
         </vue-pdf-component>
@@ -117,10 +119,6 @@ export default {
     },
     methods: {
         urlFirmadoListoMethod(urlArray) {
-            console.log('-------------------');
-            var  hola = _.clone(urlArray);
-            console.log( 'hola',  hola);
-            console.log('length', urlArray.length );
 
             for (let i = 0; i < urlArray.length; i++) {
                 console.log('///');
