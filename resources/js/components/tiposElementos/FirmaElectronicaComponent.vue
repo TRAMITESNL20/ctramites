@@ -96,6 +96,7 @@
 				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
 				});
 			}else if(this.usuario.tramite_id == 8 /*process.env.TRAMITE_INFORMATIVO*/){
+				var self = this;
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
 					this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].map(( solicitud, indSolicitud) => {
 						this.idFirmado.push(this.usuario.solicitudes[i].id);
@@ -105,12 +106,29 @@
 						'aqui estoy listo para firmar ? :',
 						user.id, 'idFirmado',
 						this.idFirmado, 'urlFirmado',
+						JSON.stringify(this.urlFirmado) ,
 						this.urlFirmado
 					);				
 				}
 				this.tramiteFirmado = true;
 				console.log('desde componente firma' ,this.docFirmadosListos );
-
+				console.log( JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })  );
+				fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+							method : 'POST',
+							body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
+						})
+						.then(res => res.json())
+						.then(res => {
+							if(res.code === 200){
+								console.log(' Aviso Firmado');    
+								// self.tramiteFirmado = true;
+								self.$emit('docFirmadosListos', self.docFirmadosListos);
+								self.$emit('docFirmado', 1, this.usuario.tramite_id );
+								self.$emit('urlFirmado', self.urlFirmado);
+							}
+							else console.log('Algo salio mal al guardar en el sistema!',  res);
+						});
+				
 
 			}	
 			this.rfc = this.user.rfc;
@@ -131,7 +149,7 @@
 					'doc' : this.doc,
 					'folio' : this.folio,
 					'rfc' : window.rfc || this.rfc,
-					'pagado' : 1,
+					// 'pagado' : 1,
 					'descargable': false,
 
 				};
@@ -217,9 +235,7 @@
 					
 				}
 			},
-			getDocumentCatastro(solicitud , tramiteInd, indTramite ){
-				// console.log( JSON.stringify(solicitud) );
-				console.log(solicitud.id);
+			async getDocumentCatastro(solicitud , tramiteInd, indTramite ){
 				var adquirientes = [];
 				var vendedores =[];
 				var tipoTramite= '';
@@ -316,13 +332,13 @@
 				];
 				var url =  process.env.TESORERIA_HOSTNAME + "/registro-catastro";
 
-				fetch(url, { 'method': 'POST', 'body' : JSON.stringify(dataCatastro[0]) } )
+				await fetch(url, { 'method': 'POST', 'body' : JSON.stringify(dataCatastro[0]) } )
 				.then(res =>  res.json())
 				.then(res => {
 					 var responseJson = JSON.parse(res.response.replace('\ufeff', ''));
-						console.log(responseJson.URL);
+						console.log('url de catastro: ',responseJson.URL);
 						this.responseCatastroDocument = responseJson.URL;
-						this.urlFirmado.push(responseJson.URL);
+						responseJson.URL ?  this.urlFirmado.push(responseJson.URL) : this.urlFirmado.push("http://www.africau.edu/images/default/sample.pdf");
 						solicitud['tramite'] = this.usuario.tramite;
 						solicitud['tramite_id'] = this.usuario.tramite_id;
 						solicitud['required_docs'] = 1;
@@ -333,7 +349,7 @@
 						// self.$emit('urlFirmado', self.urlFirmado);
 				})
 				.catch( error => console.log(error));
-				
+				console.log(JSON.stringify(this.urlFirmado)) ;
 			},
 		},
 		  watch:{
@@ -403,9 +419,9 @@
 							// console.log(this.idFirmado);
 							this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
 							})
-						}
 						this.accesToken();
 						this.encodeData();
+						}
 						},
 						immediate: true, 
 					

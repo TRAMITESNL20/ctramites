@@ -121,16 +121,10 @@ export default {
         urlFirmadoListoMethod(urlArray) {
 
             for (let i = 0; i < urlArray.length; i++) {
-                console.log('///');
-                console.log( urlArray[i] );
                 this.urlFirmadoListo.push(urlArray[i]);
             }
-            // this.urlFirmadoListo = (urlArray); 
                 console.log(this.urlFirmadoListo);
         },
-        // urlFirmadoPendienteMethod(urlArray) {
-        //    this.urlFirmadoPendiente = urlArray;
-        // },
         docFirmadoMethod(firmado, tramite_id){
             // this.docFirmado =  firmado;
             document.getElementById(tramite_id).style.display="none";
