@@ -38,7 +38,7 @@ class PendienteFirmaController extends Controller
                
             }
         }
-        // dd( ($tramitesDoc));
+        // dd( ($idTramites[0]->solicitudes[0]->info->campos ));
 		return layout_view("pendienteFirma", ['user' => json_encode($user), 'idTramites' => json_encode($idTramites), 'tramitesDoc' => json_encode($tramitesDoc)] );
     }
 

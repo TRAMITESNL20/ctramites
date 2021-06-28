@@ -119,7 +119,7 @@ export default {
     },
     methods: {
         urlFirmadoListoMethod(urlArray) {
-
+            console.log('uirkArray', urlArray );
             for (let i = 0; i < urlArray.length; i++) {
                 this.urlFirmadoListo.push(urlArray[i]);
             }

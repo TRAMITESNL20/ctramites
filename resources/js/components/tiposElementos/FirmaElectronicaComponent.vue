@@ -45,7 +45,7 @@
 
 			}
 		},
-		mounted() {
+		created() {
 			window.addEventListener("message", this.messageEvt, false);
 			if( this.usuario.tramite_id == process.env.TRAMITE_AVISO ){
 				this.usuario.solicitudes.map((solicitud, ind) => {
@@ -97,8 +97,11 @@
 				});
 			}else if(this.usuario.tramite_id == 8 /*process.env.TRAMITE_INFORMATIVO*/){
 				var self = this;
+				console.log('lenght' , this.usuario.solicitudes.length );
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
 					this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].map(( solicitud, indSolicitud) => {
+						console.log(this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral']);
+						console.log(indSolicitud);
 						this.idFirmado.push(this.usuario.solicitudes[i].id);
 						this.getDocumentCatastro(solicitud, indSolicitud, i);
 					});	
@@ -344,8 +347,9 @@
 						solicitud['required_docs'] = 1;
 						solicitud['urlDocumentoFirmado'] = 'http://www.africau.edu/images/default/sample.pdf'
 						this.docFirmadosListos.push(solicitud);
-						tipoTramite == 15 && this.usuario.solicitudes.length == tramiteInd  ? this.$emit('docFirmadosListos', this.docFirmadosListos ) : '' ;
-							// self.$emit('docFirmado', 1);
+						tipoTramite == 15 && this.usuario.solicitudes.length == tramiteInd  ? this.$emit('docFirmadosListos', this.docFirmadosListos ):  '' ;
+						tipoTramite == 15 && this.usuario.solicitudes.length == tramiteInd  ? console.log('docEmitidos: ',this.docFirmadosListos) : '' ;
+						// self.$emit('docFirmado', 1);
 						// self.$emit('urlFirmado', self.urlFirmado);
 				})
 				.catch( error => console.log(error));
@@ -365,8 +369,6 @@
 							this.urlFirmado = [];
 							this.docFirmadosListos= [];
 							this.docFirmadosPendientes= [];
-							// console.log('Prop changed: ', newVal );
-							// console.log('Prop changed| was: ', oldVal);
 							console.log('tramite actualizado en firma');
 							let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
 							this.usuario.solicitudes.map((solicitud, ind) => {
