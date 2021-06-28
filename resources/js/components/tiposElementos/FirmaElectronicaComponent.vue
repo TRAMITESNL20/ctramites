@@ -131,25 +131,32 @@
 			},
 			messageEvt (evt) {
 				var self = this;
-				console.log('messageEvt', evt, evt.data);
-				if(evt.data === 'Terminó'){
-					fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
-						method : 'POST',
-						body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
-					})
-					.then(res => res.json())
-					.then(res => {
-						if(res.code === 200){
-							console.log('Firmado');    
-							self.tramiteFirmado = true;
-							self.$emit('docFirmadosListos', self.docFirmadosListos);
-							self.$emit('docFirmado', 1);
-							self.$emit('urlFirmado', self.urlFirmado);
-						}
-						else console.log('Something goes wrong!', res);
-					});
+				console.log('menssageEvt', evt.data);
+				if( evt.data.length >= 1  ){
+					if( evt.data[0].includes(this.usuario.solicitudes[0].id)  ){
+
+						console.log("el id es: " + this.usuario.solicitudes[0].id );
+					
+						fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+							method : 'POST',
+							body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
+						})
+						.then(res => res.json())
+						.then(res => {
+							if(res.code === 200){
+								console.log('Firmado');    
+								self.tramiteFirmado = true;
+								self.$emit('docFirmadosListos', self.docFirmadosListos);
+								self.$emit('docFirmado', 1);
+								self.$emit('urlFirmado', self.urlFirmado);
+							}
+							else console.log('Something goes wrong!',  res);
+						});
+					}
+
+					
 				}
-			}
+			},
 		},
 	}
 </script>
