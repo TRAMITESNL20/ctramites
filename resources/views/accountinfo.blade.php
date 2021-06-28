@@ -1,13 +1,13 @@
 <div class="content iecontent" id="kt_content" style="min-width: -webkit-fill-available">
     <div class="d-flex flex-column-fluid">
         <div class="container">
-            <span class="col-sm-12 col-md-3 sideNavBtn" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+            <span class="col-sm-12 col-md-3 sideNavBtn" style="font-size:30px;cursor:pointer" onclick="{()=> openNav()}">&#9776;</span>
 
             <span class="col-sm-12 col-md-3">
                 perfil->Información de la cuenta
             </span>
             <div id="Sidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">...</a>
+                <a href="javascript:void(0)" class="closebtn" onclick="{() => closeNav()}">...</a>
                 <div class="card" >
                     <div class="card-body">
                         {{-- img --}}
