@@ -100,10 +100,10 @@
 				this.urlFirmado = '';
 				console.log('lenght' , this.usuario.solicitudes.length );
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
+					this.idFirmado.push(this.usuario.solicitudes[i].id);
 					this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].map(( solicitud, indSolicitud) => {
 						console.log(this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral']);
 						console.log(indSolicitud);
-						this.idFirmado.push(this.usuario.solicitudes[i].id);
 						this.getDocumentCatastro(solicitud, indSolicitud, i);
 					});	
 					console.log(
