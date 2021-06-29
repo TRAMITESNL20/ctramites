@@ -119,9 +119,9 @@
                                     </div>
                                     <div v-else-if="!data.item.detalle || typeof data.item.detalle != 'object'">
                                         <div class="text-center text-danger">
-                                          No fue posible obtener información <br>   
+                                          Error de comunicacion. <br>   
                                           <span class="text-muted text-danger">    
-                                                Consulte al administrador del sistema
+                                            Favor de iniciar el tramite.
                                           </span>
                                         </div>                          
                                     </div>
@@ -184,7 +184,7 @@
             let promises = [];
 
             this.listaEnajentantes = campoEnajenantes.valor.enajenantes.map( (enajenante, index) => {
-                if(enajenante.detalle){
+                if(enajenante.datosParaDeterminarImpuesto){
                     let data = {
                         multa_correccion_fiscal:    enajenante.datosParaDeterminarImpuesto.multaCorreccion,
                         monto_operacion:            enajenante.datosParaDeterminarImpuesto.montoOperacion,
