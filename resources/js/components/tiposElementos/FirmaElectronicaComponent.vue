@@ -97,6 +97,7 @@
 				});
 			}else if(this.usuario.tramite_id == 8 /*process.env.TRAMITE_INFORMATIVO*/){
 				var self = this;
+				this.urlFirmado = '';
 				console.log('lenght' , this.usuario.solicitudes.length );
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
 					this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].map(( solicitud, indSolicitud) => {
@@ -341,7 +342,7 @@
 					 var responseJson = JSON.parse(res.response.replace('\ufeff', ''));
 						console.log('url de catastro: ',responseJson.URL);
 						this.responseCatastroDocument = responseJson.URL;
-						responseJson.URL ?  this.urlFirmado.push(responseJson.URL) : this.urlFirmado.push("http://www.africau.edu/images/default/sample.pdf");
+						responseJson.URL ?  this.urlFirmado += responseJson.URL + ',' : this.urlFirmado += "http://www.africau.edu/images/default/sample.pdf,";
 						solicitud['tramite'] = this.usuario.tramite;
 						solicitud['tramite_id'] = this.usuario.tramite_id;
 						solicitud['required_docs'] = 1;
