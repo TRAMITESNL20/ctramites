@@ -1,19 +1,23 @@
 <template>
-        
-        <div class="card" v-if="tramiteFirmado == false">
-            <div class="col-lg-12 col-sm-12">
-			    <div class="container">
-                    <div class="card-body">
-                        <div class="row" >
-                            <iframe  id="the_frame" :src="firma" style="width:100%; height: 430px;" frameborder="0"> </iframe>
-                        </div>
-                        <!-- <div>
-                            <iframe id="the_frame" :src="firma" style="width:100%; height:600px;" frameborder="0"> </iframe>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div>
+			<div class="card" v-if="tramiteFirmado == false">
+
+				<div class="col-lg-12 col-sm-12">
+					<div class="container">
+						<div class="card-body">
+							<div class="row" >
+								<iframe  id="the_frame" :src="firma" style="width:100%; height: 430px;" frameborder="0"> </iframe>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div v-if="loader" class="pt-10 pb-10 text-center">
+				<div class="spinner-border" role="status">
+					<span class="sr-only">Loading...</span>
+				</div>
+			</div>
+		</div>
 		
 </template>
 
@@ -42,14 +46,15 @@
 				responseCatastroDocument: '',
 				docFirmadosListos: [],
 				docFirmadosPendientes: [],
+				urlConcatenadas: '',
+				loader: null,
 
 			}
 		},
-		created() {
+		async mounted() {
 			window.addEventListener("message", this.messageEvt, false);
 			if( this.usuario.tramite_id == process.env.TRAMITE_AVISO ){
 				this.usuario.solicitudes.map((solicitud, ind) => {
-				// console.log(solicitud);
 				this.multiple = this.usuario.solicitudes.length > 1;
 				var auxEnv = process.env.AAPP_URL;
 				if ( auxEnv == "https://tramites.nl.gob.mx") auxEnv = "http://tramites.nl.gob.mx";
@@ -96,42 +101,34 @@
 				this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas//${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
 				});
 			}else if(this.usuario.tramite_id == 8 /*process.env.TRAMITE_INFORMATIVO*/){
+				this.loader = true;
+				this.tramiteFirmado = true;
 				var self = this;
-				this.urlFirmado = '';
-				console.log('lenght' , this.usuario.solicitudes.length );
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
 					this.idFirmado.push(this.usuario.solicitudes[i].id);
-					this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].map(( solicitud, indSolicitud) => {
-						console.log(this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral']);
-						console.log(indSolicitud);
-						this.getDocumentCatastro(solicitud, indSolicitud, i);
-					});	
-					console.log(
-						'aqui estoy listo para firmar ? :',
-						user.id, 'idFirmado',
-						this.idFirmado, 'urlFirmado',
-						JSON.stringify(this.urlFirmado) ,
-						this.urlFirmado
-					);				
+					for (let indSolicitud = 0; indSolicitud < this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].length; indSolicitud++) {
+						await this.getDocumentCatastro(this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'][indSolicitud], indSolicitud, i);
+					}
+					this.urlFirmado.push(this.urlConcatenadas);			
 				}
-				this.tramiteFirmado = true;
-				console.log('desde componente firma' ,this.docFirmadosListos );
+				this.loader = false;
 				console.log( JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })  );
-				fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
-							method : 'POST',
-							body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
-						})
-						.then(res => res.json())
-						.then(res => {
-							if(res.code === 200){
-								console.log(' Aviso Firmado');    
-								// self.tramiteFirmado = true;
-								self.$emit('docFirmadosListos', self.docFirmadosListos);
-								self.$emit('docFirmado', 1, this.usuario.tramite_id );
-								self.$emit('urlFirmado', self.urlFirmado);
-							}
-							else console.log('Algo salio mal al guardar en el sistema!',  res);
-						});
+				console.log('aqui se hace la firma? esta todo en orden?');
+				// fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+				// 			method : 'POST',
+				// 			body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
+				// 		})
+				// 		.then(res => res.json())
+				// 		.then(res => {
+				// 			if(res.code === 200){
+				// 				console.log('Informativo Guardado');    
+
+				// 				self.$emit('docFirmadosListos', self.docFirmadosListos);
+				// 				self.$emit('docFirmado', 1, this.usuario.tramite_id );
+				// 				self.$emit('urlFirmado', self.urlFirmado);
+				// 			}
+				// 			else console.log('Algo salio mal al guardar en el sistema!',  res);
+				// 		});
 				
 
 			}	
@@ -142,7 +139,6 @@
 		methods: {
 			encodeData(ind){
 				this.perfil = this.usuario.solicitudes[0].perfil;
-				// console.log(this.perfil);
 				var urlDataGeneric =  process.env.INSUMOS_API_HOSTNAME + '/data_generic';
 				var url =  process.env.INSUMOS_API_HOSTNAME + "/v2/signature/iframe?id=";
 				var data = {
@@ -157,7 +153,6 @@
 					'descargable': false,
 
 				};
-				this.usuario.tramite_id == process.env.TRAMITE_AVISO ? console.log('data', data) : '';
 				const headers = { 
 					"Authorization": "Bearer my-token",
 					'Content-Type': 'application/json',
@@ -336,25 +331,25 @@
 				];
 				var url =  process.env.TESORERIA_HOSTNAME + "/registro-catastro";
 
-				await fetch(url, { 'method': 'POST', 'body' : JSON.stringify(dataCatastro[0]) } )
-				.then(res =>  res.json())
+				await axios.post(url,  JSON.stringify(dataCatastro[0]) )
+				// .then(res =>  JSON.parse(res))
 				.then(res => {
-					 var responseJson = JSON.parse(res.response.replace('\ufeff', ''));
+					 var responseJson = JSON.parse(res.data.response.replace('\ufeff', ''));
+					 	this.docFirmadosListos = [];
 						console.log('url de catastro: ',responseJson.URL);
 						this.responseCatastroDocument = responseJson.URL;
-						responseJson.URL ?  this.urlFirmado += responseJson.URL + ',' : this.urlFirmado += "http://www.africau.edu/images/default/sample.pdf,";
+						responseJson.URL ?  this.urlConcatenadas += responseJson.URL + ',' : this.urlConcatenadas += "http://www.africau.edu/images/default/sample.pdf,";
 						solicitud['tramite'] = this.usuario.tramite;
 						solicitud['tramite_id'] = this.usuario.tramite_id;
 						solicitud['required_docs'] = 1;
 						solicitud['urlDocumentoFirmado'] = 'http://www.africau.edu/images/default/sample.pdf'
 						this.docFirmadosListos.push(solicitud);
-						tipoTramite == 15 && this.usuario.solicitudes.length == tramiteInd  ? this.$emit('docFirmadosListos', this.docFirmadosListos ):  '' ;
-						tipoTramite == 15 && this.usuario.solicitudes.length == tramiteInd  ? console.log('docEmitidos: ',this.docFirmadosListos) : '' ;
-						// self.$emit('docFirmado', 1);
-						// self.$emit('urlFirmado', self.urlFirmado);
+						this.$emit('docFirmadosListos', this.docFirmadosListos );
+						// tipoTramite == 15 && this.usuario.solicitudes[indTramite].info.campos['Resultados Informativo Valor Catastral'].length == (tramiteInd + 1)  ? this.$emit('docFirmadosListos', this.docFirmadosListos ):  '' ;
+						// this.$emit('docFirmado', 1);
+						// this.$emit('urlFirmado', self.urlFirmado);
 				})
 				.catch( error => console.log(error));
-				console.log(JSON.stringify(this.urlFirmado)) ;
 			},
 		},
 		  watch:{
@@ -370,10 +365,8 @@
 							this.urlFirmado = [];
 							this.docFirmadosListos= [];
 							this.docFirmadosPendientes= [];
-							console.log('tramite actualizado en firma');
 							let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
 							this.usuario.solicitudes.map((solicitud, ind) => {
-								console.log(solicitud);
 								this.multiple = this.usuario.solicitudes.length > 1;
 								var auxEnv = process.env.APP_URL;
 								if ( auxEnv == "https://tramites.nl.gob.mx") {
@@ -391,8 +384,6 @@
 									this.folio.push( md5( (Date.now() % 1000) / 1000  ) + `${ind}`);
 								
 									if(solicitud.required_docs == 1){
-										console.log('/////');
-										console.log(solicitud);
 										solicitud['urlDocumentoFirmado'] = `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf`;
 										solicitud['tramite_id'] = this.usuario.tramite_id;
 										this.docFirmadosListos.push(solicitud);
