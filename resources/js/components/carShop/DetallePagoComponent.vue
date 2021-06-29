@@ -28,8 +28,8 @@
                 </li>
             </ul>
             <button id="metodoPagoBtn" v-if="!mostrarCancelarPago"  type="button" class="btn btn-primary btn-block" v-on:click="metodoPago()" :disabled="!obtenidoCostos || consultandoMetodos">
-                Pagar 
-                <div id="spinner-pago" class="spinner-border spinner-border-sm float-right" role="status" v-if="consultandoMetodos">
+                <span v-if="!consultandoMetodos">Pagar</span> 
+                <div id="spinner-pago" class="spinner-border text-white text-primary" role="status" v-if="consultandoMetodos">
                     <span class="sr-only">Loading...</span>
                 </div>
             </button>
@@ -144,8 +144,9 @@
                     //this.mostrarMetodos = false;
                     Command: toastr.warning("Error!", error.message || "Ocurrió un error al guardar");
                     $("#metodoPagoBtn").fadeIn();
-                }).finally(() => {
                     this.consultandoMetodos = false;
+                }).finally(() => {
+                    
                 });
 
             },

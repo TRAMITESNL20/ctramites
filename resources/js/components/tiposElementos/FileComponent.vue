@@ -2,9 +2,12 @@
   <div class=" fv-plugins-icon-container">
     <div class="input-group">
       <div class="input-group-prepend">
-      <span class="input-group-text text-initial" id="inputGroupFileAddon01">
-          {{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}
-      </span>
+        <span class="input-group-text text-initial" id="inputGroupFileAddon01">
+            {{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}
+          <span v-if="obteniendoFile"> 
+            <b-spinner small label="Small Spinner"></b-spinner>
+          </span>
+        </span>
       </div>
       <div class="custom-file">
         <input  
@@ -54,7 +57,8 @@
       data(){
         return{
           aceptSupported : {pdf:'application/pdf', xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'},
-          accept:''
+          accept:'', 
+          obteniendoFile:false
         }
       },
       created(){
@@ -66,7 +70,7 @@
         if(this.campo.nombreArchivoGuardado){
           let urlFile = this.campo.nombreArchivoGuardado;
           promises.push(getFile( urlFile, this.campo.nombreArchivoGuardado, this.campo ));
-
+          this.obteniendoFile = true;
           Promise.all(promises).then(( respuestas ) => {
             respuestas.forEach( (res) => {
                 const blob = new Blob([res.data], { type: res.headers['content-type'] });
@@ -82,9 +86,11 @@
                 if(arrurl.length  > 0 ){
                   let idCampo = this.campo.campo_id;
                   let relation = this.campo.relationship;
+                  let self = this;
                   setTimeout(function(){ 
-                    $("#"+ idCampo + '-' + relation + '-namefile' ).text(  arrurl[arrurl.length - 1]) 
-                  }, 500);
+                    $("#"+ idCampo + '-' + relation + '-namefile' ).text(  arrurl[arrurl.length - 1]);
+                    self.obteniendoFile = false; 
+                  }, 400);
                   
                 } else {
                   $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  "" );
@@ -93,6 +99,7 @@
 
               })
             }).catch(errors => {
+              this.obteniendoFile = false;
               $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  "" );
           }).finally(() => {
 
