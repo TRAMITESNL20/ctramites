@@ -175,6 +175,13 @@
               complementaria.idTicketNormal = tramite.info.tipoTramite == 'normal' ? tramite.id : tramite.info.idTicketNormal;
               complementaria.idTicketAnterior = tramite.id;
               complementaria.valido = tramite.formValid;
+              if(tramite.detalle){
+            
+                complementaria.costo_final = tramite.detalle && tramite.detalle['Salidas'] ? tramite.detalle['Salidas']['Cantidad a cargo'] : 0 ;
+              } else {
+                complementaria.costo_final = null;
+              }
+              
               complementaria.enajenante =  {
                 datosPersonales: tramite.info.enajenante.datosPersonales,
                 nacionalidad: tramite.info.enajenante.nacionalidad,
