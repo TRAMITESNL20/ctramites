@@ -344,7 +344,7 @@
 						solicitud['required_docs'] = 1;
 						solicitud['urlDocumentoFirmado'] = 'http://www.africau.edu/images/default/sample.pdf'
 						this.docFirmadosListos.push(solicitud);
-						this.$emit('docFirmadosListos', this.docFirmadosListos );
+						tipoTramite == 15 ? this.$emit('docFirmadosListos', this.docFirmadosListos ) : '';
 						// tipoTramite == 15 && this.usuario.solicitudes[indTramite].info.campos['Resultados Informativo Valor Catastral'].length == (tramiteInd + 1)  ? this.$emit('docFirmadosListos', this.docFirmadosListos ):  '' ;
 						// this.$emit('docFirmado', 1);
 						// this.$emit('urlFirmado', self.urlFirmado);
