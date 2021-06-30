@@ -56,6 +56,10 @@
 				loader: null,
 				TotalInformativos: 0,
 				countInformativo: 0,
+				folioCatastro:[],
+				folioConcatenado: '',
+				expedientesCatastro: [],
+				expedienteConcatenado: '',
 
 			}
 		},
@@ -118,11 +122,19 @@
 					for (let indSolicitud = 0; indSolicitud < this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].length; indSolicitud++) {
 						await this.getDocumentCatastro(this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'][indSolicitud], indSolicitud, i);
 					}
-					this.urlFirmado.push(this.urlConcatenadas);			
+					this.urlFirmado.push(this.urlConcatenadas);		
+					this.folioCatastro.push(this.folioConcatenado);
+					this.expedientesCatastro.push(this.expedienteConcatenado);	
+					this.expedienteConcatenado='';
+					this.folioConcatenado='';
 				}
 				this.loader = false;
 				console.log( JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })  );
 				console.log('aqui se hace la firma? esta todo en orden?');
+				console.log('aqui yo mandaria para karla esto :? ');
+				console.log('mando ticket_id', self.idFirmado);
+				console.log('mando arreglo expedientes' , this.expedientesCatastro);
+				console.log('mando arreglo folios', this.folioCatastro);
 				// fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
 				// 			method : 'POST',
 				// 			body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
@@ -345,9 +357,11 @@
 				.then(res => {
 					 var responseJson = JSON.parse(res.data.response.replace('\ufeff', ''));
 					 	this.docFirmadosListos = [];
-						console.log('url de catastro: ',responseJson.URL);
 						this.responseCatastroDocument = responseJson.URL;
 						responseJson.URL ?  this.urlConcatenadas += responseJson.URL + ',' : this.urlConcatenadas += "http://www.africau.edu/images/default/sample.pdf,";
+						responseJson.folio ?  this.folioConcatenado += (responseJson.folio + ',') : '';
+						this.expedienteConcatenado +=  this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos['No. EXP. CATASTRAL'] : ''  ? solicitud.info.campos['Resultados Informativo Valor Catastral'][tramiteInd].expediente_catastral : (solicitud.expediente_catastral + ',') 
+
 						solicitud['tramite'] = this.usuario.tramite;
 						solicitud['tramite_id'] = this.usuario.tramite_id;
 						solicitud['required_docs'] = 1;
