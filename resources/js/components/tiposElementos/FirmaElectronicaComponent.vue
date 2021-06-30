@@ -12,9 +12,15 @@
 					</div>
 				</div>
 			</div>
-			<div v-if="loader" class="pt-10 pb-10 text-center">
-				<div class="spinner-border" role="status">
-					<span class="sr-only">Loading...</span>
+			<div v-if="loader" class="pt-5 pb-5">
+				<div  class="pt-4 pb-4 text-center order-tramites">
+					<div class="spinner-border" role="status">
+						<span class="sr-only">Loading...</span>
+					</div>
+
+				</div>
+				<div class="text-center">
+					<span class="gray" >Cargando Informativos de valor catastral, {{countInformativo}} de {{TotalInformativos}}</span>
 				</div>
 			</div>
 		</div>
@@ -48,6 +54,8 @@
 				docFirmadosPendientes: [],
 				urlConcatenadas: '',
 				loader: null,
+				TotalInformativos: 0,
+				countInformativo: 0,
 
 			}
 		},
@@ -104,6 +112,7 @@
 				this.loader = true;
 				this.tramiteFirmado = true;
 				var self = this;
+				this.getTotalInformativos();
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
 					this.idFirmado.push(this.usuario.solicitudes[i].id);
 					for (let indSolicitud = 0; indSolicitud < this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].length; indSolicitud++) {
@@ -345,12 +354,20 @@
 						solicitud['urlDocumentoFirmado'] = 'http://www.africau.edu/images/default/sample.pdf'
 						this.docFirmadosListos.push(solicitud);
 						tipoTramite == 15 ? this.$emit('docFirmadosListos', this.docFirmadosListos ) : '';
+						tipoTramite == 15 ? this.countInformativo++ : '';
 						// tipoTramite == 15 && this.usuario.solicitudes[indTramite].info.campos['Resultados Informativo Valor Catastral'].length == (tramiteInd + 1)  ? this.$emit('docFirmadosListos', this.docFirmadosListos ):  '' ;
 						// this.$emit('docFirmado', 1);
 						// this.$emit('urlFirmado', self.urlFirmado);
 				})
 				.catch( error => console.log(error));
 			},
+			getTotalInformativos(){
+				for (let i = 0; i < this.usuario.solicitudes.length ; i++) {
+					for (let k = 0; k < this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].length ; k++) {
+						this.TotalInformativos ++;
+					}
+				}
+			}
 		},
 		  watch:{
             // usuario : (newVal) => console.log('newVal', newVal)
