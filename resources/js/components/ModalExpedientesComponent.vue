@@ -276,17 +276,21 @@
         if( this.usuario && this.usuario.notary  ){
           if(this.$v.form.folio.$model){
             this.buscandoInsumos = true;
-            let url = process.env.TESORERIA_HOSTNAME + "/insumos-montos";
-            let params = {
-              expediente:this.clave + nExpediente.split("-").join(""),
-              folio:this.$v.form.folio.$model,
-              id_notaria: this.usuario.notary.notary_number
-            }
-            let response = await axios.get(url , {params} );
-            if(response.data){
-              this.insumos = response.data;
-            } else {
-              this.insumos = false;
+            try{
+              let url = process.env.TESORERIA_HOSTNAME + "/insumos-montos";
+              let params = {
+                expediente:this.clave + nExpediente.split("-").join(""),
+                folio:this.$v.form.folio.$model,
+                id_notaria: this.usuario.notary.notary_number
+              }
+              let response = await axios.get(url , {params} );
+              if(response.data){
+                this.insumos = response.data;
+              } else {
+                this.insumos = false;
+              }
+            } catch (error) {
+              console.log(error);
             }
             this.buscandoInsumos = false;
           } else {
