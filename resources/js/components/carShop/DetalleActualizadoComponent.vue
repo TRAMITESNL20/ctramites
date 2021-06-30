@@ -1,0 +1,106 @@
+<template>
+    <span> 
+        <a class="btn-floating btn-lime btn-lg" :title="msjTitle" @click="verDetalle">                    
+            <span class="label pulse pulse-success mr-10">
+                <span class="position-relative">
+                    <i class="fas fa-info" style="color:rgb(13, 200, 241); font-size:8px;"></i>
+                </span>
+                <span class="pulse-ring"></span>
+            </span>
+        </a>
+        <b-modal v-model="modalShow" title="Actualización" size="xl">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <h4>Anterior </h4>
+                        <strong> {{ currencyFormat('Importe total',item.detalleAnterior.detalle.Salidas['Importe total'])  }} </strong>
+                    </div>
+                    <transition name="slide-fade">
+                        <b-card no-body v-if="item.detalleAnterior">
+                            <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
+                                <b-row v-for="(salida, key) in item.detalleAnterior.detalle.Salidas" :key="key">
+                                    <b-col class="text-left" style="width: 70%" >
+                                        <strong>{{ key }}</strong>
+                                    </b-col>
+                                    <b-col class="text-right" >
+                                        <span class="text-muted">   {{ currencyFormat(key, salida) }} </span>
+                                    </b-col>
+                                </b-row>
+                            </b-card-body> 
+                        </b-card>
+                    </transition>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <h4>Actual</h4>
+                        <strong>{{ currencyFormat('Importe total',item.detalleActual.Salidas['Importe total'])  }} </strong>
+                    </div>
+                    <transition name="slide-fade">
+                        <b-card no-body v-if="item.detalleActual">
+                            <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
+                                <b-row v-for="(salida, key) in item.detalleActual.Salidas" :key="key">
+                                    <b-col class="text-left" style="width: 70%" >
+                                        <strong>{{ key }}</strong>
+                                    </b-col>
+                                    <b-col class="text-right" >
+                                        <span class="text-muted">   {{ currencyFormat(key, salida) }} </span>
+                                    </b-col>
+                                </b-row>
+                            </b-card-body> 
+                        </b-card>
+                    </transition>                    
+                </div>
+            </div>
+        </b-modal>
+
+    </span>
+</template>
+
+<script>
+
+    import Vue from 'vue';
+    import { uuid } from 'vue-uuid';
+
+    export default {
+        props: ['item','onlyRead'],
+        data(){
+            return {
+                idItem:null,
+                modalShow:false,
+                msjTitle:''
+
+            }
+        },
+        mounted() {
+        	this.idItem = uuid.v4();
+            this.msjTitle = this.onlyRead ? 'Algunos items han sido actualizados' : 'Costo Actualizado';
+        },
+
+        computed:{
+
+        },
+        methods: {
+
+            verDetalle(){
+                if(!this.onlyRead){
+                    this.modalShow = !this.modalShow;
+                }
+            },
+
+            currencyFormat(campoName, salida){
+                let arr = ["Ganancia Obtenida","Monto obtenido conforme al art 127 LISR",
+                            "Pago provisional conforme al art 126 LISR","Impuesto correspondiente a la entidad federativa",
+                            "Parte actualizada del impuesto", "Recargos", "Multa corrección fiscal", "Importe total", "Cantidad a cargo",
+                            "Monto pagado en la declaracion inmediata anterior", "Pago en exceso", "Diferencia de Impuesto correspondiente a la Entidad Federativa", "Importe total a pagar"];
+                if(arr.includes(campoName)){
+                    let text = Vue.filter('toCurrency')(salida);
+                    return text;
+                } else{
+                    return salida;
+                }
+            }
+
+
+        }
+    }
+</script>

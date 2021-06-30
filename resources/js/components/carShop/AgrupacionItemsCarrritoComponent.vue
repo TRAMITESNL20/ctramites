@@ -35,8 +35,13 @@
                 </div>
                 <div class="my-lg-0 my-1">
                     <div class="d-flex p-2">
-                        <span>
-                            <h3>{{ total | toCurrency }} </h3>
+                        <span> 
+                            <h3>
+                                <span v-if="agrupacion.items[0].detalleAnterior">            
+                                    <detalle-actualizado-component :item="agrupacion.items[0]" :onlyRead="agrupacion.items.length > 1"></detalle-actualizado-component>
+                                </span>   
+                                {{ total | toCurrency }}           
+                            </h3>
                         </span>
                     </div>
                 </div>
@@ -64,7 +69,10 @@
                                         </span>
                                     </a>
                                  </div>
-                                 <div class="my-lg-0 my-1" >
+                                 <div class="my-lg-0 my-1">
+                                    <span>            
+                                        <detalle-actualizado-component v-if="item.detalleAnterior" :item="item"></detalle-actualizado-component>
+                                    </span> 
                                     <span class="btn btn-secondary mr-2">
                                         {{item.importe_tramite | toCurrency}}                        
                                     </span>

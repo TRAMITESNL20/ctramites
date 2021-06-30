@@ -23,7 +23,8 @@ export default class TramiteCar5ISRCtrl {
         this.json.isComplemento = solicitud.info.complementoDe;
         this.json.isAgrupable = this.getIsAgrupable(solicitud, tramite);
 	    this.json.detalle = this.getDetalle(solicitud);
-
+        this.json.detalleAnterior = solicitud.info && solicitud.info.detalleAnterior ? solicitud.info.detalleAnterior : false;
+        this.json.detalleActual = solicitud.info && solicitud.info.detalle ? solicitud.info.detalle : false;
                 console.log("json")
                 console.log(JSON.parse(JSON.stringify(this.json)))
 	  	return this.json;
