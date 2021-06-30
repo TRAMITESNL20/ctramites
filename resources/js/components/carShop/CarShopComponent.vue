@@ -390,9 +390,12 @@
             tramitesJson.idSolicitante = soliciante.id; 
             tramitesJson.id_tramite = soliciante.id;//soliciante.clave;
             tramitesJson.calveTemp = soliciante.clave;//soliciante.clave;
+
             if(soliciante.info.enajenante) soliciante.info = {...soliciante.info, ...soliciante.info.enajenante}
             let info = (typeof soliciante.info) == 'string' ? JSON.parse(soliciante.info) : soliciante.info;
-  
+            tramitesJson.detalleAnterior = info && info.detalleAnterior ? info.detalleAnterior : false;
+            tramitesJson.detalleActual = info && info.detalle ? info.detalle : false;
+            
             if(soliciante.info.hasOwnProperty('enajenante') && (soliciante.info.hasOwnProperty('solicitante') ) ){
 
               let solicitanteInfo = soliciante.info.solicitante;
@@ -472,8 +475,6 @@
             }
 
             //console.log(JSON.parse(JSON.stringify(tramitesJson)))
-
- 
             listadoTramites.push( tramitesJson );
           });
           });

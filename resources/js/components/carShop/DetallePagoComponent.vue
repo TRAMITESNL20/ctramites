@@ -66,6 +66,8 @@
                     delete tramite.nombre;
                     delete tramite.idSolicitante;
                     delete tramite.calveTemp;
+                    delete tramite.detalleAnterior;
+                    delete tramite.detalleActual;
                     tramitesAEnviar.push( tramite );
                 });
 
