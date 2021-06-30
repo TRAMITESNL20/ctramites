@@ -35,8 +35,13 @@
                 </div>
                 <div class="my-lg-0 my-1">
                     <div class="d-flex p-2">
-                        <span>
-                            <h3>{{ total | toCurrency }} </h3>
+                        <span> 
+                            <h3>
+                                <span v-if="agrupacion.items[0].detalleAnterior">            
+                                    <detalle-actualizado-component :item="agrupacion.items[0]" :onlyRead="agrupacion.items.length > 1"></detalle-actualizado-component>
+                                </span>   
+                                {{ total | toCurrency }}           
+                            </h3>
                         </span>
                     </div>
                 </div>
@@ -54,7 +59,7 @@
                                 <div class="mr-3 ml-4" style="cursor:pointer;" v-if="isAgrupable">
                                     <i class="fas fa-undo" title="Qutar del grupo" style="width:18px; height:18px;"  @click="quitarSelect(item.claveIndividual)"></i>
                                 </div>
-                                 <div class="mr-auto" style="width: 60%;">
+                                <div class="mr-auto" style="width: 60%;">
                                     <div v-if="!sameTramites">
                                         {{   item.nombre }}
                                     </div>
@@ -63,12 +68,15 @@
                                            {{ item.datos_solicitante.rfc || item.datos_solicitante.curp || "" }} - {{ item.datos_solicitante.razon_social ? item.datos_solicitante.razon_social : item.datos_solicitante.nombre + " " + item.datos_solicitante.apellido_paterno + " " + item.datos_solicitante.apellido_materno }}
                                         </span>
                                     </a>
-                                 </div>
-                                 <div class="my-lg-0 my-1" >
+                                </div>
+                                <div class="my-lg-0 my-1">
+                                    <span>            
+                                        <detalle-actualizado-component v-if="item.detalleAnterior" :item="item"></detalle-actualizado-component>
+                                    </span>  
                                     <span class="btn btn-secondary mr-2">
-                                        {{item.importe_tramite | toCurrency}}                        
+                                        {{item.importe_tramite | toCurrency}}                
                                     </span>
-                                 </div>
+                                </div>
                             </div>
                        </div>
                     </div>

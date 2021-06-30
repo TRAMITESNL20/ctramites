@@ -98,7 +98,7 @@ Vue.component("formulario-direccion-notificacion-component" , () => import( /* w
 Vue.component("resumen-aviso-enajenacion-component" , () => import( /* webpackChunkName: "js/components/resumen-aviso-enajenacion-component" */ './components/ResumenAvisoEnajenacion.vue' ));
 Vue.component("divisa-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/divisa-component" */ './components/tiposElementos/DivisaComponent.vue' ));
 Vue.component("input-currency-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/input-currency-component" */ './components/tiposElementos/InputCurrencyComponent.vue' ));
-
+Vue.component("detalle-actualizado-component" , () => import( /* webpackChunkName: "js/components/carShop/detalle-actualizado-component" */ './components/carShop/DetalleActualizadoComponent.vue' ));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
