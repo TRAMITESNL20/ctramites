@@ -64,7 +64,7 @@ class updateDetalle extends Command
                         $totalActualizados = $totalActualizados+1;
                     }
                 } else {
-                   Log::info('Actualizacion no soportada Cattalogo ID:' . $tramite->catalogo_id); 
+                   Log::info('Actualizacion no soportada Catalogo ID:' . $tramite->catalogo_id); 
                 }
                 
                 Log::info('-----------------------------------------------FIN ticket ' . $tramite->id . '-----------------------------------------------');
