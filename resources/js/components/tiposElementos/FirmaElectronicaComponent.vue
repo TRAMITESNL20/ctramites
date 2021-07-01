@@ -20,7 +20,7 @@
 
 				</div>
 				<div class="text-center">
-					<span class="gray" >Cargando Informativos de valor catastral, {{countInformativo}} de {{TotalInformativos}}</span>
+					<span class="gray" >Firmando Informativos de valor catastral, {{countInformativo}} de {{TotalInformativos}}</span>
 				</div>
 			</div>
 		</div>
@@ -57,9 +57,9 @@
 				TotalInformativos: 0,
 				countInformativo: 0,
 				folioCatastro:[],
-				folioConcatenado: '',
+				folioConcatenado: [],
 				expedientesCatastro: [],
-				expedienteConcatenado: '',
+				expedienteConcatenado: [],
 
 			}
 		},
@@ -125,8 +125,40 @@
 					this.urlFirmado.push(this.urlConcatenadas);		
 					this.folioCatastro.push(this.folioConcatenado);
 					this.expedientesCatastro.push(this.expedienteConcatenado);	
-					this.expedienteConcatenado='';
-					this.folioConcatenado='';
+					this.expedienteConcatenado=[];
+					this.folioConcatenado=[];
+					fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+								method : 'POST',
+								body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
+							})
+							.then(res => res.json())
+							.then(res => {
+								if(res.code === 200){
+									console.log('Informativo Guardado');    
+
+									self.$emit('docFirmadosListos', self.docFirmadosListos);
+									self.$emit('docFirmado', 1, this.usuario.tramite_id );
+									self.$emit('urlFirmado', self.urlFirmado);
+								}
+								else console.log('Algo salio mal al guardar en el sistema!',  res);
+							});
+					//  ----------------------------------------------------------------------------------------
+					fetch(`${process.env.TESORERIA_HOSTNAME}/add-folios-exp`, {
+								method : 'POST',
+								body: JSON.stringify({ id : self.idFirmado, expedientes : this.expedientesCatastro , folios: this.folioCatastro })
+							})
+							.then(res => res.json())
+							.then(res => {
+								if(res.code === 200){
+									console.log('Informativo Guardado');    
+
+									self.$emit('docFirmadosListos', self.docFirmadosListos);
+									self.$emit('docFirmado', 1, this.usuario.tramite_id );
+									self.$emit('urlFirmado', self.urlFirmado);
+								}
+								else console.log('Algo salio mal al guardar en el sistema!',  res);
+							});
+
 				}
 				this.loader = false;
 				console.log( JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })  );
@@ -135,21 +167,7 @@
 				console.log('mando ticket_id', self.idFirmado);
 				console.log('mando arreglo expedientes' , this.expedientesCatastro);
 				console.log('mando arreglo folios', this.folioCatastro);
-				// fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
-				// 			method : 'POST',
-				// 			body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
-				// 		})
-				// 		.then(res => res.json())
-				// 		.then(res => {
-				// 			if(res.code === 200){
-				// 				console.log('Informativo Guardado');    
-
-				// 				self.$emit('docFirmadosListos', self.docFirmadosListos);
-				// 				self.$emit('docFirmado', 1, this.usuario.tramite_id );
-				// 				self.$emit('urlFirmado', self.urlFirmado);
-				// 			}
-				// 			else console.log('Algo salio mal al guardar en el sistema!',  res);
-				// 		});
+				
 				
 
 			}	
@@ -359,12 +377,15 @@
 					 	this.docFirmadosListos = [];
 						this.responseCatastroDocument = responseJson.URL;
 						responseJson.URL ?  this.urlConcatenadas += responseJson.URL + ',' : this.urlConcatenadas += "http://www.africau.edu/images/default/sample.pdf,";
-						responseJson.folio ?  this.folioConcatenado += (responseJson.folio + ',') : '';
-						this.expedienteConcatenado +=  this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos['No. EXP. CATASTRAL'] : ''  ? solicitud.info.campos['Resultados Informativo Valor Catastral'][tramiteInd].expediente_catastral : (solicitud.expediente_catastral + ',') 
+
+						responseJson.folio ?  this.folioConcatenado.push(responseJson.folio) : '';
+						this.usuario.tramite_id == process.env.TRAMITE_INFORMATIVO ||this.usuario.tramite_id == 8  ? this.expedienteConcatenado.push(solicitud.expediente_catastral) : '';  
 
 						solicitud['tramite'] = this.usuario.tramite;
 						solicitud['tramite_id'] = this.usuario.tramite_id;
+						solicitud['id'] = this.usuario.solicitudes[indTramite].id;
 						solicitud['required_docs'] = 1;
+						// responseJson.URL 
 						solicitud['urlDocumentoFirmado'] = 'http://www.africau.edu/images/default/sample.pdf'
 						this.docFirmadosListos.push(solicitud);
 						tipoTramite == 15 ? this.$emit('docFirmadosListos', this.docFirmadosListos ) : '';

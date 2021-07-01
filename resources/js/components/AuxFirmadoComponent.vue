@@ -1,5 +1,10 @@
 <template>
   <div>
+        <div v-if="totalPorFirmar != urlFirmadoListo.length" class="card">
+            <div class="card-header">
+                TRAMITES POR FIRMAR
+            </div>
+        </div>
     <div style="display:flex; flex-wrap: wrap; ">
         <div v-for="(idTramite ,index) in solicitudes" :key="index" class="w-100"  v-bind:style="[ idTramite.tramite_id == 8 ? {'order': 3 }  : '']">
             <!-- /*process.env.TRAMITE_INFORMATIVO*/ -->
@@ -90,6 +95,11 @@
             </div>
         </div>
 <!-- {{solicitudes}} -->
+        <div v-if="urlFirmadoListo.length > 0" class="mt-5 card w-100 ">
+            <div class="card-header">
+                TRAMITES FIRMADOS
+            </div>
+        </div>
         <vue-pdf-component class="pt-5 w-100" 
                 :urlSourceListo="urlFirmadoListo" 
         >  
@@ -107,12 +117,15 @@ export default {
     props: ['usuario', 'tramitesdoc' , 'user'],
     mounted(){
         $('[data-toggle=tooltip]').tooltip();
+        this.recorrerTramites();
+        console.log(this.totalPorFirmar);
     },
     data(){
         return {
             urlFirmadoListo: [],
             docFirmado:'',
             clonedData: '',
+            totalPorFirmar: 0,
             solicitudes : this.usuario,
             TRAMITE_5_ISR: process.env.TRAMITE_5_ISR,
             TRAMITE_INFORMATIVO: process.env.TRAMITE_INFORMATIVO
@@ -120,11 +133,11 @@ export default {
     },
     methods: {
         urlFirmadoListoMethod(urlArray) {
-            console.log('uirkArray', urlArray );
+            // console.log('uirkArray', urlArray );
             for (let i = 0; i < urlArray.length; i++) {
                 this.urlFirmadoListo.push(urlArray[i]);
+                console.log(this.urlFirmadoListo.length);
             }
-                console.log(this.urlFirmadoListo);
         },
         docFirmadoMethod(firmado, tramite_id){
             // this.docFirmado =  firmado;
@@ -141,6 +154,29 @@ export default {
             console.log(this.clonedData);
             this.solicitudes = this.clonedData;
             this.$forceUpdate();
+        },
+        recorrerTramites(){
+            // 
+            this.totalPorFirmar= 0;
+
+            for (let i = 0; i < this.solicitudes.length; i++) {
+
+                    for (let k = 0; k < this.solicitudes[i].solicitudes.length; k++) {        
+                        if(this.solicitudes[i].tramite_id != process.env.TRAMITE_INFORMATIVO  && this.solicitudes[i].tramite_id != 8  ){
+                            this.totalPorFirmar ++;
+                        }else if(this.solicitudes[i].tramite_id == process.env.TRAMITE_INFORMATIVO || this.solicitudes[i].tramite_id == 8  ){
+                            console.log('aqui');
+                            for (let x = 0; x < this.solicitudes[i].solicitudes[k].info.campos['Resultados Informativo Valor Catastral'].length; x++) {
+                                this.totalPorFirmar ++;
+                            }
+                        }
+                    }
+                
+
+                
+                
+            }
+
         }
     },
 

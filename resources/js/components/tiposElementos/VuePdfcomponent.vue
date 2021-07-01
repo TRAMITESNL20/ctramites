@@ -15,7 +15,7 @@
               <span v-if="solicitud.tramite_id == TRAMITE_5_ISR" style="font-weight: normal" >
                 <strong > {{solicitud.info.enajenante.datosPersonales.nombre }} {{solicitud.info.enajenante.datosPersonales.apPat}} {{solicitud.info.enajenante.datosPersonales.apMat }} </strong>-{{solicitud.info.enajenante.datosPersonales.rfc}}
               </span>
-              <span v-if="solicitud.tramite_id == 8" style="font-weight: normal" >
+              <span v-if="solicitud.tramite_id == 8" style="font-weight: normal" > Tramite ID: {{solicitud.id}} -
                 <strong > {{solicitud.datos_propietarios[0].nombrePro }} {{ solicitud.datos_propietarios[0].apePat  }} {{ solicitud.datos_propietarios[0].apeMat  }} </strong>-{{solicitud.expediente_catastral }}
               </span>
             </h5>

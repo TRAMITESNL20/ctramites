@@ -10,11 +10,6 @@
                     <div class="dropdown-divider"></div>
                     <section id="invoicePanel" >
 						<div class="container">
-  							<div class="card">
-								<div class="card-header">
-                                    TRAMITES POR FIRMAR
-								</div>
-							</div>
                             
                             <aux-firmado-component 
                                                         :usuario="{{$idTramites}}" 
