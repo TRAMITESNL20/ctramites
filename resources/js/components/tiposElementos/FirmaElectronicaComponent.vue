@@ -136,25 +136,22 @@
 								if(res.code === 200){
 									console.log('Informativo Guardado');    
 
-									self.$emit('docFirmadosListos', self.docFirmadosListos);
-									self.$emit('docFirmado', 1, this.usuario.tramite_id );
-									self.$emit('urlFirmado', self.urlFirmado);
+									// self.$emit('docFirmadosListos', self.docFirmadosListos);
+									// self.$emit('docFirmado', 1, this.usuario.tramite_id );
+									// self.$emit('urlFirmado', self.urlFirmado);
 								}
 								else console.log('Algo salio mal al guardar en el sistema!',  res);
 							});
 					//  ----------------------------------------------------------------------------------------
 					fetch(`${process.env.TESORERIA_HOSTNAME}/add-folios-exp`, {
 								method : 'POST',
+								headers: {'Content-Type': 'application/json'},
 								body: JSON.stringify({ id : self.idFirmado, expedientes : this.expedientesCatastro , folios: this.folioCatastro })
 							})
 							.then(res => res.json())
 							.then(res => {
 								if(res.code === 200){
-									console.log('Informativo Guardado');    
-
-									self.$emit('docFirmadosListos', self.docFirmadosListos);
-									self.$emit('docFirmado', 1, this.usuario.tramite_id );
-									self.$emit('urlFirmado', self.urlFirmado);
+									console.log('Informativo Folio Guardado');    
 								}
 								else console.log('Algo salio mal al guardar en el sistema!',  res);
 							});
@@ -383,7 +380,7 @@
 
 						solicitud['tramite'] = this.usuario.tramite;
 						solicitud['tramite_id'] = this.usuario.tramite_id;
-						solicitud['id'] = this.usuario.solicitudes[indTramite].id;
+						// solicitud['id'] = this.usuario.solicitudes[indTramite].id;
 						solicitud['required_docs'] = 1;
 						// responseJson.URL 
 						solicitud['urlDocumentoFirmado'] = 'http://www.africau.edu/images/default/sample.pdf'
