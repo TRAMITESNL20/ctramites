@@ -69,7 +69,11 @@
           let currency = this.divisa.CURRENCY;
           if(this.campo.valor){
             let number =  Vue.filter('toNumber')( this.campo.valor + "" );
-            this.campo.valor =  Vue.filter('toCurrency')( number, style, currency  );
+            if( this.campo.nombre == this.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION){
+              this.campo.valor =  Vue.filter('toCurrency')( number, style, currency  );
+            } else {
+              this.campo.valor = Vue.filter('toCurrency')( number, 'currency', 'MXN'); 
+            }
           }
         },
         getCaracteristicas(){
