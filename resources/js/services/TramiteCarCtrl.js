@@ -180,7 +180,8 @@ export default class TramiteCar5ISRCtrl {
                 let losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "No aplica" ); 
 
                 losdescuentos = losdescuentos.filter( descuento => descuento.concepto_descuento != "El numero de oficio no coincide con el trámite" );   
-                losdescuentos = losdescuentos.filter( descuento => descuento.concepto_descuento != "El valor de operación excede el monto válido para subsidio" );    
+                losdescuentos = losdescuentos.filter( descuento => descuento.concepto_descuento != "El valor de operación excede el monto válido para subsidio" );
+                losdescuentos = losdescuentos.filter( descuento => descuento.concepto_descuento != "El tipo de Persona fiscal no es válido para este subsidio")    
                 
                 if( losdescuentos && losdescuentos.length > 0 ){
                     detalle[0].importe_concepto = losdescuentos.map( descuento => descuento.importe_total ).reduce((a, b) => a + b, 0);
