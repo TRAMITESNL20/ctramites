@@ -21,34 +21,38 @@
                                                 <div role="alert" class="alert alert-warning alert-dismissible fade show ">Ocurrio un error al guardar el documento intente nuevamente 
                                                 <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true">×</span></button></div>
                                     </div>
-                                    <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body">
+                                    <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body" v-if="tramiteDoc.required_docs == 0">
                                         
-                                        <h3>Tramite id: {{tramiteDoc.id}} </h3>
+                                        <div >
 
-                                        <div class="input-group">
+                                            <h3>Tramite id: {{tramiteDoc.id}} </h3>
 
-                                            <div class="input-group-prepend">
-                                                <span id="inputGroupFileAddon01" class="input-group-text">
-                                                CALCULO DEL ISR CONFORME AL 126 LISR
-                                                </span>
+                                            <div class="input-group">
+
+                                                <div class="input-group-prepend">
+                                                    <span id="inputGroupFileAddon01" class="input-group-text">
+                                                    CALCULO DEL ISR CONFORME AL 126 LISR
+                                                    </span>
+                                                </div>
+                                                <div class="custom-file">
+                                                    <input 
+                                                    type="file" 
+                                                    :id="tramiteDoc.id" 
+                                                    ref="myFiles" 
+                                                    class="custom-file-input" 
+                                                    accept=".pdf"
+                                                    @change="previewFiles(tramiteDoc.id , index)" >
+
+                                                    <label class="custom-file-label"
+                                                    ><span>
+                                                        {{  fileName[index] ? fileName[index] : 'Seleccione el archivo' }}
+                                                    </span>
+                                                    </label>
+                                            
+                                                </div>
                                             </div>
-                                            <div class="custom-file">
-                                                <input 
-                                                type="file" 
-                                                :id="tramiteDoc.id" 
-                                                ref="myFiles" 
-                                                class="custom-file-input" 
-                                                accept=".pdf"
-                                                @change="previewFiles(tramiteDoc.id , index)" >
+                                        </div>   
 
-                                                <label class="custom-file-label"
-                                                ><span>
-                                                    {{  fileName[index] ? fileName[index] : 'Seleccione el archivo' }}
-                                                </span>
-                                                </label>
-                                        
-                                            </div>
-                                        </div>      
                                     </div>
                                 
 
@@ -87,6 +91,19 @@ export default {
     mounted(){
         $('#modalDocument').appendTo("body");
          $("#docAlert").hide();
+
+        //     for (let i = 0; i < self.idtramites[0].solicitudes.length; i++) {
+
+        //         for (let k = 0; k < self.tramitesdoc.length; k++) {
+
+        //                 if ( self.idtramites[0].solicitudes[i].id === self.tramitesdoc[k].id  &&  this.tramitesdoc[k].required_docs == 0) {
+        //                     self.idtramites[0].solicitudes[i].required_docs = 1;
+        //                 }
+        //     }
+        //     console.log('Guardado desde el modal');
+        //     this.$emit('updatedTramites', self.idtramites);
+        // }  
+
     },
     created(){
          $("#docAlert").hide();
@@ -104,7 +121,7 @@ export default {
 
                             for (let k = 0; k < self.tramitesdoc.length; k++) {
 
-                                    if ( self.idtramites[0].solicitudes[i].id === self.tramitesdoc[k].id && self.tramitesdoc[k].required_docs == 1 ) {
+                                    if ( self.idtramites[0].solicitudes[i].id === self.tramitesdoc[k].id  && self.tramitesdoc[k].required_docs == 1) {
                                         self.idtramites[0].solicitudes[i].required_docs = 1;
                                     }
                             }

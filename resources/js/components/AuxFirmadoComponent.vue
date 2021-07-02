@@ -1,6 +1,6 @@
 <template>
   <div>
-        <div class="pt-10 pl-10 pr-10"  style="background-color:white" v-if=" (tramitesdoc).length > 0 && docFirmado != 1">
+        <div class="pt-10 pl-10 pr-10"  style="background-color:white" v-if=" (tramitesdoc.length > 0 && docFirmado != 1 && docPendientes != 0  )">
             <div >
                 <p> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
                 <modal-document-component 
@@ -16,6 +16,7 @@
             <firma-electronica-component 
                 :usuario="idTramite"   
                 :user="user"  
+                :tramitesdoc="tramitesdoc"
                 @docFirmado="docFirmadoMethod"
                 @docFirmadosListos="urlFirmadoListoMethod"
                 >
@@ -35,14 +36,17 @@
 export default {
     props: ['usuario', 'tramitesdoc' , 'user'],
     mounted(){
-
+        this.tramitesdoc.map((solicitud, index) => {
+            solicitud.required_docs == 0 ? this.docPendientes ++ : '' ; 
+        });
     },
     data(){
         return {
             urlFirmadoListo: [],
             docFirmado:'',
             clonedData: '',
-            solicitudes : this.usuario
+            solicitudes : this.usuario,
+            docPendientes: 0,
         }
     },
     methods: {
