@@ -21,6 +21,8 @@
 				</div>
 				<div class="text-center">
 					<span class="gray" >Firmando Informativos de valor catastral, {{countInformativo}} de {{TotalInformativos}}</span>
+					<span v-if="errorRecordCatastro" > Contacta con tu administrador ocurrio un error consultando los documentos en catastro </span>
+					<span v-if="errorRecordCatastro" > {{errorRecordCatastro}} </span>
 				</div>
 			</div>
 		</div>
@@ -60,6 +62,7 @@
 				folioConcatenado: [],
 				expedientesCatastro: [],
 				expedienteConcatenado: [],
+				errorRecordCatastro: null,
 
 			}
 		},
@@ -119,6 +122,7 @@
 				this.getTotalInformativos();
 				for (let i = 0; i < this.usuario.solicitudes.length; i++) {
 					this.idFirmado.push(this.usuario.solicitudes[i].id);
+					this.errorRecordCatastro = null;
 					for (let indSolicitud = 0; indSolicitud < this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'].length; indSolicitud++) {
 						await this.getDocumentCatastro(this.usuario.solicitudes[i].info.campos['Resultados Informativo Valor Catastral'][indSolicitud], indSolicitud, i);
 					}
@@ -127,7 +131,9 @@
 					this.expedientesCatastro.push(this.expedienteConcatenado);	
 					this.expedienteConcatenado=[];
 					this.folioConcatenado=[];
-					fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+					if(this.errorRecordCatastro != null){	
+						//guardar como firmado
+							fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
 								method : 'POST',
 								body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
 							})
@@ -143,7 +149,8 @@
 								else console.log('Algo salio mal al guardar en el sistema!',  res);
 							});
 					//  ----------------------------------------------------------------------------------------
-					fetch(`${process.env.TESORERIA_HOSTNAME}/add-folios-exp`, {
+					// guardado de folios
+							fetch(`${process.env.TESORERIA_HOSTNAME}/add-folios-exp`, {
 								method : 'POST',
 								headers: {'Content-Type': 'application/json'},
 								body: JSON.stringify({ id : self.idFirmado, expedientes : this.expedientesCatastro , folios: this.folioCatastro })
@@ -155,6 +162,8 @@
 								}
 								else console.log('Algo salio mal al guardar en el sistema!',  res);
 							});
+					}
+					
 
 				}
 				this.loader = false;
@@ -391,7 +400,10 @@
 						// this.$emit('docFirmado', 1);
 						// this.$emit('urlFirmado', self.urlFirmado);
 				})
-				.catch( error => console.log(error));
+				.catch( error => {
+					console.log(error)
+					this.errorRecordCatastro = error;
+					});
 			},
 			getTotalInformativos(){
 				for (let i = 0; i < this.usuario.solicitudes.length ; i++) {
