@@ -61,9 +61,14 @@ Vue.component("checkbox-component" , () => import( /* webpackChunkName: "js/comp
 Vue.component("expediente-excel-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/expediente-excel-component" */ './components/tiposElementos/ExpedienteExcelComponent.vue' ));
 Vue.component("file-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/file-component" */ './components/tiposElementos/FileComponent.vue' ));
 Vue.component("results-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ResultsComponent.vue' ));
-Vue.component("firma-electronica-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/FirmaElectronicaComponent.vue' ));
-Vue.component("modal-document-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ModalDocumentComponent.vue' ));
-Vue.component("card-porfile-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/generales/CardPorfileComponent.vue' ));
+Vue.component("firma-electronica-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/firma-electronica-component-component" */ './components/tiposElementos/FirmaElectronicaComponent.vue' ));
+Vue.component("modal-document-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/modal-document-component-component" */ './components/tiposElementos/ModalDocumentComponent.vue' ));
+Vue.component("card-porfile-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/card-porfile-component-component" */ './components/generales/CardPorfileComponent.vue' ));
+Vue.component("vue-pdf-component" , () => {
+    require ('./components/LaravelHack.vue');
+    return import ( /* webpackChunkName: "js/components/tiposElementos/vue-pdf-component-component" */ './components/tiposElementos/VuePdfcomponent.vue' )
+});
+Vue.component("aux-firmado-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/aux-firmado-component-component" */ './components/AuxFirmadoComponent.vue' ));
 
 Vue.component("btn-guardar-tramite-parent" , () => import( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-parent" */ './components/generales/BtnGuardarTramiteParent.vue' ));
 
