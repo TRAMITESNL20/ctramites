@@ -1,6 +1,5 @@
 <template>
   <div>
-    hola
     <div class="w-100" v-for="(solicitud, index) in urlSourceListo" >
       <div class="card list-item card-custom mb-5 col-lg-12" style="background-color: rgb(217, 222, 226) !important" >
         <div class="d-flex mobile-lista-multiple align-items-center mb-3">
@@ -99,7 +98,6 @@ export default {
     },
     mounted(){
         $('[data-toggle=tooltip]').tooltip()
-        console.log('mounted');
     }
 }
 </script>
