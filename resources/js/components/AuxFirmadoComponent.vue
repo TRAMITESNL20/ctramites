@@ -39,6 +39,7 @@ export default {
         this.tramitesdoc.map((solicitud, index) => {
             solicitud.required_docs == 0 ? this.docPendientes ++ : '' ; 
         });
+        console.log( this.tramitesdoc.length > 0 && this.docFirmado != 1 && this.docPendientes != 0);
     },
     data(){
         return {
