@@ -52,6 +52,7 @@ export default {
     methods: {
         urlFirmadoListoMethod(urlArray) {
            this.urlFirmadoListo = urlArray; 
+           console.log('urlFirmadoListo', this.urlFirmadoListo);
         },
         // urlFirmadoPendienteMethod(urlArray) {
         //    this.urlFirmadoPendiente = urlArray;
