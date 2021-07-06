@@ -45,7 +45,7 @@
 												</div>
 											</div>
 			 								<div v-for="(campo, j) in agrupacion.campos" :key="j" class="col-md-6 col-sm-6 col-xs-6"
-			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes', 'valuador', 'table'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
+			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file','rangoLotes' ,'results', 'question','enajenante','expedientes', 'valuador', 'table'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
 			 									<input-currency-component 
 			 										v-if="campo.tipo === 'input' && JSON.parse(campo.caracteristicas).formato === 'moneda'" 
 													:campo="campo" 
@@ -209,6 +209,10 @@
 													:estadoFormulario="comprobarEstadoFormularioCount"
 													@updateForm="updateForm">
 			 									</valuador-component>
+												<rango-lotes-component v-if="campo.tipo === 'rangoLotes' "
+													:cantidadManzanas="cantidadManzanas"
+												>
+												</rango-lotes-component>
 			 								</div>
 		 									<div v-if="agrupacion.tieneSeccionDocumentos" class="col-md-12 col-lg-12">
 		 										<div class="text-left">
@@ -270,6 +274,7 @@
 				infoExtra : {},
 				tipo_costo_obj: { tipo_costo:0 ,tipoCostoRadio:'millar',hojaInput:'', val_tipo_costo:'' },
 				tieneSeccionDocumentos: false,
+				cantidadManzanas: 0,
 				divisa:this.$store.state.DEFAULT_DIVISA
 			}
         },
@@ -650,11 +655,22 @@
 						unico = this.campos.map((ele, ind) => ele.nombre === 'Manzana Unica' ? ele.valor : null).filter(ele => ele).toString()
 						if(unico === 'true'){
 							this.campos[final].valor = this.campos[inicial].valor || 0;
+							this.cantidadManzanas = 1;
+
 						}else{
 							this.campos[final].valor = '';
 						}
 						this.cambioModelo();
 					break;
+					case 'Manzana Final' :
+						final = this.campos.map((ele, ind) => ele.nombre === 'Manzana Final' ? ele.valor : null).filter(ele => ele).toString()
+						inicial = this.campos.map((ele, ind) => ele.nombre === 'Manzana Inicial' ? ele.valor : null).filter(ele => ele).toString()
+						unico = this.campos.map((ele, ind) => ele.nombre === 'Manzana Unica' ? ele.valor : null).filter(ele => ele).toString()
+						console.log(inicial );
+						console.log(final );
+						console.log(final - inicial +1 );
+						this.cantidadManzanas = (final - inicial + 1);
+						break;
 
 					case 'Lote Unico':
 					case 'Lote Inicial':

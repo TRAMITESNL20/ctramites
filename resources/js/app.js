@@ -69,6 +69,7 @@ Vue.component("modal-document-component" , () => import( /* webpackChunkName: "j
 Vue.component("card-porfile-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/generales/CardPorfileComponent.vue' ));
 Vue.component("vue-pdf-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/VuePdfcomponent.vue' ));
 Vue.component("aux-firmado-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/AuxFirmadoComponent.vue' ));
+Vue.component("rango-lotes-component" , () => import ( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/RangoLotesComponent.vue' ));
 
 Vue.component("btn-guardar-tramite-parent" , () => import( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-parent" */ './components/generales/BtnGuardarTramiteParent.vue' ));
 
