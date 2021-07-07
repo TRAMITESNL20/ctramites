@@ -21,6 +21,7 @@ use App\Repositories\PortalcostotramitesRepositoryEloquent;
 use App\Repositories\PortalsubsidiotramitesRepositoryEloquent;
 use App\Repositories\PortalumaRepositoryEloquent;
 use Illuminate\Support\Facades\Http;
+use App\Repositories\PortalsolicitudesticketRepositoryEloquent;
 
 class TramitesController extends Controller
 {
@@ -33,6 +34,7 @@ class TramitesController extends Controller
     protected $uma;
     protected $partidas;
     protected $group;
+    protected $ticket;
 
     public function __construct(
       TramitedetalleRepositoryEloquent $tramites,
@@ -43,7 +45,8 @@ class TramitesController extends Controller
       PortalsubsidiotramitesRepositoryEloquent $subsidiotramites,
       PortalumaRepositoryEloquent $uma,
       EgobiernopartidasRepositoryEloquent $partidas,
-      PortalcamposagrupacionesRepositoryEloquent $group
+      PortalcamposagrupacionesRepositoryEloquent $group,
+      PortalsolicitudesticketRepositoryEloquent $ticket
       )
       {
         parent::__construct();
@@ -57,6 +60,7 @@ class TramitesController extends Controller
         $this->uma = $uma;
         $this->partidas = $partidas;
         $this->group = $group;
+        $this->ticket = $ticket;
       }
 
     public function index ($type, $id) {
@@ -130,6 +134,17 @@ class TramitesController extends Controller
     */
     public function getcostoTramite(Request $request) {
       $tramite_id = $request->tramite_id;
+      $id_ticket = $request->id_ticket;
+
+      //si existe un ticket id se revisa el valor anterior del costo
+      if (!empty($id_ticket)){
+        $solicitudes = $this->ticket->findWhere(["id" =>$id_ticket])->first();
+
+        $info = json_decode($solicitudes->info);
+
+        $costoAnterior = $info->costo_final;
+      }
+
       //$tramite_id = 100;
       $dt = date("Y");
 
@@ -138,7 +153,7 @@ class TramitesController extends Controller
       //$valor_catastral = 150050;
       //$valor_operacion = 178960;
       $valor_operacion = $request->valor_operacion;
-
+      $cantidad = $request->cantidad;
       //Se hace la conversión en caso de mandar un valor de operacion y catastral en otra divisa
       if(!empty($request->divisa)){
         $param = $request->divisa;
@@ -206,11 +221,19 @@ class TramitesController extends Controller
         }
       }
 
+      if($request->tipoOperacion == "I"){
+        $costoX = "I";
+      }elseif($request->tipoOperacion == "A"){
+        $costoX = "A";
+      }
+
       //Se calcula el costo del tramite
       try{
         if ($tipo == "F"){
           if($tipo_costo_fijo == "P"){ // costo fijo en pesos
             $costo = $costo_fijo;
+          }elseif($tipo_costo_fijo == "T"){ //costo para cuando es fijo por cantidad de producto
+            $costo = $costo_fijo * $cantidad;
           }
           else{ //C Para cuando el costo fijo es calculado en cuotas
             $costo = $actual_uma * $costo_fijo;
@@ -225,6 +248,7 @@ class TramitesController extends Controller
         }
         elseif ($tipo == "V") { //Costo variable
           if($costoX == "L") { //costo x lote
+            //el redondeo pasa al inicio del tramite
             $costo_real = $actual_uma * $valor; //Se calcula el costo x 1 lote
             $primer_costo = $this->redondeo($costo_real);  //Se redondea el costo x lote
 
@@ -233,15 +257,15 @@ class TramitesController extends Controller
               $costoxlote = $primer_costo * $lotes;
 
               $costoMinimo = $min * $actual_uma;
-              $costoMin = $this->redondeo($costoMinimo);
+              //$costoMin = $this->redondeo($costoMinimo);
 
               $costoMaximo = $max * $actual_uma;
-              $costoMax = $this->redondeo($costoMaximo);
+              //$costoMax = $this->redondeo($costoMaximo);
 
               if($costoxlote < $costoMinimo){
-                $costo_final = $costoMin;
+                $costo_final = $costoMinimo;
               }elseif($costoxlote > $costoMaximo){
-                $costo_final = $costoMax;
+                $costo_final = $costoMaximo;
               }else{
                 $costo_final = $costoxlote;
               }
@@ -263,25 +287,25 @@ class TramitesController extends Controller
               $costo_real = $actual_uma;
             }
 
-            $primer_costo = $this->redondeo($costo_real);
+            //$primer_costo = $this->redondeo($costo_real);
 
             if (!empty($hojas)){
-              $costoxhoja = $primer_costo * $hojas;
+              $costoxhoja = $costo_real * $hojas;
 
               $costoMinimo = $min * $actual_uma;
-              $costoMin = $this->redondeo($costoMinimo);
+              //$costoMin = $this->redondeo($costoMinimo);
 
               $costoMaximo = $max * $actual_uma;
-              $costoMax = $this->redondeo($costoMaximo);
+              //$costoMax = $this->redondeo($costoMaximo);
               if($costoxhoja < $costoMinimo){
-                $costo_final = $costoMin;
-              }elseif($costoxhoja > $costoMax){
-                $costo_final = $costoMax;
+                $costo_final = $this->redondeo($costoMinimo);
+              }elseif($costoxhoja > $costoMaximo){
+                $costo_final = $this->redondeo($costoMaximo);
               }else{
                 $costo_final = $this->redondeo($costoxhoja);
               }
             }else{
-              $costo_final = $primer_costo;
+              $costo_final = $this->redondeo($costo_real);
             }
             //Se hace calculo del costo por porcentaje en caso de tener algun porcentaje asignado
             if($porcentaje != 0 || $porcentaje != null){
@@ -289,6 +313,12 @@ class TramitesController extends Controller
             }
             //Se aplica redondeo al resultado final
             $costo_final = $this->redondeo($costo_final);
+          }
+          elseif($costoX == "A"){ //Calculamos costo Anual
+            $costo_final = $var_valor;
+          }
+          elseif($costoX == "I"){ // calculamos costo Indefinido
+            $costo_final = $valor;
           }
           else{ //costo x millar
             //Se calculan los valores minimos y máximos del trámite
@@ -435,14 +465,29 @@ class TramitesController extends Controller
           }
         }
 
+        if (!empty($costoAnterior)){
+          if($costoAnterior < $costo_final){
+            $dif = $costo_final - $costoAnterior;
+          }else{
+            $dif = $costoAnterior - $costo_final;
 
-        //Se devuelve el arreglo con el valor del costo
-        $detalle []= array(
-          'tramite_id' => $tramite_id,
-          'costo_final' => $costo_final,
-          'descuentos' => $descuentos,
-        );
+          }
+          $detalle []= array(
+            'tramite_id' => $tramite_id,
+            'costo_final' => $dif,
+            'descuentos' => $descuentos,
+            'costo_anterior' => $costoAnterior,
+            'pago_total' => $costo_final,
+          );
 
+        }else{
+          //Se devuelve el arreglo con el valor del costo
+          $detalle []= array(
+            'tramite_id' => $tramite_id,
+            'costo_final' => $costo_final,
+            'descuentos' => $descuentos,
+          );
+        }
         return json_encode($detalle);
 
 
@@ -613,7 +658,7 @@ class TramitesController extends Controller
         if( isset( $json['response']["datos"]["url_recibo"]) ){
           $url_recibo = $json['response']["datos"]["url_recibo"];
         }
-        
+
         $responseCambioEstatus = Http::post( $urlTesoreria . '/solicitudes-update-status-tramite', [
             'id_transaccion_motor' => $id_transaccion_motor,
             'status' => $statusChange,

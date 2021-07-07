@@ -1,21 +1,21 @@
 <template>
-  <div class=" fv-plugins-icon-container" v-if="visible">
+  <div class=" fv-plugins-icon-container">
     <label>
-        {{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}
+        {{ campo.nombre }}  {{ requerido == 'true' || requerido == true ? '*' : '' }}
     </label>
     <span class="currencyinput">
-      <input
+      <b-form-input
         :name="campo.nombre"
         type="text"
         class="form-control"
         style="background-color: #e5f2f5 !important"
-        :placeholder="[[campo.nombre]]"
-        :id="[[campo.campo_id]]"
+        :placeholder="campo.nombre"
+        :id="campo.campo_id+''"
         v-model="campo.valor"
         @change="validar"
         @focus="validar"
-        :disabled="campo.disabled"
-      />
+        :disabled="campo.disabled">
+      </b-form-input>
     </span>
     <small  v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
           <p  class="form-text text-danger">
@@ -27,36 +27,55 @@
 
 <script>
   import Vue from 'vue';
-    export default {
-      
-      props: ['campo', 'estadoFormulario', 'showMensajes'],
-      data() {
-        return {
-            visible:true
-        }
-      },
+  export default {
+    computed:{
+        requerido(){
+            return this.getCaracteristicas().required
+        },
+    },
+    props: ['campo', 'estadoFormulario', 'showMensajes','divisa'],
+
       created() {
         this.validar();
       },
-      mounted(){
-      },
-      methods: {
-        formatear(){
-          let caracteristicas= this.getCaracteristicas();
-          if( caracteristicas.formato == "moneda" && this.campo.valido){
-            let style = this.$store.state.DEFAULT_DIVISA.STYLE;
-            let currency = this.$store.state.DEFAULT_DIVISA.CURRENCY;
-            let number =  this.campo.valor ? Vue.filter('toNumber')( this.campo.valor ) : '';
-            this.campo.valor = Vue.filter('toCurrency')( number, style, currency  );
-          }
-          if(caracteristicas.formato == 'manzana'){
-           this.campo.valor =  this.padLeft(this.campo.valor, 3);  
-          }
-          this.$forceUpdate();
+      watch: {
+        divisa:  {
+            handler: function (val, oldVal) {
+                this.validar();
+            },
+            deep: true        
         },
 
+      },
+      mounted(){
+        this.modelFormat();
+        let self = this;
 
-
+        this.$root.$on('tipo_costo_obj_change',  function (data) {
+          let caracteristicas= self.getCaracteristicas();
+          if( self.campo.nombre == self.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION){
+            self.campo.valido = false;
+            caracteristicas.required = !data.activo;
+            self.visible = !data.activo;
+            self.campo.caracteristicas = JSON.stringify(caracteristicas);
+            this.$forceUpdate();
+            self.validar();
+          }
+        });
+      },
+      methods: {
+        modelFormat(value){
+          let style = this.divisa.STYLE;
+          let currency = this.divisa.CURRENCY;
+          if(this.campo.valor){
+            let number =  Vue.filter('toNumber')( this.campo.valor + "" );
+            if( this.campo.nombre == this.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION){
+              this.campo.valor =  Vue.filter('toCurrency')( number, style, currency  );
+            } else {
+              this.campo.valor = Vue.filter('toCurrency')( number, 'currency', 'MXN'); 
+            }
+          }
+        },
         getCaracteristicas(){
           let caracteristicas = {};
           try {
@@ -72,17 +91,12 @@
           let requeridoValido = true;
           let caracteristicas = {};
           var caracteristicasStr = this.campo.caracteristicas;
-          this.campo.mensajes = [];
-
-          if(a && a.target && a.target.name === this.campo.nombre)
-            this.campo.valor = a.target.value;
-            
+          this.campo.mensajes = [];            
           try {
             caracteristicas = this.getCaracteristicas();
           }catch(err){
             console.log(err);
           }
-
           if( this.campo.valor && caracteristicas.expreg ){
             var regex = new RegExp(caracteristicas.expreg, "i");
             exregValida = regex.test(this.campo.valor)
@@ -95,7 +109,6 @@
               this.campo.mensajes.push( mensaje );
             }
           } 
-          // console.log(caracteristicas.hasOwnProperty('required') && caracteristicas.required === 'true');
           if( caracteristicas.hasOwnProperty('required') &&  caracteristicas.required === 'true' || (typeof  caracteristicas.required == 'boolean' && caracteristicas.required)  ) {
             requeridoValido =  !!this.campo.valor && (this.campo.valor+"").length > 0;
             if( !requeridoValido ){
@@ -106,17 +119,15 @@
               this.campo.mensajes.push( mensaje );
             }
           }
+
           this.campo.valido =  requeridoValido && exregValida;
-          this.formatear();
+          if(this.campo.valido){
+            this.modelFormat()
+          }
           this.$emit('updateForm', this.campo);
           
         },
 
-        padLeft(value, length) {
-            if(!value) return value;
-            return (value.toString().length < length) ? this.padLeft("0" + value, length) : 
-            value;
-        }
       }
     }
 </script>

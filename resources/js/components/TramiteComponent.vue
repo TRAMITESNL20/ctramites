@@ -44,7 +44,7 @@
                             <a v-on:click="goTo(tramite.recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.recibo_referencia && [5].includes(type) && !group">VER REFERENCIA</a>
                             <a v-on:click="goTo(tramite.doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.doc_firmado && [2,3].includes(type)">VER DECLARACIÓN</a>
                             <!-- <modal-document-component  :tramitesdoc="tramitesdoc" v-if="tramite.required_docs === 0"   ></modal-document-component> -->
-                            <a v-on:click="goTo(tramite.tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.tramites && tramite.tramites[0] && tramite.tramites[0].url_recibo && [2,3].includes(type) && !group">VER RECIBO DE PAGO</a>
+                            <a v-on:click="goTo(tramite.tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.tramites && tramite.tramites[0] && tramite.tramites[0].url_recibo && [1,2,3].includes(type) && !group">VER RECIBO DE PAGO</a>
                             <div class="btn-group" v-if="tramite.info && !cartComponent && !group && ![7,8].includes(tramite.status)">
                                 <a v-on:click="goTo(tramite)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="files.length == 0 ? 'rounded' : ''">
                                     <span class="text-white">VER DETALLES</span>
@@ -87,8 +87,9 @@ import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue'
                 tramitesdoc: [this.tramite]
             }
         },
-        props: ['tramite', 'type', 'group', 'cartComponent'],
+        props: ['tramite', 'type', 'group', 'cartComponent', 'different'],
         mounted() {
+            console.log(this.different);
             this.files = [];
             if(this.tramite.info && typeof this.tramite.info === 'string')
                 this.tramite.info = JSON.parse(this.tramite.info)

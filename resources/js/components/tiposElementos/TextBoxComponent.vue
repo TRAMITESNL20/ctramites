@@ -5,7 +5,7 @@
       :id="[[campo.idElemento ? campo.idElemento : campo.campo_id]]"
       :name="[[campo.campo_id]]" 
       class="form-control  form-control-lg " style="background-color: #e5f2f5 !important" v-model="campo.valor"
-      @change="validar" ></textarea>
+      @change="validar" :disabled="campo.disabled"></textarea>
       <small   v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
           <p  class="form-text text-danger">
             {{ campo.mensajes[0].mensajeStr }}

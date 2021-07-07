@@ -15,10 +15,10 @@
                         <div>
                             <strong>{{datosPersonales.nombre }} {{ datosPersonales.apPat }} {{ datosPersonales.apMat }}</strong>
                         </div>
-                        <div class="font-weight-10">
+                        <div class="font-weight-10" v-if="datosPersonales.rfc">
                            <strong>RFC:</strong> <i class="ni location_pin mr-2"></i>{{ datosPersonales.rfc }}
                         </div>
-                        <div class="font-weight-10">
+                        <div class="font-weight-10" v-if="datosPersonales.curp">
                           <strong>CURP:</strong> <i class="ni business_briefcase-24 mr-2"></i>{{ datosPersonales.curp }}
                         </div>                        
                     </div>

@@ -9,7 +9,7 @@
 			<form id="formularioDinamico">
 				<div class="panel panel-default" >
  					<div class="panel-heading">
- 						<div class="row">			
+ 						<div class="row">	
 							<v-expansion-panels accordion multiple hover style="z-index: inherit" v-model="panel">
 							    <v-expansion-panel v-for="(agrupacion, i) in agrupaciones" :key="i" close :disabled=" disabled.includes(i) ">
 							      	<v-expansion-panel-header >
@@ -45,14 +45,27 @@
 												</div>
 											</div>
 			 								<div v-for="(campo, j) in agrupacion.campos" :key="j" class="col-md-6 col-sm-6 col-xs-6"
-			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes', 'valuador'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
+			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes', 'valuador', 'table'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
+			 									<input-currency-component 
+			 										v-if="campo.tipo === 'input' && JSON.parse(campo.caracteristicas).formato === 'moneda'" 
+													:campo="campo" 
+													:showMensajes="showMensajes" 
+													:estadoFormulario="comprobarEstadoFormularioCount"
+													@updateForm="updateForm" :divisa="divisa">
+			 										
+			 									</input-currency-component>
 												<input-component
-													v-if="campo.tipo === 'input'" 
+													v-else-if="campo.tipo === 'input'" 
 													:campo="campo" 
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
 													@updateForm="updateForm">
-												</input-component>	
+												</input-component>
+												<divisa-component v-else-if="campo.tipo === 'select' && campo.nombre == 'Cambio de divisas'" 
+													:campo="campo" 
+													:showMensajes="showMensajes" 
+													:estadoFormulario="comprobarEstadoFormularioCount"
+													@updateForm="updateForm"></divisa-component>	
 												<select-component
 													v-else-if="campo.tipo === 'select' || campo.tipo === 'multiple'" 
 													:campo="campo" 
@@ -61,6 +74,7 @@
 													@updateForm="updateForm"
 													v-on:estadoSelected="estadoSelected($event)"
 													:estado="estado"
+													:distrito="distrito"
 													>
 												</select-component>
 												<option-component 
@@ -105,6 +119,7 @@
 													:loading="loading"
 													:infoExtra="infoExtra"
 													v-on:expedienteSeleccionado="updateExpedienteSeleccionado($event)"
+													:response="response"
 													>
 												</results-component>
 												<expediente-excel-component  
@@ -115,6 +130,7 @@
 													@updateForm="updateForm" :files="files"
 													@validarFormulario="validarFormulario"
 													@processGrupal="processGrupal"
+													:disabled="disabled"
 													>
 												</expediente-excel-component>
 												<enajenantes-component v-else-if="campo.tipo == 'enajenante'" 
@@ -124,15 +140,12 @@
 													@updateForm="updateForm" :configCostos="configCostos">
 														
 													</enajenantes-component>
-												<table-component 
-													:propietario="JSON.parse(campo.caracteristicas).propietario"
+												<aviso-enajenacion-component
 													:campo="campo"
 													:expediente="expediente"
-													v-on:porcentaje="updatePorcentaje($event)"
-													:porcentajeFinal="progress"
 													@updateForm="updateForm"
 													v-else-if="campo.tipo == 'table'">
-												</table-component>
+												</aviso-enajenacion-component>
 												<fecha-component v-if="campo.tipo === 'date'" 
 													:campo="campo" 
 													:showMensajes="showMensajes" 
@@ -145,7 +158,6 @@
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
 													@updateForm="updateForm" :usuario="usuario"></listado-expedientes-5-i-s-r>
-
 												<div v-else-if="campo.tipo == 'question'">
 													¿Consigna valor?
 													<div class="col-md-12 col-lg-12">
@@ -153,7 +165,7 @@
 														    <div class="custom-control custom-radio custom-control-inline">
 														      	<input type="radio" value="millar"  name="radioInline" class="custom-control-input" id="millar1" v-model="tipo_costo_obj.tipoCostoRadio" key="millar" @change="cambioModelo">
 														      	<label class="custom-control-label" for="millar1">
-														      		Si (millar)	
+														      		Si<!-- (millar)-->	
 														      	</label>
 														    </div>
 
@@ -162,14 +174,14 @@
 														      	<input type="radio" value="hoja" name="radioInline" class="custom-control-input" id="hoja1" v-model="tipo_costo_obj.tipoCostoRadio" key="millar" @change="cambioModelo">
 
 														      	<label class="custom-control-label" for="hoja1">
-														      		No (hoja)
+														      		No <!-- (hoja)-->	
 														      	</label>
 														    </div>
 														    <div class="custom-control custom-radio custom-control-inline" v-if="tipo_costo_obj.val_tipo_costo === 'L'">
 														      	<input type="radio" value="lote" name="radioInline" class="custom-control-input" id="lote1" v-model="tipo_costo_obj.tipoCostoRadio" key="lote" @change="cambioModelo">
 
 														      	<label class="custom-control-label" for="lote1">
-														      		No (lote)
+														      		No <!--(lote)-->	
 														      	</label>
 														    </div>
 														    <div class=" fv-plugins-icon-container" v-if="tipo_costo_obj.tipoCostoRadio=== 'hoja'"  >
@@ -218,6 +230,8 @@
     </div>
 </template>
 <script>
+	import Vue from 'vue';
+	import divisaCtrl from '../services/DivisasCtrl.js';
     export default {
         computed:{
             configCostos(){
@@ -227,7 +241,7 @@
                 	tipoPersona:this.tipoPersona,
                 	declararEn0:this.declararEn0
                 };
-            }
+            },
         },
         props: ['tramite','formularioValido', 'comprobarEstadoFormularioCount', 'infoGuardada', 'declararEn0', 'notary', 'usuario'],
         data() {
@@ -238,6 +252,7 @@
 				campos: [], 
 				agrupaciones:[], 
 				estado: {clave:19, nombre: "NUEVO LEÓN"},
+				distrito: {clave:0, nombre: "Distrito 0"},
                 mostrar:false,
                 errors: {},
                 showMensajes:false,
@@ -255,7 +270,8 @@
 				infoExtra : {},
 				tipo_costo_obj: { tipo_costo:0 ,tipoCostoRadio:'millar',hojaInput:'', val_tipo_costo:'' },
 				tieneSeccionDocumentos: false,
-            }
+				divisa:this.$store.state.DEFAULT_DIVISA
+			}
         },
         created() {
 			if (localStorage.getItem('datosFormulario')) {
@@ -288,7 +304,6 @@
 	        } else {
 				this.obtenerCampos();
 			}
-
         },
         methods: {
 			updatePorcentaje(porcentaje){	
@@ -305,34 +320,24 @@
         		this.estado = estado;
         	},
 
+			distritoSelected(distrito){
+				this.distrito = distrito;
+			},
+
+        	gestionarCambioDistrito(distrito){
+        		this.distrito = distrito;
+        	},
+
         	async updateForm(campo){
 				const tramite = localStorage.getItem('tramite') && JSON.parse(localStorage.getItem('tramite')) ;
+				if (tramite && tramite.id_tramite === process.env.TRAMITE_AVISO) {
+				
+					if(campo.tipo == 'results' && campo.valido){
+						this.expediente = campo.valor
+        				this.updateExpedienteSeleccionado(this.expediente);
+        			}
 
-				if (tramite && tramite.tramite === 'AVISO DE ENAJENACIÓN') {
-					this.fields = ['Expediente Catastral' ,	'Fólio', 	'Días Restantes', 	'Fecha pago informativo',	'Capturista',	'Accion'];
-						//  this.rows = [{expediente : 7001002010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001002011 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001001010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'}]
-					var self = this;
-						let url = process.env.TESORERIA_HOSTNAME + "/valor-catastral-notaria/6" // + self.notary;  
-						$.ajax({
-							type: "GET",
-							dataType: 'json', 
-							url,
-							success:function(data){
-								let rows = [];
-								for (let index = 0; index < data.length; index++) {
-									let row = [];
-									data[index]
-									self.rows.push(data[index].campos) ; 
-									// console.log(self.rows);
-								}
-								self.rows = data;
-							},
-							error:function(error){
-								console.log('error');
-							},
-							complete:function(){
-							}
-						});
+					
 				}
 
 				const datosFormulario = localStorage.getItem('datosFormulario') && JSON.parse(localStorage.getItem('datosFormulario')) ;
@@ -383,6 +388,8 @@
 							this.panel = [0, 3];
 						break;
 					}
+
+					this.processCampo(campo);
 				}
 
         		if(campo.tipo == 'file' && campo.valido){
@@ -399,6 +406,12 @@
         		if(campo.nombre == 'Estado' && campo.valido){
         			this.gestionarCambioEstado(campo.valor);
         		}
+
+        		if(campo.nombre == 'Distrito' && campo.valido){
+        			this.gestionarCambioDistrito(campo.valor);
+        		}
+
+        		this.listenCampos( campo );				
 
         		this.cambioModelo();
         	},
@@ -426,9 +439,12 @@
                 camposValidables.forEach( (campo, indice) => {
 					formularioValido = formularioValido && !!campo.valido;
                 });
-                if(this.tipo_costo_obj && (this.tipo_costo_obj.tipoCostoRadio == 'hoja' || this.tipo_costo_obj.tipoCostoRadio == 'lote ' )){
-                	formularioValido = formularioValido && !!this.tipo_costo_obj.hojaInput;
+
+                if(!!this.tipo_costo_obj && (this.tipo_costo_obj.tipoCostoRadio == 'hoja' || this.tipo_costo_obj.tipoCostoRadio == 'lote' )){
+                	let hojaInputValid = !!this.tipo_costo_obj.hojaInput;
+                	formularioValido = formularioValido && hojaInputValid;
 				}
+
                 this.$emit('updatingScore', formularioValido);
                 return formularioValido;
 		    },
@@ -448,8 +464,11 @@
 					if( this.infoGuardada && this.infoGuardada.campos ){
 						this.tipoPersona = this.infoGuardada.tipoPersona;
 						this.tipo_costo_obj = this.infoGuardada.tipo_costo_obj;
+
+						this.campos = this.infoGuardada.camposConfigurados;
+
 						this.campos.forEach( (campo, index) =>{	
-							campo.valor = this.infoGuardada.campos[ campo.campo_id ];
+							//campo.valor = this.infoGuardada.campos[ campo.campo_id ];
 							if( campo.tipo == 'file' && this.infoGuardada.archivosGuardados){
 								let infoArchivoGuardado = this.infoGuardada.archivosGuardados.find( archivo => archivo.mensaje == campo.nombre );
 								campo.archivoGuardado = true;
@@ -457,7 +476,7 @@
 									campo.nombreArchivoGuardado = infoArchivoGuardado.attach;
 								}
 							}
-							if (campo.tipo == 'table' || campo.tipo == 'results') {
+							if (campo.tipo == 'results') {
 								this.campos[index].valido = true;
 							}
 
@@ -547,7 +566,7 @@
 
 				if(empty.length == 0){
 					this.panel = [0, 1, 4];
-					const exp = `${all['Municipio'].valor.clave.toString()}${all['Region'].valor}${all['Manzana'].valor}${all['Lote'].valor}`;
+					const exp = `${all['Municipio'].valor && all['Municipio'].valor.clave.toString()}${all['Region'] && all['Region'].valor}${all['Manzana'] && all['Manzana'].valor}${all['Lote'] && all['Lote'].valor}`;
 					const url = `${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/${exp}`;
 					if(this.ajax !== url){
 						this.ajax = url;
@@ -605,7 +624,7 @@
 							listItems : infoExtra
 						};
 
-						// this.rows = rows;
+						this.rows = rows;
 						this.loading = false;
 					}
 				}else{
@@ -672,6 +691,7 @@
 			},
 			async processGrupal({response, exp}){
 				let rows = [];
+				if(!response.data.expediente_catastral) response.data.expediente_catastral = exp;
 				this.response.push(response.data);
 				if(response.data.resultado) rows = [exp, response.data.resultado]
 				else if(response.data.datos_catastrales){
@@ -686,21 +706,21 @@
 				}else{
 					rows = [exp, 'Error al consultar WS. Por favor, intenta de nuevo.']
 				}
-				
-				const noValido = this.response.filter(ele => ele.cta_valida === '0');
+
+				const noValido = this.response.filter(ele => ele.bloqueado && ele.bloqueado !== '0');
 				const bloqueados = this.response.filter(ele => ele.bloqueado && ele.bloqueado !== '0');
-				const fallidos = this.response.filter(ele => ele.resultado === 'NO ENCONTRADO');
-				const autorizados = this.response.filter(ele => ele.datos_propietarios);
+				const fallidos = this.response.filter(ele => ele.resultado && ele.resultado === 'NO ENCONTRADO');
+				const autorizados = this.response.filter(ele => ele.bloqueado && ele.bloqueado === '0');
 
 				const infoExtra = [
 					{
 						label : 'Registros Consultados',
 						value : this.response.length
 					},
-					{
-						label : 'No Validos',
-						value : noValido ? noValido.length : 0
-					},
+					// {
+					// 	label : 'No Validos',
+					// 	value : noValido ? noValido.length : 0
+					// },
 					{
 						label : 'Bloqueados',
 						value : bloqueados ? bloqueados.length : 0
@@ -723,10 +743,44 @@
 				this.rows.push(rows);
 				this.loading = false;
 				this.panel = [0, 3, 4];
+				this.rows = this.rows.sort((a,b) => a[0]-b[0]);
+			},
+
+			listenCampos(campo){
+				if(campo.nombre == this.$const.NOMBRES_CAMPOS.CAMPO_DIVISAS && campo.valido){
+					let divisaValue = divisaCtrl.getSymbol(campo.valor); 
+	        		this.$store.commit('change', divisaValue);
+	        		this.divisa = this.$store.state.DEFAULT_DIVISA
+	        	}
+			},
+			processCampo (campo) {
+				const disabled = this.agrupaciones.map((agrupacion, ind) => this.disabled.includes(ind) ? agrupacion.agrupacion_id : null).filter(ele => ele);
+				const actived = this.agrupaciones.map((agrupacion, ind) => this.panel.includes(ind) ? agrupacion.agrupacion_id : null).filter(ele => ele);
+
+				this.campos.map(campo => {
+					if(disabled.find(ele => ele === campo.agrupacion_id)) campo.valido = true;
+					if(actived.find(ele => ele === campo.agrupacion_id)){
+						let object = false;
+						if(typeof campo.caracteristicas == 'object') object = true;
+						if(typeof campo.caracteristicas == 'string') campo.caracteristicas = JSON.parse(campo.caracteristicas);
+						campo.caracteristicas.required = "true";
+						if(!object) campo.caracteristicas = JSON.stringify(campo.caracteristicas);
+					}
+				})
 			}
-		 },
-		 mounted(){
-		 }
+		},
+		mounted(){
+		},
+
+		watch: {
+			tipo_costo_obj:  {
+		        handler: function (val, oldVal) {
+		         	this.$root.$emit('tipo_costo_obj_change', { activo: val.tipoCostoRadio != 'millar' });
+		        },
+		        deep: true				
+			},
+
+		},
 	}
 
 

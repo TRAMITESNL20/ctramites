@@ -27,7 +27,7 @@
                                                     </div> -->
 
                                                     <div class="pt-10 "  v-for="idTramite in {{$idTramites}}">
-                                                        <firma-electronica-component :usuario="idTramite"   :user="{{$user}}" ></firma-electronica-component>
+                                                        <firma-electronica-component :usuario="idTramite"  :tramitesdoc="{{$tramitesDoc}}"  :user="{{$user}}" ></firma-electronica-component>
                                                     </div>
 
                                                 </div>

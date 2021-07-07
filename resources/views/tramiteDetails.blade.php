@@ -32,7 +32,7 @@
                 	<div class="card-body">
                 		<div class="row align-items-center">
                 			<div class="col">
-		                		<h3 class="m-0 text-uppercase">{{ $tramite->titulo }} {!! $tramite->tramite_id == getenv('TRAMITE_5_ISR') ? " - {$tramite->info->tipoTramite}" : "" !!}</h3>
+		                		<h3 class="m-0 text-uppercase">{{ $tramite->nombre_servicio }} {!! $tramite->tramite_id == getenv('TRAMITE_5_ISR') ? " - {$tramite->info->tipoTramite}" : "" !!}</h3>
 		                		<p class="text-muted m-0">{{ $tramite->clave }}</p>
                 			</div>
                 			<div class="col text-right">
