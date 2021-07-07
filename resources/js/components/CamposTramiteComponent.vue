@@ -655,6 +655,7 @@
 						unico = this.campos.map((ele, ind) => ele.nombre === 'Manzana Unica' ? ele.valor : null).filter(ele => ele).toString()
 						if(unico === 'true'){
 							this.campos[final].valor = this.campos[inicial].valor || 0;
+							console.log('unico');
 							this.cantidadManzanas = 1;
 
 						}else{
@@ -666,10 +667,10 @@
 						final = this.campos.map((ele, ind) => ele.nombre === 'Manzana Final' ? ele.valor : null).filter(ele => ele).toString()
 						inicial = this.campos.map((ele, ind) => ele.nombre === 'Manzana Inicial' ? ele.valor : null).filter(ele => ele).toString()
 						unico = this.campos.map((ele, ind) => ele.nombre === 'Manzana Unica' ? ele.valor : null).filter(ele => ele).toString()
-						console.log(inicial );
-						console.log(final );
-						console.log(final - inicial +1 );
-						this.cantidadManzanas = (final - inicial + 1);
+						if(final){
+							this.cantidadManzanas = (final - inicial + 1);
+						}
+
 						break;
 
 					case 'Lote Unico':
