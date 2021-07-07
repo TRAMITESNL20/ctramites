@@ -1,14 +1,16 @@
 <?php 
 namespace App\Custom;
 
+use App\Custom\ramiteRP;
 use App\Custom\Tramite5ISR;
 use Illuminate\Support\Facades\Log;
 
 class AdminCostosTramites 
 {
 
-    public function __construct(Tramite5ISR $tramite5ISR){
+    public function __construct(Tramite5ISR $tramite5ISR, TramiteRP $tramiteRP){
 		$this->tramite5ISR = $tramite5ISR;
+        $this->tramiteRP = $tramiteRP;
     }
 
 
@@ -45,6 +47,29 @@ class AdminCostosTramites
             Log::error('No tiene Importe total');
             return false;
         }        
+    }
+
+    public function updateTramiteRP( $tramite ){
+        Log::info('Obtener costos total actual');
+        $this->tramiteRP->setTramite( $tramite );
+        $totalActual =  $this->tramiteRP->getTotalActual();
+        if(isset($totalActual)){
+            Log::info('Importe total actual:' . $totalActual );
+            Log::info('Obtener campos para calcular costo nuevo');
+            $params = $this->tramiteRP->getParamsParaCosto();
+
+            if( count($params) > 0 ){
+                Log::info('**********Datos para calcular costo**********');
+                Log::info( print_r ($params, true));
+                Log::info('Obtener costo nuevo');
+            } else {
+                Log::error('##########No hay parametros para consultar detalle');  
+                return false;
+            }            
+        } else {
+            Log::error('No tiene Importe total');
+            return false;
+        } 
     }
 
 }

@@ -60,11 +60,18 @@ class updateDetalle extends Command
                 Log::info('###############################################Tramite, ticket: ' . ($tramite->id). ' ###############################################'); 
                 if( $tramite->catalogo_id == 10 ){
                     Log::info('update 5% ISR') ;
-                    if($this->adminCostos->updateISR($tramite)){
+                    /*if($this->adminCostos->updateISR($tramite)){
+                        $totalActualizados = $totalActualizados+1;
+                    }*/
+                } else if( $tramite->catalogo_id == 71 ){
+                    //Log::info('Actualizacion no disponible Catalogo ID:' . $tramite->catalogo_id);
+                } else if( $tramite->catalogo_id == 3 ){
+                    //Log::info('Actualizacion no soportada Catalogo ID:' . $tramite->catalogo_id);
+                } else {
+                   Log::info('update Tramite RP');
+                    if($this->adminCostos->updateTramiteRP($tramite)){
                         $totalActualizados = $totalActualizados+1;
                     }
-                } else {
-                   Log::info('Actualizacion no soportada Catalogo ID:' . $tramite->catalogo_id); 
                 }
                 
                 Log::info('-----------------------------------------------FIN ticket ' . $tramite->id . '-----------------------------------------------');
