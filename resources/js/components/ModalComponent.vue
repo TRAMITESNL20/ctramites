@@ -190,7 +190,7 @@
                           Valor requerido
                         </span>
                         <span v-if="!$v.form.porcentajeCompra.between" class="form-text text-danger">
-                          El valor debe de estar en un rando de 1 a {{maxProcentajePermitido}};
+                          El valor debe de estar en un rango de 0 a {{maxProcentajePermitido}};
                         </span>
                       </b-form-invalid-feedback>
                     </b-form-group>
@@ -440,7 +440,7 @@
         rules(){
             if(this.enajenante.nacionalidad == 'mexicano' && this.enajenante.tipoPersona == 'pf'){
               return {
-                porcentajeCompra:{ required,  between: between(1, this.maxProcentajePermitido) },
+                porcentajeCompra:{ required,  between: between(0.000001, this.maxProcentajePermitido) },
                 datosPersonales:{
                   curp: { 
                     required, 
@@ -472,7 +472,7 @@
             } else if(this.enajenante.nacionalidad == 'mexicano' && this.enajenante.tipoPersona == 'pm'){
               return {
 
-                porcentajeCompra:{ required,  between: between(1, this.maxProcentajePermitido) },
+                porcentajeCompra:{ required,  between: between(0.000001, this.maxProcentajePermitido) },
                 datosPersonales:{
                   rfc: { required, rfcMoralPattern },
                   razonSocial:{ required }
