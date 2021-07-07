@@ -135,7 +135,8 @@ Vue.prototype.$const = {
         CAMPO_SUBSIDIO: "Subsidio",
         CAMPO_VALOR_CATASTRAL: "Valor catastral",
         CAMPO_VALOR_OPERACION: "Valor de operacion",
-        CAMPO_CANTIDAD_LOTES: "Cantidad de lotes"
+        CAMPO_CANTIDAD_LOTES: "Cantidad de lotes",
+        CAMPO_TIPO_OPERACION : "Tipo de Operación"
     },
     STATUS_FALTA_PAGO: 8,
     STATUS_ERROR_MUNICIPIO: 7,
