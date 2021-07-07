@@ -116,6 +116,7 @@ Vue.use(Vuetify);
 				totalPaginas:  JSON.parse(JSON.stringify(this.rows).length),
 				pageSizes: [5, 10, 20],
 				labelRadio: 'Seleccionar',
+				seleccionado: false,
 				expediente:'',
 				expedienteSeleccionado: '',
 				asd: process.env.TRAMITE_AVISO ,
@@ -217,6 +218,7 @@ Vue.use(Vuetify);
 			filteredHelper(e){ 
 				var inicio= (this.porPagina*(this.page -1));
 				var arrayFinal = []; 
+				var filteredHelper = [];
 
 
 				if(JSON.parse(this.campo.caracteristicas).formato == 'seleccion'  && !this.campo.expedienteSeleccionado ){
@@ -253,14 +255,14 @@ Vue.use(Vuetify);
 						}	
 						this.totalPaginas = Math.ceil(arrayFinal.length / this.porPagina);
 					}   
-					filteredHelper = arrayFinal.splice( inicio  , this.porPagina);
+					 filteredHelper = arrayFinal.splice( inicio  , this.porPagina);
 					
 				}else if(JSON.parse(this.campo.caracteristicas).formato == 'seleccion' && this.campo.expedienteSeleccionado ){
 					filteredHelper[0] = this.campo.expedienteSeleccionado;
 					console.log(filteredHelper);
 
 				}else{
-					filteredHelper = this.rows
+					 filteredHelper = this.rows
 					this.totalPaginas = Math.ceil(this.rows.length / this.porPagina);
 					filteredHelper.length < 0 ? 	this.registros = null : '' ;
 				}
