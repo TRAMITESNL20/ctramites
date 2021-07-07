@@ -7,6 +7,12 @@
         <b-modal size="lg" :id="idModal" ref="modal" :title="titleModal"  @ok="handleOk" @hidden="resetModal" 
             :ok-title = "btnOkLabel"   no-close-on-backdrop :ok-disabled="formaIvalid">
             <b-container fluid>
+                <pre>
+                    {{ formularioDatosPersonalesInvalid }} personales
+                    {{ formularioDatosPorsentajesInvalid }} porcentaje
+                    {{ formularioDireccionInvalid }}  direccion
+
+                </pre>
                 <v-expansion-panels v-model="panel" multiple>
                     <v-expansion-panel>
                         <v-expansion-panel-header >
@@ -126,6 +132,8 @@ export default {
         },
 
         estadoFormulario(validationForm){
+            console.log("validationForm personales")
+            console.log( JSON.parse( JSON.stringify(validationForm) ) )
             this.formularioDatosPersonalesInvalid = validationForm.$invalid;
             if( !this.formularioDatosPersonalesInvalid ){
                 this.datosPersonales = validationForm.form.$model ;

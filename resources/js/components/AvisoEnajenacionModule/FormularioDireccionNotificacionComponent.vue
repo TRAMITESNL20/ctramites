@@ -41,7 +41,9 @@
             <b-row>
                 <b-col>
                     <b-form-group label="Tipo de vialidad" label-for="tipo-vialidad-select" >
-                        <b-form-select id="tipo-vialidad-select" v-model="$v.form.tipoVialidad.$model"></b-form-select>
+                        <b-form-select id="tipo-vialidad-select" v-model="$v.form.tipoVialidad.$model">
+                            <option v-for="f in optionsVialidades" :value="f" :key="f.id">{{f.descripcion}}</option>
+                        </b-form-select>
                     </b-form-group>
                 </b-col>  
                 <b-col>
@@ -146,7 +148,7 @@
                     nInt:'',
                     cp:'',colonia:'',municipio:'',referencia:''
                 },
-
+                optionsVialidades:[]
             }
         },
 
@@ -174,8 +176,7 @@
             }
         },
         mounted() {
-            console.log( "DATOS DIRECCION" )
-            console.log(JSON.parse(JSON.stringify( this.datosDireccion )))
+            this.obtenerVialidad();
             if(Object.entries(this.datosDireccion).length > 0) {
                 this.form = this.datosDireccion;
             }
@@ -184,7 +185,25 @@
         methods: {
             isComprador(){
                 return this.config.name == 'comprador';
-            }
+            },
+
+            async obtenerVialidad(){
+                //let url = process.env.TESORERIA_HOSTNAME + "/obtener-vialidades";
+                let url = "http://10.153.144.228/deployed-feat-ws-anvialidades/obtener-vialidades";
+                try {
+                    let response = await axios.get(url);
+                    let options = response.data ? response.data : [];
+                    options.unshift({
+                        id:null,
+                        descripcion:'Seleccione'
+                    })
+                    this.optionsVialidades = options; 
+                    console.log("respons");
+                    console.log(JSON.parse(JSON.stringify(response)))
+                } catch (error) {
+                    console.log(error);
+                }
+            },
         },
         watch: {
             form:{

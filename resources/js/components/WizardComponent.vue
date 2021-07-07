@@ -62,7 +62,7 @@
                                     <!--end: Wizard Step 1-->
                                     <!--begin: Wizard Step 2-->
                                     <div class="pb-5" data-wizard-type="step-content" id="step2" >
-                                      <solicitantes-component v-if="currentStep == 2 && camposGuardadosObtenidos" @updatingSolicitante="updateSolicitante" :solicitantesGuardados="solicitantesGuardados"></solicitantes-component>
+                                      <solicitantes-component v-if="currentStep == 2 && camposGuardadosObtenidos" @updatingSolicitante="updateSolicitante" :solicitantesGuardados="solicitantesGuardados" :infoGuardadaFull="infoGuardadaFull"></solicitantes-component>
                                     </div>
                                     <!--end: Wizard Step 2-->
                                     <!--begin: Wizard Step 3-->
@@ -376,7 +376,7 @@
               let url = process.env.TESORERIA_HOSTNAME + "/solicitudes-get-tramite/" + this.tramite.id_seguimiento;
               try {
                 let response = await axios.get(url);
-                this.infoGuardadaFull = response.data[response.data.length - 1];
+                this.infoGuardadaFull = response.data[0/*response.data.length - 1*/];
 
                 this.infoGuardadaFull = new adminCamposCostos(this.infoGuardadaFull);
                 this.infoGuardada =  JSON.parse(this.infoGuardadaFull.info)

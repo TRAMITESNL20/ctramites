@@ -119,25 +119,31 @@
                         "Content-type":"application/json"
                     }
                 }).done((response) => {
+                    this.obteniendoRecibo = false;
                     if(typeof response === 'string') response = JSON.parse(response);
-                    let params = {
-                        recibo_referencia:response.response.datos.recibo.url,
-                        status:60,
-                        id_transaccion_motor:this.folio
-                    }
-                    this.cambiarStatusTransaccion( params/*60*/ );
-                    if(response.response.datos.recibo.pdf ) {
-                        divContenedorSecundario.append('<div id="pdfContenido"><iframe id="frame" src="http://egobierno.nl.gob.mx/egob/formatoRepositorio.php?Folio=258310" width="100%" height="600"></iframe></div>')
+                    if( response && response.response && response.response.datos ){
+                        let params = {
+                            recibo_referencia:response.response.datos.recibo.url,
+                            status:60,
+                            id_transaccion_motor:this.folio
+                        }
+                        this.cambiarStatusTransaccion( params/*60*/ );
+                        if(response.response.datos.recibo.pdf ) {
+                            divContenedorSecundario.append('<div id="pdfContenido"><iframe id="frame" src="http://egobierno.nl.gob.mx/egob/formatoRepositorio.php?Folio=258310" width="100%" height="600"></iframe></div>')
+                        } else {
+                            window.open(response.response.datos.recibo.url);
+                        }
                     } else {
-                        window.open(response.response.datos.recibo.url);
-
-
+                        if( response && response.response && response.response.error){
+                            Command: toastr.error("Error!", response.response.mensaje || "Ocurrio un error");
+                        }
                     }
                 }).fail((rror)=> {
+                    this.obteniendoRecibo = false;
                     console.log( rror)
                 }).always(() => {
                     this.obteniendoRecibo = false;
-                    $("#spinner-ref").remove();
+                    //$("#spinner-ref").remove();
                 });
 
             },

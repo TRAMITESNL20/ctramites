@@ -316,7 +316,6 @@
 			},
 			updateExpedienteSeleccionado(ex){
 				this.expediente = ex;
-				console.log(this.expediente);
 			},
 			estadoSelected(estado){
 				this.estado = estado;

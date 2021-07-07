@@ -165,7 +165,6 @@ export default class TramiteCar5ISRCtrl {
                 partida: info.partidas ? info.partidas[0].id_partida : null,
                 importe_concepto:this.json.importe_tramite         
             }
-
             if( solicitud.info.hasOwnProperty('complementos')){
                 detalle[0].concepto = detalle[0].concepto + " COMPLEMENTARIO:  " + ( solicitud.info.complementos );
             } else if (  solicitud.info.hasOwnProperty('complementoDe')  ){
@@ -173,12 +172,20 @@ export default class TramiteCar5ISRCtrl {
             }
 
             let descuentosAplicados = [];
+        
             if(info.detalle && info.detalle.descuentos && Array.isArray(info.detalle.descuentos )  && info.detalle.descuentos.length > 0  ){
-                let losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "No aplica" );   
-                losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "El numero de oficio no coincide con el trámite" );   
-                losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "El valor de operación excede el monto válido para subsidio" );    
+                
+                
+ 
+                let losdescuentos = info.detalle.descuentos.filter( descuento => descuento.concepto_descuento != "No aplica" ); 
+
+                losdescuentos = losdescuentos.filter( descuento => descuento.concepto_descuento != "El numero de oficio no coincide con el trámite" );   
+                losdescuentos = losdescuentos.filter( descuento => descuento.concepto_descuento != "El valor de operación excede el monto válido para subsidio" );
+                losdescuentos = losdescuentos.filter( descuento => descuento.concepto_descuento != "El tipo de Persona fiscal no es válido para este subsidio")    
+                console.log( JSON.parse(JSON.stringify(losdescuentos) ) )
                 if( losdescuentos && losdescuentos.length > 0 ){
-                  	info.detalle.descuentos.forEach( descuento => {
+                    detalle[0].importe_concepto = losdescuentos.map( descuento => descuento.importe_total ).reduce((a, b) => a + b, 0);
+                  	losdescuentos.forEach( descuento => {
 	                    let descuentoAplicado =  {
 	                        concepto_descuento: descuento.concepto_descuento,
 	                        importe_descuento: descuento.importe_subsidio,

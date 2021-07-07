@@ -26,7 +26,7 @@
                         </div>
                     </div>
                  
-                    <div class="float-lg-right" v-if="puedeEditar">
+                    <div class="float-lg-right" v-if="puedeEditar && !isCorreccion">
                         <button type="button"  class="btn btn-danger"  id="btnEliminar" v-on:click="eliminar( index )">
                             <i class="fa fa-times" id="iconBtnEliminar"></i> 
                         </button>
@@ -37,7 +37,7 @@
                    
                 </div>
             </div>
-            <div class="col-lg-12" v-if="!isISR">
+            <div class="col-lg-12" v-if="!isISR && !isCorreccion">
                 <button type="button"  class="btn"  id="btnAddMore" v-on:click="mostrarAgregarSolicitante()">
                     <i class="fa fa-check" id="iconBtnAddMore"></i> 
                     Agregar Solicitante
@@ -106,23 +106,25 @@
                     </div>
                 </div>
             </div>
-
-                <div class="text-right">
-                    <button type="button"  class="btn btn-danger pull-rigth"  id="btnAddMoreCancel" v-on:click="agregarMas = false" v-if="listaSolicitantes.length > 0 ">
-                        <i class="fa fa-times" id="iconBtnAddMoreCancel"></i> 
-                        Cancelar
-                    </button>
-                </div>
             <div class="row">
-                <div class="text-right">  
-                    <button type="button"  class="btn btn-success green pull-rigth"  id="btnAdd" v-on:click="agregar()" v-if="!editando">
-                        <i class="fa fa-check" id="iconBtnAdd"></i> 
-                        Guardar
-                    </button>
-                    <button type="button"  class="btn btn-success green pull-rigth"  id="btnEditSi" v-on:click="editar(indiceEditando, solicitante)" v-if="editando">
-                        <i class="fa fa-check" id="iconBtnSi"></i> 
-                        Editar
-                    </button>
+                <div class="col-lg-12">
+                    <div class="text-right">
+                        <button type="button"  class="btn btn-danger pull-rigth"  id="btnAddMoreCancel" v-on:click="agregarMas = false" v-if="listaSolicitantes.length > 0 ">
+                            <i class="fa fa-times" id="iconBtnAddMoreCancel"></i> 
+                            Cancelar
+                        </button>
+                    </div>
+            
+                    <div class="text-right">  
+                        <button type="button"  class="btn btn-success green pull-rigth"  id="btnAdd" v-on:click="agregar()" v-if="!editando">
+                            <i class="fa fa-check" id="iconBtnAdd"></i> 
+                            Guardar
+                        </button>
+                        <button type="button"  class="btn btn-success green pull-rigth"  id="btnEditSi" v-on:click="editar(indiceEditando, solicitante)" v-if="editando">
+                            <i class="fa fa-check" id="iconBtnSi"></i> 
+                            Editar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,12 +134,13 @@
 
 <script>
     export default {
-        props: ['solicitantesGuardados'],
+        props: ['solicitantesGuardados', 'infoGuardadaFull'],
         mounted() {
             let tramite = JSON.parse(localStorage.getItem('tramite'));
             this.isISR = tramite && tramite.id_tramite == process.env.TRAMITE_5_ISR; 
             if( tramite && tramite.id_tramite == process.env.TRAMITE_5_ISR ){
                 let userTitular = window.user;
+
                 if(userTitular && userTitular.notary && userTitular.notary.titular){
                     this.solicitante = {
                         rfc:userTitular.notary.titular.rfc,
@@ -162,6 +165,7 @@
                         id:userTitular.id
                     }; 
                 }
+                console.log(JSON.parse(JSON.stringify(this.solicitante)))
                 this.agregar();
             } else {
                 this.solicitante = { tipoPersona:"pf" };
@@ -179,7 +183,9 @@
                 localStorage.removeItem('listaSolicitantes');
               }
             }
-            
+            if( this.infoGuardadaFull ){
+                this.isCorreccion = this.infoGuardadaFull.status == this.$const.STATUS_ERROR_MUNICIPIO || this.infoGuardadaFull.status == this.$const.STATUS_FALTA_PAGO;
+            }
             this.$emit('updatingSolicitante', this.listaSolicitantes.length > 0);
 
         },
@@ -192,7 +198,8 @@
                 editando: false,
                 indiceEditando:null,
                 puedeEditar:false,
-                isISR:false
+                isISR:false,
+                isCorreccion:false
             }
         },
   
@@ -201,8 +208,6 @@
                 this.solicitante.id=0;
                 if( this.solicitante.tipoPersona == 'pf' ){
                     if(/*!!this.solicitante.rfc &&*/ !!this.solicitante.nombreSolicitante && !!this.solicitante.apPat){
-                        this.solicitante.rfc = "";
-                        this.solicitante.curp = "";
                         this.listaSolicitantes.push( this.solicitante );
                         this.solicitante = { tipoPersona:"pf" };
                         this.agregarMas = false;

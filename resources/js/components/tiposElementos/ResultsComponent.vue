@@ -116,13 +116,11 @@ Vue.use(Vuetify);
 				totalPaginas:  JSON.parse(JSON.stringify(this.rows).length),
 				pageSizes: [5, 10, 20],
 				labelRadio: 'Seleccionar',
-				seleccionado: false,
 				expediente:'',
 				expedienteSeleccionado: '',
 				asd: process.env.TRAMITE_AVISO ,
 				registros: true,
 				fields:'',
-
 		}},
 		mounted () {
 			this.getExpedientes();
@@ -132,6 +130,7 @@ Vue.use(Vuetify);
 				this.labelRadio = 'Deseleccionar';
 				console.log('si hay uno seleccionado es este: ',this.campo.expedienteSeleccionado);
 			}
+      
 			this.campo.valido = true;
 			this.$emit('updateForm', this.campo);
 			this.$forceUpdate();
@@ -176,7 +175,6 @@ Vue.use(Vuetify);
 						this.expedienteSeleccionado= '0'
 						// this.totalPaginas = Math.ceil(arrayFinal.length/ this.porPagina);
 						// this.$forceUpdate();
-
 				}
 
 				this.$emit('updateForm', this.campo);
@@ -189,6 +187,7 @@ Vue.use(Vuetify);
 
         	},
 			getExpedientes(){
+      
 					this.fields = ['Expediente Catastral' ,	'Fólio', 	'Días Restantes', 	'Fecha pago informativo',	'Capturista',	'Accion'];
 						//  this.rows = [{expediente : 7001002010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001002011 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'},{expediente : 7001001010 , folio: 123 , dias: 2, fecha: 'nan', capturista: 'jaime'}]
 					var self = this;
@@ -254,15 +253,18 @@ Vue.use(Vuetify);
 						}	
 						this.totalPaginas = Math.ceil(arrayFinal.length / this.porPagina);
 					}   
-					var filteredHelper = arrayFinal.splice( inicio  , this.porPagina);
+					filteredHelper = arrayFinal.splice( inicio  , this.porPagina);
 					
+				}else if(JSON.parse(this.campo.caracteristicas).formato == 'seleccion' && this.campo.expedienteSeleccionado ){
+					filteredHelper[0] = this.campo.expedienteSeleccionado;
+					console.log(filteredHelper);
+
 				}else{
-					var filteredHelper = this.rows;
+					filteredHelper = this.rows
 					this.totalPaginas = Math.ceil(this.rows.length / this.porPagina);
 					filteredHelper.length < 0 ? 	this.registros = null : '' ;
 				}
-				
-				return filteredHelper;
+					return filteredHelper;				
         	},
 		}
 	}

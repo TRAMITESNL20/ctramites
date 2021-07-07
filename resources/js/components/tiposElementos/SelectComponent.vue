@@ -1,7 +1,7 @@
 <template>
 	<div class=" fv-plugins-icon-container">
 		<label>{{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }}</label>
-    <multiselect v-model="campo.valor" :options="options" :multiple="campo.tipo == 'multiple'" label="nombre" track-by="clave" :searchable="true" @input="validar" :disabled="campo.disabled" ></multiselect>
+    <multiselect v-model="campo.valor" :options="options" :multiple="campo.tipo == 'multiple'" label="nombre" track-by="clave" :searchable="true" @input="validar" :disabled="campo.disabled" selectLabel="Presione enter para seleccionar" deselectLabel="Presione enter para eliminar"></multiselect>
 		<small v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
         <p  class="form-text text-danger">
           {{ campo.mensajes[0].mensajeStr }}

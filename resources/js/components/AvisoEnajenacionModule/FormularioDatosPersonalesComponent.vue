@@ -123,38 +123,51 @@
                       </b-input-group>
                     </b-form-group>
                 </b-col>
-                <b-col  cols="12" md="6">
-                    <b-form-group label="Fecha de Nacimiento" label-for="fechaNacimiento-input" >
-                        <b-input-group class="mt-3" id="loadingcurp">
-                            <template #prepend v-if="buscandoCurp">
-                                <b-input-group-text >
-                                    <strong class="loadingcurp">
-                                        <b-spinner label="Loading..." small ></b-spinner>
-                                    </strong>
-                                </b-input-group-text>
-                            </template>
-                            <b-form-input
-                                id="fechanac-input"
-                                v-model="$v.form.fechaNacimiento.$model"
-                                type="text"
-                                placeholder="DD-MM-AAAA"
-                                autocomplete="off" :state="$v.form.fechaNacimiento.$dirty ? !$v.form.fechaNacimiento.$error : null" 
-                                :disabled="curpEncontrada" aria-describedby="fechaNacimiento-input-feedback">
-                            </b-form-input>
-                            <b-input-group-append>
-                                <b-form-datepicker  class="mb-2" id="fechaNacimiento-input" name="fechaNacimiento"  v-model="fechaDatepICKER" :state="$v.form.fechaNacimiento.$dirty ? !$v.form.fechaNacimiento.$error : null" aria-describedby="fechaNacimiento-input-feedback" :disabled="curpEncontrada || buscandoCurp"
-                                button-only right aria-controls="fechanac-input"  @input="formatFechaNacimiento()"
-                                ></b-form-datepicker>
-                            </b-input-group-append>
-                            <b-form-invalid-feedback id="fechaNacimiento-input-feedback">
-                                <span v-if="!$v.form.fechaNacimiento.required" class="form-text text-danger">
-                                    La fecha de nacimiento es requerida
-                                </span>
-                            </b-form-invalid-feedback>
-                        </b-input-group>
+                <b-col cols="12" md="6" >
+                    <b-form-group label="Fecha Nacimiento" label-for="fn-input" >
+                      <b-input-group class="mt-3">
+
+                        <b-form-input id="fn-input" name="fechaNacimiento" v-model="$v.form.fechaNacimiento.$model"  :state="$v.form.fechaNacimiento.$dirty ? !$v.form.fechaNacimiento.$error : null"  aria-describedby="fn-input-feedback"  :disabled="curpEncontrada || buscandoCurp"></b-form-input>
+                        <b-form-invalid-feedback id="fn-input-feedback">
+                            <span v-if="!$v.form.fechaNacimiento.required" class="form-text text-danger">
+                                El fechaNacimiento es requerido.
+                            </span>
+                        </b-form-invalid-feedback>
+                      </b-input-group>
+
+
                     </b-form-group>
-                </b-col>                   
+                </b-col>                  
             </b-row>
+            <b-row v-if="$v.form.nacionalidad.$model == 'extrajero'">
+                <b-col>
+                    <b-form-group label="Pais de Nacimiento" label-for="tipo-pais-select" >
+                        <b-form-select v-model="$v.form.pais.$model" :options="optionsPaises"
+                            :state="$v.form.pais.$dirty ? !$v.form.pais.$error : null"
+                            value-field="clave"
+                            text-field="nombre" id="tipo-pais-select" aria-describedby="pais-select-feedback"></b-form-select>
+                        <b-form-invalid-feedback id="pais-select-feedback">
+                            <span v-if="$v.form.nombre.$invalid"  class="form-text text-danger">
+                                El pais es requerido.
+                            </span>
+                        </b-form-invalid-feedback>
+                    </b-form-group>
+
+
+
+
+
+                    <b-form-group label="Nombre(s)" label-for="nombre-input" >
+
+                            <b-form-input   :disabled="curpEncontrada || buscandoCurp" v-uppercase></b-form-input>
+
+
+                    </b-form-group>
+
+
+
+                </b-col>                
+            </b-row>   
             <b-row v-if="form.tipoPersona == 'pf' && form.nacionalidad == 'mexicana'" >
                 <b-col>
                     <b-form-group label="Genero" label-for="tipo-genero-select" >
@@ -191,9 +204,10 @@
                     nombre:null,
                     apPat:null,
                     apMat:null,
-                    fechaNacimiento:null,
                     genero:null,
-                    estado:null
+                    estado:null,
+                    fechaNacimiento:null,
+                    pais:null
                 },
                 options: [
                   { value: null, text: 'Seleccione' },
@@ -210,7 +224,8 @@
                     { value: 'H', text: 'Hombre' },
                     { value: 'M', text: 'Mujer' },
                 ],
-                optionsEstado:[]
+                optionsEstado:[],
+                //optionsPaises:[]
             }
         },
         computed:{
@@ -228,6 +243,10 @@
                     this.curpEncontrada = false;*/
                     return datosPersonalesRulesService.getRulesExtranjero();
                 }
+            },
+
+            optionsPaises(){
+                return []
             }
         },
         validations() {
@@ -238,7 +257,9 @@
         mounted() {
             if(Object.entries(this.datosPersonales).length > 0) {
                 this.form = this.datosPersonales;
-                this.$v.$touch()
+                /*if( !this.form.fechaNacimiento ){
+                    this.$v.form.fechaNacimiento.$model = 'hello'
+                }*/
             }
 
             this.getEstados();
@@ -285,20 +306,21 @@
                     this.form.nombre = data.data.nombres;
                     this.form.apPat = data.data.apePat;
                     this.form.apMat = data.data.apeMat;
-                    this.form.fechaNacimiento =  data.data.fechaNac.split("/").join("-");/*reverse()*/
+                    this.form.fechaNacimiento  =  data.data.fechaNac.split("/").join("-");/*reverse()*/
                     this.form.genero = data.data.sexo;
                 } else {
                     this.curpEncontrada = false;
                     this.form.nombre = "";
                     this.form.apPat = "";
                     this.form.apMat = "";
-                    this.form.fechaNacimiento = "";
+                    this.form.fechaNacimiento  = "";
                     this.form.genero = "";
                 }
+                this.$v.form.$touch()
             },
 
             formatFechaNacimiento(){
-                this.form.fechaNacimiento =  this.fechaDatepICKER.split("-").reverse().join("-");
+                //this.form.fechaNacimiento =  this.fechaDatepICKER.split("-").reverse().join("-");
             },
 
             async getEstados(){

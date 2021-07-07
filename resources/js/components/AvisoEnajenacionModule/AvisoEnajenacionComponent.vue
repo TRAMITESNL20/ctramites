@@ -1,5 +1,8 @@
 <template>
     <div>
+        <pre>
+            {{expediente}}
+        </pre>
         <div v-if="expediente">   
             <b-row>
                 <b-col cols="12" class="text-center">
@@ -96,6 +99,9 @@ export default {
 
     },
 
+    mounted(){
+
+    },
     methods: {
         listaVendedores(data){
             this.seccionVendedores.vendedores = data.items;
@@ -138,10 +144,6 @@ export default {
                         //campoValorCatastral.valor = Vue.filter('formatoMoneda')( datosCatastrales[0].valor_catastral );
                         $("#"  + campoValorCatastral.campo_id).val( Vue.filter('formatoMoneda')( this.datosCatastrales[0].valor_catastral));
                         $("#"  + campoValorCatastral.campo_id).prop('disabled', true);
-
-/*
-                        campoValorCatastral.disabled=true
-                        console.log(JSON.parse(JSON.stringify(campoValorCatastral)));*/
                     }
 
                     if( datosPropietarios && datosPropietarios.length > 0){
@@ -161,6 +163,8 @@ export default {
                                     vendedor.datosPersonales.apMat = propietario.apeMat;
                                     if(propietario.fecha_nac){
                                         vendedor.datosPersonales.fechaNacimiento = propietario.fecha_nac.split("/").reverse().join("-");
+                                    } else {
+                                        vendedor.datosPersonales.fechaNacimiento = '';
                                     }
                                     vendedor.datosPersonales.genero = propietario.sexo;
                                     vendedor.datosPersonales.estado = propietario.entidad;
@@ -202,7 +206,30 @@ export default {
 
     watch: {
         expediente (newValue, oldValue) {
-            this.getInformacion();
+            if(newValue && newValue == oldValue){
+                if(this.seccionVendedores && this.seccionVendedores.vendedores.length < 0){
+                    console.log("hello")
+                    this.getInformacion();
+                }
+            } else {
+
+                this.seccionVendedores = {
+                    vendedores:[],
+                    porcentajeUsufructo:0,
+                    porcentajePropiedad:0,
+                    porcentajeVenta:0
+                };
+                this.seccionCompradores = {
+                    compradores:[],
+                    porcentajePropiedad:0,
+                    porcentajeUsufructo:0
+                }; 
+
+                this.datosCatastrales = [];
+                this.datosFormulario = [];
+
+                this.validar();
+            }
         }
     },
 
