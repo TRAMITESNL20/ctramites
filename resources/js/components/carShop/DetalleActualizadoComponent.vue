@@ -13,9 +13,14 @@
                 <div class="col-lg-6">
                     <div class="text-center">
                         <h4>Anterior </h4>
-                        <strong> {{ currencyFormat('Importe total',item.detalleAnterior.detalle.Salidas['Importe total'])  }} </strong>
+                        <strong v-if="item.detalleAnterior.detalle.Salidas"> 
+                            {{ currencyFormat('Importe total',item.detalleAnterior.detalle.Salidas['Importe total'])  }} 
+                        </strong>
+                        <strong v-else-if="item.detalleAnterior.detalle.costo_final"> 
+                            {{ item.detalleAnterior.detalle.costo_final || toCurrency  }} 
+                        </strong>                        
                     </div>
-                    <transition name="slide-fade">
+                    <transition name="slide-fade" v-if="item.detalleAnterior.detalle.Salidas">
                         <b-card no-body v-if="item.detalleAnterior">
                             <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
                                 <b-row v-for="(salida, key) in item.detalleAnterior.detalle.Salidas" :key="key">
@@ -33,9 +38,14 @@
                 <div class="col-lg-6">
                     <div class="text-center">
                         <h4>Actual</h4>
-                        <strong>{{ currencyFormat('Importe total',item.detalleActual.Salidas['Importe total'])  }} </strong>
+                        <strong v-if="item.detalleActual.Salidas"> 
+                            {{ currencyFormat('Importe total',item.detalleActual.Salidas['Importe total'])  }} 
+                        </strong>
+                        <strong v-else-if="item.detalleActual.costo_final"> 
+                            {{ item.detalleActual.costo_final || toCurrency  }} 
+                        </strong>  
                     </div>
-                    <transition name="slide-fade">
+                    <transition name="slide-fade" v-if="item.detalleActual.Salidas">
                         <b-card no-body v-if="item.detalleActual">
                             <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
                                 <b-row v-for="(salida, key) in item.detalleActual.Salidas" :key="key">
