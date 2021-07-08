@@ -115,6 +115,9 @@
                             </tbody>
                         </table>
                     </div>
+                    <div v-if="datosFormulario.campos">
+                        <resumen-campos-component :campos="datosFormulario.campos"></resumen-campos-component>
+                    </div>
                 </div>
             </div>
         </div>
