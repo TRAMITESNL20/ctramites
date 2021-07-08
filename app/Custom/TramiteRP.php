@@ -6,16 +6,19 @@ use App\Http\Controllers\TramitesController;
 use App\Repositories\PortalsolicitudesticketRepositoryEloquent;
 use App\Repositories\PortalsolicitudescatalogoRepositoryEloquent;
 
-class TramiteRP
+use App\Custom\iTramite;
+
+class TramiteRP implements iTramite
 {
 
-    //protected $namesFieldsCost = [{$name:"Cambio de divisas"}, {$name:"Lote"}, {$name:"Hoja"}, {$name:"Subsidio"},  {$name:"Valor catastral"},  {$name:"Valor de operacion"}, {$name:"Cantidad de lotes"},  {$name:"Tipo de Operación"} ];
 
-    public function __construct(TramitesController $impuestoCtrl,PortalsolicitudesticketRepositoryEloquent $modelTramite, PortalsolicitudescatalogoRepositoryEloquent $catalogoSolicitud)
+    public function __construct(TramitesController $tramiteCtrl,PortalsolicitudesticketRepositoryEloquent $modelTramite, PortalsolicitudescatalogoRepositoryEloquent $catalogoSolicitud)
     {
-        $this->impuestoCtrl = $impuestoCtrl;
+        $this->tramiteCtrl = $tramiteCtrl;
         $this->modelTramite = $modelTramite;
         $this->catalogoSolicitud = $catalogoSolicitud;
+
+        $this->detalleNuevo = null;
     }
 
     public function setTramite( $tramite ){
@@ -33,13 +36,13 @@ class TramiteRP
     }
 
     public function getDetalleActual(){
-        /*$info = $this->info;
-        if(  (isset( $info['detalle']) && gettype( $info['detalle']) == 'array' )  ||  ( isset( $info['enajenante']['detalle']) && gettype( $info['enajenante']['detalle']) == 'array' ) ) {
-            $detalle = isset( $info['detalle'] ) ? $info['detalle'] : $info['enajenante']['detalle'];
+        $info = $this->info;
+        if( isset( $info['detalle']) && gettype( $info['detalle']) == 'array' ) {
+            $detalle = $info['detalle'];
             return $detalle;
         } else {
             return false;
-        }*/
+        }
     }
 
     public function getParamsParaCosto(){   
@@ -125,18 +128,20 @@ class TramiteRP
         $request = new Request();
         $request->initialize( $params );
         try {
-            $response =  $this->impuestoCtrl->getcostoTramite( $request ); 
+            $response =  $this->tramiteCtrl->getcostoTramite( $request );
+            $this->detalleNuevo = $response; 
         } catch (Exception $e) {
             Log::error('Error al obtener detalle '. $e->getMessage());
         }
+        
         return $response;
         
     }
 
     public function updateDetalle(){
-        /*$params =  $this->getParamsParaCosto();
-        if($this->info['tipoTramite'] == 'normal'){
-            if( count($params) > 0 ){
+        $params =  $this->getParamsParaCosto();
+        if( count($params) > 0 ){
+           
                 $detalleAnterior = new \stdClass;
 
                 $detalleAnterior->fechaDeActualizacion = date("Y-m-d h:i:sa");
@@ -145,9 +150,10 @@ class TramiteRP
 
                 $detalle = $this->calcularTotal( $params );
                 $detalleObj = json_decode( $detalle, true, 512);
-                $this->info['costo_final'] = $detalleObj['Salidas']["Importe total"];
-                $this->info['detalle'] = $detalleObj;
-                $this->info['enajenante']['detalle'] = $detalleObj;
+                $this->info['costo_final'] = $detalleObj[0]['costo_final'];
+                $this->info['detalle'] = $detalleObj[0];
+               
+                
                 $query = $this->modelTramite->where('id', $this->tramite->id)->where('status', '=', 99)->update([
                     'info' => json_encode($this->info)
                 ]);   
@@ -155,13 +161,11 @@ class TramiteRP
                 Log::info( print_r ($query, true));
                 Log::info('-----------------------');
                 return $query ? true : false;
-            } else {
-                return false;
-            }
+
         } else {
-            Log::error('Es declaracionEn0');
+            Log::error('No hay parametros para calcular costos');
             return false;
-        }*/
+        }
     }
 
     private function infoToObject($tramite){
@@ -178,7 +182,6 @@ class TramiteRP
             }
             
         } else {
-            Log::info($name. " es no integet res:" .  gettype($res));
             return false;
         }
     }
@@ -196,5 +199,26 @@ class TramiteRP
 
     private function columnToLower($column){
         return strtolower($column);   
+    }
+
+    public function getTotal(){
+        $params =  $this->getParamsParaCosto();
+        if( count($params) > 0 ){
+            $detalle = $this->calcularTotal( $params );
+            $detalleObj = json_decode( $detalle, true, 512);            
+            return $detalleObj[0]['costo_final'];
+        } else {
+            return false;
+        }
+    }
+
+    public function getDetalleNuevoComoObj(){
+        return json_decode( $this->detalleNuevo, true, 512);
+    }
+
+    public function canUpdate(){
+        $totalActual = $this->getTotalActual();
+        $totalNuevo = $this->getTotal();
+        return $totalActual != $totalNuevo;  
     }
 }

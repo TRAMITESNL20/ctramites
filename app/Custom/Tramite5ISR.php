@@ -4,22 +4,33 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CalculoimpuestosController;
 use App\Repositories\PortalsolicitudesticketRepositoryEloquent;
+use App\Custom\iTramite;
 
-class Tramite5ISR 
+class Tramite5ISR implements iTramite
 {
 
     public function __construct(CalculoimpuestosController $impuestoCtrl,PortalsolicitudesticketRepositoryEloquent $modelTramite)
     {
         $this->impuestoCtrl = $impuestoCtrl;
         $this->modelTramite = $modelTramite;
+        $this->detalleNuevo = null;
     }
 
     public function setTramite( $tramite ){
         $this->tramite = $tramite;
         $this->info = $this->infoToObject( $tramite );
+
+        
+
+        if( isset($this->info['tipoTramite']) ) {
+            Log::info('Tipo tramite: ' . ( $this->info['tipoTramite']) ); 
+    
+        } else {
+           Log::error('ID ERROR tramite: ' . ( $this->tramite->id  ) );
+        }
     }
 
-    public function getTotalActualISR(){
+    public function getTotalActual(){
         $info = $this->info;
         if(  (isset( $info['detalle']) && gettype( $info['detalle']) == 'array' )  ||  ( isset( $info['enajenante']['detalle']) && gettype( $info['enajenante']['detalle']) == 'array' ) ) {
             $detalle = isset( $info['detalle'] ) ? $info['detalle'] : $info['enajenante']['detalle'];
@@ -43,7 +54,6 @@ class Tramite5ISR
 
     public function getParamsParaCosto(){   
         $info = $this->info;
-        Log::info('Tipo tramite: ' . ( $this->info['tipoTramite']) ); 
         $parms = [];
         if( $info && isset($info["camposConfigurados"]) ){
             $parms['fecha_escritura'] = $this->getValue( $info["camposConfigurados"], "Fecha de escritura o minuta", "nombre");
@@ -62,10 +72,12 @@ class Tramite5ISR
         $request = new Request();
         $request->initialize( $params );
         try {
-            $response =  $this->impuestoCtrl->index( $request ); 
+            $response =  $this->impuestoCtrl->index( $request );
+            $this->detalleNuevo = $response; 
         } catch (Exception $e) {
             Log::error('Error al obtener detalle '. $e->getMessage());
         }
+        
         return $response;
         
     }
@@ -122,4 +134,27 @@ class Tramite5ISR
     private function findIndex($label, $array, $column){
         return array_search($label, array_column($array, $column));
     }
+
+    public function getTotal(){
+        $params =  $this->getParamsParaCosto();
+        if( count($params) > 0 ){
+            $detalle = $this->calcularTotal( $params );
+            $detalleObj = json_decode( $detalle, true, 512);
+            return $detalleObj['Salidas']["Importe total"];
+        } else {
+            return false;
+        }
+    }
+
+    public function getDetalleNuevoComoObj(){
+        return json_decode( $this->detalleNuevo, true, 512);
+    }
+
+    public function canUpdate(){
+        $totalActual = $this->getTotalActual();
+        $totalNuevo = $this->getTotal();
+        return $totalActual != $totalNuevo;        
+    }
 }
+
+            
