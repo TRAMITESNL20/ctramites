@@ -42,7 +42,7 @@
                                       </div>
                                       <div v-if="(tipoTramite == 'normal' || tipoTramite == 'declaracionEn0') && camposGuardadosObtenidos" >
                                         <campos-tramite-component :tramite="tramite" v-if="currentStep == 1"
-                                        :formularioValido="formularioValido" @updatingScore="updateScore" :comprobarEstadoFormularioCount="comprobarEstadoFormularioCount" @updatingFiles="updatingFiles" :infoGuardada="infoGuardada" :declararEn0="declararEn0" :usuario="usuario">
+                                        :formularioValido="formularioValido" @updatingScore="updateScore" :comprobarEstadoFormularioCount="comprobarEstadoFormularioCount" @updatingFiles="updatingFiles" :infoGuardada="infoGuardada" :declararEn0="declararEn0" :usuario="usuario" :filesPrecargados="files">
 
                                         </campos-tramite-component>
                                       </div>
