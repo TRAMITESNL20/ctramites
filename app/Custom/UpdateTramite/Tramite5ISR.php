@@ -26,7 +26,7 @@ class Tramite5ISR implements iTramite
             Log::info('Tipo tramite: ' . ( $this->info['tipoTramite']) ); 
     
         } else {
-           Log::error('ID ERROR tramite: ' . ( $this->tramite->id  ) );
+           Log::warning('ID ERROR tramite: ' . ( $this->tramite->id  ) );
         }
     }
 
@@ -108,7 +108,7 @@ class Tramite5ISR implements iTramite
                 return false;
             }
         } else {
-            Log::error('Es declaracionEn0');
+            Log::warning('Es declaracionEn0');
             return false;
         }
     }

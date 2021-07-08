@@ -56,11 +56,11 @@ class AdminCostosTramites
                 }
                 Log::info('Fin update');
             } else {
-                Log::error('##########No hay parametros para consultar detalle');  
+                Log::warning('##########No hay parametros para consultar detalle');  
                 return false;
             } 
         } else {
-            Log::error('No tiene Importe total');
+            Log::warning('No tiene Importe total');
             return false;
         }     
 

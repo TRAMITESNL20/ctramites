@@ -72,7 +72,7 @@ class updateDetalle extends Command
             Log::info('Actualizados: ' . $totalActualizados);
             Log::info('*******************************************FIN DEL PROCESO*******************************************');
         } else {
-            Log::error('Error al obtener los tramites'); 
+            Log::warning('Error al obtener los tramites'); 
         }
     }
 

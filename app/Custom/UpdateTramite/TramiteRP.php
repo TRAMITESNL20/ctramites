@@ -163,7 +163,7 @@ class TramiteRP implements iTramite
                 return $query ? true : false;
 
         } else {
-            Log::error('No hay parametros para calcular costos');
+            Log::warning('No hay parametros para calcular costos');
             return false;
         }
     }
