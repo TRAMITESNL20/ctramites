@@ -90,7 +90,7 @@
 													:campo="campo" 
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
-													@updateForm="updateForm" :files="files"
+													@updateForm="updateForm" :files="filesPrecargados"
 													@validarFormulario="validarFormulario"
 												></file-component>
 												<results-component 
@@ -229,7 +229,7 @@
                 };
             }
         },
-        props: ['tramite','formularioValido', 'comprobarEstadoFormularioCount', 'infoGuardada', 'declararEn0', 'notary', 'usuario'],
+        props: ['tramite','formularioValido', 'comprobarEstadoFormularioCount', 'infoGuardada', 'declararEn0', 'notary', 'usuario', 'filesPrecargados'],
         data() {
             return {
 				progress: '',
