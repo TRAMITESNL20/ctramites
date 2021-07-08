@@ -1,16 +1,15 @@
 <template>
     <span> 
-        <a class="btn-floating btn-lime btn-lg" :title="msjTitle" @click="verDetalle">                    
-            <span class="label pulse pulse-success mr-10">
-                <span class="position-relative">
-                    <i class="fas fa-info" style="color:rgb(13, 200, 241); font-size:8px;"></i>
-                </span>
-                <span class="pulse-ring"></span>
+        <a class="btn-sm btn-warning pulse" :title="msjTitle" @click="verDetalle" style="padding: 2px;">                    
+            <span class="text-center text-white">
+                <small class="text-center text-white">
+                    Costo actualizado
+                </small>
             </span>
         </a>
         <b-modal v-model="modalShow" title="Actualización" size="xl">
-            <div class="row">
-                <div class="col-lg-6">
+            <div class="row" v-for="(item, index) in items" :key="index" >
+                <div class="col-lg-6" v-if="item.detalleAnterior">
                     <div class="text-center">
                         <h4>Anterior </h4>
                         <strong v-if="item.detalleAnterior.detalle.Salidas"> 
@@ -72,7 +71,7 @@
     import { uuid } from 'vue-uuid';
 
     export default {
-        props: ['item','onlyRead'],
+        props: ['items','onlyRead'],
         data(){
             return {
                 idItem:null,
@@ -83,7 +82,7 @@
         },
         mounted() {
         	this.idItem = uuid.v4();
-            this.msjTitle = this.onlyRead ? 'Algunos items han sido actualizados' : 'Costo Actualizado';
+            this.msjTitle = 'Costo Actualizado';
         },
 
         computed:{
@@ -92,9 +91,9 @@
         methods: {
 
             verDetalle(){
-                if(!this.onlyRead){
+                //if(!this.onlyRead){
                     this.modalShow = !this.modalShow;
-                }
+                //}
             },
 
             currencyFormat(campoName, salida){

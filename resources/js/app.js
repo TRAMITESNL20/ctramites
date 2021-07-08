@@ -102,6 +102,8 @@ Vue.component("input-currency-component" , () => import( /* webpackChunkName: "j
 
 Vue.component("detalle-actualizado-component" , () => import( /* webpackChunkName: "js/components/carShop/detalle-actualizado-component" */ './components/carShop/DetalleActualizadoComponent.vue' ));
 
+Vue.component("currency-mark-component" , () => import( /* webpackChunkName: "js/components/generales/currency-mark-component" */ './components/generales/CurrencyMarkComponent.vue' ));
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
