@@ -4,13 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Repositories\PortalsolicitudesticketRepositoryEloquent;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Collection;
-use App\Http\Controllers\CalculoimpuestosController;
-
 use Illuminate\Support\Facades\Log;
-use App\Custom\AdminCostosTramites;
+use App\Custom\UpdateTramite\AdminCostosTramites;
 
 class updateDetalle extends Command
 {
@@ -58,7 +53,6 @@ class updateDetalle extends Command
                 Log::info('###############################################Tramite, ticket: ' . ($tramite->id). ' ###############################################'); 
                 if( $tramite->catalogo_id == 10 ){
                     Log::info('update 5% ISR') ;
-
                     if($this->adminCostos->updateISR($tramite)){
                         $totalActualizados = $totalActualizados+1;
                     }

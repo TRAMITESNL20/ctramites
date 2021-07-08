@@ -1,12 +1,12 @@
 <?php 
-namespace App\Custom;
+namespace App\Custom\UpdateTramite;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\TramitesController;
 use App\Repositories\PortalsolicitudesticketRepositoryEloquent;
 use App\Repositories\PortalsolicitudescatalogoRepositoryEloquent;
 
-use App\Custom\iTramite;
+use App\Custom\UpdateTramite\iTramite;
 
 class TramiteRP implements iTramite
 {

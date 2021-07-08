@@ -1,10 +1,10 @@
 <?php 
-namespace App\Custom;
+namespace App\Custom\UpdateTramite;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CalculoimpuestosController;
 use App\Repositories\PortalsolicitudesticketRepositoryEloquent;
-use App\Custom\iTramite;
+use App\Custom\UpdateTramite\iTramite;
 
 class Tramite5ISR implements iTramite
 {

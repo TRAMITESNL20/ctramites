@@ -1,9 +1,9 @@
 <?php 
-namespace App\Custom;
+namespace App\Custom\UpdateTramite;
 
-use App\Custom\iTramite;
-use App\Custom\TramiteRP;
-use App\Custom\Tramite5ISR;
+use App\Custom\UpdateTramite\iTramite;
+use App\Custom\UpdateTramite\TramiteRP;
+use App\Custom\UpdateTramite\Tramite5ISR;
 use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\TramitesController;
