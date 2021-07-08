@@ -38,7 +38,7 @@
       </table>
 
       <div class="pt-10 pr-4 pb-5" style="float: right">
-          <button type="button" class="btn btn-success">Buscar</button>
+          <button type="button"  @click="buscarPorRango()" class="btn btn-success">Buscar</button>
       </div>
 
     </div>
@@ -68,6 +68,12 @@ export default {
             document.getElementById(checkboxId).checked ?
             document.getElementById('final'+index).value = document.getElementById('inicial'+index).value : '';
 
+        },
+        async buscarPorRango(){
+			const url = `${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/`;
+            let response = await axios.get(url, {} );
+            console.log(response);
+            //emitir de camposTramiteCompoent para que se vaya a results ?) 
         }
     }
 }

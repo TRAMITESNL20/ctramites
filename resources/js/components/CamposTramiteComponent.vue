@@ -572,6 +572,7 @@
 
 				if(empty.length == 0){
 					this.panel = [0, 1, 4];
+					console.log(`${  JSON.stringify( all['Municipio'] )   }`);
 					const exp = `${all['Municipio'].valor && all['Municipio'].valor.clave.toString()}${all['Region'] && all['Region'].valor}${all['Manzana'] && all['Manzana'].valor}${all['Lote'] && all['Lote'].valor}`;
 					const url = `${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/${exp}`;
 					if(this.ajax !== url){
