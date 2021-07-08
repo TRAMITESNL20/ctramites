@@ -131,7 +131,8 @@
 					this.expedientesCatastro.push(this.expedienteConcatenado);	
 					this.expedienteConcatenado=[];
 					this.folioConcatenado=[];
-					if(this.errorRecordCatastro != null){	
+					
+					if(this.errorRecordCatastro == null){	
 						//guardar como firmado
 							fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
 								method : 'POST',
