@@ -17,7 +17,7 @@
                             {{ currencyFormat('Importe total',item.detalleAnterior.detalle.Salidas['Importe total'])  }} 
                         </strong>
                         <strong v-else-if="item.detalleAnterior.detalle.costo_final"> 
-                            {{ item.detalleAnterior.detalle.costo_final || toCurrency  }} 
+                            {{ item.detalleAnterior.detalle.costo_final | toCurrency  }} 
                         </strong>                        
                     </div>
                     <transition name="slide-fade" v-if="item.detalleAnterior.detalle.Salidas">
@@ -42,7 +42,7 @@
                             {{ currencyFormat('Importe total',item.detalleActual.Salidas['Importe total'])  }} 
                         </strong>
                         <strong v-else-if="item.detalleActual.costo_final"> 
-                            {{ item.detalleActual.costo_final || toCurrency  }} 
+                            {{ item.detalleActual.costo_final | toCurrency  }} 
                         </strong>  
                     </div>
                     <transition name="slide-fade" v-if="item.detalleActual.Salidas">
