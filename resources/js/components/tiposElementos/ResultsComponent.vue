@@ -203,11 +203,13 @@ Vue.use(Vuetify);
 								// 	data[index]
 								// 	self.rowAux.push(data[index].campos) ; 
 								// }
+								this.registros= true;
 								console.log(data);
 								self.rowAux = data;
 							},
 							error:function(error){
 								console.log('error');
+								this.registros= null;
 							},
 							complete:function(){
 							}
@@ -263,8 +265,9 @@ Vue.use(Vuetify);
 
 				}else{
 					 filteredHelper = this.rows
+					 console.log('filteredHelper ',filteredHelper.length);
 					this.totalPaginas = Math.ceil(this.rows.length / this.porPagina);
-					filteredHelper.length < 0 ? 	this.registros = null : '' ;
+					filteredHelper.length < 0 ? this.registros = null : '' ;
 				}
 					return filteredHelper;				
         	},

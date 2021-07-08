@@ -49,7 +49,13 @@
             let number =  this.campo.valor ? Vue.filter('toNumber')( this.campo.valor ) : '';
             this.campo.valor = Vue.filter('toCurrency')( number, style, currency  );
           }
+          if(caracteristicas.formato == 'region'){
+           this.campo.valor =  this.padLeft(this.campo.valor, 2);   
+          }
           if(caracteristicas.formato == 'manzana'){
+           this.campo.valor =  this.padLeft(this.campo.valor, 3);  
+          }
+          if(caracteristicas.formato == 'lote'){
            this.campo.valor =  this.padLeft(this.campo.valor, 3);  
           }
           this.$forceUpdate();

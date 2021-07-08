@@ -17,13 +17,15 @@
 					<div class="spinner-border" role="status">
 						<span class="sr-only">Loading...</span>
 					</div>
-
+						<span class="gray" >Firmando Informativos de valor catastral, {{countInformativo}} de {{TotalInformativos}}</span>
 				</div>
-				<div class="text-center">
-					<span class="gray" >Firmando Informativos de valor catastral, {{countInformativo}} de {{TotalInformativos}}</span>
-					<span v-if="errorRecordCatastro" > Contacta con tu administrador ocurrio un error consultando los documentos en catastro </span>
-					<span v-if="errorRecordCatastro" > {{errorRecordCatastro}} </span>
+			</div>
+			<div v-if="errorRecordCatastro" class="text-center">
+				<div class="alert alert-warning" role="alert">
+					<span style="color:white"> Contacta con tu administrador ocurrio un error consultando los documentos en catastro </span>
+					<span style="color:white"> {{errorRecordCatastro}} </span>
 				</div>
+			
 			</div>
 		</div>
 		
@@ -63,6 +65,7 @@
 				expedientesCatastro: [],
 				expedienteConcatenado: [],
 				errorRecordCatastro: null,
+				dataCatastro: [],
 
 			}
 		},
@@ -348,36 +351,36 @@
 									});
 					}
 				}
-				var dataCatastro = [
+				this.dataCatastro = [
 					{
 						"json":{
-							"expedientecatastral": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos['No. EXP. CATASTRAL'] : ''  ? solicitud.info.campos['Resultados Informativo Valor Catastral'][tramiteInd].expediente_catastral : solicitud.expediente_catastral ,
-							"pktramite": tipoTramite ,
-							"pknotaria": this.user.notary.id ?? '',
-							"estadonotaria": "19",
-							"foliopago":123456,
-							"fechapago": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? new Date().toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10) ,
-							"montopago": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.costo_final : '1231' ? this.usuario.solicitudes[indTramite].info.costo_final : '1231',
-							"tipoventa": 'terreno ?',
-							"isai": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos.ISAI : 'SIATEST' ? this.usuario.solicitudes[indTramite].info.campos.ISAI : 'ISAIINFORMATIVO',
-							"fechaprot": this.usuario.tramite_id == process.env.TRAMITE_AVISO ?  solicitud.info.campos['Fecha de protocolización'] : '',
-							"fechafirma": new Date().toISOString().slice(0, 10),
-							"escriturapub": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos['Número de Escritura Pública'] : '12345' ?  this.usuario.solicitudes[indTramite].info.campos['Número de Escritura Pública'] : '54321' ,
 							"actafprot":  this.usuario.tramite_id == process.env.TRAMITE_AVISO ?  solicitud.info.campos['Acta Fuera Protocolo'] : '' ? this.usuario.solicitudes[indTramite].info.campos['Acta Fuera Protocolo'] : '' ,
+							"adquirientes": adquirientes,
 							"avaluo":12345,
-							"operacion": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? 0 : 12345,
-							"motivooperacion":"motivo",
+							"descripcion_predio": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos['Anexo descripción'] : 'descripcionTest' ? this.usuario.solicitudes[indTramite].info.campos['Anexo descripcion'] : '',
+							"estadonotaria": "19",
+							"escriturapub": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos['Número de Escritura Pública'] : '12345' ?  this.usuario.solicitudes[indTramite].info.campos['Número de Escritura Pública'] : '54321' ,
+							"expedientecatastral": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos['No. EXP. CATASTRAL'] : ''  ? solicitud.info.campos['Resultados Informativo Valor Catastral'][tramiteInd].expediente_catastral : solicitud.expediente_catastral ,
+							"fechapago": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? new Date().toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10) ,
+							"fechafirma": new Date().toISOString().slice(0, 10),
+							"fechaprot": this.usuario.tramite_id == process.env.TRAMITE_AVISO ?  solicitud.info.campos['Fecha de protocolización'] : '',
 							"fiscal":12345678,
 							"folioforma":"12345",
-							"descripcion_predio": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos['Anexo descripción'] : 'descripcionTest' ? this.usuario.solicitudes[indTramite].info.campos['Anexo descripcion'] : '',
-							"adquirientes": adquirientes,
+							"foliopago":123456,
+							"isai": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.campos.ISAI : 'SIATEST' ? this.usuario.solicitudes[indTramite].info.campos.ISAI : 'ISAIINFORMATIVO',
+							"motivooperacion":"motivo",
+							"montopago": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? solicitud.info.costo_final : '1231' ? this.usuario.solicitudes[indTramite].info.costo_final : '1231',
+							"pktramite": tipoTramite ,
+							"pknotaria": this.user.notary.id ?? '',
+							"tipoventa": 'terreno ?',
+							"operacion": this.usuario.tramite_id == process.env.TRAMITE_AVISO ? 0 : 12345,
 							"vendedores": vendedores,
 						}
 					}
 				];
 				var url =  process.env.TESORERIA_HOSTNAME + "/registro-catastro";
 
-				await axios.post(url,  JSON.stringify(dataCatastro[0]) )
+				await axios.post(url,  JSON.stringify(this.dataCatastro[0]) )
 				// .then(res =>  JSON.parse(res))
 				.then(res => {
 					 var responseJson = JSON.parse(res.data.response.replace('\ufeff', ''));
@@ -403,7 +406,8 @@
 				})
 				.catch( error => {
 					console.log(error)
-					this.errorRecordCatastro = error;
+					this.errorRecordCatastro = error.toString();;
+					this.$forceUpdate();
 					});
 			},
 			getTotalInformativos(){

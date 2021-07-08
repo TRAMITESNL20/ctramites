@@ -1,11 +1,12 @@
 <template>
     <div>
         <div v-if="loteError || loteFinalError">
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <span v-if="loteError">hijoles el lote  tiene que ser de 3 digitos</span>
-                <span v-if="loteFinalError">hijoles el lote final tiene que ser mayor al inicial paiiiii</span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+            <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+                <span v-if="loteError" style="color:white">hijoles el lote  tiene que ser de 3 digitos</span>
+                <span v-if="loteFinalError" style="color:white">El Lote final tiene que ser mayor al inicial</span>
+                <span v-if="inputError" style="color:white">El Lote final tiene que ser mayor al inicial</span>
+                <button type="button" class="close"  data-dismiss="alert" aria-label="Close">
+                    <span style="color:white" aria-hidden="true">&times;</span>
                 </button>
             </div>
         </div>
@@ -19,9 +20,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(manzana, index) in  cantidadManzanas" :key="index">
+                <tr v-for="(manzana, index) in  cantidadManzanas" :key="index" class="lotesRango">
                     <td>
-                        Manzana #{{(index ).toString().padStart(3,"0") }}
+                        Manzana #{{ ( (Number((index).toString().padStart(3,"0")))+(Number(datosRango['Manzana Inicial'].valor)) ).toString().padStart(3  , "0") }}
                     </td>
                     <td>
                             <input type="number" class="form-control" :id="'inicial'+index" placeholder="000" @change="addZeros('inicial'+index, index)" >
@@ -46,17 +47,19 @@
 
 <script>
 export default {
-    props:[ 'cantidadManzanas' ],
+    props:[ 'cantidadManzanas' , 'datosRango'],
     data(){
         return{
             loteError : null,
             loteFinalError: null,
+            inputError: null,
+            rowToEmit: [],
         }
     },
     methods:{
         addZeros(id, index){
             if(id.includes('final') )
-                (document.getElementById('final'+index).value - document.getElementById('inicial'+index).value) > 1 ? '' :  this.loteFinalError = true;
+                (document.getElementById('final'+index).value - document.getElementById('inicial'+index).value) >= 0 ? '' :  this.loteFinalError = true;
             let  lote = document.getElementById(id).value;
             if (lote.length < 3)
                 return document.getElementById(id).value = lote.toString().padStart(3 , "0");
@@ -70,9 +73,40 @@ export default {
 
         },
         async buscarPorRango(){
-			const url = `${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/`;
-            let response = await axios.get(url, {} );
-            console.log(response);
+            if( $(".lotesRango input[type=text]:empty").length == 0){
+                    
+                var municipio = this.datosRango.Municipio.valor.clave ;
+                var region = this.datosRango['*Región'].valor;
+                var manzana = this.datosRango['Manzana Inicial'].valor;
+                var manzanaFinal = this.datosRango['Manzana Final'].valor;
+
+                var x = 0;
+                for (let i = manzana; i <= manzanaFinal; i++) {
+                    var loteInicial = document.getElementById('inicial'+x).value;
+                    var loteFinal = document.getElementById('final' + x).value;
+
+                    for (let k = loteInicial ; k <= loteFinal; k++) {
+                        
+                        typeof(k) == 'number' ? k = k.toString().padStart(3 , "0") : '' ;
+                        typeof(i) == 'number' ? i = i.toString().padStart(3 , "0") : '' ;
+                        console.log(`${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/${municipio}${region}${i}${k}`);
+                        let exp = `${municipio}${region}${i}${k}`;
+                        const url = `${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/${municipio}${region}${i}${k}`;
+                        const response = await axios.get(url);
+                        // this.rowToEmit.push(response);
+                        this.$emit('processGrupal', {response, exp});
+                    }
+                
+                    x++;
+                    
+                }
+
+            }else{
+                console.log('lol');
+                this.inputError = true;
+            }
+
+
             //emitir de camposTramiteCompoent para que se vaya a results ?) 
         }
     }
