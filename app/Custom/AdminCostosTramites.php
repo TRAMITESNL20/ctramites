@@ -1,79 +1,69 @@
 <?php 
 namespace App\Custom;
 
-use App\Custom\ramiteRP;
+use App\Custom\iTramite;
+use App\Custom\TramiteRP;
 use App\Custom\Tramite5ISR;
 use Illuminate\Support\Facades\Log;
+
+use App\Http\Controllers\TramitesController;
+use App\Http\Controllers\CalculoimpuestosController;
+use App\Repositories\PortalsolicitudesticketRepositoryEloquent;
+use App\Repositories\PortalsolicitudescatalogoRepositoryEloquent;
+
 
 class AdminCostosTramites 
 {
 
-    public function __construct(Tramite5ISR $tramite5ISR, TramiteRP $tramiteRP){
-		$this->tramite5ISR = $tramite5ISR;
-        $this->tramiteRP = $tramiteRP;
+    public function __construct(TramitesController $tramiteCtrl, PortalsolicitudesticketRepositoryEloquent $modelTramite, PortalsolicitudescatalogoRepositoryEloquent $catalogoSolicitud, CalculoimpuestosController $impuestoCtrl){
+        $this->tramiteCtrl = $tramiteCtrl;
+        $this->modelTramite = $modelTramite;
+        $this->catalogoSolicitud = $catalogoSolicitud;
+        $this->impuestoCtrl = $impuestoCtrl;
+
     }
 
-
     public function updateISR($tramite){
+        $tramiteISRClass = new Tramite5ISR($this->impuestoCtrl, $this->modelTramite);
+        return $this->update($tramiteISRClass, $tramite );     
+    }
+
+    public function updateTramiteRP( $tramite ){
+        $tramiteRPClass = new TramiteRP($this->tramiteCtrl, $this->modelTramite, $this->catalogoSolicitud);
+        return $this->update($tramiteRPClass, $tramite );
+    }
+
+    private function update( iTramite $tramiteCtrl, $tramite  ){
         Log::info('Obtener costos total actual');
-        $this->tramite5ISR->setTramite( $tramite );
-        $totalActual =  $this->tramite5ISR->getTotalActualISR();
+        $tramiteCtrl->setTramite( $tramite );
+        $totalActual =  $tramiteCtrl->getTotalActual();
         if(isset($totalActual)){
             Log::info('Importe total actual:' . $totalActual );
-            Log::info('Obtener campos para calcular costo nuevo ');
-            $params = $this->tramite5ISR->getParamsParaCosto();
+            Log::info('Obtener campos para calcular costo nuevo');
+            $params = $tramiteCtrl->getParamsParaCosto();
             if( count($params) > 0 ){
-                Log::info('**********Datos para deteterminar el impuesto**********');
+                Log::info('**********Datos para calcular costo**********');
                 Log::info( print_r ($params, true));
                 Log::info('Obtener costo nuevo');
-                $detalle =  $this->tramite5ISR->calcularTotal($params);
-                $detalleObj = json_decode( $detalle, true, 512);
-                Log::info("Importe nuevo:" . $detalleObj['Salidas']["Importe total"] );
-                Log::info("Necesario actualizar :" . ($totalActual != $detalleObj['Salidas']["Importe total"] ? 'SI' : 'NO' )  );
-                Log::info('Detalle:');
-                Log::info( print_r ($detalleObj, true));
-                if( $totalActual != $detalleObj['Salidas']["Importe total"] ){
-                	return $this->tramite5ISR->updateDetalle();
+                Log::info("Importe nuevo:" . ($tramiteCtrl->getTotal()) );
+                Log::info("Necesario actualizar :" . ( $tramiteCtrl->canUpdate() ? 'SI' : 'NO' )  );
+                Log::info('Detalle Calculo Nuevo:');
+                Log::info( print_r ($tramiteCtrl->getDetalleNuevoComoObj(), true));
+                if( $tramiteCtrl->canUpdate() ){
+                    return $tramiteCtrl->updateDetalle();
                 } else {
-                	return false;
+                    return false;
                 }
                 Log::info('Fin update');
             } else {
                 Log::error('##########No hay parametros para consultar detalle');  
                 return false;
-            }
-            
+            } 
         } else {
             Log::error('No tiene Importe total');
             return false;
-        }        
-    }
+        }     
 
-    public function updateTramiteRP( $tramite ){
-        Log::info('Obtener costos total actual');
-        $this->tramiteRP->setTramite( $tramite );
-        $totalActual =  $this->tramiteRP->getTotalActual();
-        if(isset($totalActual)){
-            Log::info('Importe total actual:' . $totalActual );
-            Log::info('Obtener campos para calcular costo nuevo');
-            $params = $this->tramiteRP->getParamsParaCosto();
-
-            if( count($params) > 0 ){
-                Log::info('**********Datos para calcular costo**********');
-                Log::info( print_r ($params, true));
-                Log::info('Obtener costo nuevo');
-                $detalle =  $this->tramiteRP->calcularTotal($params);
-                $detalleObj = json_decode( $detalle, true, 512);
-                Log::info( print_r ($detalleObj, true));
-
-            } else {
-                Log::error('##########No hay parametros para consultar detalle');  
-                return false;
-            }            
-        } else {
-            Log::error('No tiene Importe total');
-            return false;
-        } 
     }
 
 }
