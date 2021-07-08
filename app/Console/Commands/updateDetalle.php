@@ -28,8 +28,6 @@ class updateDetalle extends Command
      */
     protected $description = 'Actualiza el costo de los tramites';
 
-    //protected $namesFieldsCost = ["Cambio de divisas", "Lote", "Hoja", "Subsidio",  "Valor catastral",  "Valor de operacion". "Cambio de divisas" ,  "Cantidad" ];
-
     /**
      * Create a new command instance.
      *
@@ -49,24 +47,25 @@ class updateDetalle extends Command
      */
     public function handle()
     {
-        Log::info('Iniciando proceso');
+        Log::info('*******************************************INICIO DEL PROCESO*******************************************');
         Log::info('Obtener tramites');
         $totalActualizados = 0;
         $listadoTramites = $this->getTramites();
-        Log::info('###############################################Tramites: ' . (count($listadoTramites)) . '###############################################');
+        Log::info('###############################################Total Tramites: ' . (count($listadoTramites)) . '###############################################');
         if($listadoTramites && count($listadoTramites)){
             Log::info('Procesar tramites');
             foreach ($listadoTramites as $tramite) {
                 Log::info('###############################################Tramite, ticket: ' . ($tramite->id). ' ###############################################'); 
                 if( $tramite->catalogo_id == 10 ){
                     Log::info('update 5% ISR') ;
-                    /*if($this->adminCostos->updateISR($tramite)){
+
+                    if($this->adminCostos->updateISR($tramite)){
                         $totalActualizados = $totalActualizados+1;
-                    }*/
+                    }
                 } else if( $tramite->catalogo_id == 71 ){
-                    //Log::info('Actualizacion no disponible Catalogo ID:' . $tramite->catalogo_id);
+                    Log::info('Actualizacion no disponible Catalogo ID:' . $tramite->catalogo_id);
                 } else if( $tramite->catalogo_id == 3 ){
-                    //Log::info('Actualizacion no soportada Catalogo ID:' . $tramite->catalogo_id);
+                    Log::info('Actualizacion no soportada Catalogo ID:' . $tramite->catalogo_id);
                 } else {
                    Log::info('update Tramite RP');
                     if($this->adminCostos->updateTramiteRP($tramite)){
@@ -77,6 +76,7 @@ class updateDetalle extends Command
                 Log::info('-----------------------------------------------FIN ticket ' . $tramite->id . '-----------------------------------------------');
             }
             Log::info('Actualizados: ' . $totalActualizados);
+            Log::info('*******************************************FIN DEL PROCESO*******************************************');
         } else {
             Log::error('Error al obtener los tramites'); 
         }
