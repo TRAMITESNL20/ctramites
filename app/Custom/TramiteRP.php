@@ -9,7 +9,7 @@ use App\Repositories\PortalsolicitudescatalogoRepositoryEloquent;
 class TramiteRP
 {
 
-    protected $namesFieldsCost = ["Cambio de divisas", "Lote", "Hoja", "Subsidio",  "Valor catastral",  "Valor de operacion", "Cantidad de lotes" ,  "Tipo de Operación" ];
+    //protected $namesFieldsCost = [{$name:"Cambio de divisas"}, {$name:"Lote"}, {$name:"Hoja"}, {$name:"Subsidio"},  {$name:"Valor catastral"},  {$name:"Valor de operacion"}, {$name:"Cantidad de lotes"},  {$name:"Tipo de Operación"} ];
 
     public function __construct(TramitesController $impuestoCtrl,PortalsolicitudesticketRepositoryEloquent $modelTramite, PortalsolicitudescatalogoRepositoryEloquent $catalogoSolicitud)
     {
@@ -59,19 +59,54 @@ class TramiteRP
                     $parms['tipoCostoRadio'] = $info["tipo_costo_obj"]['tipoCostoRadio'];
                     $parms['hojaInput'] = $info["tipo_costo_obj"]['hojaInput'];
                 } else {
-                    $parms['valor_catastral'] = $this->getValue( $info["camposConfigurados"], "Valor catastral", "nombre");
-                    $parms['subsidio'] = $this->getValue( $info["camposConfigurados"], "Subsidio", "nombre");
+                    $hoja = $this->getValue( $info["camposConfigurados"], "Hoja", "nombre");
+                    $campoCantidadLote = $this->getValue( $info["camposConfigurados"], "Cantidad de lotes", "nombre");
+                    $lote = $this->getValue( $info["camposConfigurados"], "Lote", "nombre");
+                    $subsidio = $this->getValue( $info["camposConfigurados"], "Subsidio", "nombre");
+                    $valor_catastral = $this->getValue( $info["camposConfigurados"], "Valor catastral", "nombre");
+                    $valor_operacion = $this->getValue( $info["camposConfigurados"], "Valor de operacion", "nombre");
+                    $tipoOperacion = $this->getValue( $info["camposConfigurados"], "Tipo de Operación", "nombre");
+                    $divisa = $this->getValue( $info["camposConfigurados"], "Cambio de divisas", "nombre");
+
+                    if(isset($valor_catastral) && $valor_catastral){
+                        $parms['valor_catastral'] = $valor_catastral;
+                    }
+
+                    if(isset($subsidio) && $subsidio ){
+                        $parms['subsidio'] = $subsidio;
+                    }
+
+                    if(isset($valor_operacion) &&  $valor_operacion){
+                        $parms['valor_operacion'] = $valor_operacion;
+                    }
+
+                    if(isset($hoja) &&  $hoja){
+                        $parms['hoja'] = $hoja;
+                    }
+
+                    if(isset($tipoOperacion) &&  $tipoOperacion){
+                        $parms['tipoOperacion'] = $tipoOperacion;
+                    }
+
+
+                    if(isset($divisa) &&  $divisa){
+                        $parms['divisa'] = $divisa;
+                    }
+
+
+                    if(isset($campoCantidadLote) &&  $campoCantidadLote) {// es con el campo o con el valor
+                        $parms['lote'] = $campoCantidadLote;
+                    } else if( isset($lote) &&  $lote ){
+                        $parms['lote'] = $lote;
+                    }
+
+                    if( isset( $this->info['complementoDe'] ) ){
+                        Log::info('complementoDe');
+                        Log::info( print_r ($this->info['complementoDe'], true));
+                        $parms['id_ticket'] = $this->info['complementoDe'];
+                    }
                 }
 
-
-
-            /*if( $info && isset($info["camposConfigurados"]) ){
-                $parms['fecha_escritura'] = $this->getValue( $info["camposConfigurados"], "Fecha de escritura o minuta", "nombre");
-                $parms['ganancia_obtenida'] = $this->getInNumber( $info['enajenante']["datosParaDeterminarImpuesto"]['gananciaObtenida']  ) ;
-                $parms['monto_operacion'] = $this->getInNumber( $info['enajenante']["datosParaDeterminarImpuesto"]['montoOperacion']  ) ;//15600;//
-                $parms['multa_correccion_fiscal'] = $this->getInNumber( $info['enajenante']["datosParaDeterminarImpuesto"]['multaCorreccion']  ) ;//16800;//
-                $parms['pago_provisional_lisr'] = $this->getInNumber( $info['enajenante']["datosParaDeterminarImpuesto"]['pagoProvisional']  ) ;   
-            }*/
 
                 return $parms;
             } else {
@@ -134,16 +169,16 @@ class TramiteRP
     }
 
     private function getValue($array, $name, $campo){
-        $campo = $this->findIndex($name, $array, $campo);
-        if( gettype($campo) == 'integer' &&  $campo >= 0 ){
-            if($array[$campo]['tipo'] == 'select'){
-                return $array[$campo]['valor']['clave'];
+        $res = $this->findIndex($name, $array, $campo);
+        if( gettype($res) != 'boolean' &&  $res >= 0 ){
+            if($array[$res]['tipo'] == 'select'){
+                return $array[$res]['valor']['clave'];
             } else {
-                return $array[$campo]['valor'];
+                return $array[$res]['valor'];
             }
             
         } else {
-            Log::info("es no integet campo");
+            Log::info($name. " es no integet res:" .  gettype($res));
             return false;
         }
     }
@@ -154,6 +189,12 @@ class TramiteRP
 
 
     private function findIndex($label, $array, $column){
-        return array_search( strtolower($label), array_column($array, strtolower($column)));
+        return array_search( strtolower($label), array_map( function ($column){
+            return strtolower($column);  
+        } ,array_column($array, $column) ) );
+    }
+
+    private function columnToLower($column){
+        return strtolower($column);   
     }
 }

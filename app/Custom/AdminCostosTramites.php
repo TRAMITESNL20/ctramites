@@ -62,6 +62,10 @@ class AdminCostosTramites
                 Log::info('**********Datos para calcular costo**********');
                 Log::info( print_r ($params, true));
                 Log::info('Obtener costo nuevo');
+                $detalle =  $this->tramiteRP->calcularTotal($params);
+                $detalleObj = json_decode( $detalle, true, 512);
+                Log::info( print_r ($detalleObj, true));
+
             } else {
                 Log::error('##########No hay parametros para consultar detalle');  
                 return false;
