@@ -133,6 +133,7 @@ export default {
                     contadorAux++;
                     
                 }
+                this.restartErorrs();
 
             //emitir de camposTramiteCompoent para que se vaya a results ?) 
         }
