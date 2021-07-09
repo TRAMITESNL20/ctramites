@@ -583,6 +583,7 @@
 							this.loading = true;
 							const response = await axios.get(url);
 							const rows = [];
+							response.data['expediente_catastral'] = (exp);
 							this.response = [response.data];
 							if(response.data.resultado) rows.push([exp, response.data.resultado])
 							else{
