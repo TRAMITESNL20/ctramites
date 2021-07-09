@@ -104,8 +104,8 @@ class TramiteRP implements iTramite
                     }
 
                     if( isset( $this->info['complementoDe'] ) ){
-                        Log::info('complementoDe');
-                        Log::info( print_r ($this->info['complementoDe'], true));
+                        Log::channel('costos-update')->info('complementoDe');
+                        Log::channel('costos-update')->info( print_r ($this->info['complementoDe'], true));
                         $parms['id_ticket'] = $this->info['complementoDe'];
                     }
                 }
@@ -113,11 +113,11 @@ class TramiteRP implements iTramite
 
                 return $parms;
             } else {
-                Log::info("No se encontraron solicitantes");
+                Log::channel('costos-update')->info("No se encontraron solicitantes");
                 return [];
             }
         } else {
-            Log::info("No se encontro tramite id");
+            Log::channel('costos-update')->info("No se encontro tramite id");
             return [];
         }
     }
@@ -131,7 +131,7 @@ class TramiteRP implements iTramite
             $response =  $this->tramiteCtrl->getcostoTramite( $request );
             $this->detalleNuevo = $response; 
         } catch (Exception $e) {
-            Log::error('Error al obtener detalle '. $e->getMessage());
+            Log::channel('costos-update')->error('Error al obtener detalle '. $e->getMessage());
         }
         
         return $response;
@@ -157,13 +157,13 @@ class TramiteRP implements iTramite
                 $query = $this->modelTramite->where('id', $this->tramite->id)->where('status', '=', 99)->update([
                     'info' => json_encode($this->info)
                 ]);   
-                Log::info('Registrto actualizado');
-                Log::info( print_r ($query, true));
-                Log::info('-----------------------');
+                Log::channel('costos-update')->info('Registrto actualizado');
+                Log::channel('costos-update')->info( print_r ($query, true));
+                Log::channel('costos-update')->info('-----------------------');
                 return $query ? true : false;
 
         } else {
-            Log::warning('No hay parametros para calcular costos');
+            Log::channel('costos-update')->warning('No hay parametros para calcular costos');
             return false;
         }
     }

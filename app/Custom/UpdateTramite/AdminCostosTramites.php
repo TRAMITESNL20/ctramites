@@ -34,33 +34,33 @@ class AdminCostosTramites
     }
 
     private function update( iTramite $tramiteCtrl, $tramite  ){
-        Log::info('Obtener costos total actual');
+        Log::channel('costos-update')->info('Obtener costos total actual');
         $tramiteCtrl->setTramite( $tramite );
         $totalActual =  $tramiteCtrl->getTotalActual();
         if(isset($totalActual)){
-            Log::info('Importe total actual:' . $totalActual );
-            Log::info('Obtener campos para calcular costo nuevo');
+            Log::channel('costos-update')->info('Importe total actual:' . $totalActual );
+            Log::channel('costos-update')->info('Obtener campos para calcular costo nuevo');
             $params = $tramiteCtrl->getParamsParaCosto();
             if( count($params) > 0 ){
-                Log::info('**********Datos para calcular costo**********');
-                Log::info( print_r ($params, true));
-                Log::info('Obtener costo nuevo');
-                Log::info("Importe nuevo:" . ($tramiteCtrl->getTotal()) );
-                Log::info("Necesario actualizar :" . ( $tramiteCtrl->canUpdate() ? 'SI' : 'NO' )  );
-                Log::info('Detalle Calculo Nuevo:');
-                Log::info( print_r ($tramiteCtrl->getDetalleNuevoComoObj(), true));
+                Log::channel('costos-update')->info('**********Datos para calcular costo**********');
+                Log::channel('costos-update')->info( print_r ($params, true));
+                Log::channel('costos-update')->info('Obtener costo nuevo');
+                Log::channel('costos-update')->info("Importe nuevo:" . ($tramiteCtrl->getTotal()) );
+                Log::channel('costos-update')->info("Necesario actualizar :" . ( $tramiteCtrl->canUpdate() ? 'SI' : 'NO' )  );
+                Log::channel('costos-update')->info('Detalle Calculo Nuevo:');
+                Log::channel('costos-update')->info( print_r ($tramiteCtrl->getDetalleNuevoComoObj(), true));
                 if( $tramiteCtrl->canUpdate() ){
                     return $tramiteCtrl->updateDetalle();
                 } else {
                     return false;
                 }
-                Log::info('Fin update');
+                Log::channel('costos-update')->info('Fin update');
             } else {
-                Log::warning('##########No hay parametros para consultar detalle');  
+                Log::channel('costos-update')->warning('##########No hay parametros para consultar detalle');  
                 return false;
             } 
         } else {
-            Log::warning('No tiene Importe total');
+            Log::channel('costos-update')->warning('No tiene Importe total');
             return false;
         }     
 

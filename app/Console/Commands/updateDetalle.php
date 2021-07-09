@@ -42,37 +42,37 @@ class updateDetalle extends Command
      */
     public function handle()
     {
-        Log::info('*******************************************INICIO DEL PROCESO*******************************************');
-        Log::info('Obtener tramites');
+        Log::channel('costos-update')->info('*******************************************INICIO DEL PROCESO*******************************************');
+        Log::channel('costos-update')->info('Obtener tramites');
         $totalActualizados = 0;
         $listadoTramites = $this->getTramites();
-        Log::info('###############################################Total Tramites: ' . (count($listadoTramites)) . '###############################################');
+        Log::channel('costos-update')->info('###############################################Total Tramites: ' . (count($listadoTramites)) . '###############################################');
         if($listadoTramites && count($listadoTramites)){
-            Log::info('Procesar tramites');
+            Log::channel('costos-update')->info('Procesar tramites');
             foreach ($listadoTramites as $tramite) {
-                Log::info('###############################################Tramite, ticket: ' . ($tramite->id). ' ###############################################'); 
+                Log::channel('costos-update')->info('###############################################Tramite, ticket: ' . ($tramite->id). ' ###############################################'); 
                 if( $tramite->catalogo_id == 10 ){
-                    Log::info('update 5% ISR') ;
+                    Log::channel('costos-update')->info('update 5% ISR') ;
                     if($this->adminCostos->updateISR($tramite)){
                         $totalActualizados = $totalActualizados+1;
                     }
                 } else if( $tramite->catalogo_id == 71 ){
-                    Log::info('Actualizacion no disponible Catalogo ID:' . $tramite->catalogo_id);
+                    Log::channel('costos-update')->info('Actualizacion no disponible Catalogo ID:' . $tramite->catalogo_id);
                 } else if( $tramite->catalogo_id == 3 ){
-                    Log::info('Actualizacion no soportada Catalogo ID:' . $tramite->catalogo_id);
+                    Log::channel('costos-update')->info('Actualizacion no soportada Catalogo ID:' . $tramite->catalogo_id);
                 } else {
-                   Log::info('update Tramite RP');
+                   Log::channel('costos-update')->info('update Tramite RP');
                     if($this->adminCostos->updateTramiteRP($tramite)){
                         $totalActualizados = $totalActualizados+1;
                     }
                 }
                 
-                Log::info('-----------------------------------------------FIN ticket ' . $tramite->id . '-----------------------------------------------');
+                Log::channel('costos-update')->info('-----------------------------------------------FIN ticket ' . $tramite->id . '-----------------------------------------------');
             }
-            Log::info('Actualizados: ' . $totalActualizados);
-            Log::info('*******************************************FIN DEL PROCESO*******************************************');
+            Log::channel('costos-update')->info('Actualizados: ' . $totalActualizados);
+            Log::channel('costos-update')->info('*******************************************FIN DEL PROCESO*******************************************');
         } else {
-            Log::warning('Error al obtener los tramites'); 
+            Log::channel('costos-update')->warning('Error al obtener los tramites'); 
         }
     }
 

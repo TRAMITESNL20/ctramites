@@ -23,10 +23,10 @@ class Tramite5ISR implements iTramite
         
 
         if( isset($this->info['tipoTramite']) ) {
-            Log::info('Tipo tramite: ' . ( $this->info['tipoTramite']) ); 
+            Log::channel('costos-update')->info('Tipo tramite: ' . ( $this->info['tipoTramite']) ); 
     
         } else {
-           Log::warning('ID ERROR tramite: ' . ( $this->tramite->id  ) );
+           Log::channel('costos-update')->warning('ID ERROR tramite: ' . ( $this->tramite->id  ) );
         }
     }
 
@@ -75,7 +75,7 @@ class Tramite5ISR implements iTramite
             $response =  $this->impuestoCtrl->index( $request );
             $this->detalleNuevo = $response; 
         } catch (Exception $e) {
-            Log::error('Error al obtener detalle '. $e->getMessage());
+            Log::channel('costos-update')->error('Error al obtener detalle '. $e->getMessage());
         }
         
         return $response;
@@ -100,15 +100,15 @@ class Tramite5ISR implements iTramite
                 $query = $this->modelTramite->where('id', $this->tramite->id)->where('status', '=', 99)->update([
                     'info' => json_encode($this->info)
                 ]);   
-                Log::info('Registrto actualizado');
-                Log::info( print_r ($query, true));
-                Log::info('-----------------------');
+                Log::channel('costos-update')->info('Registrto actualizado');
+                Log::channel('costos-update')->info( print_r ($query, true));
+                Log::channel('costos-update')->info('-----------------------');
                 return $query ? true : false;
             } else {
                 return false;
             }
         } else {
-            Log::warning('Es declaracionEn0');
+            Log::channel('costos-update')->warning('Es declaracionEn0');
             return false;
         }
     }
