@@ -96,8 +96,14 @@ import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue'
                 this.tramite.mensajes.map(msg => {
                     if(msg.attach && msg.attach != ""){
                         let name = msg.attach.split('/');
+                        let ext = name[name.length-1].split('.');
+                        ext = ext[ext.length-1];
+
+                        name = name[name.length-1].split('-'); // Manual-ford-mondeo-2319_5_1625781494.pdf
+                        name = name.slice(0, -1); // 2319_5_1625781494.pdf
+
                         this.files.push({
-                            name : name[name.length-1],
+                            name : `${name.join('-')}.${ext}`,
                             href : msg.attach
                         });
                     }
