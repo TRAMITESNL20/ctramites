@@ -136,9 +136,15 @@ export default {
 			},
 			messageEvt (evt) {
 				var self = this;
-				console.log('menssageEvt', evt.data);
-				if( evt.data.length >= 1  ){
+				console.log('menssageEvt', evt.data );
+			
+
+
+				if( typeof(evt.data)=== 'object'  &&  evt.data.length >= 1  ){
+
 					if( evt.data[0].includes(this.usuario.solicitudes[0].id)  ){
+						this.urlFirmado = evt.data;
+						
 						console.log("el id es: " + this.usuario.solicitudes[0].id );
 					
 						fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
@@ -157,6 +163,25 @@ export default {
 							else console.log('Something goes wrong!',  res);
 						});
 					}
+
+				}else if(evt.data === 'Terminó'){
+					console.log('se guarda desde como en prod xD');
+					fetch(`${process.env.TESORERIA_HOSTNAME}/solicitudes-guardar-carrito`, {
+						method : 'POST',
+						body: JSON.stringify({ ids : self.idFirmado, status : 1, type : 'firmado', urls : self.urlFirmado, user_id: user.id })
+					})
+					.then(res => res.json())
+					.then(res => {
+						if(res.code === 200){
+							console.log('Firmado');    
+							self.tramiteFirmado = true;
+							self.$emit('docFirmadosListos', self.docFirmadosListos);
+							self.$emit('docFirmado', 1);
+							self.$emit('urlFirmado', self.urlFirmado);
+						}
+						else console.log('Something goes wrong!', res);
+					});
+
 					
 				}
 			}
