@@ -161,7 +161,7 @@
 							})
 							.then(res => res.json())
 							.then(res => {
-								if(res.code === 200){
+								if(res.code == 200){
 									console.log('Informativo Folio Guardado');    
 								}
 								else console.log('Algo salio mal al guardar en el sistema!',  res);
