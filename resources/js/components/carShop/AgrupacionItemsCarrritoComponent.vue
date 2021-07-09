@@ -20,7 +20,7 @@
                     </button>
 
                     <div style="margin-right:15px;"  class="close" v-if="agrupacion.items[0].detalleAnterior">
-                        <detalle-actualizado-component :items="agrupacion.items" :onlyRead="agrupacion.items.length > 1"></detalle-actualizado-component>
+                        <detalle-actualizado-component :items="agrupacion.items" :inCart="true"></detalle-actualizado-component>
                     </div>
 
                 </div>

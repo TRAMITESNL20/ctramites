@@ -15,6 +15,8 @@
                             <h5 class="ml-3"><span style="font-weight: normal;"><strong>{{ tramite[0].created_at }}</strong></span></h5>
 						</div>
 						<div class="my-lg-0 my-1">
+                            <detalle-actualizado-component :items="tramite.map( t => t.info )"></detalle-actualizado-component>
+                            
                             <a v-on:click="goTo(tramite[0].recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].recibo_referencia && [5].includes(type)">VER REFERENCIA</a>
                             <!-- <a v-on:click="redirect(tramite[0].doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].doc_firmado && [2,3].includes(type)">VER DECLARACIÓN</a> -->
                             <a v-on:click="goTo(tramite[0].tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].tramites && tramite[0].tramites[0] && tramite[0].tramites[0].url_recibo && [1,2,3].includes(type)">VER RECIBO DE PAGO</a>

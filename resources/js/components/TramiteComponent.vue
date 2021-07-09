@@ -30,13 +30,14 @@
                         <!--begin::User-->
                         <!--begin::Actions-->
                         <div class="my-lg-0 my-1 boton-lista-mobil">
+                            <detalle-actualizado-component :items="tramite.info" v-if="tramite.status == 99"></detalle-actualizado-component>
                             <button v-on:click="addToCart(tramite)" v-if="!group && tramite.status == 99 && !['notary_capturist'].includes(user.role_name)" type="button" class="btn btn-sm" :class="tramite.en_carrito ? 'btn-primary' : 'btn-outline-primary'">
-                                <span v-if="tramite.loading"><i class="fas fa-spinner fa-spin"></i></span>
-                                <span v-if="!tramite.loading"><i :class="tramite.en_carrito == 1 ? (cartComponent ? 'fas fa-trash' : 'fas fa-check-circle') : 'fas fa-plus-circle'"></i> {{ tramite.en_carrito == 1 ? (cartComponent ? 'ELIMINAR' : 'QUITAR DEL CARRITO') : 'AGREGAR AL CARRITO' }}</span>
+                                <small v-if="tramite.loading"><i class="fas fa-spinner fa-spin"></i></small>
+                                <small v-if="!tramite.loading"><i :class="tramite.en_carrito == 1 ? (cartComponent ? 'fas fa-trash' : 'fas fa-check-circle') : 'fas fa-plus-circle'"></i> {{ tramite.en_carrito == 1 ? (cartComponent ? 'ELIMINAR' : 'QUITAR DEL CARRITO') : 'AGREGAR AL CARRITO' }}</small>
                             </button>
                             <button v-on:click="addToSign(tramite)" v-if="!group && type == 'pendiente_firma' && ['notary_titular', 'notary_substitute'].includes(user.role_name)" type="button" class="btn btn-sm" :class="tramite.por_firmar ? 'btn-primary' : 'btn-outline-primary'">
-                                <span v-if="tramite.loadingSign"><i class="fas fa-spinner fa-spin"></i></span>
-                                <span v-if="!tramite.loadingSign"><i :class="tramite.por_firmar == 1 ? 'fas fa-check-circle' : 'fas fa-plus-circle'"></i> {{ tramite.por_firmar == 1 ? 'DESELECCIONAR' : 'PREPARAR PARA FIRMAR' }}</span>
+                                <small v-if="tramite.loadingSign"><i class="fas fa-spinner fa-spin"></i></small>
+                                <small v-if="!tramite.loadingSign"><i :class="tramite.por_firmar == 1 ? 'fas fa-check-circle' : 'fas fa-plus-circle'"></i> {{ tramite.por_firmar == 1 ? 'DESELECCIONAR' : 'PREPARAR PARA FIRMAR' }}</small>
                             </button>
                             <a v-on:click="goTo(tramite)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="!tramite.info">
                                 INICIAR TRAMITE
