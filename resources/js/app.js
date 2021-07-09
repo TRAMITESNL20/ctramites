@@ -99,7 +99,6 @@ Vue.component("resumen-aviso-enajenacion-component" , () => import( /* webpackCh
 Vue.component("divisa-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/divisa-component" */ './components/tiposElementos/DivisaComponent.vue' ));
 Vue.component("input-currency-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/input-currency-component" */ './components/tiposElementos/InputCurrencyComponent.vue' ));
 
-Vue.component('resumen-campos-component',  () => import( /* webpackChunkName: "js/components/resumen-campos-component" */ './components/ResumenCamposComponent.vue'));
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

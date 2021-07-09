@@ -20,6 +20,7 @@
     import Vue from 'vue'
 
     export default {
+        name:'resumen-campos-component',
         props: ['campos'],
 
     }
