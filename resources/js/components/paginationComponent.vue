@@ -46,7 +46,18 @@
     					<tramite-component :cartComponent="cartComponent" :group="true" :type="type" v-for="(solicitud, ind) in tramite" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="solicitud" v-bind:key="ind" v-if="totalItems != 0"></tramite-component>
                     </div>
 				</div>
-				<tramite-component @obtenerTramites="obtenerTramites" :cartComponent="cartComponent" :type="type" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="tramite[0]" v-bind:key="index"  v-if="tramite.length == 1 && totalItems != 0"></tramite-component>
+				<tramite-component
+                    @obtenerTramites="obtenerTramites"
+                    :cartComponent="cartComponent"
+                    :type="type"
+                    @processToCart="processToCart"
+                    @processDelete="processDelete"
+                    :tramitesCart="tramitesCart"
+                    :tramite="tramite[0]"
+                    v-bind:key="index"
+                    v-if="tramite.length == 1 && totalItems != 0"
+                    @responseDelete="responseDelete"
+                ></tramite-component>
 			</div>
             <div class="card mb-4 pt-5" v-if="totalItems === 0">
                 <div class="card-body">
@@ -244,6 +255,12 @@
             },
             obtenerTramites(){
                 this.$emit('obtenerTramites');
+            },
+            responseDelete(res){
+                if(res.data && res.data.Code == '200' && res.data.Message == 'Estatus actualizado'){
+                    Command: toastr.success("", "Item eliminado correctamente");
+                    this.$emit('updateListado', res);
+                }
             }
 		}
 	};
