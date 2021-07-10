@@ -104,9 +104,10 @@ export default {
                         let name = msg.attach.split('/');
                         let ext = name[name.length-1].split('.');
                         ext = ext[ext.length-1];
-
                         name = name[name.length-1].split('-'); // Manual-ford-mondeo-2319_5_1625781494.pdf
-                        name = name.slice(0, -1); // 2319_5_1625781494.pdf
+                        // console.log(name);
+                        if(name.length > 1)
+                            name = name.slice(0, -1); // 2319_5_1625781494.pdf
 
                         this.files.push({
                             name : `${name.join('-')}.${ext}`,
