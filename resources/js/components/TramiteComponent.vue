@@ -46,6 +46,7 @@
                             <!-- <modal-document-component  :tramitesdoc="tramitesdoc" v-if="tramite.required_docs === 0"   ></modal-document-component> -->
                             <a v-on:click="goTo(tramite.tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.tramites && tramite.tramites[0] && tramite.tramites[0].url_recibo && [2,3].includes(type) && !group">VER RECIBO DE PAGO</a>
                             <div class="btn-group" v-if="tramite.info && !cartComponent && !group && ![7,8].includes(tramite.status)">
+                                <btn-eliminar-borrador-component :tramite="tramite" @responseDelete="responseDelete"></btn-eliminar-borrador-component>
                                 <a v-on:click="goTo(tramite)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" :class="files.length == 0 ? 'rounded' : ''">
                                     <span class="text-white">VER DETALLES</span>
                                 </a>
@@ -184,6 +185,10 @@ import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue'
                         tramite.loadingSign = false;
                     });
                 });
+            },
+
+            responseDelete(res){
+                this.$emit('responseDelete', res);
             }
         }
     }
