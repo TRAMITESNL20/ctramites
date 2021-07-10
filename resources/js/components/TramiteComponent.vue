@@ -143,7 +143,7 @@ export default {
                 let { id_transaccion } = tramite;
                 this.$dialog.confirm({
                     title: '¿Esta seguro de cancelar la referencia de pago?',
-                    text: '*Al cancelar la referencia también se eliminará el ticket, es decir, se tendrá que crear de nuevo el trámite.',
+                    text: '*Al cancelar la referencia también se eliminará el tramite, es decir, se tendrá que crear de nuevo el trámite.',
                     actions: [{
                         text: 'No',
                         color: 'red',

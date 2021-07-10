@@ -161,7 +161,34 @@
 		methods : {
             cancelReference(tramite){
                 let { id_transaccion } = tramite;
-                console.log(tramite);
+                this.$dialog.confirm({
+                    title: '¿Esta seguro de cancelar la referencia de pago?',
+                    text: '*Al cancelar la referencia también se eliminará el tramite, es decir, se tendrá que crear de nuevo el trámite.',
+                    actions: [{
+                        text: 'No',
+                        color: 'red',
+                        class:'danger',
+                        key: false,
+                        handle: () => { }
+                    },{
+                        text: 'Si',
+                        color: 'blue',
+                        key: true,
+                        handle: () => {
+                            fetch(`${process.env.APP_URL}/api/cancel-reference/${id_transaccion}`, {
+                                method : 'POST'
+                            })
+                            .then(res => res.json())
+                            .then(res => {
+                                if(res.updated == 'ok'){
+                                    toastr.success("Referencia cancelada con éxito");
+                                    this.$emit('obtenerTramites');
+                                }
+                                else toastr.error(res.message, "Error!");
+                            })
+                        }
+                    }]
+                })
             },
             goTo(tramite, _blank=false){
                 if(typeof tramite === 'string') return redirect(tramite, _blank);

@@ -52,7 +52,7 @@
         <div v-if="estatusTramites == '5'">
             <b-alert show variant="warning"> 
                 <div class="text-justify text-white">
-                    Si ya realizó su pago y validó que se haya efectuado con éxito, su ticket deberá ser trasladado al listado trámites finalizados o trámites en curso en un plazo máximo de 48 horas.
+                    Si usted realizó su pago y verificó que se halla efectuado, su referencia será actualiza en trámites finalizados en un máximo de 48 horas.
                 </div>
             </b-alert>
         </div>
