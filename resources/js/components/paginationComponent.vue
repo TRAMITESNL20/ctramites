@@ -4,9 +4,9 @@
 			<div v-for="(tramite, index) in tramitesPaginados" :class="!tramite[0].en_carrito && cartComponent ? 'd-none' : '' ">
 				<div class="card list-item card-custom gutter-b col-lg-12" style="background-color: #d9dee2 !important;" v-if="tramite.length > 1">
 					<div class="d-flex mobile-lista-multiple align-items-center mb-3">
-						<div class="mr-3 ml-4  espace-checkbox" v-if="tramite[0].status && (tramite[0].status == 99 || tramite[0].status == 98) && !cartComponent && ['notary_titular', 'notary_substitute'].includes(user.role_name)"><input type="checkbox" :id="tramite[0].id" style="width:18px; height:18px;" v-on:change="processToCart(tramite[0], true)"></div>
+						<div class="mr-3 ml-4  espace-checkbox" v-if="tramite[0].status && (tramite[0].status == 99 || tramite[0].status == 98) && !cartComponent && ['notary_titular', 'notary_substitute'].includes(user.role_name)"><input type="checkbox" :id="tramite[0].id" style="width:18px; height:18px;" v-on:change="processToCart(tramite[0], true)"></div>
 						<div class="mr-auto espace-checkbox-text desktop-agrupacion-width" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '70%' } ]">
-							<h4 class="ml-3 text-uppercase text-truncate"><strong>{{ tramite[0].nombre_servicio && (tramite[0].titulo && tramite[0].nombre_servicio.toLowerCase() != tramite[0].titulo.toLowerCase()) ? `${tramite[0].nombre_servicio} - ` : '' }}{{ (tramite[0].info && tramite[0].info.tipoTramite) || tramite[0].tramite || tramite[0].titulo | capitalize }}</strong></h4>
+							<h4 class="ml-3 text-uppercase text-truncate"><strong>{{ tramite[0].nombre_servicio && (tramite[0].titulo && tramite[0].nombre_servicio.toLowerCase() != tramite[0].titulo.toLowerCase()) ? `${tramite[0].nombre_servicio} - ` : '' }}{{ (tramite[0].info && tramite[0].info.tipoTramite) || tramite[0].tramite || tramite[0].titulo | capitalize }}</strong></h4>
 							<h5 class="ml-3">
                                 <span style="font-weight: normal;" v-if="tramite[0].tramites[0] && tramite[0].tramites[0].id_transaccion_motor"><strong>FOLIO PAGO:</strong> {{ tramite[0].tramites[0].id_transaccion_motor ? `${tramite[0].tramites[0].id_transaccion_motor} -` : '' }}</span>
                                 <span style="font-weight: normal;" v-if="tramite[0].tramites[0] && tramite[0].tramites[0].id"><strong>FSE:</strong> {{ tramite[0].tramites[0].id ? `${tramite[0].tramites[0].id} -` : '' }}</span>
@@ -33,7 +33,7 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a v-for="(file, ind) in tramite[0].files" class="dropdown-item" :href="file.href || file" target="_blank" :key="ind"><i class="fas fa-download mr-2"></i> {{ file.name || file }}</a>
+                                    <a v-for="(file, ind) in tramite[0].files" class="dropdown-item" :href="file.href || file" target="_blank" :key="ind"><i class="fas fa-download mr-2"></i> {{ file.name || file }}</a>
                                 </div>
                             </div>
                             <span v-if="cartComponent" class="btn btn-secondary mr-2">{{ new Intl.NumberFormat('es-MX', { style : 'currency', currency : 'MXN' }).format(tramite.map(ele => ele.importe_tramite).reduce((a,b) => a+b)) }} </span>
@@ -96,27 +96,9 @@
             localStorage.removeItem('datosFormulario');
             localStorage.removeItem('listaSolicitantes');
             localStorage.removeItem('tramite');
-			
+
             this.calcularPage()
             this.pagination(1);
-
-            Object.entries(this.tramitesPaginados).map(obj => {
-                let [ind, tramite] = obj;
-                let files = [];
-                if(tramite[0].info && typeof tramite[0].info === 'string')
-                    tramite[0].info = JSON.parse(tramite[0].info)
-                if(tramite[0].mensajes && tramite[0].mensajes.length > 0){
-                    tramite[0].mensajes.map(msg => {
-                        if(msg.attach && msg.attach != ""){
-                            files.push(msg.attach);
-                        }
-                    })
-                }
-                
-                tramite[0].files = files;
-
-                this.tramitesPaginados[ind] = tramite;
-            })
 		},
 		data () {
 			let attrs = this.$attrs;
@@ -134,6 +116,28 @@
         watch: {
             items (props) {
                 this.items = props;
+            },
+            tramitesPaginados (props) {
+                Object.entries(this.tramitesPaginados).map(obj => {
+                    let [ind, tramite] = obj;
+                    let files = [];
+                    if(tramite[0].info && typeof tramite[0].info === 'string')
+                        tramite[0].info = JSON.parse(tramite[0].info)
+                    if(tramite[0].mensajes && tramite[0].mensajes.length > 0){
+                        tramite[0].mensajes.map(msg => {
+                            if(msg.attach && msg.attach != ""){
+                                let name = msg.attach.split('/')
+                                files.push({
+                                    name : name[name.length-1],
+                                    href : msg.attach
+                                });
+                            }
+                        })
+                    }
+                    
+                    tramite[0].files = files;
+                    this.tramitesPaginados[ind] = tramite;
+                })
             }
         },
 		methods : {
@@ -142,7 +146,7 @@
                 if(window.location.href.indexOf("borradores") >= 0){
                     redirect("detalle-tramite/" + tramite.tramite_id + "?clave=" + tramite.clave, _blank);
                 } else {
-                    redirect(`/detalle${ tramite.id_tramite ? "-tramite" : "" }/` +  (tramite.id_tramite || tramite.id), _blank);
+                    redirect(`/detalle${ tramite.id_tramite ? "-tramite" : "" }/` +  (tramite.id_tramite || tramite.id), _blank);
                 }
                 
             },
@@ -175,12 +179,10 @@
                 	else groups[tramite.clave] = [tramite];
                 })
 
-                console.log('items', this.items);
                 this.tramitesPaginados = groups;
                 this.totalItems = this.items.length;
             },
             goto( page ){ 
-                console.log('pages', this.pages);
                 this.pagination(page);
                 this.currentPage = page;
             },

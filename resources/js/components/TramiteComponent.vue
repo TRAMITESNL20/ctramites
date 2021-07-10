@@ -54,7 +54,7 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a v-for="(file, ind) in files" class="dropdown-item" :href="file.href || file" :key="ind"><i class="fas fa-download mr-2"></i> {{ file.name || file }}</a>
+                                    <a v-for="(file, ind) in files" class="dropdown-item" :href="file.href || file" target="_blank" :key="ind"><i class="fas fa-download mr-2"></i> {{ file.name || file }}</a>
                                 </div>
                             </div>
                             <a v-on:click="goTo(`detalle-tramite/${tramite.tramite_id}?clave=${tramite.clave}`)" class="btn btn-sm btn-success font-weight-bolder text-uppercase text-white" v-if="[7,8].includes(tramite.status)">
@@ -96,7 +96,11 @@ import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue'
             if(this.tramite.mensajes && this.tramite.mensajes.length > 0){
                 this.tramite.mensajes.map(msg => {
                     if(msg.attach && msg.attach != ""){
-                        this.files.push(msg.attach);
+                        let name = msg.attach.split('/');
+                        this.files.push({
+                            name : name[name.length-1],
+                            href : msg.attach
+                        });
                     }
                 })
             }

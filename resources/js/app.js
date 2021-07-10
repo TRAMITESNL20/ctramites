@@ -117,7 +117,7 @@ Vue.filter('toNumber', function (value) {
 });
 
 Vue.prototype.$const = {
-    PRECISION: 3,
+    PRECISION: 5,
     NOMBRES_CAMPOS:{
         CAMPO_DIVISAS: "Cambio de divisas",
         CAMPO_LOTE: "Lote",
