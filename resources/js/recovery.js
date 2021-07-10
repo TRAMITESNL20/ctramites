@@ -46,6 +46,21 @@ $('#kt_recovery_submit').on('click', function(e) {
                     }).then(function() {
                         redirect("/login");
                     });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.status == 401) {
+                        swal.fire({
+                            text: "No se encontró una cuenta registrada con el correo ingresado.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Entendido",
+                            customClass: {
+                                confirmButton: "btn font-weight-bold btn-light-primary"
+                            }
+                        }).then(function() {
+                            KTUtil.scrollTop();
+                        });
+                    }
                 }
             });
         } else {
