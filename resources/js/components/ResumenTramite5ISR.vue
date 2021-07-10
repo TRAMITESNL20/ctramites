@@ -35,26 +35,39 @@
                                     <template-datos-personales-component :datosPersonales="data.item.datosPersonales"></template-datos-personales-component>
                                 </template>
                                 <template #cell(detalle)="data" >
-                                    <div v-if="data.item.detalle && data.item.detalle.Salidas">
-                                        <div class="text-center">
-                                            {{currencyFormat('Importe total', data.item.detalle.Salidas['Importe total'])}}
-                                        </div>                          
-                                    </div>
-                                    <div v-else-if="!data.item.detalle || typeof data.item.detalle != 'object'">
-                                        <div class="text-center text-danger">
-                                          No fue posible obtener información <br>   
-                                          <span class="text-muted text-danger">    
-                                                Consulte al administrador del sistema
-                                          </span>
-                                        </div>                          
-                                    </div>
+                                    <transition name="slide-fade">
+                                        <div v-if="!actualizandoDatos">
+                                            <div v-if="data.item.detalle && data.item.detalle.Salidas">
+                                                <div class="text-center">
+                                                    {{currencyFormat('Importe total', data.item.detalle.Salidas['Importe total'])}}
+                                                </div>                          
+                                            </div>
+                                            <div v-else-if="!data.item.detalle || typeof data.item.detalle != 'object'">
+                                                <div class="text-center text-danger">
+                                                  No fue posible obtener información <br>   
+                                                  <span class="text-muted text-danger">    
+                                                        Consulte al administrador del sistema
+                                                  </span>
+                                                </div>                          
+                                            </div>
+                                        </div>
+                                        <div v-else-if="actualizandoDatos">
+                                            <b-spinner small type="grow" label="Loading..."></b-spinner>
+                                        </div>
+                                    </transition>
                                 </template>
                                 <template #cell(status)="data">
-                                    <div v-if="data.item.detalle && typeof data.item.detalle == 'object'">
-                                        <b-link title="Click para ver detalles" @click="data.toggleDetails" class="mr-2 btn btn-link">
-                                            {{!data.detailsShowing ? "Ver detalle " : "Ocultar detalle "}}
-                                        </b-link>
-                                    </div>
+                                    <transition name="slide-fade">
+                                        <div v-if="data.item.detalle && typeof data.item.detalle == 'object' && !actualizandoDatos ">
+                                            <b-link title="Click para ver detalles" @click="data.toggleDetails" class="mr-2 btn btn-link">
+                                                {{!data.detailsShowing ? "Ver detalle " : "Ocultar detalle "}}
+                                            </b-link>
+                                        </div>
+
+                                        <div v-else-if="actualizandoDatos">
+                                            <b-spinner small  type="grow" label="Loading..."></b-spinner>
+                                        </div>
+                                    </transition>
                                 </template> 
                                 <template #row-details="data" #title="Detalle">
                                     <transition name="slide-fade">
@@ -106,9 +119,9 @@
                                     </div>
                                     <div v-else-if="!data.item.detalle || typeof data.item.detalle != 'object'">
                                         <div class="text-center text-danger">
-                                          No fue posible obtener información <br>   
+                                          Error de comunicacion. <br>   
                                           <span class="text-muted text-danger">    
-                                                Consulte al administrador del sistema
+                                            Favor de iniciar el tramite.
                                           </span>
                                         </div>                          
                                     </div>
@@ -122,7 +135,7 @@
                                 </template> 
                                 <template #row-details="data" #title="Detalle">
                                     <transition name="slide-fade" tag="b-card">
-                                        <b-card key="1" no-body v-if="data && data.item.detalle.Salidas">
+                                        <b-card key="1" no-body v-if="data && data.item.detalle.Salidas" >
                                                 <template #header>
                                                   <h4 class="mb-0">Complementaria</h4>
                                                 </template>
@@ -152,23 +165,61 @@
 <script>
 
     import Vue from 'vue'
+    import costosApi from '../services/costosApi.services.js';
 
     export default {
 
         props: ['datosComplementaria','tipoTramite', 'files'],
         mounted() {
+            
+
             this.obtenerInformacionDelTramite();
             this.usuario = this.listaSolicitantes && this.listaSolicitantes.length > 0 ? this.listaSolicitantes[0] : {};
             
             this.camposGenerales = this.datosFormulario.campos;
             let campoEnajenantes = this.camposGenerales.find( campo =>  campo.tipo == 'enajenante');
             let campoExpedientes = this.camposGenerales.find( campo =>  campo.tipo == 'expedientes');
+            let campoFecha= this.camposGenerales.find( campo =>  campo.nombre == 'Fecha de escritura o minuta');
 
+            let promises = [];
 
             this.listaEnajentantes = campoEnajenantes.valor.enajenantes.map( (enajenante, index) => {
+                if(enajenante.datosParaDeterminarImpuesto){
+                    let data = {
+                        multa_correccion_fiscal:    enajenante.datosParaDeterminarImpuesto.multaCorreccion,
+                        monto_operacion:            enajenante.datosParaDeterminarImpuesto.montoOperacion,
+                        pago_provisional_lisr:      enajenante.datosParaDeterminarImpuesto.pagoProvisional,
+                        ganancia_obtenida:          enajenante.datosParaDeterminarImpuesto.gananciaObtenida,
+                        fecha_escritura:            campoFecha.valor
+                    }
+                    promises.push(costosApi.getISRRequest(data,  {  index }  ));    
+                }
                 enajenante.index = index;
                 return enajenante;
             });
+            this.actualizandoDatos = true;
+            this.$emit('actualizandoDatos', this.actualizandoDatos);
+            axios.all(promises).then(axios.spread((...responses) => {
+                responses.forEach( res => {
+                    this.listaEnajentantes[res.config.headers.index].detalle = res.data
+                });
+
+                this.datosFormulario.campos.map( campo => {
+                    if( campo.tipo == 'enajenante' ){
+                        campo.valor.enajenantes = this.listaEnajentantes;
+                    }
+                    return campo;
+                });
+                localStorage.setItem('datosFormulario', JSON.stringify(this.datosFormulario));
+                this.actualizandoDatos = false;
+                this.$emit('actualizandoDatos', this.actualizandoDatos); 
+            })).catch(errors => {
+                console.log( errors);
+                console.log("error al obtener la info")
+            }).finally( () => {
+
+
+            } )            
             this.listaExpedientes = campoExpedientes.valor.expedientes;
             this.camposExpedientes = ['expediente', 'direccion'];
 
@@ -197,7 +248,8 @@
                     { key: 'fechaEscritura', label:"Fecha Escritura" },
                     { key: 'status', label:"Acciones" }
                 ],
-                usuario:{}
+                usuario:{},
+                actualizandoDatos:false
             }
         },
   

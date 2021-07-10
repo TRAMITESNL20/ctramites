@@ -4,9 +4,9 @@
 			<div v-for="(tramite, index) in tramitesPaginados" :class="!tramite[0].en_carrito && cartComponent ? 'd-none' : '' ">
 				<div class="card list-item card-custom gutter-b col-lg-12" style="background-color: #d9dee2 !important;" v-if="tramite.length > 1">
 					<div class="d-flex mobile-lista-multiple align-items-center mb-3">
-						<div class="mr-3 ml-4  espace-checkbox" v-if="tramite[0].status && (tramite[0].status == 99 || tramite[0].status == 98) && !cartComponent && ['notary_titular', 'notary_substitute'].includes(user.role_name)"><input type="checkbox" :id="tramite[0].id" style="width:18px; height:18px;" v-on:change="processToCart(tramite[0], true)"></div>
-						<div class="mr-auto espace-checkbox-text desktop-agrupacion-width" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '70%' } ]">
-							<h4 class="ml-3 text-uppercase text-truncate"><strong>{{ tramite[0].nombre_servicio && (tramite[0].titulo && tramite[0].nombre_servicio.toLowerCase() != tramite[0].titulo.toLowerCase()) ? `${tramite[0].nombre_servicio} - ` : '' }}{{ (tramite[0].info && tramite[0].info.tipoTramite) || tramite[0].tramite || tramite[0].titulo | capitalize }}</strong></h4>
+						<div class="mr-3 ml-4  espace-checkbox" v-if="tramite[0].status && (tramite[0].status == 99 || tramite[0].status == 98) && !cartComponent && ['notary_titular', 'notary_substitute'].includes(user.role_name)"><input type="checkbox" :id="tramite[0].id" style="width:18px; height:18px;" v-on:change="processToCart(tramite[0], true)"></div>
+						<div class="mr-auto espace-checkbox-text desktop-agrupacion-width" v-bind:style="[ cartComponent ? { width : '50%' } : { width: '60%' } ]">
+							<h4 class="ml-3 text-uppercase text-truncate"><strong>{{ tramite[0].nombre_servicio && (tramite[0].titulo && tramite[0].nombre_servicio.toLowerCase() != tramite[0].titulo.toLowerCase()) ? `${tramite[0].nombre_servicio} - ` : '' }}{{ (tramite[0].info && tramite[0].info.tipoTramite) || tramite[0].tramite || tramite[0].titulo | capitalize }}</strong></h4>
 							<h5 class="ml-3">
                                 <span style="font-weight: normal;" v-if="tramite[0].tramites[0] && tramite[0].tramites[0].id_transaccion_motor"><strong>FOLIO PAGO:</strong> {{ tramite[0].tramites[0].id_transaccion_motor ? `${tramite[0].tramites[0].id_transaccion_motor} -` : '' }}</span>
                                 <span style="font-weight: normal;" v-if="tramite[0].tramites[0] && tramite[0].tramites[0].id"><strong>FSE:</strong> {{ tramite[0].tramites[0].id ? `${tramite[0].tramites[0].id} -` : '' }}</span>
@@ -14,6 +14,7 @@
                             </h5>
 						</div>
 						<div class="my-lg-0 my-1">
+                            <button v-on:click="cancelReference(tramite[0])" class="btn btn-sm btn-danger font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].recibo_referencia && [5].includes(type)">CANCELAR REFERENCIA</button>
                             <a v-on:click="goTo(tramite[0].recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].recibo_referencia && [5].includes(type)">VER REFERENCIA</a>
                             <!-- <a v-on:click="redirect(tramite[0].doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].doc_firmado && [2,3].includes(type)">VER DECLARACIÓN</a> -->
                             <a v-on:click="goTo(tramite[0].tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].tramites && tramite[0].tramites[0] && tramite[0].tramites[0].url_recibo && [2,3].includes(type)">VER RECIBO DE PAGO</a>
@@ -33,7 +34,7 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a v-for="(file, ind) in tramite[0].files" class="dropdown-item" :href="file.href || file" target="_blank" :key="ind"><i class="fas fa-download mr-2"></i> {{ file.name || file }}</a>
+                                    <a v-for="(file, ind) in tramite[0].files" class="dropdown-item" :href="file.href || file" target="_blank" :key="ind"><i class="fas fa-download mr-2"></i> {{ file.name || file }}</a>
                                 </div>
                             </div>
                             <span v-if="cartComponent" class="btn btn-secondary mr-2">{{ new Intl.NumberFormat('es-MX', { style : 'currency', currency : 'MXN' }).format(tramite.map(ele => ele.importe_tramite).reduce((a,b) => a+b)) }} </span>
@@ -45,7 +46,18 @@
     					<tramite-component :cartComponent="cartComponent" :group="true" :type="type" v-for="(solicitud, ind) in tramite" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="solicitud" v-bind:key="ind" v-if="totalItems != 0"></tramite-component>
                     </div>
 				</div>
-				<tramite-component :cartComponent="cartComponent" :type="type" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="tramite[0]" v-bind:key="index"  v-if="tramite.length == 1 && totalItems != 0"></tramite-component>
+				<tramite-component
+                    @obtenerTramites="obtenerTramites"
+                    :cartComponent="cartComponent"
+                    :type="type"
+                    @processToCart="processToCart"
+                    @processDelete="processDelete"
+                    :tramitesCart="tramitesCart"
+                    :tramite="tramite[0]"
+                    v-bind:key="index"
+                    v-if="tramite.length == 1 && totalItems != 0"
+                    @responseDelete="responseDelete"
+                ></tramite-component>
 			</div>
             <div class="card mb-4 pt-5" v-if="totalItems === 0">
                 <div class="card-body">
@@ -96,27 +108,9 @@
             localStorage.removeItem('datosFormulario');
             localStorage.removeItem('listaSolicitantes');
             localStorage.removeItem('tramite');
-			
+
             this.calcularPage()
             this.pagination(1);
-
-            Object.entries(this.tramitesPaginados).map(obj => {
-                let [ind, tramite] = obj;
-                let files = [];
-                if(tramite[0].info && typeof tramite[0].info === 'string')
-                    tramite[0].info = JSON.parse(tramite[0].info)
-                if(tramite[0].mensajes && tramite[0].mensajes.length > 0){
-                    tramite[0].mensajes.map(msg => {
-                        if(msg.attach && msg.attach != ""){
-                            files.push(msg.attach);
-                        }
-                    })
-                }
-                
-                tramite[0].files = files;
-
-                this.tramitesPaginados[ind] = tramite;
-            })
 		},
 		data () {
 			let attrs = this.$attrs;
@@ -134,15 +128,47 @@
         watch: {
             items (props) {
                 this.items = props;
+            },
+            tramitesPaginados (props) {
+                Object.entries(this.tramitesPaginados).map(obj => {
+                    let [ind, tramite] = obj;
+                    let files = [];
+                    if(tramite[0].info && typeof tramite[0].info === 'string')
+                        tramite[0].info = JSON.parse(tramite[0].info)
+                    if(tramite[0].mensajes && tramite[0].mensajes.length > 0){
+                        tramite[0].mensajes.map(msg => {
+                            if(msg.attach && msg.attach != ""){
+                                let name = msg.attach.split('/');
+                                let ext = name[name.length-1].split('.');
+                                ext = ext[ext.length-1];
+
+                                name = name[name.length-1].split('-'); // Manual-ford-mondeo-2319_5_1625781494.pdf
+                                name = name.slice(0, -1); // 2319_5_1625781494.pdf
+
+                                files.push({
+                                    name : `${name.join('-')}.${ext}`,
+                                    href : msg.attach
+                                });
+                            }
+                        })
+                    }
+                    
+                    tramite[0].files = files;
+                    this.tramitesPaginados[ind] = tramite;
+                })
             }
         },
 		methods : {
+            cancelReference(tramite){
+                let { id_transaccion } = tramite;
+                console.log(tramite);
+            },
             goTo(tramite, _blank=false){
                 if(typeof tramite === 'string') return redirect(tramite, _blank);
                 if(window.location.href.indexOf("borradores") >= 0){
                     redirect("detalle-tramite/" + tramite.tramite_id + "?clave=" + tramite.clave, _blank);
                 } else {
-                    redirect(`/detalle${ tramite.id_tramite ? "-tramite" : "" }/` +  (tramite.id_tramite || tramite.id), _blank);
+                    redirect(`/detalle${ tramite.id_tramite ? "-tramite" : "" }/` +  (tramite.id_tramite || tramite.id), _blank);
                 }
                 
             },
@@ -175,12 +201,10 @@
                 	else groups[tramite.clave] = [tramite];
                 })
 
-                console.log('items', this.items);
                 this.tramitesPaginados = groups;
                 this.totalItems = this.items.length;
             },
             goto( page ){ 
-                console.log('pages', this.pages);
                 this.pagination(page);
                 this.currentPage = page;
             },
@@ -228,6 +252,15 @@
             },
             redirect($url){
                 redirect($url);
+            },
+            obtenerTramites(){
+                this.$emit('obtenerTramites');
+            },
+            responseDelete(res){
+                if(res.data && res.data.Code == '200' && res.data.Message == 'Estatus actualizado'){
+                    Command: toastr.success("", "Item eliminado correctamente");
+                    this.$emit('updateListado', res);
+                }
             }
 		}
 	};
