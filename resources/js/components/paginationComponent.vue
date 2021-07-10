@@ -5,7 +5,7 @@
 				<div class="card list-item card-custom gutter-b col-lg-12" style="background-color: #d9dee2 !important;" v-if="tramite.length > 1">
 					<div class="d-flex mobile-lista-multiple align-items-center mb-3">
 						<div class="mr-3 ml-4  espace-checkbox" v-if="tramite[0].status && (tramite[0].status == 99 || tramite[0].status == 98) && !cartComponent && ['notary_titular', 'notary_substitute'].includes(user.role_name)"><input type="checkbox" :id="tramite[0].id" style="width:18px; height:18px;" v-on:change="processToCart(tramite[0], true)"></div>
-						<div class="mr-auto espace-checkbox-text desktop-agrupacion-width" v-bind:style="[ cartComponent ? { width : '60%' } : { width: '70%' } ]">
+						<div class="mr-auto espace-checkbox-text desktop-agrupacion-width" v-bind:style="[ cartComponent ? { width : '50%' } : { width: '60%' } ]">
 							<h4 class="ml-3 text-uppercase text-truncate"><strong>{{ tramite[0].nombre_servicio && (tramite[0].titulo && tramite[0].nombre_servicio.toLowerCase() != tramite[0].titulo.toLowerCase()) ? `${tramite[0].nombre_servicio} - ` : '' }}{{ (tramite[0].info && tramite[0].info.tipoTramite) || tramite[0].tramite || tramite[0].titulo | capitalize }}</strong></h4>
 							<h5 class="ml-3">
                                 <span style="font-weight: normal;" v-if="tramite[0].tramites[0] && tramite[0].tramites[0].id_transaccion_motor"><strong>FOLIO PAGO:</strong> {{ tramite[0].tramites[0].id_transaccion_motor ? `${tramite[0].tramites[0].id_transaccion_motor} -` : '' }}</span>
@@ -14,6 +14,7 @@
                             </h5>
 						</div>
 						<div class="my-lg-0 my-1">
+                            <button v-on:click="cancelReference(tramite[0])" class="btn btn-sm btn-danger font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].recibo_referencia && [5].includes(type)">CANCELAR REFERENCIA</button>
                             <a v-on:click="goTo(tramite[0].recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].recibo_referencia && [5].includes(type)">VER REFERENCIA</a>
                             <!-- <a v-on:click="redirect(tramite[0].doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].doc_firmado && [2,3].includes(type)">VER DECLARACIÓN</a> -->
                             <a v-on:click="goTo(tramite[0].tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white mr-2" v-if="tramite[0].tramites && tramite[0].tramites[0] && tramite[0].tramites[0].url_recibo && [2,3].includes(type)">VER RECIBO DE PAGO</a>
@@ -45,7 +46,7 @@
     					<tramite-component :cartComponent="cartComponent" :group="true" :type="type" v-for="(solicitud, ind) in tramite" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="solicitud" v-bind:key="ind" v-if="totalItems != 0"></tramite-component>
                     </div>
 				</div>
-				<tramite-component :cartComponent="cartComponent" :type="type" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="tramite[0]" v-bind:key="index"  v-if="tramite.length == 1 && totalItems != 0"></tramite-component>
+				<tramite-component @obtenerTramites="obtenerTramites" :cartComponent="cartComponent" :type="type" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="tramite[0]" v-bind:key="index"  v-if="tramite.length == 1 && totalItems != 0"></tramite-component>
 			</div>
             <div class="card mb-4 pt-5" v-if="totalItems === 0">
                 <div class="card-body">
@@ -147,6 +148,10 @@
             }
         },
 		methods : {
+            cancelReference(tramite){
+                let { id_transaccion } = tramite;
+                console.log(tramite);
+            },
             goTo(tramite, _blank=false){
                 if(typeof tramite === 'string') return redirect(tramite, _blank);
                 if(window.location.href.indexOf("borradores") >= 0){
@@ -236,6 +241,9 @@
             },
             redirect($url){
                 redirect($url);
+            },
+            obtenerTramites(){
+                this.$emit('obtenerTramites');
             }
 		}
 	};

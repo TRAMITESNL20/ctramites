@@ -65,7 +65,7 @@
                 </v-row>
             </v-container>
             <div class="w-100" v-if="!loading">
-                <pagination-component :type="type" @processToCart="processToCart" :items="tramitesFiltrados" :tramitesCart="tramitesCart"></pagination-component>
+                <pagination-component @obtenerTramites="obtenerTramites" :type="type" @processToCart="processToCart" :items="tramitesFiltrados" :tramitesCart="tramitesCart"></pagination-component>
             </div>
         </div>
     </div>
@@ -114,12 +114,13 @@
                 });
             },
             async obtenerTramites(){
+                if(!this.loading) this.loading = true;
                 let url = process.env.TESORERIA_HOSTNAME + "/solicitudes-filtrar";
                 moment.lang("es");
                 try {
                     let estatus = this.type;
-                    let notary_id = this.notary || null;
-                    let id_usuario = this.user || null;
+                    let notary_id = this.notary || null;
+                    let id_usuario = this.user || null;
                     let pendiente_firma = null;
 
                     if(estatus === 98){

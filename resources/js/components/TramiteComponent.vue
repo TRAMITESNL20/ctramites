@@ -1,5 +1,5 @@
 <template>
-    <div class="card list-item card-custom gutter-b col-lg-12" :class="cartComponent && !tramite.en_carrito ? 'd-none' : ''">
+    <div  v-if="!tramite.deleted" :data-algo="tramite.deleted || 'algo'" class="card list-item card-custom gutter-b col-lg-12" :class="cartComponent && !tramite.en_carrito ? 'd-none' : ''">
         <div class="card-body" :class="group ? 'p-0' : ''">
             <!--begin::Top-->
             <div class="d-flex">
@@ -41,6 +41,7 @@
                             <a v-on:click="goTo(tramite)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="!tramite.info">
                                 INICIAR TRAMITE
                             </a>
+                            <button v-on:click="cancelReference(tramite)" class="btn btn-sm btn-danger font-weight-bolder text-uppercase text-white" v-if="tramite.recibo_referencia && [5].includes(type) && !group">CANCELAR REFERENCIA</button>
                             <a v-on:click="goTo(tramite.recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.recibo_referencia && [5].includes(type) && !group">VER REFERENCIA</a>
                             <a v-on:click="goTo(tramite.doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.doc_firmado && [2,3].includes(type)">VER DECLARACIÓN</a>
                             <!-- <modal-document-component  :tramitesdoc="tramitesdoc" v-if="tramite.required_docs === 0"   ></modal-document-component> -->
@@ -74,8 +75,11 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue';
-    export default {
+import Dialog from 'bootstrap-vue-dialog';
+Vue.use(Dialog)
+export default {
   components: { ModalDocumentComponent },
         data() {
             return {
@@ -84,7 +88,8 @@ import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue'
                 user : window.user,
                 declaracion : null,
                 recibo: null,
-                tramitesdoc: [this.tramite]
+                tramitesdoc: [this.tramite],
+                deleted : null
             }
         },
         props: ['tramite', 'type', 'group', 'cartComponent'],
@@ -132,6 +137,38 @@ import ModalDocumentComponent from './tiposElementos/ModalDocumentComponent.vue'
             }
         },
         methods:{
+            cancelReference(tramite){
+                let { id_transaccion } = tramite;
+                this.$dialog.confirm({
+                    title: '¿Esta seguro de cancelar la referencia de pago?',
+                    text: '*Al cancelar la referencia también se eliminará el ticket, es decir, se tendrá que crear de nuevo el trámite.',
+                    actions: [{
+                        text: 'No',
+                        color: 'red',
+                        class:'danger',
+                        key: false,
+                        handle: () => { }
+                    },{
+                        text: 'Si',
+                        color: 'blue',
+                        key: true,
+                        handle: () => {
+                            fetch(`${process.env.APP_URL}/api/cancel-reference/${id_transaccion}`, {
+                                method : 'POST'
+                            })
+                            .then(res => res.json())
+                            .then(res => {
+                                if(res.updated == 'ok'){
+                                    toastr.success("Referencia cancelada con éxito");
+                                    this.$emit('obtenerTramites');
+                                }
+                                else toastr.error(res.message, "Error!");
+                            })
+                        }
+                    }]
+                })
+
+            },
             goTo(tramite, _blank=false){
                 if(typeof tramite === 'string') return redirect(tramite, _blank);
                 if(window.location.href.indexOf("borradores") >= 0){
