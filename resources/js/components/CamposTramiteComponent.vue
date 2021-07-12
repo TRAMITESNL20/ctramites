@@ -737,7 +737,7 @@
 							campoItem.ocultar = ocultarCampoOtro;
 							let caracteristicas = JSON.parse(campoItem.caracteristicas + '');
 							caracteristicas.required =  !ocultarCampoOtro;
-							campoItem.valor = "";
+							campoItem.valor = campo.valido && !ocultarCampoOtro ? campoItem.valor : "";
 							campoItem.valido = ocultarCampoOtro; 
 							campoItem.caracteristicas = JSON.stringify(caracteristicas);
 						}
