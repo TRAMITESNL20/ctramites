@@ -125,10 +125,10 @@
                                         <!--begin::Form-->
                                         <form id="kt_confirm_password_form_log">
                                             <div class="card-body">
-                                                <div class="form-group row">
+                                                <div class="form-group row" id="show_hide_password">
                                                     <label  class="col-md-3 col-sm-12 col-form-label">Contraseña actual</label>
                                                     <div class="col-md-8 col-sm-12">
-                                                        <input class="form-control" type="text" placeholder="Contraseña actual" id="example-text-input" data-toggle="password" />
+                                                        <input class="form-control" type="password" placeholder="Contraseña actual" data-toggle="password" />
                                                         <a href="{{ url()->route("password/recovery") }}"><span>¿Se te olvido la Contraseña?</span></a>
                                                     </div>
                                                 </div>

@@ -68,7 +68,7 @@
                                     <a href="/perfil" type="button" class="mt-4 btn btn-text-primary text-left btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary"> <i class="far fa-user"></i>Información Personal</a>
                                     <a href="/informacion-cuenta" type="button" class="btn btn-text-primary text-left btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary"> <i class="fas fa-clipboard-list"></i>Información de la Cuenta</a>
                                     <a href="/cambiar-contraseña"  type="checkbox" class="btn btn-text-primary text-left btn-hover-light-primary font-weight-bold btn-lg btn-block text-dark text-hover-primary"> <i class="fas fa-exchange-alt"></i>Cambiar Contraseña</a>
-                                    <a href="/usuarios" type="button" class="btn btn-text-primary btn-hover-light-primary text-left font-weight-bold btn-lg btn-block text-dark text-hover-primary"> <i class="fas fa-people-arrows"></i>Usuarios</a>
+                                    <!-- <a href="/usuarios" type="button" class="btn btn-text-primary btn-hover-light-primary text-left font-weight-bold btn-lg btn-block text-dark text-hover-primary"> <i class="fas fa-people-arrows"></i>Usuarios</a> -->
                                 </div>
                           </div>
                     </div>
