@@ -198,9 +198,6 @@ export default {
 							this.urlFirmado = [];
 							this.docFirmadosListos= [];
 							this.docFirmadosPendientes= [];
-							console.log('Prop changed: ', newVal );
-							console.log('Prop changed| was: ', oldVal);
-							console.log('tramite actualizado en firma');
 							let APP_URL = 'http://10.153.144.218/tramites-ciudadano';
 							this.usuario.solicitudes.map((solicitud, ind) => {
 								console.log(solicitud);
@@ -245,7 +242,6 @@ export default {
 								}
 							this.rfc= this.user.rfc; 
 							this.idFirmado.push(solicitud.id);
-							console.log(this.idFirmado);
 							this.urlFirmado.push( `${process.env.INSUMOS_DOCS_HOSTNAME}/firmas/${this.usuario.tramite_id + "_" +  this.usuario.solicitudes[0].id}/${solicitud.id}_${this.usuario.tramite_id}_${this.usuario.solicitudes[0].id}_firmado.pdf` );
 							})
 						this.accesToken();

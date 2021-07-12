@@ -1,8 +1,8 @@
 <template>
   <div>
         <div class="pt-10 pl-10 pr-10"  style="background-color:white" v-if=" (tramitesdoc.length > 0 && docFirmado != 1 && docPendientes != 0  )">
-            <div >
-                <p> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
+            <div class="alert alert-warning" role="alert" style="margin-bottom:0px !important">
+                <p style="color:white; margin-bottom: 0px;"> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
                 <modal-document-component 
                     :tramitesdoc="tramitesdoc" 
                     :idtramites="usuario"
@@ -62,14 +62,23 @@ export default {
             this.docFirmado =  firmado;
         },
         updatedTramitesMethod(newTramites){
-            console.log('tramites updateed en aux' );
-            console.log( newTramites);
+            this.docPendientes = 0;
+            console.log('///////////');
+            console.log(newTramites);
+            newTramites[0].solicitudes.map((solicitud, index) => {
+                console.log(solicitud);
+                solicitud.required_docs == 0 ? this.docPendientes ++ : '' ; 
+            });
+
+
+            // console.log('tramites updateed en aux' );
+            // console.log( newTramites);
             this.usuario = newTramites;
             // this.solicitudes = newTramites;
             var cloned =  _.cloneDeep(newTramites);
             this.clonedData = cloned;
-            console.log('------clonedData');
-            console.log(this.clonedData);
+            // console.log('------clonedData');
+            // console.log(this.clonedData);
             this.solicitudes = this.clonedData;
             this.$forceUpdate();
         }

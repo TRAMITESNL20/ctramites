@@ -1,11 +1,9 @@
 <template>
     <div> 
             <div class="col-lg-12 col-sm-12">
-			    <div class="container">
-                    <div class="card-body">
-                        <div class="row" >
+		
 
-                            <button type="button" class="btn btn-sm  btn-success font-weight-bolder text-uppercase text-white mt-2" data-toggle="modal" data-target="#modalDocument">Ingresar documentos </button>
+                            <button type="button" class="btn btn-sm  btn-light font-weight-bolder text-uppercase  mt-2" style="color:black" data-toggle="modal" data-target="#modalDocument">Ingresar documentos </button>
 
 
                             <div class="modal fade" id="modalDocument" role="dialog">
@@ -21,11 +19,12 @@
                                                 <div role="alert" class="alert alert-warning alert-dismissible fade show ">Ocurrio un error al guardar el documento intente nuevamente 
                                                 <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true">×</span></button></div>
                                     </div>
-                                    <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body" v-if="tramiteDoc.required_docs != 1">
+                                    <div  v-for="(tramiteDoc, index) in newTramites" :key="tramiteDoc.id"  class="modal-body" v-if="tramiteDoc.required_docs != 1">
                                         
-                                        <div >
+                                        <div>
 
-                                            <h3>Tramite id: {{tramiteDoc.id}} </h3>
+                                            <h3>Tramite FSE: {{tramiteDoc.id_transaccion}}  </h3>
+                                            <h3>Tamite id: {{tramiteDoc.id}}</h3>
 
                                             <div class="input-group">
 
@@ -41,7 +40,7 @@
                                                     ref="myFiles" 
                                                     class="custom-file-input" 
                                                     accept=".pdf"
-                                                    @change="previewFiles(tramiteDoc.id , index)" >
+                                                    @change="previewFiles(tramiteDoc.id , index, tramiteDoc.clave)" >
 
                                                     <label class="custom-file-label"
                                                     ><span>
@@ -52,7 +51,7 @@
                                                 </div>
                                             </div>
                                         </div>   
-
+                                        
                                     </div>
                                 
 
@@ -70,9 +69,7 @@
                             </div>
                             </div>
                     </div>
-                    </div>
-                </div>
-            </div>
+        
     </div>
 </template>
 
@@ -85,12 +82,23 @@ export default {
             fileById: '',
             filesx: '',
             fileName: [],
-            showAlert: 0
+            showAlert: 0,
+            lastClave: [],
+            newTramites: [],
         }
     },
     mounted(){
         $('#modalDocument').appendTo("body");
          $("#docAlert").hide();
+        var last=[];
+        for (let i = 0; i < this.tramitesdoc.length; i++) {
+            if (!last.includes(this.tramitesdoc[i].clave)) {
+                console.log(this.tramitesdoc[i].clave);
+                this.newTramites.push(this.tramitesdoc[i]);
+            }
+            last.push(this.tramitesdoc[i].clave);
+            
+        }
         //     for (let i = 0; i < self.idtramites[0].solicitudes.length; i++) {
         //         for (let k = 0; k < self.tramitesdoc.length; k++) {
         //                 if ( self.idtramites[0].solicitudes[i].id === self.tramitesdoc[k].id  &&  this.tramitesdoc[k].required_docs == 0) {
@@ -119,6 +127,8 @@ export default {
                                         self.idtramites[0].solicitudes[i].required_docs = 1;
                                         self.tramitesdoc[k].required_docs =1;
                                         this.$forceUpdate();
+                                    }else{
+                                        self.idtramites[0].solicitudes[i].required_docs = 0;
                                     }
                             }
                             console.log('Guardado desde el modal');
@@ -136,8 +146,12 @@ export default {
                     $('#saveDocument').removeClass('spinner-border spinner-border-sm text-light');
                 });
         },
-        previewFiles(id, index){
+        previewFiles(id, index, clave){
         
+        for (let i = 0; i < this.tramitesdoc.length; i++) {
+            this.tramitesdoc[i].clave == clave ?  this.tramitesdoc[i].required_docs = 3  : '';
+        }
+
         this.tramitesdoc[index].required_docs = 3
                 // var i = $(this).prev('label').clone();
                 var auxName = $('#'+id)[0].files[0].name;

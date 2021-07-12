@@ -10,7 +10,7 @@
             </h4>
             <h5 class="ml-3">
               <span style="font-weight: normal" >
-                <strong> {{solicitud.info.enajenante.datosPersonales.nombre }} {{solicitud.info.enajenante.datosPersonales.apPat}} {{solicitud.info.enajenante.datosPersonales.apMat }} </strong>-{{solicitud.info.enajenante.datosPersonales.rfc}}
+                <strong> {{solicitud.info.enajenante.datosPersonales.nombre }} {{solicitud.info.enajenante.datosPersonales.apPat}} {{solicitud.info.enajenante.datosPersonales.apMat }} </strong>-{{solicitud.id_transaccion}}
               </span>
             </h5>
           </div>
@@ -21,7 +21,7 @@
 
               <button 
                 v-if="solicitud.required_docs != 1"
-                class="btn btn-danger disabled" 
+                class="btn btn-warning disabled" 
                 style="border-top-right-radius: 0px;border-bottom-right-radius: 0px;font-size: 7px;border-radius: 1 1 0 0 !important;" 
                 data-toggle="tooltip" 
                 data-placement="top" 
@@ -30,7 +30,7 @@
               </button>
 
                 <!-- boton de descarga  -->
-                <a  v-if="solicitud.required_docs != 1" :href="solicitud.urlDocumentoFirmado" target="_blank" :disabled="solicitud.required_docs != 1"  v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]"  style="border-top-left-radius:0px;border-bottom-left-radius:0px"  class="btn btn-primary font-weight-bolder text-uppercase text-white mr-5" >DESCARGAR</a>
+                <a  v-if="solicitud.required_docs != 1" :disabled="solicitud.required_docs != 1"  v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]"  style="border-top-left-radius:0px;border-bottom-left-radius:0px"  class="btn btn-primary font-weight-bolder text-uppercase text-white mr-5" >DESCARGAR</a>
                 <a  v-if="solicitud.required_docs == 1" :href="solicitud.urlDocumentoFirmado" target="_blank" v-bind:class="[ solicitud.required_docs== 1 ?  '' : 'disabled' ]"   class="btn btn-primary font-weight-bolder text-uppercase text-white mr-5" >DESCARGAR</a>
                 <!-- boton de collapse -->
                 <button
