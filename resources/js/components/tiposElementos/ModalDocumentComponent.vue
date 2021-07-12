@@ -21,7 +21,7 @@
                                                 <div role="alert" class="alert alert-warning alert-dismissible fade show ">Ocurrio un error al guardar el documento intente nuevamente 
                                                 <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true">×</span></button></div>
                                     </div>
-                                    <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body" v-if="tramiteDoc.required_docs == 0">
+                                    <div  v-for="(tramiteDoc, index) in tramitesdoc" class="modal-body" v-if="tramiteDoc.required_docs != 1">
                                         
                                         <div >
 
@@ -115,8 +115,10 @@ export default {
                     if (response.data.code === 200) {
                         for (let i = 0; i < self.idtramites[0].solicitudes.length; i++) {
                             for (let k = 0; k < self.tramitesdoc.length; k++) {
-                                    if ( self.idtramites[0].solicitudes[i].id === self.tramitesdoc[k].id  && self.tramitesdoc[k].required_docs == 1) {
+                                    if ( self.idtramites[0].solicitudes[i].id === self.tramitesdoc[k].id  && self.tramitesdoc[k].required_docs == 3) {
                                         self.idtramites[0].solicitudes[i].required_docs = 1;
+                                        self.tramitesdoc[k].required_docs =1;
+                                        this.$forceUpdate();
                                     }
                             }
                             console.log('Guardado desde el modal');
@@ -136,7 +138,7 @@ export default {
         },
         previewFiles(id, index){
         
-        this.tramitesdoc[index].required_docs = 1
+        this.tramitesdoc[index].required_docs = 3
                 // var i = $(this).prev('label').clone();
                 var auxName = $('#'+id)[0].files[0].name;
                 this.fileName[index] = auxName;   
