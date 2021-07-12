@@ -400,11 +400,12 @@
         			this.gestionarCambioEstado(campo.valor);
         		}
 
+        		this.listenCampos( campo );	
         		this.cambioModelo();
         	},
 		    cambioModelo(){
 				let formvALID = this.validarFormulario();
-            	let datosFormulario = {
+            	let datosFormulario = { 		
             		tramite: this.tramite,
             		campos: this.campos,
             		tipoPersona:this.tipoPersona,//quitar?
@@ -516,9 +517,10 @@
 				  		agrupaciones = agrupaciones.filter( agrupacion => agrupacion.nombre_agrupacion != 'Datos Personales' && agrupacion.nombre_agrupacion != 'Razón Social'  );
 				  		agrupaciones.unshift( {nombre_agrupacion:'Tipo Persona',  tipo: 'agrupacion', grupos: { 'pf': this.datosPersonales, 'pm': this.razonSocial } } );
 				  	}
-
+				  	if( !this.configCostos.declararEn0 ){
+				  		agrupaciones = agrupaciones.filter( agrupacion =>  agrupacion.nombre_agrupacion != 'Motivo y Fundamento Legal' );
+				  	}
 				  	this.agrupaciones = agrupaciones.sort(function(a,b) { return parseFloat(a.orden_agrupacion) - parseFloat(b.orden_agrupacion) } );
-				  	
 				  	
 				  	let segg= this;
 					setTimeout(function(){ 
@@ -723,10 +725,35 @@
 				this.rows.push(rows);
 				this.loading = false;
 				this.panel = [0, 3, 4];
-			}
+			},
+
+			listenCampos(campo){
+				if(campo.nombre == 'Motivo y Fundamento Legal' ){
+
+					let ocultarCampoOtro = !campo.valor || campo.valor.clave != 'Otro';
+				
+					this.campos.map( campoItem => {
+						if(campoItem.nombre == 'Otro (especificar):'){
+							campoItem.ocultar = ocultarCampoOtro;
+							let caracteristicas = JSON.parse(campoItem.caracteristicas + '');
+							caracteristicas.required =  !ocultarCampoOtro;
+							campoItem.valor = "";
+							campoItem.valido = ocultarCampoOtro; 
+							campoItem.caracteristicas = JSON.stringify(caracteristicas);
+						}
+						return campoItem;
+					});
+	        	}
+			},
 		 },
-		 mounted(){
-		 }
+		mounted(){
+		},
+		
+        watch: {
+            'configCostos.declararEn0':function (val, oldVal){
+                this.agruparCampos();
+            }
+        }
 	}
 
 

@@ -125,6 +125,7 @@
         	   </modal-component>
            </b-col>
         </b-row> 
+        <!--
         <b-row v-if="configCostos.declararEn0">
             <b-col  cols="12" >
                 <label>Motivo y Fundamento Legal *</label>
@@ -136,7 +137,7 @@
                     </p>
                 </small>
             </b-col>
-       </b-row>         
+       </b-row>-->         
     </div>
 </template>
 <script>
@@ -204,7 +205,7 @@
             if(this.campo.valor && this.campo.valor.enajenantes && this.campo.valor.enajenantes.length > 0){
                 this.enajentantes = this.campo.valor.enajenantes;
                 this.$v.porcentajeVenta.$model = Number( Number( this.campo.valor.porcentajeVenta ).toFixed(this.$const.PRECISION)) ;
-                this.motivo = this.campo.valor.motivo;
+                //this.motivo = this.campo.valor.motivo;
                 
                 this.calcularTotalPorcentaje();
                 this.calcularTotalMontoOperacionDeEnajentantes();
@@ -247,7 +248,7 @@
 	            enajentantes: [],
                 porcentajeTotalCompra: 0,
                 porcentajeVenta:100,
-                motivo:'',
+                //motivo:'',
                 totalMontoOperacionDeEnajentantes:null,
                 montoOperacion:Vue.filter('formatoMoneda')("0"),
                 totalMontoOperacionDeclarado:null
@@ -305,12 +306,12 @@
 
                 let valor = {enajenantes:this.enajentantes, porcentajeVenta:this.$v.porcentajeVenta.$model};
                 valor.montoOperacion = this.montoOperacion;
-                if(this.configCostos.declararEn0){
+                /*if(this.configCostos.declararEn0){
                     valor.motivo = this.motivo;
                     if( this.motivo == undefined || this.motivo.length == 0){
                         this.campo.valido = false;
                     }
-                }
+                }*/
                 this.campo.valor = valor;
                 this.$emit('updateForm', this.campo);
           

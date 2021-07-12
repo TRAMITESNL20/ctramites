@@ -1,18 +1,18 @@
 <template>
-  <div class=" fv-plugins-icon-container">
-    <label>{{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }} </label>
-    <textarea  
-      :id="[[campo.idElemento ? campo.idElemento : campo.campo_id]]"
-      :name="[[campo.campo_id]]" 
-      class="form-control  form-control-lg " style="background-color: #e5f2f5 !important" v-model="campo.valor"
-      @change="validar" ></textarea>
-      <small   v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
-          <p  class="form-text text-danger">
-            {{ campo.mensajes[0].mensajeStr }}
-          </p>
-      </small>
-    
-  </div>
+    <div class=" fv-plugins-icon-container" v-if="!campo.ocultar">
+      <label> {{ campo.nombre }}  {{JSON.parse(this.campo.caracteristicas + '').required == 'true' ? '*' : '' }} </label>
+      <textarea  
+        :id="[[campo.idElemento ? campo.idElemento : campo.campo_id]]"
+        :name="[[campo.campo_id]]" 
+        class="form-control  form-control-lg " style="background-color: #e5f2f5 !important" v-model="campo.valor"
+        @change="validar" ></textarea>
+        <small   v-if="campo.mensajes && campo.mensajes.length > 0 && ( showMensajes || estadoFormulario > 0)" class="position-absolute">
+            <p  class="form-text text-danger">
+              {{ campo.mensajes[0].mensajeStr }}
+            </p>
+        </small>
+      
+    </div>
 </template>
 
 <script>
@@ -53,6 +53,15 @@
           this.campo.valido = requeridoValido;
           this.$emit('updateForm', this.campo);
         }
-      }
+      },
+      
+      watch: {
+          campo: {
+            deep: true,
+            handler(val, oldVal){
+              this.$forceUpdate();
+            }
+          }
+        }         
     }
 </script>
