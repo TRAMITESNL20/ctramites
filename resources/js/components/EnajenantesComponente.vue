@@ -41,7 +41,7 @@
             <b-col  cols="12" >
                 <div class="table-responsive" id="scrollDiv">
                         <div id="gradientBackgroundLeft" class="border-table-left" ></div>
-                        <div id="gradientBackgroundRight" class="border-table-right" ></div>
+                        <div id="gradientBackgroundRight" class="border-table-right"  ></div>
                     <table class="table  table-striped" id="tableEnajenantes">
                         <thead style="border-bottom: solid;">
                             <tr>
