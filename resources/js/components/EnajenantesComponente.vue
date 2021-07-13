@@ -342,7 +342,7 @@
                 let procenttaje = (enajenante.porcentajeCompra / 100);
                 let montoOperacionGbl =  Vue.filter('toNumber')(this.montoOperacion);
                 return  montoOperacionGbl * procenttaje;  
-            }   
+            },   
 
             calcularTotalMontoOperacionDeEnajentantes(){
                 /*let eltotal = 0;
