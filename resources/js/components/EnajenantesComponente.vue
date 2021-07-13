@@ -1,6 +1,5 @@
  <template>
     <div>
-<!--
         <b-row>
             <b-col cols="12" md="6">
                 <b-form-group label="MONTO DE OPERACIÓN" label-for="monto-operacion-gral-input" >
@@ -14,7 +13,7 @@
                   </b-input-group>
                 </b-form-group>
             </b-col>
-        </b-row> -->     
+        </b-row>     
         <b-row > 
             <b-col>
                 <b-form-group label="Porcentaje que enajena" label-for="procentaje-venta-input" >

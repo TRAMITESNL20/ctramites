@@ -286,7 +286,7 @@
                           id="monto-operacion-input" name="montoOperacion" v-model="$v.form.datosParaDeterminarImpuesto.montoOperacion.$model"  
                           @change="formatoMoneda('montoOperacion')"
                           :state="$v.form.datosParaDeterminarImpuesto.montoOperacion.$dirty ? !$v.form.datosParaDeterminarImpuesto.montoOperacion.$error : null"  
-                          aria-describedby="montoOperacion-input-feedback"
+                          aria-describedby="montoOperacion-input-feedback" disabled="true"
                         ></b-form-input>
                       </b-input-group>
                       <b-form-invalid-feedback id="montoOperacion-input-feedback">
@@ -707,11 +707,11 @@
 
       calcularMontoOperacion(val){
           this.form.porcentajeCompra = Number( Number( this.form.porcentajeCompra ).toFixed(this.$const.PRECISION)) ;
-      /*
+      
           let procenttaje = (val / 100);
           let montoOperacionGbl =  Vue.filter('toNumber')(this.montoOperacionGbl);          
           let montoCorrespondiente =  montoOperacionGbl * (val / 100);
-          this.$v.form.datosParaDeterminarImpuesto.montoOperacion.$model = Vue.filter('formatoMoneda')( montoCorrespondiente ); */     
+          this.$v.form.datosParaDeterminarImpuesto.montoOperacion.$model = Vue.filter('formatoMoneda')( montoCorrespondiente );     
       },
 
       formatFechaNacimiento(){
