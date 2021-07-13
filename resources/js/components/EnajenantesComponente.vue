@@ -104,7 +104,7 @@
                 </div>
                 Porcentaje de venta asignado 
                 <b-progress :value="porcentajeTotalCompra" max="porcentajeVenta" show-value class="mb-3" :precision="$const.PRECISION"></b-progress>
-            </b-col>  
+            </b-col> 
             <b-col v-if="totalMontoOperacionDeclarado != montoOperacion && enajentantes.length > 0">
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                   <strong>IMPORTANTE!</strong> El monto de operación declarado, no corresponde al ingresado en el Aviso de Enajenación o no se ha presentado.
@@ -212,18 +212,6 @@
             this.validar();
             
 		},
-        updated(){
-            // var height = $("#tableEnajenantes")[0].clientHeight;
-            // $("#gradientBackgroundLeft").css( "width" ,'12%');
-            // $("#gradientBackgroundRight").css( "width" ,'12%');
-            // $("#gradientBackgroundLeft").css( "height" ,  height+"px" );
-            // $("#gradientBackgroundRight").css( "height" ,  height+"px" );
-            // $('#scrollDiv').scroll( function() {
-            //     ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
-
-            //     ( $('#scrollDiv').scrollLeft() > 0) ? $('#gradientBackgroundLeft').show() : $('#gradientBackgroundLeft').hide();
-            // });
-        },
         props:{
 
           campo:{
@@ -240,6 +228,10 @@
           },
           configCostos:{
             type: Object
+          },
+          updateListadoExpedientes:{
+            type: Number,
+            default:0
           }
         },
 	    data(){
@@ -402,6 +394,9 @@
                     });  
                 }
                 this.validar();
+            },
+            updateListadoExpedientes(){
+              this.calcularTotalMontoOperacionDeclarado();  
             }
         }
 

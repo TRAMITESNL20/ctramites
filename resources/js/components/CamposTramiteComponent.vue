@@ -121,7 +121,7 @@
 												:campo="campo" 
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
-													@updateForm="updateForm" :configCostos="configCostos">
+													@updateForm="updateForm" :configCostos="configCostos" :updateListadoExpedientes="updateListadoExpedientes">
 														
 													</enajenantes-component>
 												<table-component 
@@ -255,6 +255,7 @@
 				infoExtra : {},
 				tipo_costo_obj: { tipo_costo:0 ,tipoCostoRadio:'millar',hojaInput:'', val_tipo_costo:'' },
 				tieneSeccionDocumentos: false,
+				updateListadoExpedientes:0
             }
         },
         created() {
@@ -743,6 +744,8 @@
 						}
 						return campoItem;
 					});
+	        	}  	else if( campo.tipo === 'expedientes' ){
+	        		this.updateListadoExpedientes = this.updateListadoExpedientes + 1;
 	        	}
 			},
 		 },
