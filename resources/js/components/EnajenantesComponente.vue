@@ -105,7 +105,7 @@
                 Porcentaje de venta asignado 
                 <b-progress :value="porcentajeTotalCompra" max="porcentajeVenta" show-value class="mb-3" :precision="$const.PRECISION"></b-progress>
             </b-col>
-            <b-col v-if="totalMontoOperacionDeclarado != totalMontoOperacionDeEnajentantes && enajentantes.length > 0">
+            <b-col v-if="totalMontoOperacionDeclarado != montoOperacion && enajentantes.length > 0">
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                   <strong>IMPORTANTE!</strong> El monto de operación declarado, no corresponde al ingresado en el Aviso de Enajenación o no se ha presentado.
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -328,24 +328,31 @@
 
             calcularPorcentajePorEnajenantes(){
                 this.enajentantes = this.enajentantes.map(enaj => {
-                    let procenttaje = (enaj.porcentajeCompra / 100);
+                    /*let procenttaje = (enaj.porcentajeCompra / 100);
                     let montoOperacionGbl =  Vue.filter('toNumber')(this.montoOperacion);          
-                    let montoCorrespondiente =  montoOperacionGbl * procenttaje;
-                    enaj.datosParaDeterminarImpuesto.montoOperacion = Vue.filter('formatoMoneda')( montoCorrespondiente ); 
+                    let montoCorrespondiente =  montoOperacionGbl * procenttaje;*/
+                    enaj.datosParaDeterminarImpuesto.montoOperacion = Vue.filter('formatoMoneda')( this.montoOperacionPorEnajenante( enaj ) ); 
                     return enaj;
                 });
                 this.validar();                
             },
 
+
+            montoOperacionPorEnajenante( enajenante ){
+                let procenttaje = (enajenante.porcentajeCompra / 100);
+                let montoOperacionGbl =  Vue.filter('toNumber')(this.montoOperacion);
+                return  montoOperacionGbl * procenttaje;  
+            }   
+
             calcularTotalMontoOperacionDeEnajentantes(){
-                let eltotal = 0;
+                /*let eltotal = 0;
                 if(this.enajentantes && this.enajentantes.length > 0){
                     this.enajentantes.forEach( enajenante => {
                         let total = Vue.filter('toNumber')(enajenante.datosParaDeterminarImpuesto.montoOperacion);
                         eltotal = eltotal + total;
                     });
                 }
-                this.totalMontoOperacionDeEnajentantes = eltotal;
+                this.totalMontoOperacionDeEnajentantes = eltotal;*/
                 this.calcularTotalMontoOperacionDeclarado();
             },
 
@@ -388,7 +395,7 @@
                     this.enajentantes = this.enajentantes.map( enajentante => {
                         enajentante.detalle = false;
                         enajentante.datosParaDeterminarImpuesto.gananciaObtenida = '0';
-                        enajentante.datosParaDeterminarImpuesto.montoOperacion = '0';
+                        enajentante.datosParaDeterminarImpuesto.montoOperacion =  Vue.filter('formatoMoneda')( this.montoOperacionPorEnajenante( enajentante ) ); //'0';
                         enajentante.datosParaDeterminarImpuesto.multaCorreccion = '0';
                         enajentante.datosParaDeterminarImpuesto.pagoProvisional = '0';
                         return enajentante;
