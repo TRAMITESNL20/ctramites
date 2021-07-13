@@ -10,7 +10,12 @@
             </h4>
             <h5 class="ml-3">
               <span style="font-weight: normal" >
-                <strong> {{solicitud.info.enajenante.datosPersonales.nombre }} {{solicitud.info.enajenante.datosPersonales.apPat}} {{solicitud.info.enajenante.datosPersonales.apMat }} </strong>-{{solicitud.id_transaccion}}
+                <strong> {{solicitud.info.enajenante.datosPersonales.nombre }} {{solicitud.info.enajenante.datosPersonales.apPat}} {{solicitud.info.enajenante.datosPersonales.apMat }} </strong>
+              </span>
+            </h5>
+            <h5 class="ml-3">
+              <span style="font-weight: normal" >
+                <strong>FSE:</strong>{{solicitud.id_transaccion}} <strong>  ID Tramite: </strong> {{solicitud.id}}
               </span>
             </h5>
           </div>
