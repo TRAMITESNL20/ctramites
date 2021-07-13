@@ -104,7 +104,7 @@
                 </div>
                 Porcentaje de venta asignado 
                 <b-progress :value="porcentajeTotalCompra" max="porcentajeVenta" show-value class="mb-3" :precision="$const.PRECISION"></b-progress>
-            </b-col>
+            </b-col>  
             <b-col v-if="totalMontoOperacionDeclarado != montoOperacion && enajentantes.length > 0">
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                   <strong>IMPORTANTE!</strong> El monto de operación declarado, no corresponde al ingresado en el Aviso de Enajenación o no se ha presentado.
@@ -378,7 +378,7 @@
                       Command: toastr.error("Error!", "No se encontro configurado la seccion de expedientes, Consulte al administrador del sistema");
                     }
                 }
-                this.totalMontoOperacionDeclarado = eltotal;
+                this.totalMontoOperacionDeclarado = Vue.filter('formatoMoneda')( eltotal );
                 //return eltotal; 
             }, 
 
