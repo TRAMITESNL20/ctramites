@@ -27,7 +27,10 @@ let dotenvplugin = new webpack.DefinePlugin({
 		INSUMOS_USERNAME: JSON.stringify(process.env.INSUMOS_USERNAME || null),
 		INSUMOS_PASSWORD: JSON.stringify(process.env.INSUMOS_PASSWORD || null),
 		ENTIDAD_REPOSITORIO:JSON.stringify(process.env.ENTIDAD_REPOSITORIO || null),
-		TRAMITE_5_ISR:JSON.stringify(process.env.TRAMITE_5_ISR || null)
+		TRAMITE_5_ISR:JSON.stringify(process.env.TRAMITE_5_ISR || null),
+		TRAMITE_ACTANAC:JSON.stringify(process.env.TRAMITE_ACTANAC || null),
+		TRAMITE_ACTADEF:JSON.stringify(process.env.TRAMITE_ACTADEF || null),
+		TRAMITE_ACTAMAT:JSON.stringify(process.env.TRAMITE_ACTAMAT || null)
 	}
 })
 

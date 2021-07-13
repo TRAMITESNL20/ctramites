@@ -65,7 +65,7 @@ Vue.component("firma-electronica-component" , () => import( /* webpackChunkName:
 Vue.component("modal-document-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ModalDocumentComponent.vue' ));
 
 Vue.component("btn-guardar-tramite-parent" , () => import( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-parent" */ './components/generales/BtnGuardarTramiteParent.vue' ));
-
+Vue.component("btn-busqueda-acta-component", () => import(/* webpackChunkName: "js/components/generales/btn-busqueda-acta-component" */ './components/generales/BtnBusquedaActaComponent.vue'));
 Vue.component("btn-guardar-tramite-component" , () => import( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-component" */ './components/generales/BtnGuardarTramiteComponent.vue' ));
 Vue.component("fecha-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/fecha-component" */ './components/tiposElementos/FechaComponent.vue' ));
 Vue.component("enajenantes-component" , () => import( /* webpackChunkName: "js/components/enajenantes-component" */ './components/EnajenantesComponente.vue' ));
