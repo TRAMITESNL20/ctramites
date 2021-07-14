@@ -24,7 +24,10 @@
                                         <div>
 
                                             <h3>Tramite FSE: {{tramiteDoc.id_transaccion}}  </h3>
-                                            <h3>Tamite id: {{tramiteDoc.id}}</h3>
+                                            <div style="display:flex;justify-content: space-between;">
+                                            <h3>No. Escritura: {{tramiteDoc.info.campos.Escritura}} </h3>
+                                            <h5> Fecha de Escritura: {{tramiteDoc.info.camposConfigurados[1].valor}}</h5>
+                                            </div>
 
                                             <div class="input-group">
 
