@@ -108,24 +108,28 @@
                 </v-row>
             </v-container>
             <div class="w-100" v-if="!loading">
-                <div v-for="categoria in categoriasGroup">
-                    <fieldset >
-                        <legend class=" text-primary text-dark">
-                            {{ categoria.nombre_categoria }}
-                        </legend>
-                        <hr>
-                        <div class="col-lg-12 mobile-container">
-                            <tramite-component v-for="(tramite, index) in categoria.tramites" :tramite="tramite" v-bind:key="index"></tramite-component>
-                        </div>
-                    </fieldset>
-                </div>
-                <div v-if="totalTramites == 0">
-                    <div class="card" style="width: 100%;">
-                          <div class="card-body text-center">
-                            <h5 class="card-title" >Sin resultados  </h5>
-                          </div>
-                    </div>                    
-                </div>
+                <transition-group name="fade">
+                    <div v-for="(categoria,  indice) in categoriasGroup" :key="categoria.categoria_id">
+                        <fieldset >
+                            <legend class=" text-primary text-dark">
+                                {{ categoria.nombre_categoria }}
+                            </legend>
+                            <hr>
+                            <div class="col-lg-12 mobile-container">
+                                <tramite-component v-for="(tramite, index) in categoria.tramites" :tramite="tramite" :key="tramite.id_tramite"></tramite-component>
+                            </div>
+                        </fieldset>
+                    </div>
+                </transition-group>
+                <transition name="fade">    
+                    <div v-if="totalTramites == 0">
+                        <div class="card" style="width: 100%;">
+                              <div class="card-body text-center">
+                                <h5 class="card-title" >Sin resultados  </h5>
+                              </div>
+                        </div>                    
+                    </div>
+                </transition>
             </div>
         </div>
     </div>
