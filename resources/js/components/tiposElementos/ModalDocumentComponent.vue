@@ -19,7 +19,7 @@
                                                 <div role="alert" class="alert alert-warning alert-dismissible fade show ">Ocurrio un error al guardar el documento intente nuevamente 
                                                 <button type="button" data-dismiss="alert" aria-label="Close" class="close"><span aria-hidden="true">×</span></button></div>
                                     </div>
-                                    <div  v-for="(tramiteDoc, index) in newTramites" :key="tramiteDoc.id"  class="modal-body" >
+                                    <div  v-for="(tramiteDoc, index) in newTramites" :key="tramiteDoc.id"  class="modal-body" v-if="tramiteDoc.required_docs != 1">
                                         
                                         <div>
 
@@ -94,7 +94,7 @@ export default {
         for (let i = 0; i < this.tramitesdoc.length; i++) {
             if (!last.includes(this.tramitesdoc[i].clave)) {
                 console.log(this.tramitesdoc[i].clave);
-                this.newTramites.push(this.tramitesdoc[i]);
+                this.newTramites.push( _.cloneDeep( this.tramitesdoc[i] )  );
             }
             last.push(this.tramitesdoc[i].clave);
             
