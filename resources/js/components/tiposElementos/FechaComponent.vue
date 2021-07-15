@@ -63,7 +63,7 @@
           this.validar();
         },
         cahngeEvent(){
-          this.estadoFormulario = this.estadoFormulario + 1;
+          //this.estadoFormulario = this.estadoFormulario + 1;
           this.validar();
         },
         validar(){
@@ -71,7 +71,10 @@
           if(/\d{2}-\d{2}-\d{4}/.test(this.campo.show)){
             let date = this.campo.show.split('-');
             if(date[2]) this.campo.valor = `${date[2]}-${date[1]}-${date[0]}`;
-          }else format = false;
+          }else {
+           format = false;
+           this.campo.valor = this.campo.show;
+          }
 
        		this.campo.mensajes = [];
           let requeridoValido = true;
@@ -96,7 +99,7 @@
               }
               this.campo.mensajes.push( mensaje );
             }
-          
+
           this.campo.valido =  requeridoValido && validDate;
           this.$forceUpdate();
           this.$emit('updateForm', this.campo);
