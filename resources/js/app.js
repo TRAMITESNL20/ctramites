@@ -87,6 +87,7 @@ Vue.component("valuador-component" , () => import( /* webpackChunkName: "js/comp
 
 Vue.component("complementaria-component" , () => import( /* webpackChunkName: "js/components/complementaria-component" */ './components/ComplementariaComponent.vue' ));
 
+Vue.component("btn-eliminar-borrador-component", () => import( /* webpackChunkName: "js/components/generales/btn-eliminar-borrador-component" */ './components/generales/BtnEliminarBorradorComponent.vue' ));
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -116,7 +117,7 @@ Vue.filter('toNumber', function (value) {
 });
 
 Vue.prototype.$const = {
-    PRECISION: 3,
+    PRECISION: 5,
     NOMBRES_CAMPOS:{
         CAMPO_DIVISAS: "Cambio de divisas",
         CAMPO_LOTE: "Lote",

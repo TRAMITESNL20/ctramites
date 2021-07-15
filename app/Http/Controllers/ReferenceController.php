@@ -322,4 +322,29 @@ class ReferenceController extends Controller {
 
 		return true;
     }
+
+    public function cancelSingleReference (Request $request) {
+    	$tramite = DB::table('portal.solicitudes_tramite AS tramite')
+    	->select(
+    		'oper.referencia',
+    		'tramite.id_ticket'
+    	)
+    	->leftjoin('operacion.oper_transacciones AS oper', 'tramite.id_transaccion_motor', 'oper.id_transaccion_motor')
+    	->where('tramite.id', $request->transaccion_id)
+    	->first();
+    	if(!$tramite->referencia) return abort(409, 'Sin referencia');
+    	$tramite->id_ticket = str_replace('[', '', $tramite->id_ticket);
+    	$tramite->id_ticket = str_replace(']', '', $tramite->id_ticket);
+    	$tramite->id_ticket = explode(',', $tramite->id_ticket);
+    	$cancel = curlSendRequest('POST', getenv("PAYMENTS_HOSTNAME")."/v1/cancel", ["referencia" => $tramite->referencia], [ "Authorization: Bearer ".getenv("PAYMENTS_KEY") ]);
+    	if($cancel->data == 'error') return abort(409, $cancel->error->message);
+    	$update = DB::table('portal.solicitudes_ticket AS ticket')
+    	->leftjoin('portal.solicitudes_tramite as tramite', 'ticket.id_transaccion', 'tramite.id')
+    	->whereIn('ticket.id', $tramite->id_ticket)
+    	->update([ "ticket.status" => 9, 'tramite.estatus' => 11 ]);
+
+    	return [
+    		"updated" => "ok"
+    	];
+    }
 }

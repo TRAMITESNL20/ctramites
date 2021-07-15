@@ -231,7 +231,7 @@
 }
 
 .desktop-agrupacion-width{
-	width: 50% !important;
+	width: 40% !important;
 }
 
 table ::before,::after{
@@ -242,6 +242,12 @@ table ::before,::after{
     
 }::after {
 	// transform:translateX(0px) rotate(180deg);
+}
+
+#toast-container > .toast-error{
+	.toast-title, .toast-message{
+		color: white !important;
+	}
 }
 
 

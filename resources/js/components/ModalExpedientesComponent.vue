@@ -6,7 +6,7 @@
     </b-button>
 
     <b-modal size="xl" :id="idModa" ref="modal" :title="titleModal" @show="resetModal" @hidden="resetModal" @ok="handleOk" 
-    :ok-title = "btnOkLabel" :ok-disabled="!direccion.datos_direccion">
+    :ok-title = "btnOkLabel" :ok-disabled="!direccion.datos_direccion || buscandoInsumos || buscandoDatosDomicilio">
       <b-container fluid>
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <b-row>
@@ -136,7 +136,8 @@
         estados:[], municipios:[], clave: "70",
         desabilitarSelecEstados:true,
         insumos:{},
-        buscandoDatosDomicilio:false
+        buscandoDatosDomicilio:false,
+        buscandoInsumos:false
       }
     },
     computed:{
@@ -274,18 +275,24 @@
       async valorOperacion(nExpediente){
         if( this.usuario && this.usuario.notary  ){
           if(this.$v.form.folio.$model){
-            let url = process.env.TESORERIA_HOSTNAME + "/insumos-montos";
-            let params = {
-              expediente:this.clave + nExpediente.split("-").join(""),
-              folio:this.$v.form.folio.$model,
-              id_notaria: this.usuario.notary.notary_number
+            this.buscandoInsumos = true;
+            try{
+              let url = process.env.TESORERIA_HOSTNAME + "/insumos-montos";
+              let params = {
+                expediente:this.clave + nExpediente.split("-").join(""),
+                folio:this.$v.form.folio.$model,
+                id_notaria: this.usuario.notary.notary_number
+              }
+              let response = await axios.get(url , {params} );
+              if(response.data){
+                this.insumos = response.data;
+              } else {
+                this.insumos = false;
+              }
+            } catch (error) {
+              console.log(error);
             }
-            let response = await axios.get(url , {params} );
-            if(response.data){
-              this.insumos = response.data;
-            } else {
-              this.insumos = false;
-            }
+            this.buscandoInsumos = false;
           } else {
             this.insumos.status = false;
             this.insumos.msg = "Ingrese Folio";
