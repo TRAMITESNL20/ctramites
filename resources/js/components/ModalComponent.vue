@@ -275,7 +275,7 @@
                       </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
-                  
+                  <!--
                   <b-col cols="12" md="6" >
                     <b-form-group label="MONTO DE OPERACIÓN (proporcional conforme al % de venta)" label-for="monto-operacion-input" >
                       <b-input-group  >
@@ -295,7 +295,7 @@
                         </span>
                       </b-form-invalid-feedback>
                     </b-form-group>
-                  </b-col>    
+                  </b-col>-->    
                 </b-row>
                 <b-row>
                     <calculo-costo-tramite-5-isr-component 
