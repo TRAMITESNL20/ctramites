@@ -121,7 +121,7 @@
 												:campo="campo" 
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
-													@updateForm="updateForm" :configCostos="configCostos" :updateListadoExpedientes="updateListadoExpedientes">
+													@updateForm="updateForm" :configCostos="configCostos" :updateListadoExpedientes="updateListadoExpedientes" >
 														
 													</enajenantes-component>
 												<table-component 
@@ -225,7 +225,8 @@
                 	campos:this.campos, 
                 	tramite:this.tramite, 
                 	tipoPersona:this.tipoPersona,
-                	declararEn0:this.declararEn0
+                	declararEn0:this.declararEn0,
+                	montoOperacion: this.montoOperacion
                 };
             }
         },
@@ -255,7 +256,8 @@
 				infoExtra : {},
 				tipo_costo_obj: { tipo_costo:0 ,tipoCostoRadio:'millar',hojaInput:'', val_tipo_costo:'' },
 				tieneSeccionDocumentos: false,
-				updateListadoExpedientes:0
+				updateListadoExpedientes:0,
+				montoOperacion:0
             }
         },
         created() {
@@ -746,6 +748,8 @@
 					});
 	        	}  	else if( campo.tipo === 'expedientes' ){
 	        		this.updateListadoExpedientes = this.updateListadoExpedientes + 1;
+	        	} else if( campo.nombre === 'Monto total de operación (reportado en el aviso de enajenación)' ){
+	        		this.montoOperacion = campo.valor;
 	        	}
 			},
 		 },

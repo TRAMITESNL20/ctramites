@@ -37,7 +37,7 @@
         axios({
             method: "get",
             url,
-            responseType: "ArrayBuffer",
+            responseType: "blob",
             headers: {
           'nombreArchivo': nombreArchivo,
           campo_id: campo.campo_id + "-" + campo.relationship,
@@ -78,6 +78,10 @@
                   type: res.headers['content-type'], 
                   lastModified: Date.now()
                 });
+
+                //var fileURL = URL.createObjectURL(fileNew);
+                //window.open(fileURL);
+
                 let headers = res.config.headers;
 
                 this.campo.valor = fileNew;
