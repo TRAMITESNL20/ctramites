@@ -166,9 +166,9 @@
 					<tr class="datos-enajenante">
 						<td class="columna">% DE CO-PROPIEDAD:</td>
 						@if ($info->solicitudes[0]->info->{'tipoTramite'} === 'declaracionEn0')
-						<td class="columna"colspan="2">MONTO DE OPERACIÓN:</td>
+						<td class="columna"colspan="2">MONTO TOTAL DE OPERACIÓN:</td>
 						@else
-						<td class="columna"colspan="2">MONTO DE OPERACIÓN:</td>
+						<td class="columna"colspan="2">MONTO TOTAL DE OPERACIÓN:</td>
 						@endif
 						<td class="columna"></td>
 					</tr>
@@ -245,7 +245,7 @@
 			</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }} first">
 					<td class="columna">ESTATUS</td>
-					<td class=" columna" colspan="2">Ticket ID</td>
+					<td class=" columna" colspan="2">TRAMITE ID</td>
 					<td class="columna">NO. FOLIO DE TESORERIA VIRTUAL</td>
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }}">
