@@ -45,6 +45,9 @@
       
       props: ['campo', 'estadoFormulario', 'showMensajes'],
       created() {
+        if(this.campo.valor){
+          this.campo.show = this.campo.valor
+        }
         this.validar();
       },
       data(){
