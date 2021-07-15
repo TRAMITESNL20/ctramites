@@ -165,16 +165,20 @@
 					</tr>
 					<tr class="datos-enajenante">
 						<td class="columna">% DE CO-PROPIEDAD:</td>
-						@if ($info->solicitudes[0]->info->{'tipoTramite'} === 'declaracionEn0')
-						<td class="columna"colspan="2">MONTO TOTAL DE OPERACIÓN:</td>
+						@if ($info->solicitudes[0]->info->campos->{'Monto total de operación (reportado en el aviso de enajenación)'})
+							<td class="columna"colspan="2">MONTO TOTAL DE OPERACIÓN:</td>
 						@else
-						<td class="columna"colspan="2">MONTO TOTAL DE OPERACIÓN:</td>
+							<td class="columna"colspan="2">MONTO DE OPERACIÓN:</td>
 						@endif
 						<td class="columna"></td>
 					</tr>
 					<tr class="datos-enajenante last">
 						<td class="columna value">{{ $enajenante->{'porcentajeCompra'} ?? '' }}</td>
+						@if($info->solicitudes[0]->info->campos->{'Monto total de operación (reportado en el aviso de enajenación)'})
+						<td class="columna value" colspan="2">{{ $info->solicitudes[0]->info->campos->{'Monto total de operación (reportado en el aviso de enajenación)'} ?? '' }} </td>
+						@else
 						<td class="columna value" colspan="2">{{ $enajenante->datosParaDeterminarImpuesto->{'montoOperacion'} ?? '' }} </td>
+						@endif
 						<td class="columna value"></td>
 					</tr>
 					
@@ -192,12 +196,16 @@
 					</tr>
 					@if ($info->solicitudes[0]->info->{'tipoTramite'} === 'declaracionEn0')
 					<tr class="datos-enajenante fisrt">
-						<td class="columna">MONTO DE OPERACIÓN:</td>
+						<td class="columna">MONTO TOTAL DE OPERACIÓN:</td>
 						<td class="columna" colspan="2">&nbsp;</td>
 						<td class="columna">&nbsp;</td>
 					</tr>
 					<tr class="datos-enajenante last">
-						<td class="columna value">{{ $enajenante->datosParaDeterminarImpuesto->{'montoOperacion'} ?? '' }}</td>
+						@if($info->solicitudes[0]->info->campos->{'Monto total de operación (reportado en el aviso de enajenación)'})
+						<td class="columna value">{{ $info->solicitudes[0]->info->campos->{'Monto total de operación (reportado en el aviso de enajenación)'} ?? '' }} </td>
+						@else
+						<td class="columna value">{{ $enajenante->datosParaDeterminarImpuesto->{'montoOperacion'} ?? '' }} </td>
+						@endif
 						<td class="columna value" colspan="2">&nbsp;</td>
 						<td class="columna value">&nbsp;</td>
 					</tr>
