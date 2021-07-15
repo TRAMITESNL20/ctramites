@@ -134,6 +134,7 @@
         },
         distrito: function() {
           if(this.campo.nombre == 'Municipio'){
+            this.campo.valor = null;
             if(this.distrito && this.distrito.clave){
               this.setOpciones();
             }
