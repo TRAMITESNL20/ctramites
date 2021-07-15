@@ -43,7 +43,20 @@
                             </a>
                             <button v-on:click="cancelReference(tramite)" class="btn btn-sm btn-danger font-weight-bolder text-uppercase text-white" v-if="tramite.recibo_referencia && [5].includes(type) && !group">CANCELAR REFERENCIA</button>
                             <a v-on:click="goTo(tramite.recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.recibo_referencia && [5].includes(type) && !group">VER REFERENCIA</a>
-                            <a v-on:click="goTo(tramite.doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.doc_firmado && [2,3].includes(type)">VER DECLARACIÓN</a>
+                            
+                            <button 
+                                v-if="tramite.doc_firmado && [2,3].includes(type) && tramite.required_docs == 0 "
+                                class="btn btn-warning disabled" 
+                                style="border-top-right-radius: 0px;border-bottom-right-radius: 0px;font-size: 5px;border-radius: 1 1 0 0 !important;margin-right: -4px;height:32px" 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="No es posbile descargar este archivo al no contar con el documento del CALCULO DEL ISR CONFORME AL 126 LISR O COMPROBANTE DE LA EXENCIÓN ">
+                                    <i class="text-white fa fa-question-circle"></i>
+                            </button>
+                            <a class="btn btn-sm btn-primary font-weight-bolder text-uppercase disabled text-white" disabled  style="border-top-left-radius:0px;border-bottom-left-radius:0px" v-if="tramite.doc_firmado && [2,3].includes(type) && tramite.required_docs == 0 ">VER DECLARACIÓN</a>
+                            <a v-on:click="goTo(tramite.doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.doc_firmado && [2,3].includes(type) && tramite.required_docs == 1">VER DECLARACIÓN</a>
+
+
                             <!-- <modal-document-component  :tramitesdoc="tramitesdoc" v-if="tramite.required_docs === 0"   ></modal-document-component> -->
                             <a v-on:click="goTo(tramite.tramites[0].url_recibo, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.tramites && tramite.tramites[0] && tramite.tramites[0].url_recibo && [2,3].includes(type) && !group">VER RECIBO DE PAGO</a>
                             <div class="btn-group" v-if="tramite.info && !cartComponent && !group && ![7,8].includes(tramite.status)">
