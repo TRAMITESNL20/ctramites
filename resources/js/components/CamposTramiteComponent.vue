@@ -751,8 +751,85 @@
 					let divisaValue = divisaCtrl.getSymbol(campo.valor); 
 	        		this.$store.commit('change', divisaValue);
 	        		this.divisa = this.$store.state.DEFAULT_DIVISA
+	        	}   else if( campo.nombre == 'Número de Escritura Pública' ) {
+	        		this.$root.$emit('notify', { 
+	        			of:'Número de Escritura Pública', 
+	        			for:'Acta Fuera Protocolo', 
+	        			campoOf:campo,
+	        			validation: (self, campoOf, caracteristicas) => {
+	        				self.campo.valido = campoOf.valido && !!campoOf.valor && campoOf.valor.length > 0;  
+	        				caracteristicas.required = !!campoOf.valor && campoOf.valor.length == 0;
+	        				self.campo.disabled = !!campoOf.valor && campoOf.valor.length > 0; 
+                            self.campo.caracteristicas = JSON.stringify(caracteristicas);
+	        				return self;  
+	        			},
+	        		});
+	        	}	else if( campo.nombre == 'Acta Fuera Protocolo') {
+	        		this.$root.$emit('notify', { 
+	        			for:'Número de Escritura Pública', 
+	        			of:'Acta Fuera Protocolo', 
+	        			campoOf:campo,
+	        			validation: (self, campoOf, caracteristicas) => {
+	        				self.campo.valido = campoOf.valido && !!campoOf.valor && campoOf.valor.length > 0;  
+	        				caracteristicas.required = !!campoOf.valor && campoOf.valor.length == 0;
+	        				self.campo.disabled = !!campoOf.valor && campoOf.valor.length > 0; 
+                            self.campo.caracteristicas = JSON.stringify(caracteristicas);
+	        				return self;  
+	        			},
+	        		});
+	        	} else if( campo.nombre == "Fecha de protocolización"){
+	        		
+	        		this.$root.$emit('notifyDate', { 
+	        			for:'Fecha de escritura', 
+	        			of:'Fecha de protocolización', 
+	        			campoOf:campo,
+	        			validation: (self, campoOf, caracteristicas) => {
+	        				let fechaProtocolizacion = moment(campoOf.valor);
+	        				let fechaEscritura = moment(self.campo.valor)
+	        				let fechaProtocolizacionMayor = fechaProtocolizacion > fechaEscritura;
+	        			    if(fechaProtocolizacionMayor){
+	        				    let mensaje = { 
+				                	tipo:'validation',
+				                	mensajeStr: "La fecha de protocolo no puede ser mayor a la fecha de la escritura."
+				              	}
+				              	campoOf.valido = false;	
+				              	campoOf.mensajes.push( mensaje );
+
+
+				            } else {
+				            	self.campo.valido = campoOf.valido;
+				            	self.campo.mensajes = self.campo.mensajes.filter( mensaje => mensaje.tipo != 'validation')
+				            }
+	        				return self;  
+	        			},
+	        		});
+	        	} else if( campo.nombre == "Fecha de escritura"){
+	        		
+	        		this.$root.$emit('notifyDate', { 
+	        			of:'Fecha de escritura', 
+	        			for:'Fecha de protocolización', 
+	        			campoOf:campo,
+	        			validation: (self, campoOf, caracteristicas) => {
+	        				let fechaProtocolizacion = moment(self.campo.valor);
+	        				let fechaEscritura = moment(campoOf.valor);
+	        				let fechaProtocolizacionMayor = fechaProtocolizacion > fechaEscritura;
+	        			    if(fechaProtocolizacionMayor){
+	        				    let mensaje = { 
+				                	tipo:'validation',
+				                	mensajeStr: "La fecha de protocolo no puede ser mayor a la fecha de la escritura."
+				              	}
+				              	campoOf.valido = false;	
+				              	campoOf.mensajes.push( mensaje );
+				            } else {
+				            	self.campo.valido = campoOf.valido;
+				            	self.campo.mensajes = self.campo.mensajes.filter( mensaje => mensaje.tipo != 'validation')
+				            }
+	        				return self;  
+	        			},
+	        		});
 	        	}
 			},
+
 			processCampo (campo) {
 				const disabled = this.agrupaciones.map((agrupacion, ind) => this.disabled.includes(ind) ? agrupacion.agrupacion_id : null).filter(ele => ele);
 				const actived = this.agrupaciones.map((agrupacion, ind) => this.panel.includes(ind) ? agrupacion.agrupacion_id : null).filter(ele => ele);
@@ -775,7 +852,9 @@
 		watch: {
 			tipo_costo_obj:  {
 		        handler: function (val, oldVal) {
-		         	this.$root.$emit('tipo_costo_obj_change', { activo: val.tipoCostoRadio != 'millar' });
+		        	if(val){
+		         		this.$root.$emit('tipo_costo_obj_change', { activo: val.tipoCostoRadio != 'millar' });
+		         	}
 		        },
 		        deep: true				
 			},

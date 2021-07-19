@@ -47,6 +47,17 @@
       created() {
         this.validar();
       },
+      mounted(){
+        let self = this;
+        this.$root.$on('notifyDate',  function (data) {
+            if(self.campo.nombre == data.for){
+              let caracteristicas = self.getCaracteristicas();
+              self = data.validation(self, data.campoOf, caracteristicas);
+              this.$forceUpdate();            
+            }
+        });
+
+      },
       data(){
         return {
           showDecadeNav: true,

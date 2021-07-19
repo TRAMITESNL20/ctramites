@@ -8,7 +8,7 @@
         :name="campo.nombre"
         type="text"
         class="form-control"
-        style="background-color: #e5f2f5 !important"
+        style="background-color: #e5f2f5 !important;"
         :placeholder="[[campo.nombre]]"
         :id="[[campo.campo_id]]"
         v-model="campo.valor"
@@ -39,6 +39,16 @@
         this.validar();
       },
       mounted(){
+        let self = this;
+
+        this.$root.$on('notify',  function (data) {
+            if(self.campo.nombre == data.for){
+              let caracteristicas = self.getCaracteristicas();
+              self = data.validation(self, data.campoOf, caracteristicas)
+              this.$forceUpdate();            
+            }
+        });
+
       },
       methods: {
         formatear(){
@@ -86,7 +96,6 @@
           if( this.campo.valor && caracteristicas.expreg ){
             var regex = new RegExp(caracteristicas.expreg, "i");
             exregValida = regex.test(this.campo.valor)
-
             if( !exregValida ){
               let mensaje = { 
                 tipo: 'regex',
@@ -108,6 +117,7 @@
           }
           this.campo.valido =  requeridoValido && exregValida;
           this.formatear();
+          this.$forceUpdate();
           this.$emit('updateForm', this.campo);
           
         },
