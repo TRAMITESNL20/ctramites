@@ -107,6 +107,7 @@ export default {
             this.seccionVendedores.vendedores = data.items;
             this.seccionVendedores.porcentajePropiedad = data.config.porcentajePropiedadAsignado;
             this.seccionVendedores.porcentajeUsufructo = data.config.porcentajeUsufructoAsignado;
+   
             this.seccionVendedores.porcentajeVenta = data.config.porcentajeVentaAsignado;
 
             this.validar();
@@ -121,7 +122,7 @@ export default {
         },
 
         validar(){
-            this.campo.valido =  this.seccionVendedores.porcentajePropiedad == 100 &&  this.seccionVendedores.porcentajeUsufructo == 100 && this.seccionCompradores.porcentajePropiedad == 100 && this.seccionVendedores.porcentajeVenta && this.seccionVendedores.porcentajeVenta > 0; 
+            this.campo.valido =  this.seccionVendedores.porcentajePropiedad == 100 &&  this.seccionVendedores.porcentajeUsufructo == 100 && this.seccionCompradores.porcentajePropiedad == this.seccionVendedores.porcentajeVenta && this.seccionVendedores.porcentajeVenta > 0; 
             let valor = {seccionVendedores:this.seccionVendedores, seccionCompradores: this.seccionCompradores, datosCatastrales:[]};
             this.campo.valor = valor;
             this.$emit('updateForm', this.campo); 
@@ -208,7 +209,6 @@ export default {
         expediente (newValue, oldValue) {
             if(newValue && newValue == oldValue){
                 if(this.seccionVendedores && this.seccionVendedores.vendedores.length < 0){
-                    console.log("hello")
                     this.getInformacion();
                 }
             } else {
