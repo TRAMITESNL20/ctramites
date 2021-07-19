@@ -73,7 +73,7 @@ class ReferenceController extends Controller {
 					->table('solicitudes_mensajes')
 					->insert([
 						'ticket_id'=> $solicitud->id,
-						'mensaje' => "Solicitud cerrada porque esta asignado al admin"
+						'mensaje' => "Solicitud cerrada porque esta asignado al admin - API Bancos"
 					]);
 				}
 			}
@@ -91,9 +91,10 @@ class ReferenceController extends Controller {
 		$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 		Log::channel('apilog')->info("\n\nENDPOINT: [{$_SERVER['REQUEST_METHOD']}] - ".$actual_link);
 		if(!$reference) $reference = request()->toArray();
-		if(gettype($reference) != 'array') $reference = [$reference];
-		if(count($reference) == 0) abort(409, "No hay referencias para validar.");
+		if(gettype($reference) != 'array' && !isset($reference->service)) $reference = [$reference];
+		unset($reference["service"]);
 		unset($reference["dev"]);
+		if(count($reference) == 0) abort(409, "No hay referencias para validar.");
 		$response = [];
 
 		foreach ($reference as $ref) {
@@ -296,11 +297,11 @@ class ReferenceController extends Controller {
 
 				if($reference->{'oper_transacciones-estatus'} == 65){
 					$changes = [
-						'solicitudes_ticket.status' => 99,
-						'recibo_referencia' => null,
-						'id_transaccion' => null,
-						'asignado_a' => null,
-						'en_carrito' => 0,
+						'solicitudes_ticket.status' => 9,
+						// 'recibo_referencia' => null,
+						// 'id_transaccion' => null,
+						// 'asignado_a' => null,
+						// 'en_carrito' => 0,
 						'updated_at' => date('Y-m-d H:i:s')
 					];
 				}
@@ -320,5 +321,30 @@ class ReferenceController extends Controller {
 		}
 
 		return true;
+    }
+
+    public function cancelSingleReference (Request $request) {
+    	$tramite = DB::table('portal.solicitudes_tramite AS tramite')
+    	->select(
+    		'oper.referencia',
+    		'tramite.id_ticket'
+    	)
+    	->leftjoin('operacion.oper_transacciones AS oper', 'tramite.id_transaccion_motor', 'oper.id_transaccion_motor')
+    	->where('tramite.id', $request->transaccion_id)
+    	->first();
+    	if(!$tramite->referencia) return abort(409, 'Sin referencia');
+    	$tramite->id_ticket = str_replace('[', '', $tramite->id_ticket);
+    	$tramite->id_ticket = str_replace(']', '', $tramite->id_ticket);
+    	$tramite->id_ticket = explode(',', $tramite->id_ticket);
+    	$cancel = curlSendRequest('POST', getenv("PAYMENTS_HOSTNAME")."/v1/cancel", ["referencia" => $tramite->referencia], [ "Authorization: Bearer ".getenv("PAYMENTS_KEY") ]);
+    	if($cancel->data == 'error') return abort(409, $cancel->error->message);
+    	$update = DB::table('portal.solicitudes_ticket AS ticket')
+    	->leftjoin('portal.solicitudes_tramite as tramite', 'ticket.id_transaccion', 'tramite.id')
+    	->whereIn('ticket.id', $tramite->id_ticket)
+    	->update([ "ticket.status" => 9, 'tramite.estatus' => 11 ]);
+
+    	return [
+    		"updated" => "ok"
+    	];
     }
 }

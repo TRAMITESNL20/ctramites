@@ -72,7 +72,7 @@
                                           :tipoTramite="tipoTramite" 
                                           :datosComplementaria="datosComplementaria" 
                                           :files="files" 
-                                          :usuario="usuario">
+                                          :usuario="usuario" @actualizandoDatos="actualizandoDatos">
                                           </resumen-tramite-5-isr-component>
                                         </div>
                                         <div v-else>
@@ -119,6 +119,7 @@
                                               v-if="currentStep == 3 && ['notary_titular', 'notary_substitute', 'notary_payments', 'notary_capturist_payments'].includes(user.role_name)"
                                               labelBtn="Pagar"
                                               @tramiteAgregadoEvent="tramiteAgregadoEvent"
+                                              :actualizandoDatosResumen="actualizandoDatosResumen"
                                               ></btn-guardar-tramite-component>
                                             <button type="button" id="btnWizard" class="btn btn-primary font-weight-bolder text-uppercase px-9 py-4 arrow-desktop" data-wizard-type="action-next" v-on:click="next()" v-if="currentStep != 3">
                                                 Siguiente
@@ -227,8 +228,9 @@
                   wizardTitle:'Finalizar',
                   wizardDesc:'Revisar y completar',
                 }],
-                TRAMITE_5_ISR:process.env.TRAMITE_5_ISR
+                TRAMITE_5_ISR:process.env.TRAMITE_5_ISR,
                 //declararEn0:false
+                actualizandoDatosResumen:false
             }
         },
 
@@ -245,12 +247,17 @@
                 let totalCarritoActual = parseInt( $("#totalTramitesCarrito" ).text( ));
                 $("#totalTramitesCarrito" ).text( totalCarritoActual + totalAgregados  );
 
-             
-                  Command: toastr.success("Listo !", "El trámite ha sido agregado");
+                Command: toastr.success("Listo !", "El trámite ha sido agregado");
                 
                 if( data.type == "finalizar" ){
+                  localStorage.removeItem('tramite'); 
+                  localStorage.removeItem('listaSolicitantes');
+                  localStorage.removeItem('datosFormulario');
                   redirect("/cart");
                 } if(data.type=="temporal"){
+                  localStorage.removeItem('tramite'); 
+                  localStorage.removeItem('listaSolicitantes');
+                  localStorage.removeItem('datosFormulario');
                   redirect("/tramites/borradores/80");
                 }else {
                   localStorage.removeItem('listaSolicitantes');
@@ -377,6 +384,10 @@
                   console.log(error);
               }
             },
+
+            actualizandoDatos(res){
+              this.actualizandoDatosResumen = res; 
+            }
 
         }
     }

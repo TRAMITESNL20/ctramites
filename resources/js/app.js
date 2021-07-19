@@ -63,6 +63,7 @@ Vue.component("file-component" , () => import( /* webpackChunkName: "js/componen
 Vue.component("results-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ResultsComponent.vue' ));
 Vue.component("firma-electronica-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/FirmaElectronicaComponent.vue' ));
 Vue.component("modal-document-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/tiposElementos/ModalDocumentComponent.vue' ));
+Vue.component("card-porfile-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/results-component" */ './components/generales/CardPorfileComponent.vue' ));
 
 Vue.component("btn-guardar-tramite-parent" , () => import( /* webpackChunkName: "js/components/generales/btn-guardar-tramite-parent" */ './components/generales/BtnGuardarTramiteParent.vue' ));
 
@@ -86,6 +87,7 @@ Vue.component("valuador-component" , () => import( /* webpackChunkName: "js/comp
 
 Vue.component("complementaria-component" , () => import( /* webpackChunkName: "js/components/complementaria-component" */ './components/ComplementariaComponent.vue' ));
 
+Vue.component("btn-eliminar-borrador-component", () => import( /* webpackChunkName: "js/components/generales/btn-eliminar-borrador-component" */ './components/generales/BtnEliminarBorradorComponent.vue' ));
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -115,7 +117,7 @@ Vue.filter('toNumber', function (value) {
 });
 
 Vue.prototype.$const = {
-    PRECISION: 3,
+    PRECISION: 5,
     NOMBRES_CAMPOS:{
         CAMPO_DIVISAS: "Cambio de divisas",
         CAMPO_LOTE: "Lote",
@@ -160,4 +162,18 @@ Vue.directive('currency',
 
 const app = new Vue({
     el: '#app',
+    updated(){
+        if($(".table").length > 0){
+            var height = $(".table")[0].clientHeight;
+            $(".border-table-left").css( "width" ,'12%');
+            $(".border-table-right").css( "width" ,'12%');
+            $(".border-table-left").css( "height" ,  height+"px" );
+            $(".border-table-right").css( "height" ,  height+"px" );
+            $('#scrollDiv').scroll( function() {    
+                ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
+
+                ( $('#scrollDiv').scrollLeft() > 0) ? $('.border-table-left').show() : $('#gradientBackgroundLeft').hide();
+            });
+        }
+    }
 });

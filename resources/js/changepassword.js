@@ -1,9 +1,9 @@
 var validation;
-
+var fv;
 document.addEventListener('DOMContentLoaded', function(e) {
-    const form = document.getElementById('kt_confirm_password_form');
-    validation = FormValidation.formValidation(
-        document.getElementById('kt_confirm_password_form'), {
+    const form = document.getElementById('kt_confirm_password_form_log');
+    fv = FormValidation.formValidation(
+        document.getElementById('kt_confirm_password_form_log'), {
             fields: {
                 password: {
                     validators: {
@@ -56,12 +56,10 @@ $('#kt_recovery_submit_change').on('click', function(e) {
     const url = window.location.href;
     const user_id =  $('#emailAux').val();
     const token_bearer =  $('#sesionAux').val();
-    console.log(token_bearer);
     const password = $(document).find('input[name="password"]').val();
     const password_confirmation = $(document).find('input[name="confirmPassword"]').val();
-    validation.validate().then(function(status) {
+    fv.validate().then(function(status) {
         if (status == 'Valid') {
-            console.log('validado');
                   $.ajaxSetup({
                         url: `${process.env.SESSION_HOSTNAME}/users/`+ user_id,
                         headers: {
@@ -72,8 +70,6 @@ $('#kt_recovery_submit_change').on('click', function(e) {
                             "password": password,
                         },
                         success: function(res) {
-                            console.log(res);
-                            console.log(url);
                             swal.fire({
                                 text: "Tu contraseña a sido actualizada",
                                 icon: "success",

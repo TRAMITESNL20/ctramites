@@ -1,6 +1,6 @@
 <template>
 	<button type="button" :class="btnClass ? btnClass : 'btn btn-success font-weight-bolder text-uppercase px-9 py-4 mobil-font'"
-		v-on:click="agregar()" :disabled="enviando">
+		v-on:click="agregar()" :disabled="enviando || actualizandoDatosResumen">
         {{ labelBtn }}
         <div id="spinner-guardaFina" class="spinner-border spinner-border-sm float-right" role="status" 
         	v-if="enviando" style="margin-left: 5px;">
@@ -12,7 +12,7 @@
 <script>
     import BtnGuardarTramiteParent from './BtnGuardarTramiteParent'
     export default {
-        props: ['btnClass'],
+        props: ['btnClass', 'actualizandoDatosResumen'],
         data() {
             return {
               enviando:false
@@ -63,17 +63,31 @@
                 }
               } else if(!!this.tieneEnajentantes(datosFormulario) && this.type != 'temporal' && this.tipoTramite != 'complementaria' ){
                 let enajenantes = this.extraerEnajentantes(datosFormulario, tramite, informacion, listaSolicitantes );
+
                 formData = this.getFormData(enajenantes);
 
                 let detallesComplete = true;
+                let detallesValid = true;
        
                 enajenantes.forEach( enajenante => {
                   detallesComplete = detallesComplete && !!enajenante.detalle && typeof enajenante.detalle == 'object'; 
                 });
-
+                
+                if( detallesComplete && this.tipoTramite == 'normal' ){
+                  enajenantes.forEach( enajenante => {
+                    detallesValid = detallesValid && !!enajenante.detalle && enajenante.detalle.Salidas['Importe total'] > 0; 
+                  });
+                }
                 
                 if(detallesComplete ||  this.type == 'temporal'){
-                  this.guardarTramiteUnico(formData, url );
+                  
+                  if(detallesValid){
+                    this.guardarTramiteUnico(formData, url );
+                  } else {
+                    this.enviando = false;
+                    Command: toastr.warning("Aviso!", "Importe total debe ser mayor a 0");
+                  }
+                  //
                 } else {
                   this.enviando = false;
                   Command: toastr.warning("Aviso!", "Importe total requerido");

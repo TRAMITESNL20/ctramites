@@ -18,9 +18,9 @@
         <b-row > 
             <b-col>
                 <b-form-group label="Porcentaje que enajena" label-for="procentaje-venta-input" >
-                    <b-form-input  id="procentaje-venta-input" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" @input="validar"  :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback" max="100" type="number"  style="background-color: #e5f2f5 !important"></b-form-input>
+                    <b-form-input  id="procentaje-venta-input" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" @input="validar"  :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback" max="100" type="number"  style="background-color: #e5f2f5 !important" step="0.001" @change="precision()"></b-form-input>
                     <b-input-group prepend="0" append="100" >
-                        <b-form-input  id="procentaje-venta-rango" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" type="range" max="100" @input="validar" :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback"></b-form-input>
+                        <b-form-input  id="procentaje-venta-rango" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" type="range" max="100" @input="validar" :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback" step="0.001" @change="precision()"></b-form-input>
                     </b-input-group>
                     <b-form-invalid-feedback id="porcentajeVenta-input-feedback">
                         <span v-if="!$v.porcentajeVenta.isMayorQuePorcentajeAsignado"  class="form-text text-danger">
@@ -203,27 +203,26 @@
             }
             if(this.campo.valor && this.campo.valor.enajenantes && this.campo.valor.enajenantes.length > 0){
                 this.enajentantes = this.campo.valor.enajenantes;
-                this.$v.porcentajeVenta.$model  = this.campo.valor.porcentajeVenta;
+                this.$v.porcentajeVenta.$model = Number( Number( this.campo.valor.porcentajeVenta ).toFixed(this.$const.PRECISION)) ;
                 this.motivo = this.campo.valor.motivo;
                 
                 this.calcularTotalPorcentaje();
                 this.calcularTotalMontoOperacionDeEnajentantes();
             }
             this.validar();
-            $('#gradientBackgroundLeft').hide();
             
 		},
         updated(){
-            var height = $("#tableEnajenantes")[0].clientHeight;
-            $("#gradientBackgroundLeft").css( "width" ,'12%');
-            $("#gradientBackgroundRight").css( "width" ,'12%');
-            $("#gradientBackgroundLeft").css( "height" ,  height+"px" );
-            $("#gradientBackgroundRight").css( "height" ,  height+"px" );
-            $('#scrollDiv').scroll( function() {
-                ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
+            // var height = $("#tableEnajenantes")[0].clientHeight;
+            // $("#gradientBackgroundLeft").css( "width" ,'12%');
+            // $("#gradientBackgroundRight").css( "width" ,'12%');
+            // $("#gradientBackgroundLeft").css( "height" ,  height+"px" );
+            // $("#gradientBackgroundRight").css( "height" ,  height+"px" );
+            // $('#scrollDiv').scroll( function() {
+            //     ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
 
-                ( $('#scrollDiv').scrollLeft() > 0) ? $('#gradientBackgroundLeft').show() : $('#gradientBackgroundLeft').hide();
-            });
+            //     ( $('#scrollDiv').scrollLeft() > 0) ? $('#gradientBackgroundLeft').show() : $('#gradientBackgroundLeft').hide();
+            // });
         },
         props:{
 
@@ -354,7 +353,7 @@
                 let eltotal = 0;
                 
                 let campoExpedientes = this.configCostos.campos.find(campo => campo.nombre == "Expedientes");
-                console.log(JSON.parse(JSON.stringify(campoExpedientes)))
+                
                 if(campoExpedientes && campoExpedientes.valor){
                     if(campoExpedientes.valor.expedientes){
                       if( campoExpedientes.valor.expedientes.length > 0){
@@ -374,6 +373,11 @@
                 }
                 this.totalMontoOperacionDeclarado = eltotal;
                 //return eltotal; 
+            }, 
+
+
+            precision(){
+                this.$v.porcentajeVenta.$model = Number( Number( this.$v.porcentajeVenta.$model ).toFixed(this.$const.PRECISION)) ;
             }
 
 		},
@@ -381,7 +385,8 @@
         watch: {
             'configCostos.declararEn0':function (val, oldVal){
                 if(this.enajentantes.length > 0) {
-                        this.enajentantes = this.enajentantes.map( enajentante => {
+                    this.enajentantes = this.enajentantes.map( enajentante => {
+                        enajentante.detalle = false;
                         enajentante.datosParaDeterminarImpuesto.gananciaObtenida = '0';
                         enajentante.datosParaDeterminarImpuesto.montoOperacion = '0';
                         enajentante.datosParaDeterminarImpuesto.multaCorreccion = '0';
