@@ -154,7 +154,7 @@
                     </b-form-group>
 
 
-
+                    <!--
 
 
                     <b-form-group label="Nombre(s)" label-for="nombre-input" >
@@ -163,7 +163,7 @@
 
 
                     </b-form-group>
-
+-->
 
 
                 </b-col>                

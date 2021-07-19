@@ -19,19 +19,24 @@
                         <template-datos-personales-component :datosPersonales="data.item.datosPersonales"></template-datos-personales-component>
                     </template>
                     <template #cell(porcentajePropiedad)="data">
-                        <span class="badge badge-pill badge-success">
-                            {{data.item.porcentajePropiedad}}
+                        <span class="badge badge-pill badge-success" v-if="data.item.datosPorcentajes">
+                            {{data.item.datosPorcentajes.porcentajePropiedad }} 
+                        </span>
+                        <span v-if="!data.item.datosPorcentajes">
+                            0  
                         </span>
                     </template>
                      <template #cell(porcentajeUsufructo)="data">
-                        <span class="badge badge-pill badge-success">
-                            {{data.item.porcentajeUsufructo}}
+                        <span class="badge badge-pill badge-success" v-if="data.item.datosPorcentajes">
+                            {{data.item.datosPorcentajes.porcentajeUsufructo}}
                         </span>
+                        <span v-if="!data.item.datosPorcentajes"> 0 </span>
                     </template>
                     <template #cell(porcentajeVenta)="data" v-if="config.name=='vendedor'">
-                        <span class="badge badge-pill badge-success">
-                            {{data.item.porcentajeVenta}}
+                        <span class="badge badge-pill badge-success" v-if="data.item.datosPorcentajes">
+                            {{data.item.datosPorcentajes.porcentajeVenta}}
                         </span>
+                        <span v-if="!data.item.datosPorcentajes"> 0 </span>
                     </template>
                     <template #cell(actions)="data" v-if="!config.onlyRead">
                         <span>
@@ -119,6 +124,7 @@ export default {
                 if(item.datosPersonales.nacionalidad=='mexicana'){
                     item.tipoPersona = item.datosPersonales.tipoPersona; 
                 }
+                /*
                 if(item.datosPorcentajes){
                     item.porcentajePropiedad =  item.datosPorcentajes.porcentajePropiedad;
                     item.porcentajeUsufructo = item.datosPorcentajes.porcentajeUsufructo;
@@ -127,7 +133,7 @@ export default {
                     item.porcentajePropiedad =  0;
                     item.porcentajeUsufructo = 0;
                     item.porcentajeVenta = 0;
-                }
+                }*/
                 return item;
             });         
         },
@@ -155,14 +161,20 @@ export default {
             if(!this.config.onlyRead){
                 let totalPorcentajePropiedad = 0;
                 let totalPorcentajeUsufructo = 0;
-                let totalPorcentajeVentta = 0;
+                let totalPorcentajeVenta = 0;
                 if(this.items && this.items.length > 0){
                     this.items.forEach( item  => {
                         if(item.datosPorcentajes){
                             totalPorcentajePropiedad = Number(Number(Number(totalPorcentajePropiedad) + Number(item.datosPorcentajes.porcentajePropiedad)).toFixed(this.$const.PRECISION));
                             totalPorcentajeUsufructo = Number(Number(Number(totalPorcentajeUsufructo) + Number(item.datosPorcentajes.porcentajeUsufructo)).toFixed(this.$const.PRECISION));
                             if(this.config.name == 'vendedor'){
-                                totalPorcentajeVentta = Number(Number(Number(totalPorcentajeVentta) + Number(item.datosPorcentajes.porcentajeVenta)).toFixed(this.$const.PRECISION));
+                                let porcentajeProp = /*Number(*/ Number(item.datosPorcentajes.porcentajePropiedad )//.toFixed(this.$const.PRECISION);
+                                let porcentajeVenta = /*Number(*/ Number(item.datosPorcentajes.porcentajeVenta )//.toFixed(this.$const.PRECISION);
+                                let procentajeVentaDecimal = /*Number(*/ (porcentajeVenta / 100);//.toFixed(this.$const.PRECISION) );
+
+                                let porcentajeReal = porcentajeProp * procentajeVentaDecimal; 
+
+                                totalPorcentajeVenta = Number(Number(Number(totalPorcentajeVenta) + Number(porcentajeReal)).toFixed(this.$const.PRECISION));
                             }
                         }
                     });
@@ -172,7 +184,7 @@ export default {
                 this.config.porcentajeUsufructoAsignado = totalPorcentajeUsufructo || 0; 
 
                 if(this.config.name == 'vendedor'){
-                    this.config.porcentajeVentaAsignado = totalPorcentajeVentta;                
+                    this.config.porcentajeVentaAsignado = totalPorcentajeVenta;                
                 }
             }      
         },
