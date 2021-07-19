@@ -320,17 +320,27 @@ class CalculoimpuestosController extends Controller
     	$this->e = ($diferencia * $this->factor_actualizacion) - $diferencia;
       //var_dump("e ".$this->e);
       $this->e = $this->redondeo($this->e);
+      //Si el saldo es negativo pasa como 0 porque si hay saldo a favor no se calculan
+      if($this->e < 0){
+        $this->e = 0;
+      }
     	// obtener los recargos
     	$this->f = ($diferencia + $this->e) * $this->porcentaje_recargos;
 
       $this->f = $this->redondeo($this->f);
+      //Si el saldo es negativo pasa como 0 porque si hay saldo a favor no se calculan
+      if($this->f < 0){
+        $this->f = 0;
+      }
       //var_dump("f ".$this->f);
       //Se calcula la diferencia entre la parte actualizada del impuesto actual y el anteriror
       //$this->e = $this->e - $pai_anterior;
 
       //Se calcula la diferencia entre el recargo actual y el anteriror
       $dif = $this->d - $impuesto;
-
+      if($dif < 0){
+        $dif = $dif * -1;
+      }
 
       // importe total
     	$this->h =  $this->d + $this->e + $this->f + $this->g ;
@@ -341,6 +351,11 @@ class CalculoimpuestosController extends Controller
       {
         //La cantidad en exceso es el importe anterior
         $this->k = $impuesto - $this->h;
+        //Si el pago es negativo debe quedar como cargo en exceso positivo y el importe a pagar es 0
+        if($this->k < 0){
+          $this->k = $this->k * -1;
+          $this->l = 0;
+        }
       }else{
         $this->l = $this->h - $impuesto;
       }
