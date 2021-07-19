@@ -225,7 +225,7 @@
                     { value: 'M', text: 'Mujer' },
                 ],
                 optionsEstado:[],
-                //optionsPaises:[]
+                optionsPaises:[]
             }
         },
         computed:{
@@ -243,11 +243,11 @@
                     this.curpEncontrada = false;*/
                     return datosPersonalesRulesService.getRulesExtranjero();
                 }
-            },
+            }/*,
 
             optionsPaises(){
                 return []
-            }
+            }*/
         },
         validations() {
             return {
@@ -263,6 +263,7 @@
             }
 
             this.getEstados();
+            this.getPaises();
         },
         methods: {
             async updateCurp(){
@@ -308,6 +309,7 @@
                     this.form.apMat = data.data.apeMat;
                     this.form.fechaNacimiento  =  data.data.fechaNac.split("/").join("-");/*reverse()*/
                     this.form.genero = data.data.sexo;
+                    this.form.estado = data.data.entidadNac;
                 } else {
                     this.curpEncontrada = false;
                     this.form.nombre = "";
@@ -315,6 +317,7 @@
                     this.form.apMat = "";
                     this.form.fechaNacimiento  = "";
                     this.form.genero = "";
+                    this.form.estado = "";
                 }
                 this.$v.form.$touch()
             },
@@ -324,8 +327,18 @@
             },
 
             async getEstados(){
-                let url = process.env.TESORERIA_HOSTNAME + "/obtener-estados" ; 
+                //let url = process.env.TESORERIA_HOSTNAME + "/obtener-estados" ; 
+                let url = 'http://10.153.144.228/deployed-feat-ws-anvialidades/obtener-estados';
                 let options = await this.obtenerOptions(url);
+
+                options = options.map( estado => {
+                    let option = {};
+                    option.clave = estado.abreviatura;
+                    option.nombre = estado.entidad_federativa;
+                    option.catalog_key = estado.catalog_key;
+                    option.id = estado.id;
+                    return option;
+                } )
                 options.unshift({
                     clave:null,
                     nombre:'Seleccione'
@@ -338,6 +351,23 @@
                 let options = response.data ? response.data : [];
                 return options;
             },
+
+            async getPaises(){
+                let url = 'http://10.153.144.228/deployed-feat-ws-anvialidades/obtener-paises';
+                let options = await this.obtenerOptions(url);
+                options = options.map( pais => {
+                    let option = {};
+                    option.clave = pais.alpha;
+                    option.nombre = pais.nombre;
+                    option.id = pais.id;
+                    return option;
+                });
+                options.unshift({
+                    clave:null,
+                    nombre:'Seleccione'
+                });
+                this.optionsPaises = options;                 
+            }
         },
         watch: {
             form:{
