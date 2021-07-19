@@ -238,7 +238,7 @@ class CalculoimpuestosController extends Controller
           foreach($salidas as $s => $v)
           {
 
-            if(strcmp($s,"Importe total") == 0)
+            if(strcmp($s,"Importe total") == 0 || strcmp($s,"Importe total a pagar") == 0 )
             {
               $importe = $v;
 

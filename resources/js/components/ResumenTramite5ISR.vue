@@ -104,7 +104,7 @@
                     </b-row> 
                     <b-row v-if="datosComplementaria && datosComplementaria.complementarias && datosComplementaria.complementarias.length > 0">
                         <div class="col-sm-12">
-                            <h2 class="border-bottom my-3">Complementarias</h2>
+                            <h2 class="border-bottom my-3">Complementarias </h2>
                         </div>
                         <div class="col-sm-12">
                             <b-table responsive striped hover :items="datosComplementaria.complementarias" :fields="camposComplementarias">
@@ -137,7 +137,7 @@
                                     <transition name="slide-fade" tag="b-card">
                                         <b-card key="1" no-body v-if="data && data.item.detalle.Salidas" >
                                                 <template #header>
-                                                  <h4 class="mb-0">Complementaria</h4>
+                                                  <h4 class="mb-0">Complementaria <span v-if="data.item.detalle.Nivel"> {{data.item.detalle.Nivel}} </span> </h4>
                                                 </template>
                                                 <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
                                                     
