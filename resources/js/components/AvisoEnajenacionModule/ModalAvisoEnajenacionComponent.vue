@@ -7,12 +7,6 @@
         <b-modal size="lg" :id="idModal" ref="modal" :title="titleModal"  @ok="handleOk" @hidden="resetModal" 
             :ok-title = "btnOkLabel"   no-close-on-backdrop :ok-disabled="formaIvalid">
             <b-container fluid>
-                <pre>
-                    {{ formularioDatosPersonalesInvalid }} personales
-                    {{ formularioDatosPorsentajesInvalid }} porcentaje
-                    {{ formularioDireccionInvalid }}  direccion
-
-                </pre>
                 <v-expansion-panels v-model="panel" multiple>
                     <v-expansion-panel>
                         <v-expansion-panel-header >

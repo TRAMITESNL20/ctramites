@@ -124,9 +124,6 @@
                 </b-col>
             </b-row>
         </form>
-        <pre>
-            {{$v.form.municipio}} here
-        </pre>
     </div>
 </template>
 
