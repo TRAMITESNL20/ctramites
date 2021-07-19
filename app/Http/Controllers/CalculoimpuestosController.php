@@ -339,7 +339,7 @@ class CalculoimpuestosController extends Controller
       //Se calcula la diferencia entre el recargo actual y el anteriror
       $dif = $this->d - $impuesto;
       if($dif < 0){
-        $dif = $dif * -1;
+        $dif = $dif * -1; //Se manda el valor positivo
       }
 
       // importe total
@@ -353,7 +353,7 @@ class CalculoimpuestosController extends Controller
         $this->k = $impuesto - $this->h;
         //Si el pago es negativo debe quedar como cargo en exceso positivo y el importe a pagar es 0
         if($this->k < 0){
-          $this->k = $this->k * -1;
+          $this->k = $this->k * -1; //Se manda el valor positivo
           $this->l = 0;
         }
       }else{
