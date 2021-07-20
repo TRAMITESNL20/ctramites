@@ -18,6 +18,11 @@
                     <button type="button" class="close" aria-label="Close" title="Quitar"  v-on:click="showConfirm()" :disabled="desabilitar" :ref="'btnConfirm-' + index">
                       <span><i class="fas fa-trash" v-if="totalItemInGroup > 0" style="color:#808080;"></i> </span>
                     </button>
+
+                    <div style="margin-right:15px;"  class="close" v-if="agrupacion.items[0].detalleAnterior">
+                        <detalle-actualizado-component :items="agrupacion.items" :inCart="true"></detalle-actualizado-component>
+                    </div>
+
                 </div>
             </div>
         </div>    
@@ -35,8 +40,18 @@
                 </div>
                 <div class="my-lg-0 my-1">
                     <div class="d-flex p-2">
-                        <span>
-                            <h3>{{ total | toCurrency }} </h3>
+                        <span> 
+                            <h3>
+                                <!--
+                                <span v-if="agrupacion.items[0].detalleAnterior">            
+                                    <detalle-actualizado-component :item="agrupacion.items[0]" :onlyRead="agrupacion.items.length > 1"></detalle-actualizado-component>
+                                </span>-->   
+                                {{ total | toCurrency }} 
+                            </h3>
+                            <h6 v-if="agrupacion.items[0].detalleAnterior">
+                                <currency-mark-component :detalle="agrupacion.items[0].detalleAnterior.detalle"></currency-mark-component>  
+                            </h6>      
+
                         </span>
                     </div>
                 </div>
@@ -64,9 +79,16 @@
                                         </span>
                                     </a>
                                  </div>
-                                 <div class="my-lg-0 my-1" >
+                                 <div class="my-lg-0 my-1">
+                                    <!--
+                                    <span>            
+                                        <detalle-actualizado-component v-if="item.detalleAnterior" :item="item"></detalle-actualizado-component>
+                                    </span> -->
                                     <span class="btn btn-secondary mr-2">
-                                        {{item.importe_tramite | toCurrency}}                        
+                                        {{item.importe_tramite | toCurrency}}
+
+                                        <currency-mark-component v-if="item.detalleAnterior" 
+                                        :detalle="item.detalleAnterior.detalle"></currency-mark-component>                       
                                     </span>
                                  </div>
                             </div>

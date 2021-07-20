@@ -70,7 +70,8 @@
                     delete tramite.claveIndividual;
                     delete tramite.isComplemento;
                     delete tramite.isAgrupable;
-
+                    delete tramite.detalleAnterior;
+                    delete tramite.detalleActual;
                     tramitesAEnviar.push( tramite );
                 });
 

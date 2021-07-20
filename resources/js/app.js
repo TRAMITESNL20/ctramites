@@ -100,6 +100,10 @@ Vue.component("divisa-component" , () => import( /* webpackChunkName: "js/compon
 Vue.component("input-currency-component" , () => import( /* webpackChunkName: "js/components/tiposElementos/input-currency-component" */ './components/tiposElementos/InputCurrencyComponent.vue' ));
 
 
+Vue.component("detalle-actualizado-component" , () => import( /* webpackChunkName: "js/components/carShop/detalle-actualizado-component" */ './components/carShop/DetalleActualizadoComponent.vue' ));
+
+Vue.component("currency-mark-component" , () => import( /* webpackChunkName: "js/components/generales/currency-mark-component" */ './components/generales/CurrencyMarkComponent.vue' ));
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -133,7 +137,8 @@ Vue.prototype.$const = {
         CAMPO_SUBSIDIO: "Subsidio",
         CAMPO_VALOR_CATASTRAL: "Valor catastral",
         CAMPO_VALOR_OPERACION: "Valor de operacion",
-        CAMPO_CANTIDAD_LOTES: "Cantidad de lotes"
+        CAMPO_CANTIDAD_LOTES: "Cantidad de lotes",
+        CAMPO_TIPO_OPERACION : "Tipo de Operación"
     },
     STATUS_FALTA_PAGO: 8,
     STATUS_ERROR_MUNICIPIO: 7,

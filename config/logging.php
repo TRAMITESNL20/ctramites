@@ -105,6 +105,11 @@ return [
             'path' => storage_path('logs/api.log'),
             'level' => 'debug',
         ],
+        'costos-update' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/costos-'.date('Y-m-d').'.log'),
+            'level' => 'debug',
+        ],        
     ],
 
 ];

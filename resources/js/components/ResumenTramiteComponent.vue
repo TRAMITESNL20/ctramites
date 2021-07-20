@@ -122,12 +122,13 @@
 </template>
 
 <script>
+    /*
     const CAMPO_LOTE            = "Lote";
     const CAMPO_HOJA            = "Hoja";
     const CAMPO_SUBSIDIO        = "Subsidio";
     const CAMPO_VALOR_CATASTRAL = "Valor catastral";
     const CAMPO_VALOR_OPERACION = "Valor de operacion";
-    const CAMPO_TIPO_OPERACION  = "Tipo de Operación";
+    const CAMPO_TIPO_OPERACION  = "Tipo de Operación";*/
 
     //CAMPOS CALCULO IMPUESTO
     /*
@@ -138,7 +139,7 @@
     const CAMPO_PAGO_PROVISIONAL_CONFORME_AL_ARTICULO_126_LISR  = "PAGO PROVISIONAL CONFORME AL ARTICULO 126 LISR";
     */
 
-    const CAMPO_DIVISAS = "Cambio de divisas";
+    //const CAMPO_DIVISAS = "Cambio de divisas";
 
     import Vue from 'vue'
 
@@ -234,13 +235,13 @@
                             paramsCosto.tipoCostoRadio = tipo_costo_obj.tipoCostoRadio;
                             paramsCosto.hojaInput = tipo_costo_obj.hojaInput;
                         }  else {
-                            let campoLote           = this.getCampoByName(CAMPO_LOTE);
-                            let campoHoja           = this.getCampoByName(CAMPO_HOJA);
-                            let campoSubsidio       = this.getCampoByName(CAMPO_SUBSIDIO);
-                            let campoCatastral      = this.getCampoByName(CAMPO_VALOR_CATASTRAL);
-                            let campoValorOperacion = this.getCampoByName(CAMPO_VALOR_OPERACION);
+                            let campoLote           = this.getCampoByName(Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_LOTE);
+                            let campoHoja           = this.getCampoByName(Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_HOJA);
+                            let campoSubsidio       = this.getCampoByName(Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_SUBSIDIO);
+                            let campoCatastral      = this.getCampoByName(Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_VALOR_CATASTRAL);
+                            let campoValorOperacion = this.getCampoByName(Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_VALOR_OPERACION);
                             let campoCantidadLote   =  this.getCampoByName(Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_CANTIDAD_LOTES);
-                            let tipoOperacion       = this.getCampoByName(CAMPO_TIPO_OPERACION);
+                            let tipoOperacion       = this.getCampoByName(Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_TIPO_OPERACION);
 
                             if( campoCatastral ){
                                 paramsCosto.valor_catastral = this.formatoNumero(campoCatastral.valor);
@@ -277,7 +278,7 @@
                             }
                         }
                     }
-                    let campoDivisas              = this.getCampoByName(CAMPO_DIVISAS);
+                    let campoDivisas              = this.getCampoByName(Vue.prototype.$const.NOMBRES_CAMPOS.CAMPO_DIVISAS);
                     if( campoDivisas ){
                         paramsCosto.divisa = campoDivisas.valor.clave;
                         //paramsCosto.divisa = campoDivisas.valor[0][0];
