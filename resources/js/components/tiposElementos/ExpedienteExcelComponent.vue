@@ -13,10 +13,10 @@
           type="file"
           accept=".xlsx,.xls"
           @change="validar()"/>
-        <label class="custom-file-label" :for="[[campo.campo_id]]">
-          <span :id="[[campo.campo_id]]+ '-' + [[campo.nombre.replace('*', '')]]+'-namefile'">  
-            {{ campo.attach || 'Seleccione archivo' }}
-          </span>
+         <label class="custom-file-label">
+           <span>
+            {{  fileName[campo.campo_id] ? fileName[campo.campo_id] : 'Seleccione el archivo' }}
+           </span>
         </label>
         </div>
     </div>
@@ -49,6 +49,11 @@
     }
     export default {
       props: ['campo', 'estadoFormulario', 'showMensajes', 'disabled'],
+      data(){
+          return{
+            fileName: [],
+          }
+      },
       created() {
       },
       mounted(){
@@ -90,6 +95,15 @@
         let requeridoValido = false;
         var file = document.getElementById(this.campo.campo_id );
           if (file != null ) {
+              
+              if( $('#'+this.campo.campo_id)[0].files[0] ){
+                var auxName = $('#'+this.campo.campo_id)[0].files[0].name;
+                console.log(auxName);
+                this.fileName[this.campo.campo_id] = auxName;   
+                this.$forceUpdate();
+
+              }
+
               file =file.files[0];
             if(file){
               var fileReader = new FileReader();

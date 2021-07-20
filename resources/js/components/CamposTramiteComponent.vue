@@ -45,7 +45,7 @@
 												</div>
 											</div>
 			 								<div v-for="(campo, j) in agrupacion.campos" :key="j" class="col-md-6 col-sm-6 col-xs-6"
-			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes', 'valuador', 'table'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
+			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file','rangoLotes' ,'results', 'question','enajenante','expedientes', 'valuador', 'table'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
 			 									<input-currency-component 
 			 										v-if="campo.tipo === 'input' && JSON.parse(campo.caracteristicas).formato === 'moneda'" 
 													:campo="campo" 
@@ -209,6 +209,12 @@
 													:estadoFormulario="comprobarEstadoFormularioCount"
 													@updateForm="updateForm">
 			 									</valuador-component>
+												<rango-lotes-component v-if="campo.tipo === 'rangoLotes' "
+													:cantidadManzanas="cantidadManzanas"
+													:datosRango="datosRango"
+													@processGrupal="processGrupal"
+												>
+												</rango-lotes-component>
 			 								</div>
 		 									<div v-if="agrupacion.tieneSeccionDocumentos" class="col-md-12 col-lg-12">
 		 										<div class="text-left">
@@ -270,6 +276,8 @@
 				infoExtra : {},
 				tipo_costo_obj: { tipo_costo:0 ,tipoCostoRadio:'millar',hojaInput:'', val_tipo_costo:'' },
 				tieneSeccionDocumentos: false,
+				cantidadManzanas: 0,
+				datosRango: {},
 				divisa:this.$store.state.DEFAULT_DIVISA
 			}
         },
@@ -331,6 +339,7 @@
         	async updateForm(campo){
 				const tramite = localStorage.getItem('tramite') && JSON.parse(localStorage.getItem('tramite')) ;
 				if (tramite && tramite.id_tramite === process.env.TRAMITE_AVISO) {
+					
 				
 					if(campo.tipo == 'results' && campo.valido){
 						this.expediente = campo.valor
@@ -566,67 +575,71 @@
 
 				if(empty.length == 0){
 					this.panel = [0, 1, 4];
-					const exp = `${all['Municipio'].valor && all['Municipio'].valor.clave.toString()}${all['Region'] && all['Region'].valor}${all['Manzana'] && all['Manzana'].valor}${all['Lote'] && all['Lote'].valor}`;
-					const url = `${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/${exp}`;
-					if(this.ajax !== url){
-						this.ajax = url;
-						this.loading = true;
-						const response = await axios.get(url);
-						const rows = [];
-						this.response = [response.data];
-						if(response.data.resultado) rows.push([exp, response.data.resultado])
-						else{
-							const propietarios = response.data.datos_propietarios.length > 1 ? { label : response.data.datos_propietarios[0].nombrePro, tooltip : { title : 'Propietarios', listItems : response.data.datos_propietarios.map(e => e.nombrePro) } } : response.data.datos_propietarios[0].nombrePro;
-							rows.push([
-								response.data.datos_catastrales[0].expediente_catastral,
-								response.data.nombre_municipio,
-								response.data.tipo_predio,
-								response.data.uso_suelo,
-								propietarios
-							])
-						}
-
-
-						const noValido = this.response.filter(ele => ele.cta_valida === '0');
-						const bloqueados = this.response.filter(ele => ele.bloqueado && ele.bloqueado !== '0');
-						const fallidos = this.response.filter(ele => ele.resultado === 'NO ENCONTRADO');
-						const autorizados = this.response.filter(ele => ele.datos_propietarios);
-
-						const infoExtra = [
-							{
-								label : 'Registros Consultados',
-								value : rows.length
-							},
-							{
-								label : 'No Validos',
-								value : noValido ? noValido.length : 0
-							},
-							{
-								label : 'Bloqueados',
-								value : bloqueados ? bloqueados.length : 0
-							},
-							{
-								label : 'Fallidos',
-								value : fallidos ? fallidos.length : 0
-							},
-							{
-								label : 'Duplicados',
-								value : 0
-							},
-							{
-								label : 'Autorizados',
-								value : autorizados ? autorizados.length : 0
+					if(  all['Municipio'].valor != null &&  all['Municipio'].valor != undefined && all['Region'].valor != undefined  &&  all['Manzana'].valor != undefined && all['Lote'].valor != undefined ){
+						const exp = `${all['Municipio'].valor && all['Municipio'].valor.clave.toString()}${all['Region'] && all['Region'].valor}${all['Manzana'] && all['Manzana'].valor}${all['Lote'] && all['Lote'].valor}`;
+						const url = `${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/${exp}`;
+						if(this.ajax !== url){
+							this.ajax = url;
+							this.loading = true;
+							const response = await axios.get(url);
+							const rows = [];
+							response.data['expediente_catastral'] = (exp);
+							this.response = [response.data];
+							if(response.data.resultado) rows.push([exp, response.data.resultado])
+							else{
+								const propietarios = response.data.datos_propietarios.length > 1 ? { label : response.data.datos_propietarios[0].nombrePro, tooltip : { title : 'Propietarios', listItems : response.data.datos_propietarios.map(e => e.nombrePro) } } : response.data.datos_propietarios[0].nombrePro;
+								rows.push([
+									response.data.datos_catastrales[0].expediente_catastral,
+									response.data.nombre_municipio,
+									response.data.tipo_predio,
+									response.data.uso_suelo,
+									propietarios
+								])
 							}
-						];
 
-						this.infoExtra = {
-							title : 'Resultados de la búsqueda',
-							listItems : infoExtra
-						};
 
-						this.rows = rows;
-						this.loading = false;
+							const noValido = this.response.filter(ele => ele.cta_valida === '0');
+							const bloqueados = this.response.filter(ele => ele.bloqueado && ele.bloqueado !== '0');
+							const fallidos = this.response.filter(ele => ele.resultado === 'NO ENCONTRADO');
+							const autorizados = this.response.filter(ele => ele.datos_propietarios);
+
+							const infoExtra = [
+								{
+									label : 'Registros Consultados',
+									value : rows.length
+								},
+								{
+									label : 'No Validos',
+									value : noValido ? noValido.length : 0
+								},
+								{
+									label : 'Bloqueados',
+									value : bloqueados ? bloqueados.length : 0
+								},
+								{
+									label : 'Fallidos',
+									value : fallidos ? fallidos.length : 0
+								},
+								{
+									label : 'Duplicados',
+									value : 0
+								},
+								{
+									label : 'Autorizados',
+									value : autorizados ? autorizados.length : 0
+								}
+							];
+
+							this.infoExtra = {
+								title : 'Resultados de la búsqueda',
+								listItems : infoExtra
+							};
+
+							this.rows = rows;
+							this.loading = false;
+						}
 					}
+				
 				}else{
 					this.panel = [0, 1];
 				}
@@ -648,11 +661,23 @@
 						unico = this.campos.map((ele, ind) => ele.nombre === 'Manzana Unica' ? ele.valor : null).filter(ele => ele).toString()
 						if(unico === 'true'){
 							this.campos[final].valor = this.campos[inicial].valor || 0;
+							console.log('unico');
+							this.cantidadManzanas = 1;
+
 						}else{
 							this.campos[final].valor = '';
 						}
 						this.cambioModelo();
 					break;
+					case 'Manzana Final' :
+						final = this.campos.map((ele, ind) => ele.nombre === 'Manzana Final' ? ele.valor : null).filter(ele => ele).toString()
+						inicial = this.campos.map((ele, ind) => ele.nombre === 'Manzana Inicial' ? ele.valor : null).filter(ele => ele).toString()
+						unico = this.campos.map((ele, ind) => ele.nombre === 'Manzana Unica' ? ele.valor : null).filter(ele => ele).toString()
+						if(final){
+							this.cantidadManzanas = (final - inicial + 1);
+						}
+
+						break;
 
 					case 'Lote Unico':
 					case 'Lote Inicial':
@@ -669,10 +694,11 @@
 				}
 
 				datosFormulario.campos.map(ele => {
-					if(['*Municipios', '*Región', 'Manzana Inicial', 'Manzana Final', 'Lote Inicial', 'Lote Final'].includes(ele.nombre)){
+					if(['Municipio', '*Región', 'Manzana Inicial', 'Manzana Final', 'Lote Inicial', 'Lote Final'].includes(ele.nombre)){
 						if(ele.nombre == campo.nombre)
 							ele.valor = campo.valor
 						all[ele.nombre] = ele
+						this.datosRango = all;
 					}
 				})
 

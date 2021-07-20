@@ -1,7 +1,7 @@
 <div class="content iecontent" id="kt_content" style="min-width: -webkit-fill-available">
     <div class="d-flex flex-column-fluid">
         <div class="container">
-            <span class="col-sm-12 col-md-3 sideNavBtn" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+            <span class="col-sm-12 col-md-3 sideNavBtn" style="font-size:30px;cursor:pointer" onclick="{()=> openNav()}">&#9776;</span>
             <span  class="col-sm-12 col-md-3">
                 perfil->Información de la cuenta
             </span>
@@ -9,7 +9,7 @@
 
             
             <div id="Sidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">...</a>
+                <a href="javascript:void(0)" class="closebtn" onclick="{()=> closeNav()}">...</a>
                 <div class="card" >
                     <div class="card-body">
                         {{-- img --}}
@@ -123,36 +123,36 @@
                                         </div>
                                     </div> --}}
                                         <!--begin::Form-->
-                                        <form id="kt_confirm_password_form_log">
+                                        <form  id="kt_confirm_password_form_log">
                                             <div class="card-body">
-                                                <div class="form-group row">
+                                                <div class="form-group row pd20-mobile">
                                                     <label  class="col-md-3 col-sm-12 col-form-label">Contraseña actual</label>
                                                     <div class="col-md-8 col-sm-12">
                                                         <input class="form-control" type="text" placeholder="Contraseña actual" id="example-text-input" data-toggle="password" />
                                                         <a href="{{ url()->route("password/recovery") }}"><span>¿Se te olvido la Contraseña?</span></a>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row"  id="show_hide_password">
+                                                <div class="form-group row pd20-mobile"  id="show_hide_password">
                                                     <label  class="col-md-3 col-sm-12 col-form-label">Nueva Contraseña</label>
                                                     <div class="col-md-8 col-sm-12">
                                                         <input class="form-control" type="password" placeholder="Nueva Contraseña" id="password" name="password" data-toggle="password"/>
                                                 				<div class="fv-plugins-message-container"></div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row" id="show_hide_password2">
+                                                <div class="form-group row pd20-mobile" id="show_hide_password2">
                                                     <label class="col-md-3 col-sm-12 col-form-label">Verificar Contraseña</label>
                                                     <div class="col-md-8 col-sm-12">
                                                         <input class="form-control" type="password" placeholder="Verificar Contraseña" id="confirmPassword" name="confirmPassword" data-toggle="password"/>
                                                 				<div class="fv-plugins-message-container"></div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row" id="" style="display:none">
+                                                <div class="form-group row pd20-mobile" id="" style="display:none">
                                                     <div class="col-md-8 col-sm-12">
                                                         <input class="form-control" type="email" placeholder="" id="emailAux" name="emailAux"  value="{{ $user->id }}"  />
                                                 				<div class="fv-plugins-message-container"></div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row" id="" style="display:none">
+                                                <div class="form-group row pd20-mobile" id="" style="display:none">
                                                     <div class="col-md-8 col-sm-12">
                                                         <input class="form-control" type="email" placeholder="" id="sesionAux" name="sesionAux"  value="{{ $sesion }}"  />
                                                 				<div class="fv-plugins-message-container"></div>

@@ -1,0 +1,148 @@
+<template>
+    <div>
+        <div v-if="loteError || loteFinalError || datosFaltantesError || inputError">
+            <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+                <span v-if="loteError" style="color:white">hijoles el lote  tiene que ser de 3 digitos</span>
+                <span v-if="loteFinalError" style="color:white">El Lote final tiene que ser mayor al inicial</span>
+                <span v-if="inputError" style="color:white">El Lote final tiene que ser mayor al inicial</span>
+                <span v-if="datosFaltantesError" style="color:white">Es necesario ingresar todos los datos</span>
+                <button type="button" class="close" @click="restartErorrs" data-dismiss="alert" aria-label="Close">
+                    <span style="color:white" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+        <table v-if="cantidadManzanas > 0" class="table  table-bordered">
+            <thead>
+                <tr >
+                    <th></th>
+                    <th class="text-center">Lote inicial</th>
+                    <th class="text-center">Lote Final</th>
+                    <th class="text-center">Lote Unico</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(manzana, index) in  cantidadManzanas" :key="index" class="lotesRango">
+                    <td>
+                        Manzana #{{ ( (Number((index).toString().padStart(3,"0")))+(Number(datosRango['Manzana Inicial'].valor)) ).toString().padStart(3  , "0") }}
+                    </td>
+                    <td>
+                        <input type="number" class="form-control lote" :id="'inicial'+index" placeholder="000" @change="addZeros('inicial'+index, index)" >
+                    </td>
+                    <td>
+                        <input type="number" class="form-control lote" :id="'final'+index" placeholder="000"  @change="addZeros('final'+index, index)">
+                    </td>
+                    <td class="text-center">
+                        <input class="text-center" type="checkbox" name="" :id="'checkbox'+index" @change="loteUnico('checkbox'+index , index)">
+                    </td>
+                </tr>
+            </tbody>
+
+      </table>
+
+      <div v-if="cantidadManzanas > 0" class="pt-10 pr-4 pb-5" style="float: right">
+          <button  type="button"  @click="buscarPorRango()" class="btn btn-success">Buscar</button>
+      </div>
+
+    </div>
+</template>
+
+<script>
+export default {
+    props:[ 'cantidadManzanas' , 'datosRango'],
+    data(){
+        return{
+            loteError : null,
+            loteFinalError: null,
+            inputError: null,
+            datosFaltantesError: null,
+            rowToEmit: [],
+        }
+    },
+    mounted(){
+    
+    },
+    methods:{
+        restartErorrs(){
+            this.loteError = null;
+            this.loteFinalError = null;
+            this.datosFaltantesError = null;
+            this.inputError = null;
+        },
+        addZeros(id, index){
+            if(id.includes('final') ){
+                (document.getElementById('final'+index).value - document.getElementById('inicial'+index).value) >= 0 ? '' :  this.loteFinalError = true;                
+                this.$forceUpdate();
+            }
+
+            let  lote = document.getElementById(id).value;
+            if (lote.length < 3){
+                return document.getElementById(id).value = lote.toString().padStart(3 , "0");
+            }else{
+                this.loteError = true;
+            }
+            
+        },
+        loteUnico( checkboxId , index ){
+            document.getElementById(checkboxId).checked ?
+            document.getElementById('final'+index).value = document.getElementById('inicial'+index).value : '';
+
+            if( document.getElementById('final'+index).value == ""){
+                document.getElementById('final'+index).value = "000";
+                document.getElementById('inicial'+index).value = "000"
+            }
+
+                
+            !document.getElementById(checkboxId).checked ? document.getElementById('inicial'+index).value = "" : '';
+            !document.getElementById(checkboxId).checked ? document.getElementById('final'+index).value = "" : '';
+
+            
+        },
+        async buscarPorRango(){
+                var valido = true;
+                for (let i = 0; i < this.cantidadManzanas; i++) {
+                    $( `#inicial${i}`).val() == "" ? valido = false : '';
+                    $( `#final${i}`).val() == "" ? valido = false : '';
+
+                    if(valido == false)
+                        return this.datosFaltantesError = true ;   
+                    
+                }
+                    
+                var municipio = this.datosRango.Municipio.valor.clave ;
+                var region = this.datosRango['*Región'].valor;
+                var manzana = this.datosRango['Manzana Inicial'].valor;
+                var manzanaFinal = this.datosRango['Manzana Final'].valor;
+
+                var contadorAux = 0;
+                for (let i = manzana; i <= manzanaFinal; i++) {
+                    var loteInicial = document.getElementById('inicial'+contadorAux).value;
+                    var loteFinal = document.getElementById('final' + contadorAux).value;
+
+                    for (let k = loteInicial ; k <= loteFinal; k++) {
+                        
+                        typeof(k) == 'number' ? k = k.toString().padStart(3 , "0") : '' ;
+                        typeof(i) == 'number' ? i = i.toString().padStart(3 , "0") : '' ;
+                        console.log(`${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/${municipio}${region}${i}${k}`);
+                        let exp = `${municipio}${region}${i}${k}`;
+                        const url = `${process.env.TESORERIA_HOSTNAME}/insumos-catastro-consulta/${municipio}${region}${i}${k}`;
+                        const response = await axios.get(url);
+                        // this.rowToEmit.push(response);
+                        this.$emit('processGrupal', {response, exp});
+                    }
+                
+                    contadorAux++;
+                    
+                }
+                this.restartErorrs();
+
+            //emitir de camposTramiteCompoent para que se vaya a results ?) 
+        }
+    },
+    watch:{
+        cantidadManzanas(props){
+            this.cantidadManzanas = props;
+            this.$forceUpdate();
+        }
+    }
+}
+</script>

@@ -227,7 +227,7 @@
 								<!--end::Search-->
 								<!--begin::User-->
 								<div class="topbar-item">
-									<div class="btn btn-icon btn-hover-transparent-dark w-auto d-flex align-items-center btn-lg px-2" id="kt_quick_user_toggle2" onclick="iehelper()">
+									<div class="btn btn-icon btn-hover-transparent-dark w-auto d-flex align-items-center btn-lg px-2" id="kt_quick_user_toggle2" onclick="{()=> iehelper()}">
 										<div class="d-flex flex-column text-right pr-3">
 											<span class="opacity-50 font-weight-bold font-size-sm d-none d-md-inline">{{ $user ? $user->name : "" }} {{ $user ? $user->fathers_surname : "" }} </span>
 											<span class="font-weight-bolder font-size-sm d-none d-md-inline">{{ $user ? $user->role->description : "" }}</span>
@@ -1171,7 +1171,7 @@
 				<!--begin::Header-->
 				<div class="offcanvas-header d-flex align-items-center justify-content-between pb-5">
 					<h3 class="font-weight-bold m-0">Perfil de Usuario
-					<a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close" onclick="destroyBackground()" >
+					<a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close" onclick="{()=>destroyBackground()}" >
 						<i class="ki ki-close icon-xs text-muted"></i>
 					</a>
 				</div>

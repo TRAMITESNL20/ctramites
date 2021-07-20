@@ -6,6 +6,12 @@
     //     width: 50%;
     // }\
 
+    .pd20-mobile{
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-bottom: unset !important;
+    }
+
     .nowrap{
         white-space: nowrap;
     }  
@@ -24,6 +30,14 @@
 
     .desktop-agrupacion-width{
         width: 70% !important; 
+    }
+    
+    .order-pago{
+        order:  1;
+    }
+    
+    .order-tramites{
+        order: 2;
     }
     
     .left-5{
@@ -521,6 +535,19 @@
         cursor: pointer;
         transition: all .5s;
         z-index: 1;
+
+        button {
+            i {
+                transition: all .5s;
+            }
+
+            &.collapsed {
+                i {
+                    transform: rotate(180deg);
+                }
+            }
+        }
+
         &:hover {
             transform: scale(1.02);
             box-shadow: 0px 0px 10px 10px rgba(82, 63, 105, 0.1);
