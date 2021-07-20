@@ -23,17 +23,17 @@
                                         
                                         <div>
 
-                                            <h3>Tramite FSE: {{tramiteDoc.id_transaccion}}  </h3>
+                                            <h3>Folio de pago|FSE {{tramiteDoc.id_transaccion}}</h3>
                                             <div style="display:flex;justify-content: space-between;">
-                                            <h3 v-for="(campoConfigurado , index )  in  tramiteDoc.info.camposConfigurados" :key="index" v-if="campoConfigurado.nombre == 'Escritura' "   >No. Escritura: {{campoConfigurado.valor}} </h3>
-                                            <h5> Fecha de Escritura: {{tramiteDoc.info.camposConfigurados[1].valor}}</h5>
+                                            <h3 v-for="(campoConfigurado , index )  in  tramiteDoc.info.camposConfigurados" :key="index" v-if="campoConfigurado.nombre == 'Escritura' "   >No. Escritura {{campoConfigurado.valor}} </h3>
+                                            <h5> Fecha de Escritura o minuta  {{tramiteDoc.info.camposConfigurados[1].valor}}</h5>
                                             </div>
 
                                             <div class="input-group">
 
                                                 <div class="input-group-prepend">
-                                                    <span id="inputGroupFileAddon01" class="input-group-text">
-                                                    CALCULO DEL ISR CONFORME AL 126 LISR
+                                                    <span id="inputGroupFileAddon01" style="font-size:10px" class="input-group-text">
+                                                    CALCULO DEL ISR CONFORME AL 126 LISR O COMPROBANTE DE LA EXENCIÓN
                                                     </span>
                                                 </div>
                                                 <div class="custom-file">
@@ -97,6 +97,8 @@ export default {
         for (let i = 0; i < this.tramitesdoc.length; i++) {
             if (!last.includes(this.tramitesdoc[i].clave)) {
                 console.log(this.tramitesdoc[i].clave);
+                var contadorEnajenantes = 0;
+                
                 this.newTramites.push( _.cloneDeep( this.tramitesdoc[i] )  );
             }
             last.push(this.tramitesdoc[i].clave);
