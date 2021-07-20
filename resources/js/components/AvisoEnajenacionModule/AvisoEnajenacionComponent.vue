@@ -212,7 +212,7 @@ export default {
                     this.getInformacion();
                 }
             } else {
-
+/*validar cuando cambie el expediente
                 this.seccionVendedores = {
                     vendedores:[],
                     porcentajeUsufructo:0,
@@ -228,7 +228,7 @@ export default {
                 this.datosCatastrales = [];
                 this.datosFormulario = [];
 
-                this.validar();
+                this.validar();*/
             }
         }
     },
