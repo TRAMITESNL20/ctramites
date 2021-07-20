@@ -45,7 +45,7 @@
                             <a v-on:click="goTo(tramite.recibo_referencia, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.recibo_referencia && [5].includes(type) && !group">VER REFERENCIA</a>
                             
                             <button 
-                                v-if="tramite.doc_firmado && [2,3].includes(type) && tramite.required_docs == 0 "
+                                v-if="tramite.doc_firmado && [2,3].includes(type) && tramite.required_docs != 1 "
                                 class="btn btn-warning disabled" 
                                 style="border-top-right-radius: 0px;border-bottom-right-radius: 0px;font-size: 5px;border-radius: 1 1 0 0 !important;margin-right: -4px;height:32px" 
                                 data-toggle="tooltip" 
@@ -53,7 +53,7 @@
                                 title="No es posbile descargar este archivo al no contar con el documento del CALCULO DEL ISR CONFORME AL 126 LISR O COMPROBANTE DE LA EXENCIÓN ">
                                     <i class="text-white fa fa-question-circle"></i>
                             </button>
-                            <a class="btn btn-sm btn-primary font-weight-bolder text-uppercase disabled text-white" disabled  style="border-top-left-radius:0px;border-bottom-left-radius:0px" v-if="tramite.doc_firmado && [2,3].includes(type) && tramite.required_docs == 0 ">VER DECLARACIÓN</a>
+                            <a class="btn btn-sm btn-primary font-weight-bolder text-uppercase disabled text-white" disabled  style="border-top-left-radius:0px;border-bottom-left-radius:0px" v-if="tramite.doc_firmado && [2,3].includes(type) && tramite.required_docs != 1 ">VER DECLARACIÓN</a>
                             <a v-on:click="goTo(tramite.doc_firmado, true)" class="btn btn-sm btn-primary font-weight-bolder text-uppercase text-white" v-if="tramite.doc_firmado && [2,3].includes(type) && tramite.required_docs == 1">VER DECLARACIÓN</a>
 
 

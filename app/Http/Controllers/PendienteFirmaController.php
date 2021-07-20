@@ -17,6 +17,7 @@ class PendienteFirmaController extends Controller
 		$user = session()->get("user");
 		$tramites = curlSendRequest("GET", getenv("TESORERIA_HOSTNAME")."/solicitudes-info/{$user->id}/firma");
 
+        if($tramites->tramites);
         $idTramites = $tramites->tramites;
         if( !empty($idTramites) ){
             for ($i=0; $i < count( $idTramites[0]->solicitudes );  $i++) { 
