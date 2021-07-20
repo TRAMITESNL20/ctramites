@@ -115,6 +115,9 @@
                             </tbody>
                         </table>
                     </div>
+                    <div v-if="datosFormulario.campos">
+                        <resumen-campos-component :campos="datosFormulario.campos"></resumen-campos-component>
+                    </div>
                 </div>
             </div>
         </div>
@@ -140,13 +143,15 @@
 
     const CAMPO_DIVISAS = "Cambio de divisas";
 
-    import Vue from 'vue'
+    import Vue from 'vue';
+    import ResumenCamposComponent from '../components/ResumenCamposComponent.vue';
 
     export default {
-
+        components: {
+          ResumenCamposComponent
+        },
         props: ['datosComplementaria','tipoTramite', 'infoGuardadaFull'],
         mounted() {
-
             this.obtenerInformacionDelTramite();
 
 
