@@ -30,13 +30,14 @@
         left: 5%  !important;
     }
         
-    .pagar-desktop{
-        display: none !important;
+    .order-pago{
+        order:  1;
     }
     
-    .pagar-mobile{
-        display: inline !important;
+    .order-tramites{
+        order: 2;
     }
+    
 
     .absolute-mobile{
         position: absolute;

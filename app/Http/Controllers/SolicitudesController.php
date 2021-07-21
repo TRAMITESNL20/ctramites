@@ -396,7 +396,7 @@ class SolicitudesController extends Controller
   public function allCategories (){
     try{
       $cats = $this->cat_tramite->get();
-
+      Log::info('cat '.$cats);
       return json_encode($cats);
 
     }catch(\Exception $e){

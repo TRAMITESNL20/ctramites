@@ -62,7 +62,7 @@
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
-	<body id="kt_body " class="header-fixed header-mobile-fixed page-loading">
+	<body id="kt_body " class="header-fixed header-mobile-fixed page-loading" style="filter : grayscale(1) !important;">
 		<!--begin::Main-->
 		<!--begin::Header Mobile-->
 		<div id="kt_header_mobile" class="header-mobile bg-primary header-mobile-fixed @if($empty_layout === true) d-none @endif">

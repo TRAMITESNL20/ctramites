@@ -11,39 +11,7 @@
     </div>
     <div class="row">
         <!--Grid column-->
-         <div class="col-lg-4 pagar-mobile" >
-            <v-container v-if="obteniendoTramites">
-              <v-row>
-                  <v-col cols="12" md="12">
-                      <v-skeleton-loader v-bind:key="i" type="list-item" v-for="(r,i) in [1]" height="150px" style="margin-bottom: 8px;"></v-skeleton-loader>
-                  </v-col>
-              </v-row>
-            </v-container>
-            <detalle-pago-component v-if="tramites.length > 0" 
-              :tramites="tramites" 
-              :obtenidoCostos="costosObtenidos" @updatingParent="recibirMetodosPago"  @cancelarPago="cancelarPago"
-              :metodoPagoSeleccionado="metodoPagoSeleccionado" >
-            </detalle-pago-component>
-            <transition name="slide-fade" appear>
-              <div class="mb-3 shadow-sm p-3 bg-white rounded" v-if="mostrarMetodos">  
-                <div class="pt-4">
-                  <b-table responsive  striped hover :items="tramites" :fields="camposTablaTramites">
-                    <template #cell(nombre)="data">
-                      {{ data.item.nombre }}
-                    </template>
-                    <template #cell(importe_tramite)="data">
-                      <div style="text-align: right;"  >
-                        {{ data.item.importe_tramite | toCurrency }}
-                      </div>
-                      
-                    </template>
-                  </b-table>
-                </div>
-              </div>
-             </transition>
-        </div>
-
-        <div class="col-lg-8">
+        <div class="col-lg-8 order-tramites">
             <!-- Card -->
             
             <div v-if="!mostrarMetodos && !mostrarReciboPago0">
@@ -111,7 +79,7 @@
         </div>
         <!--Grid column-->
         <!--Grid column-->
-        <div class="col-lg-4 pagar-desktop"  >
+        <div class="col-lg-4 order-pago"  >
             <v-container v-if="obteniendoTramites">
               <v-row>
                   <v-col cols="12" md="12">
