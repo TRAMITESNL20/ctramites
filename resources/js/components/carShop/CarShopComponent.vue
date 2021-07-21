@@ -421,14 +421,19 @@
             }
             tramitesJson.detalle = [];
 
-            if(info && info.detalle && info.detalle.Salidas && info.tipoTramite != 'complementaria'){
-              
-
-              
+            if(info && info.detalle && info.detalle.Salidas /*&& info.tipoTramite != 'complementaria' */){
+                            
               tramitesJson.detalle[0] = {
-                concepto : 'Impuesto correspondiente a la entidad federativa',
+                concepto : 'Impuesto correspondiente a la entidad federativa - ' + (info.detalle.Nivel ? info.detalle.Nivel : ''),
                 partida: 56754,
                 importe_concepto: Number(Number(info.detalle.Salidas['Impuesto correspondiente a la entidad federativa']).toFixed(this.$const.PRECISION))      
+              }
+              if( info.detalle.Salidas['Monto pagado en la declaracion inmediata anterior'] ){
+                tramitesJson.detalle[0].descuentos = [{
+                  concepto_descuento: 'Monto pagado en la declaracion inmediata anterior',
+                  importe_descuento: info.detalle.Salidas['Monto pagado en la declaracion inmediata anterior'],
+                  partida_descuento: 78975
+                }]
               }
               tramitesJson.detalle[1] = {
                 concepto : 'Parte actualizada del impuesto',
@@ -470,10 +475,8 @@
                 }
               }
             }
-
+            
             //console.log(JSON.parse(JSON.stringify(tramitesJson)))
-
- 
             listadoTramites.push( tramitesJson );
           });
           });

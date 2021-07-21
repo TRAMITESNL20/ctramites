@@ -1,12 +1,18 @@
 <template>
   <div class="row">
-        <div class="col-lg-6 fv-plugins-icon-container"> 
+        <div class="col-lg-4 fv-plugins-icon-container"> 
           <label>
             Folio
           </label>
             <b-form-input id="folio-input" v-model="folio" placeholder="Folio" @change="getInformacion()" :disabled="buscandoInformacion"></b-form-input>
         </div>
-        <div class="col-lg-6 fv-plugins-icon-container"">
+        <div class="col-lg-4 fv-plugins-icon-container"> 
+          <label>
+            Ticket
+          </label>
+            <b-form-input id="ticket-input" v-model="ticket" placeholder="Ticket" @change="getInformacion()" :disabled="buscandoInformacion"></b-form-input>
+        </div>
+        <div class="col-lg-4 fv-plugins-icon-container"">
           <label>
             Fecha de escritura o minuta
           </label>
@@ -77,12 +83,14 @@
           mensaje:'',
           fechaEscritura:'', 
           complementarias:[],
-          panel:[]   
+          panel:[],
+          ticket:''   
         }
       },
       created() {
         if(this.infoGuardada && this.infoGuardada.datosComplementaria) {
           this.folio = this.infoGuardada.datosComplementaria.folio;
+          this.ticket = this.infoGuardada.datosComplementaria.ticket;
           this.fechaEscritura = this.infoGuardada.datosComplementaria.fechaEscritura;
           this.getInformacion();
         } else{
@@ -92,7 +100,7 @@
       methods: {
         async getData(){
           try {
-            let url = process.env.TESORERIA_HOSTNAME + "/getInfoNormales/" + this.folio;
+            let url = process.env.TESORERIA_HOSTNAME + "/getInfoNormales/" + this.folio + "/" + this.ticket;
             let response = await axios.get(url);
             return response.data;
           } catch (error) {
@@ -101,7 +109,7 @@
         },
         getInformacion(){
           let self = this;
-          if( self.folio && self.folio.length > 0 ){
+          if( self.folio && self.folio.length > 0 && self.ticket && self.ticket.length > 0 ){
             let response = [];
             self.buscandoInformacion = true;
             (async () => {
@@ -152,6 +160,7 @@
           this.tramitesObtenidos[response.info.index].detalle = response.detalle;          
           this.tramitesObtenidos[response.info.index].fechaEscritura = response.info.fechaEscritura;
           this.tramitesObtenidos[response.info.index].folio = response.info.folio;
+          this.tramitesObtenidos[response.info.index].ticket = response.info.ticket;
           this.tramitesObtenidos[response.info.index].formValid = response.valid;
           this.validar();
         },
@@ -166,6 +175,13 @@
               complementaria.idTicketNormal = tramite.info.tipoTramite == 'normal' ? tramite.id : tramite.info.idTicketNormal;
               complementaria.idTicketAnterior = tramite.id;
               complementaria.valido = tramite.formValid;
+              if(tramite.detalle){
+            
+                complementaria.costo_final = tramite.detalle && tramite.detalle['Salidas'] ? tramite.detalle['Salidas']['Cantidad a cargo'] : 0 ;
+              } else {
+                complementaria.costo_final = null;
+              }
+              
               complementaria.enajenante =  {
                 datosPersonales: tramite.info.enajenante.datosPersonales,
                 nacionalidad: tramite.info.enajenante.nacionalidad,
@@ -188,7 +204,8 @@
             let info = {
               folio:this.folio,
               fechaEscritura:this.fechaEscritura,
-              complementarias:this.complementarias
+              complementarias:this.complementarias,
+              ticket:this.ticket
             }
             this.$emit('sendData', info);
           //}

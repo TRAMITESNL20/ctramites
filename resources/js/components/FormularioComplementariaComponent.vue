@@ -103,7 +103,7 @@
                         <b-card no-body v-if="datosCostos && verDetalle">
                             <b-card no-body  v-if="typeof datosCostos == 'object'">
                                 <template #header>
-                                  <h4 class="mb-0">Complementaria</h4>
+                                  <h4 class="mb-0">Complementaria <span v-if="datosCostos.Nivel"> {{datosCostos.Nivel}} </span> </h4>
                                   <hr>
                                 </template>
                                 <b-card-body id="nav-scroller"ref="content"style="position:relative; height:400px; overflow-y:scroll;">
