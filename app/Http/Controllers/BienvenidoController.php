@@ -32,7 +32,7 @@ class BienvenidoController extends Controller
 		// $url = "http://10.153.144.218/tramites-ciudadano/allTramites?config_id=11";
 		$url = "http://localhost:8080/getCampos";
 		// $url = getenv("TESORERIA_HOSTNAME")."/solicitudes-info/113/firma";
-		$tramites = curlSendRequest("GET", getenv("APP_URL")."/formato-declaracion");
+		// $tramites = curlSendRequest("GET", getenv("APP_URL")."/formato-declaracion");
 
 		// dd($tramites);
 		$ch = curl_init();
