@@ -2,7 +2,7 @@
   <div>
         <div class="pt-10 pl-10 pr-10"  style="background-color:white" v-if=" (tramitesdoc.length > 0 && docFirmado != 1  )">
             <div class="alert alert-warning" role="alert" style="margin-bottom:0px !important">
-                <p style="color:white; margin-bottom: 0px;"> El tramite seleccionado no cuenta con los documentos de CALCULO DEL ISR CONFORME AL 126 LISR y SAT </p>
+                <p style="color:white; margin-bottom: 0px;">Uno o más de los trámites seleccionados, no cuentan con documento adjunto del CALCULO DEL ISR CONFORME AL 126 LISR O COMPROBANTE DE LA EXENCIÓN</p>
                 <modal-document-component 
                     :tramitesdoc="tramitesdoc" 
                     :idtramites="usuario"
