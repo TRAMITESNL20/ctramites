@@ -43,7 +43,18 @@
 						</div>
 					</div>
                     <div class="collapse" :id="`collapse-${index}`" :class="type != 2 ? 'show' : ''">
-    					<tramite-component :cartComponent="cartComponent" :group="true" :type="type" v-for="(solicitud, ind) in tramite" @processToCart="processToCart" @processDelete="processDelete" :tramitesCart="tramitesCart" :tramite="solicitud" v-bind:key="ind" v-if="totalItems != 0"></tramite-component>
+    					<tramite-component
+                            :cartComponent="cartComponent"
+                            :group="true"
+                            :type="type"
+                            v-for="(solicitud, ind) in tramite"
+                            @processToCart="processToCart"
+                            @processDelete="processDelete"
+                            :tramitesCart="tramitesCart"
+                            :tramite="solicitud"
+                            v-bind:key="ind"
+                            v-if="totalItems != 0"
+                        ></tramite-component>
                     </div>
 				</div>
 				<tramite-component
@@ -156,6 +167,10 @@
                     tramite[0].files = files;
                     this.tramitesPaginados[ind] = tramite;
                 })
+            },
+            items (val) {
+                this.calcularPage()
+                this.pagination(1);
             }
         },
 		methods : {
