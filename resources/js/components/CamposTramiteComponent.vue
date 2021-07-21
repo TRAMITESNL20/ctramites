@@ -45,7 +45,7 @@
 												</div>
 											</div>
 			 								<div v-for="(campo, j) in agrupacion.campos" :key="j" class="col-md-6 col-sm-6 col-xs-6"
-			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes', 'valuador', 'table'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
+			 								:class="campo.nombre == '¿Cuenta con avalúo?' || ['file', 'results', 'question','enajenante','expedientes', 'valuador', 'table', 'registrocivil'].includes(campo.tipo) ? 'col-md-12 col-sm-12 col-xs-12' : 'col-md-6 col-sm-6 col-xs-6'">
 			 									<input-currency-component 
 			 										v-if="campo.tipo === 'input' && JSON.parse(campo.caracteristicas).formato === 'moneda'" 
 													:campo="campo" 
@@ -209,6 +209,9 @@
 													:estadoFormulario="comprobarEstadoFormularioCount"
 													@updateForm="updateForm">
 			 									</valuador-component>
+			 									<btn-busqueda-acta-component v-if="campo.tipo === 'registrocivil'"
+		                                          labelBtn="Buscar Acta">                                          
+		                                        </btn-busqueda-acta-component>
 			 								</div>
 		 									<div v-if="agrupacion.tieneSeccionDocumentos" class="col-md-12 col-lg-12">
 		 										<div class="text-left">
