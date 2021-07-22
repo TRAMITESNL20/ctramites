@@ -275,7 +275,7 @@
                       </b-form-invalid-feedback>
                     </b-form-group>
                   </b-col>
-                  
+                  <!--
                   <b-col cols="12" md="6" >
                     <b-form-group label="MONTO DE OPERACIÓN (proporcional conforme al % de venta)" label-for="monto-operacion-input" >
                       <b-input-group  >
@@ -286,7 +286,7 @@
                           id="monto-operacion-input" name="montoOperacion" v-model="$v.form.datosParaDeterminarImpuesto.montoOperacion.$model"  
                           @change="formatoMoneda('montoOperacion')"
                           :state="$v.form.datosParaDeterminarImpuesto.montoOperacion.$dirty ? !$v.form.datosParaDeterminarImpuesto.montoOperacion.$error : null"  
-                          aria-describedby="montoOperacion-input-feedback"
+                          aria-describedby="montoOperacion-input-feedback" disabled="true"
                         ></b-form-input>
                       </b-input-group>
                       <b-form-invalid-feedback id="montoOperacion-input-feedback">
@@ -295,7 +295,7 @@
                         </span>
                       </b-form-invalid-feedback>
                     </b-form-group>
-                  </b-col>    
+                  </b-col>-->    
                 </b-row>
                 <b-row>
                     <calculo-costo-tramite-5-isr-component 
@@ -707,11 +707,11 @@
 
       calcularMontoOperacion(val){
           this.form.porcentajeCompra = Number( Number( this.form.porcentajeCompra ).toFixed(this.$const.PRECISION)) ;
-      /*
+      
           let procenttaje = (val / 100);
           let montoOperacionGbl =  Vue.filter('toNumber')(this.montoOperacionGbl);          
           let montoCorrespondiente =  montoOperacionGbl * (val / 100);
-          this.$v.form.datosParaDeterminarImpuesto.montoOperacion.$model = Vue.filter('formatoMoneda')( montoCorrespondiente ); */     
+          this.$v.form.datosParaDeterminarImpuesto.montoOperacion.$model = Vue.filter('formatoMoneda')( montoCorrespondiente );     
       },
 
       formatFechaNacimiento(){

@@ -118,7 +118,7 @@
               } else {
                 this.datosComplementaria.complementarias.forEach( complementaria => {
                   let inf = Object.assign({} , complementaria);
-                  inf.version = '1.0.0';
+                  inf.version = '1.1.0';
                   inf.id = 0;
                   inf.tipoTramite = this.tipoTramite;
                   inf.solicitante = listaSolicitantes[0];

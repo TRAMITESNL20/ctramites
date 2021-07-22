@@ -90,7 +90,7 @@
 													:campo="campo" 
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
-													@updateForm="updateForm" :files="files"
+													@updateForm="updateForm" :files="filesPrecargados"
 													@validarFormulario="validarFormulario"
 												></file-component>
 												<results-component 
@@ -121,7 +121,7 @@
 												:campo="campo" 
 													:showMensajes="showMensajes" 
 													:estadoFormulario="comprobarEstadoFormularioCount"
-													@updateForm="updateForm" :configCostos="configCostos">
+													@updateForm="updateForm" :configCostos="configCostos" :updateListadoExpedientes="updateListadoExpedientes" >
 														
 													</enajenantes-component>
 												<table-component 
@@ -225,11 +225,12 @@
                 	campos:this.campos, 
                 	tramite:this.tramite, 
                 	tipoPersona:this.tipoPersona,
-                	declararEn0:this.declararEn0
+                	declararEn0:this.declararEn0,
+                	montoOperacion: this.montoOperacion
                 };
             }
         },
-        props: ['tramite','formularioValido', 'comprobarEstadoFormularioCount', 'infoGuardada', 'declararEn0', 'notary', 'usuario'],
+        props: ['tramite','formularioValido', 'comprobarEstadoFormularioCount', 'infoGuardada', 'declararEn0', 'notary', 'usuario', 'filesPrecargados'],
         data() {
             return {
 				progress: '',
@@ -255,6 +256,8 @@
 				infoExtra : {},
 				tipo_costo_obj: { tipo_costo:0 ,tipoCostoRadio:'millar',hojaInput:'', val_tipo_costo:'' },
 				tieneSeccionDocumentos: false,
+				updateListadoExpedientes:0,
+				montoOperacion:0
             }
         },
         created() {
@@ -400,11 +403,12 @@
         			this.gestionarCambioEstado(campo.valor);
         		}
 
+        		this.listenCampos( campo );	
         		this.cambioModelo();
         	},
 		    cambioModelo(){
 				let formvALID = this.validarFormulario();
-            	let datosFormulario = {
+            	let datosFormulario = { 		
             		tramite: this.tramite,
             		campos: this.campos,
             		tipoPersona:this.tipoPersona,//quitar?
@@ -516,9 +520,10 @@
 				  		agrupaciones = agrupaciones.filter( agrupacion => agrupacion.nombre_agrupacion != 'Datos Personales' && agrupacion.nombre_agrupacion != 'Razón Social'  );
 				  		agrupaciones.unshift( {nombre_agrupacion:'Tipo Persona',  tipo: 'agrupacion', grupos: { 'pf': this.datosPersonales, 'pm': this.razonSocial } } );
 				  	}
-
+				  	if( !this.configCostos.declararEn0 ){
+				  		agrupaciones = agrupaciones.filter( agrupacion =>  agrupacion.nombre_agrupacion != 'Motivo y Fundamento Legal' );
+				  	}
 				  	this.agrupaciones = agrupaciones.sort(function(a,b) { return parseFloat(a.orden_agrupacion) - parseFloat(b.orden_agrupacion) } );
-				  	
 				  	
 				  	let segg= this;
 					setTimeout(function(){ 
@@ -723,10 +728,39 @@
 				this.rows.push(rows);
 				this.loading = false;
 				this.panel = [0, 3, 4];
-			}
+			},
+
+			listenCampos(campo){
+				if(campo.nombre == 'Motivo y Fundamento Legal' ){
+
+					let ocultarCampoOtro = !campo.valor || campo.valor.clave != 'Otro';
+				
+					this.campos.map( campoItem => {
+						if(campoItem.nombre == 'Otro (especificar):'){
+							campoItem.ocultar = ocultarCampoOtro;
+							let caracteristicas = JSON.parse(campoItem.caracteristicas + '');
+							caracteristicas.required =  !ocultarCampoOtro;
+							campoItem.valor = campo.valido && !ocultarCampoOtro ? campoItem.valor : "";
+							campoItem.valido = ocultarCampoOtro; 
+							campoItem.caracteristicas = JSON.stringify(caracteristicas);
+						}
+						return campoItem;
+					});
+	        	}  	else if( campo.tipo === 'expedientes' ){
+	        		this.updateListadoExpedientes = this.updateListadoExpedientes + 1;
+	        	} else if( campo.nombre === 'Monto total de operación (reportado en el aviso de enajenación)' ){
+	        		this.montoOperacion = campo.valor;
+	        	}
+			},
 		 },
-		 mounted(){
-		 }
+		mounted(){
+		},
+		
+        watch: {
+            'configCostos.declararEn0':function (val, oldVal){
+                this.agruparCampos();
+            }
+        }
 	}
 
 

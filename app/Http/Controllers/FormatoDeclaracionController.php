@@ -12,7 +12,7 @@ class FormatoDeclaracionController extends Controller
 		$tramite = curlSendRequest("GET", getenv("TESORERIA_HOSTNAME")."/solicitudes-get-tramite-pdf/{$id}");
 		if(isset($tramite->tramite) && count( $tramite->tramite->solicitudes) > 0){
 			$info = $tramite->tramite;
-			// dd($info);
+			// dd($id);
 			$control = $tramite;
 			if($info->solicitudes[0]->info->tipoTramite != 'complementaria'){
 				$enajenante = $info->solicitudes[0]->info->enajenante;
@@ -23,11 +23,11 @@ class FormatoDeclaracionController extends Controller
 				$enajenante->datosParaDeterminarImpuesto = $datosParaDeterminarImpuesto;
 			}
 
-			// dd( $enajenante);
+			// dd( $control);
 			$tipoTramite =  $info->solicitudes[0]->info->tipoTramite;
 			$user =base64_decode (request()->data) ;
 			
-			$pdf = PDF::loadView('pdf.formatoDeclaracionISR', compact('info', 'enajenante', 'tipoTramite', 'control', 'user'));
+			$pdf = PDF::loadView('pdf.formatoDeclaracionISR', compact('info', 'enajenante', 'tipoTramite', 'control', 'user' , 'id' ));
 			$tipo = "";
 			$escritura = $info->solicitudes[0]->info->campos->{'Escritura'} ?? "";
 			switch ($info->solicitudes[0]->info->{'tipoTramite'}) {

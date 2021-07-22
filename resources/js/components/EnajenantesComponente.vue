@@ -1,7 +1,7 @@
  <template>
     <div>
-<!--
         <b-row>
+            <!--
             <b-col cols="12" md="6">
                 <b-form-group label="MONTO DE OPERACIÓN" label-for="monto-operacion-gral-input" >
                   <b-input-group  >
@@ -13,11 +13,11 @@
                        @change="cambioMontoOperacionGBL()"></b-form-input>
                   </b-input-group>
                 </b-form-group>
-            </b-col>
-        </b-row> -->     
+            </b-col>-->
+        </b-row>     
         <b-row > 
             <b-col>
-                <b-form-group label="Porcentaje que enajena" label-for="procentaje-venta-input" >
+                <b-form-group label="Porcentaje total que enajena" label-for="procentaje-venta-input" >
                     <b-form-input  id="procentaje-venta-input" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" @input="validar"  :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback" max="100" type="number"  style="background-color: #e5f2f5 !important" step="0.001" @change="precision()"></b-form-input>
                     <b-input-group prepend="0" append="100" >
                         <b-form-input  id="procentaje-venta-rango" name="procentaje-venta"  v-model="$v.porcentajeVenta.$model" type="range" max="100" @input="validar" :state="$v.porcentajeVenta.$dirty ? !$v.porcentajeVenta.$error : null" aria-describedby="porcentajeVenta-input-feedback" step="0.001" @change="precision()"></b-form-input>
@@ -95,7 +95,7 @@
                                         :porcentajeVenta="$v.porcentajeVenta.$model" 
                                         :listaCurps="listaCurps" 
                                         :configCostos="configCostos"
-                                        :montoOperacionGbl="montoOperacion">
+                                        :montoOperacionGbl="configCostos.montoOperacion">
                                 	</modal-component>                    	
                                 </td>
                             </tr>
@@ -106,14 +106,16 @@
                 Porcentaje de venta asignado 
                 <b-progress :value="porcentajeTotalCompra" max="porcentajeVenta" show-value class="mb-3" :precision="$const.PRECISION"></b-progress>
             </b-col>
-            <b-col v-if="totalMontoOperacionDeclarado != totalMontoOperacionDeEnajentantes && enajentantes.length > 0">
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                  <strong>IMPORTANTE!</strong> El monto de operación declarado, no corresponde al ingresado en el Aviso de Enajenación o no se ha presentado.
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-            </b-col>
+            <transition name="fade"> 
+                <b-col v-if="totalMontoOperacionDeclarado != montoGlobalOperacion && montoGlobalOperacion">
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      <strong>IMPORTANTE!</strong> El monto de operación declarado, no corresponde al ingresado en el Aviso de Enajenación o no se ha presentado.
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                </b-col>
+            </transition>
             <b-col  cols="12" >
         	    <modal-component 
         		@addEnajentante="addEnajentante" v-if="porcentajeTotalCompra < $v.porcentajeVenta.$model" 
@@ -121,10 +123,11 @@
                     :porcentajeVenta="$v.porcentajeVenta.$model" 
                     :listaCurps="listaCurps" 
                     :configCostos="configCostos"
-                    :montoOperacionGbl="montoOperacion">
+                    :montoOperacionGbl="configCostos.montoOperacion">
         	   </modal-component>
            </b-col>
         </b-row> 
+        <!--
         <b-row v-if="configCostos.declararEn0">
             <b-col  cols="12" >
                 <label>Motivo y Fundamento Legal *</label>
@@ -136,7 +139,7 @@
                     </p>
                 </small>
             </b-col>
-       </b-row>         
+       </b-row>-->         
     </div>
 </template>
 <script>
@@ -168,6 +171,10 @@
                 return this.enajentantes.map( enajentante => enajentante.datosPersonales.curp );
             },
 
+            montoGlobalOperacion(){
+                return  this.configCostos.montoOperacion ? Vue.filter('formatoMoneda')(this.configCostos.montoOperacion +"") : false;
+            }
+
 /*            totalMontoOperacionDeclarado(){
                 let eltotal = 0;
                 debugger;
@@ -198,13 +205,13 @@
             }*/
         },
 		mounted(){
-            if(this.campo.valor){
+            /*if(this.campo.valor){
                 this.montoOperacion =  Vue.filter('formatoMoneda')(this.campo.valor.montoOperacion);
-            }
+            }*/
             if(this.campo.valor && this.campo.valor.enajenantes && this.campo.valor.enajenantes.length > 0){
                 this.enajentantes = this.campo.valor.enajenantes;
                 this.$v.porcentajeVenta.$model = Number( Number( this.campo.valor.porcentajeVenta ).toFixed(this.$const.PRECISION)) ;
-                this.motivo = this.campo.valor.motivo;
+                //this.motivo = this.campo.valor.motivo;
                 
                 this.calcularTotalPorcentaje();
                 this.calcularTotalMontoOperacionDeEnajentantes();
@@ -212,18 +219,6 @@
             this.validar();
             
 		},
-        updated(){
-            // var height = $("#tableEnajenantes")[0].clientHeight;
-            // $("#gradientBackgroundLeft").css( "width" ,'12%');
-            // $("#gradientBackgroundRight").css( "width" ,'12%');
-            // $("#gradientBackgroundLeft").css( "height" ,  height+"px" );
-            // $("#gradientBackgroundRight").css( "height" ,  height+"px" );
-            // $('#scrollDiv').scroll( function() {
-            //     ( $('#scrollDiv').scrollLeft() == ($('#scrollDiv table').width() - $('#scrollDiv').width())) ?  $('#gradientBackgroundRight').hide() : $('#gradientBackgroundRight').show();
-
-            //     ( $('#scrollDiv').scrollLeft() > 0) ? $('#gradientBackgroundLeft').show() : $('#gradientBackgroundLeft').hide();
-            // });
-        },
         props:{
 
           campo:{
@@ -240,16 +235,20 @@
           },
           configCostos:{
             type: Object
-          }
+          },
+          updateListadoExpedientes:{
+            type: Number,
+            default:0
+          },
         },
 	    data(){
 	        return {
 	            enajentantes: [],
                 porcentajeTotalCompra: 0,
                 porcentajeVenta:100,
-                motivo:'',
+                //motivo:'',
                 totalMontoOperacionDeEnajentantes:null,
-                montoOperacion:Vue.filter('formatoMoneda')("0"),
+                //montoOperacion:Vue.filter('formatoMoneda')("0"),
                 totalMontoOperacionDeclarado:null
 	        }
 	    },
@@ -304,48 +303,55 @@
                 this.campo.valido =  this.porcentajeTotalCompra == this.$v.porcentajeVenta.$model;
 
                 let valor = {enajenantes:this.enajentantes, porcentajeVenta:this.$v.porcentajeVenta.$model};
-                valor.montoOperacion = this.montoOperacion;
-                if(this.configCostos.declararEn0){
+                //valor.montoOperacion = this.montoOperacion;
+                /*if(this.configCostos.declararEn0){
                     valor.motivo = this.motivo;
                     if( this.motivo == undefined || this.motivo.length == 0){
                         this.campo.valido = false;
                     }
-                }
+                }*/
                 this.campo.valor = valor;
                 this.$emit('updateForm', this.campo);
           
             },
 
             cambioMontoOperacionGBL(){
-                this.formatoMoneda();
+                //this.formatoMoneda();
                 this.calcularPorcentajePorEnajenantes();
             },
 
             formatoMoneda(){
-                this.montoOperacion = Vue.filter('formatoMoneda')(this.montoOperacion +"");
-                this.validar();
+               // this.montoOperacion = Vue.filter('formatoMoneda')(this.montoOperacion +"");
+               // this.validar();
             },
 
             calcularPorcentajePorEnajenantes(){
                 this.enajentantes = this.enajentantes.map(enaj => {
-                    let procenttaje = (enaj.porcentajeCompra / 100);
+                    /*let procenttaje = (enaj.porcentajeCompra / 100);
                     let montoOperacionGbl =  Vue.filter('toNumber')(this.montoOperacion);          
-                    let montoCorrespondiente =  montoOperacionGbl * procenttaje;
-                    enaj.datosParaDeterminarImpuesto.montoOperacion = Vue.filter('formatoMoneda')( montoCorrespondiente ); 
+                    let montoCorrespondiente =  montoOperacionGbl * procenttaje;*/
+                    enaj.datosParaDeterminarImpuesto.montoOperacion = Vue.filter('formatoMoneda')( this.montoOperacionPorEnajenante( enaj ) ); 
                     return enaj;
                 });
                 this.validar();                
             },
 
+
+            montoOperacionPorEnajenante( enajenante ){
+                let procenttaje = (enajenante.porcentajeCompra / 100);
+                let montoOperacionGbl =  Vue.filter('toNumber')(this.configCostos.montoOperacion);
+                return  montoOperacionGbl * procenttaje;  
+            },   
+
             calcularTotalMontoOperacionDeEnajentantes(){
-                let eltotal = 0;
+                /*let eltotal = 0;
                 if(this.enajentantes && this.enajentantes.length > 0){
                     this.enajentantes.forEach( enajenante => {
                         let total = Vue.filter('toNumber')(enajenante.datosParaDeterminarImpuesto.montoOperacion);
                         eltotal = eltotal + total;
                     });
                 }
-                this.totalMontoOperacionDeEnajentantes = eltotal;
+                this.totalMontoOperacionDeEnajentantes = eltotal;*/
                 this.calcularTotalMontoOperacionDeclarado();
             },
 
@@ -371,7 +377,7 @@
                       Command: toastr.error("Error!", "No se encontro configurado la seccion de expedientes, Consulte al administrador del sistema");
                     }
                 }
-                this.totalMontoOperacionDeclarado = eltotal;
+                this.totalMontoOperacionDeclarado = Vue.filter('formatoMoneda')( eltotal );
                 //return eltotal; 
             }, 
 
@@ -388,13 +394,19 @@
                     this.enajentantes = this.enajentantes.map( enajentante => {
                         enajentante.detalle = false;
                         enajentante.datosParaDeterminarImpuesto.gananciaObtenida = '0';
-                        enajentante.datosParaDeterminarImpuesto.montoOperacion = '0';
+                        enajentante.datosParaDeterminarImpuesto.montoOperacion =  Vue.filter('formatoMoneda')( this.montoOperacionPorEnajenante( enajentante ) ); //'0';
                         enajentante.datosParaDeterminarImpuesto.multaCorreccion = '0';
                         enajentante.datosParaDeterminarImpuesto.pagoProvisional = '0';
                         return enajentante;
                     });  
                 }
                 this.validar();
+            },
+            updateListadoExpedientes(){
+              this.calcularTotalMontoOperacionDeclarado();  
+            },
+            'configCostos.montoOperacion': function( val, oldVal ){
+                this.cambioMontoOperacionGBL();
             }
         }
 

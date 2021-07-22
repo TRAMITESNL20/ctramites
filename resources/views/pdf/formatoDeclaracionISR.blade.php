@@ -165,16 +165,20 @@
 					</tr>
 					<tr class="datos-enajenante">
 						<td class="columna">% DE CO-PROPIEDAD:</td>
-						@if ($info->solicitudes[0]->info->{'tipoTramite'} === 'declaracionEn0')
-						<td class="columna"colspan="2">MONTO DE OPERACIÓN:</td>
+						@if ($info->solicitudes[0]->info->campos->{'Monto total de operación (reportado en el aviso de enajenación)'})
+							<td class="columna"colspan="2">MONTO TOTAL DE OPERACIÓN:</td>
 						@else
-						<td class="columna"colspan="2">MONTO DE OPERACIÓN:</td>
+							<td class="columna"colspan="2">MONTO DE OPERACIÓN:</td>
 						@endif
 						<td class="columna"></td>
 					</tr>
 					<tr class="datos-enajenante last">
 						<td class="columna value">{{ $enajenante->{'porcentajeCompra'} ?? '' }}</td>
+						@if($info->solicitudes[0]->info->campos->{'Monto total de operación (reportado en el aviso de enajenación)'})
+						<td class="columna value" colspan="2">{{ $info->solicitudes[0]->info->campos->{'Monto total de operación (reportado en el aviso de enajenación)'} ?? '' }} </td>
+						@else
 						<td class="columna value" colspan="2">{{ $enajenante->datosParaDeterminarImpuesto->{'montoOperacion'} ?? '' }} </td>
+						@endif
 						<td class="columna value"></td>
 					</tr>
 					
@@ -192,12 +196,16 @@
 					</tr>
 					@if ($info->solicitudes[0]->info->{'tipoTramite'} === 'declaracionEn0')
 					<tr class="datos-enajenante fisrt">
-						<td class="columna">MONTO DE OPERACIÓN:</td>
+						<td class="columna">MONTO TOTAL DE OPERACIÓN:</td>
 						<td class="columna" colspan="2">&nbsp;</td>
 						<td class="columna">&nbsp;</td>
 					</tr>
 					<tr class="datos-enajenante last">
-						<td class="columna value">{{ $enajenante->datosParaDeterminarImpuesto->{'montoOperacion'} ?? '' }}</td>
+						@if($info->solicitudes[0]->info->campos->{'Monto total de operación (reportado en el aviso de enajenación)'})
+						<td class="columna value">{{ $info->solicitudes[0]->info->campos->{'Monto total de operación (reportado en el aviso de enajenación)'} ?? '' }} </td>
+						@else
+						<td class="columna value">{{ $enajenante->datosParaDeterminarImpuesto->{'montoOperacion'} ?? '' }} </td>
+						@endif
 						<td class="columna value" colspan="2">&nbsp;</td>
 						<td class="columna value">&nbsp;</td>
 					</tr>
@@ -245,13 +253,13 @@
 			</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }} first">
 					<td class="columna">ESTATUS</td>
-					<td class=" columna" colspan="2">FECHA LIMITE DE PAGO</td>
+					<td class=" columna" colspan="2">TRAMITE ID</td>
 					<td class="columna">NO. FOLIO DE TESORERIA VIRTUAL</td>
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }}">
 					<td class="columna value">{{ $control->operaciones->{'estatus_tramite'} ?? "-" }}</td>
-					<td class="columna value" colspan="2">{{ $enajenante->detalle->Salidas->{'Fecha vencimiento'} ?? "-"}}</td>
-					<td class="columna value">{{ $control->operaciones->{'id_transaccion_motor'} ?? "-" }}</td> 
+					<td class="columna value" colspan="2">{{ $id ?? "-"}}</td>
+					<td class="columna value">{{ $control->operaciones->{'id_transaccion_motor'} ?? "-" }}</td> ~
 				</tr>
 				<tr class="{{ $info->solicitudes[0]->info->{'tipoTramite'} !== 'declaracionEn0' ? 'datos-enajenante' : '' }}">
 					<td class="columna">FECHA DE PAGO</td>
@@ -269,7 +277,12 @@
 					<td class="titulo1 text-left" colspan="4"> <strong> MOTIVO POR EL QUE DECLARA EN CEROS </strong></td>
 				</tr>
 					<tr class="datos-enajenante first last">
-						<td class="motivo-fundamento" colspan="4" valign="middle" align="left">{{ $info->solicitudes[0]->info->campos->{'Listado de enajenantes'}->motivo ?? '' }}</td>
+						@if(!$info->solicitudes[0]->info->campos->{'Otro (especificar):'})
+						<td class="motivo-fundamento" colspan="4" valign="middle" align="left">{{ $info->solicitudes[0]->info->campos->{'Listado de enajenantes'}->motivo ?? '' }} {{$info->solicitudes[0]->info->campos->{'Motivo y Fundamento Legal'}->nombre}} </td>
+						@endif
+						@if($info->solicitudes[0]->info->campos->{'Otro (especificar):'})
+						<td class="motivo-fundamento" colspan="4" valign="middle" align="left">{{$info->solicitudes[0]->info->campos->{'Otro (especificar):'} }}</td>
+						@endif
 					
 					</tr>
 			@endif

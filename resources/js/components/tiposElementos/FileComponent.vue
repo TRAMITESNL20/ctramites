@@ -15,7 +15,7 @@
           :name="[[campo.campo_id]] + '-' + [[campo.relationship]]" 
           class="custom-file-input"  style="background-color: #e5f2f5 !important"
           ref="fileInput"
-          type="file" @change="validar" :accept="accept" />
+          type="file" @change="updateFile" :accept="accept" />
         <label class="custom-file-label" :for="[[campo.campo_id]] + '-' + [[campo.relationship]]">
           <span :id="[[campo.campo_id]]+ '-' + [[campo.relationship]]+'-namefile'">  
             {{ campo.attach || 'Seleccione archivo' }} 
@@ -37,7 +37,7 @@
         axios({
             method: "get",
             url,
-            responseType: "ArrayBuffer",
+            responseType: "blob",
             headers: {
           'nombreArchivo': nombreArchivo,
           campo_id: campo.campo_id + "-" + campo.relationship,
@@ -53,7 +53,7 @@
       });
     }
     export default {
-      props: ['campo', 'estadoFormulario', 'showMensajes'],
+      props: ['campo', 'estadoFormulario', 'showMensajes', 'files'],
       data(){
         return{
           aceptSupported : {pdf:'application/pdf', xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'},
@@ -67,9 +67,17 @@
       mounted(){
         let promises = [];
 
-        if(this.campo.nombreArchivoGuardado){
+        if(this.files && this.files.length > 0 && this.files[0].valor instanceof File){
+          let idCampo = this.campo.campo_id;
+          let relation = this.campo.relationship;
+          let self = this;         
+          setTimeout(function(){
+            $("#"+ idCampo + '-' + relation + '-namefile' ).text(   self.files[0].valor.name  );
+          }, 500);
+        } else if(this.campo.nombreArchivoGuardado){
           let urlFile = this.campo.nombreArchivoGuardado;
-          promises.push(getFile( urlFile, this.campo.nombreArchivoGuardado, this.campo ));
+          let urlAsArr = urlFile.split("/");
+          promises.push(getFile( urlFile, urlAsArr[urlAsArr.length - 1] , this.campo ));
           this.obteniendoFile = true;
           Promise.all(promises).then(( respuestas ) => {
             respuestas.forEach( (res) => {
@@ -78,6 +86,10 @@
                   type: res.headers['content-type'], 
                   lastModified: Date.now()
                 });
+
+                //var fileURL = URL.createObjectURL(fileNew);
+                //window.open(fileURL);
+
                 let headers = res.config.headers;
 
                 this.campo.valor = fileNew;
@@ -90,7 +102,7 @@
                   setTimeout(function(){ 
                     $("#"+ idCampo + '-' + relation + '-namefile' ).text(  arrurl[arrurl.length - 1]);
                     self.obteniendoFile = false; 
-                  }, 400);
+                  },500);
                   
                 } else {
                   $("#"+ this.campo.campo_id + '-' + this.campo.relationship + '-namefile' ).text(  "" );
@@ -120,6 +132,10 @@
           if(caracteristicas.accept){
             this.accept =  this.aceptSupported[caracteristicas.accept];
           }
+        },
+        updateFile(){
+          this.campo.nombreArchivoGuardado = ''; //optional
+          this.validar();
         },
         validar(){
           let requeridoValido = false;
