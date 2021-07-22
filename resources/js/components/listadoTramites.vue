@@ -3,17 +3,49 @@
         <div class="subheader py-2 py-lg-4 subheader-transparent" id="kt_subheader">
             <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
                 <!--begin::Details-->
-                <div class="d-flex align-items-center flex-wrap mr-2">
+                <div class="d-flex align-items-center flex-wrap mr-2 w-100">
                     <!--begin::Title-->
-                    <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">Trámites</h5>
+                    <div>
+                        <h5 class="text-dark font-weight-bold mt-2 mr-5">Trámites</h5>
+                        <span class="text-dark-50 font-weight-bold" id="kt_subheader_total">{{ tramitesFiltrados.length }} Total</span>
+                    </div>
                     <!--end::Title-->
                     <!--begin::Separator-->
                     <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-5 bg-gray-200"></div>
                     <!--end::Separator-->
                     <!--begin::Search Form-->
-                    <div class="d-flex align-items-center" id="kt_subheader_search">
-                        <span class="text-dark-50 font-weight-bold" id="kt_subheader_total">{{ tramitesFiltrados.length }} Total</span>
-                        <form class="ml-5">
+                    <div class="">
+                        Búsqueda por fecha:
+                        <date-range-picker
+                            ref="picker"
+                            opens="left"
+                            :locale-data="{ firstDay: 1, format: 'dd-mm-yyyy' }"
+                            v-model="dateRange"
+                            :dateFormat="dateFormat"
+                            :showDropdowns="false"
+                            :ranges="false"
+                            @update="updateValues"
+                        >
+                            <template v-slot:input="picker" style="min-width: 350px;">
+                                {{ `${`${picker.startDate.getDate()}`.padStart(2,'0')}-${`${picker.startDate.getMonth()+1}`.padStart(2,'0')}-${picker.startDate.getFullYear()}` }} <i class="fas fa-arrow-right mx-2"></i> {{ `${`${picker.endDate.getDate()}`.padStart(2,'0')}-${`${picker.endDate.getMonth()+1}`.padStart(2,'0')}-${picker.endDate.getFullYear()}` }}
+                            </template>
+                        </date-range-picker>
+                    </div>
+                    <div class="d-flex align-items-center ml-auto" id="kt_subheader_search">
+                        <div class="btn-group ml-10">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Buscar por: <strong>{{ searchBy.description || '' }}</strong>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <button :class="searchBy.name == null ? 'active' : ''" v-on:click="searchByFilter(null, '')" class="dropdown-item" type="button">Ninguno</button>
+                                <button :class="searchBy.name == 'escritura' ? 'active' : ''" v-on:click="searchByFilter('escritura', 'Número de Escritura')" class="dropdown-item" type="button">Número de Escritura</button>
+                                <button :class="searchBy.name == 'expediente' ? 'active' : ''" v-on:click="searchByFilter('expediente', 'Expediente Catastral')" class="dropdown-item" type="button">Expediente Catastral</button>
+                                <button :class="searchBy.name == 'enajenante' ? 'active' : ''" v-on:click="searchByFilter('enajenante', 'Enajenante')" class="dropdown-item" type="button">Enajenante</button>
+                                <button v-if="![99,80].includes(type)" :class="searchBy.name == 'folio_pago' ? 'active' : ''" v-on:click="searchByFilter('folio_pago', 'Folio de Pago')" class="dropdown-item" type="button">Folio de Pago</button>
+                                <button v-if="![99,80].includes(type)" :class="searchBy.name == 'fse' ? 'active' : ''" v-on:click="searchByFilter('fse', 'FSE')" class="dropdown-item" type="button">FSE</button>
+                            </div>
+                        </div>
+                        <form>
                             <div class="input-group input-group-sm input-group-solid" style="max-width: 175px">
                                 <input type="text" class="form-control" id="kt_subheader_search_form" placeholder="Search..." v-on:keyup="search()" v-model="strBusqueda">
                                 <div class="input-group-append">
@@ -85,24 +117,37 @@
     </div>
 </template>
 <script>
+    import DateRangePicker from 'vue2-daterange-picker'
+    import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
     export default {    
-
+        components: { DateRangePicker },
         data() {
+            let endDate = new Date();
+            let startDate = new Date().setDate(new Date().getDate()-30);
             return {
                 type : null,
                 tramites: [], loading:true, porPage : 30, pages:[0], currentPage :1, strBusqueda:"", totalTramites:0, tramitesFiltrados:[], tramitesCart : [],
+                searchBy: {name:null, description:''},
+                dateRange: {
+                    startDate,
+                    endDate
+                },
+                picker:null,
+                date:'',
                 ...this.$attrs,estatusTramites:null
             }
         },
         created() {
-            // localStorage.removeItem('datosFormulario');
-            // localStorage.removeItem('listaSolicitantes');
-            // localStorage.removeItem('tramite');
             let url = window.location.href;
             this.estatusTramites = url.split("/")[url.split("/").length - 1]
             this.obtenerTramites();
         },
         methods: {
+            searchByFilter(name, description){
+                this.searchBy = {
+                    name, description
+                };
+            },
             processToCart (tramite) {
                 let index = this.tramitesCart.findIndex(ele => ele.id == tramite.id)
                 if(index < 0) this.tramitesCart.push(tramite);
@@ -152,12 +197,7 @@
                     if(window.user) data.id_usuario = window.user.id;
 
                     let response = await axios.post(url, data);
-                    // response.data = response.data.map(res => {
-                    //     res.status = estatus;
-                    //     return res;
-                    // })
                     this.tramites = response.data;
-                    // this.tramitesFiltrados = this.tramites;
                     this.tramitesFiltrados = this.tramites.filter( tramite => tramite.titulo.toLocaleLowerCase().includes(this.strBusqueda.toLocaleLowerCase()) ) ;
                     this.tramitesFiltrados.map(tramite => {
                         tramite.created_at = moment(tramite.created_at).format("D MMMM YYYY, hh:mm A")
@@ -177,9 +217,50 @@
             },
 
             search(){
-                this.calcularPage()
-                this.currentPage = 1;
-                this.pagination(1);
+                let searchStr = new RegExp(this.strBusqueda, 'i');
+                if(this.strBusqueda == '') return this.tramitesFiltrados = this.tramites;
+                this.tramitesFiltrados = this.tramites.filter(tramite => {
+                    let camposConfigurados = {};
+                    tramite.info && tramite.info.camposConfigurados && tramite.info.camposConfigurados.map(campo => camposConfigurados[campo.alias] = campo);
+                    if(this.searchBy.name === 'expediente' && camposConfigurados.expedientes){
+                        let search = camposConfigurados.expedientes.valor.expedientes.filter(exp => exp.expediente.search(searchStr) >= 0)
+                        return search.length > 0;
+                    }
+                    else if (this.searchBy.name === 'enajenante' && camposConfigurados.listado_de_enajenantes) {
+                        let search = camposConfigurados.listado_de_enajenantes.valor.enajenantes.filter(enajenante => 
+                            (enajenante.datosPersonales.apMat && enajenante.datosPersonales.apMat.search(searchStr) >= 0) ||
+                            (enajenante.datosPersonales.apPat && enajenante.datosPersonales.apPat.search(searchStr) >= 0) ||
+                            (enajenante.datosPersonales.nombre && enajenante.datosPersonales.nombre.search(searchStr) >= 0) ||
+                            (enajenante.datosPersonales.curp && enajenante.datosPersonales.curp.search(searchStr) >= 0) ||
+                            (enajenante.datosPersonales.rfc && enajenante.datosPersonales.rfc.search(searchStr) >= 0)
+                        )
+                        return search.length > 0;
+                    }
+                    else if (this.searchBy.name === 'folio_pago' && tramite.tramites && tramite.tramites[0] && tramite.tramites[0].id_transaccion_motor) {
+                        console.log('folio_pago');
+                        return searchStr.test(tramite.tramites[0].id_transaccion_motor)
+                    }
+                    else if (this.searchBy.name === 'fse' && tramite.tramites && tramite.tramites[0] && tramite.tramites[0].id) {
+                        console.log('fse');
+                        return searchStr.test(tramite.tramites[0].id)
+                    }
+                    else if (this.searchBy.name === 'escritura' && camposConfigurados.escritura) {
+                        return camposConfigurados.escritura.valor.search(searchStr) >= 0
+                    }
+                    else{
+                        return (tramite.nombre_servicio && tramite.nombre_servicio.search(searchStr) >= 0) ||
+                        (tramite.titulo && tramite.titulo.search(searchStr) >= 0)
+                    }
+                })
+
+                let pagesTotal = Math.ceil( this.tramitesFiltrados.length / this.porPage);
+                let pages = [];
+
+                for (var i = 0; i < pagesTotal; i++) {
+                    pages.push( i + 1 );
+                }
+                this.pages = pages;
+                this.$forceUpdate()
             },
 
             updateListado(res){
@@ -188,8 +269,33 @@
                 this.tramitesFiltrados = [];
                 this.tramitesCart = [];
                 this.obtenerTramites();
-            }
+            },
+            dateFormat(classes, date){
+                return classes
+            },
+            updateValues (dates) {
+                let today = new Date();
+                let startDate = new Date(dates.startDate);
+                startDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0, 0, 0)
+                let endDate = new Date(dates.endDate);
+                endDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 0, 0, 0)
+                this.tramitesFiltrados = this.tramites.filter((tramite, ind) => {
+                    let created_at = new Date(tramite.created_at);
+                    return (startDate <= created_at && endDate >= created_at)
+                })
 
+                let pagesTotal = Math.ceil( this.tramitesFiltrados.length / this.porPage);
+                let pages = [];
+
+                for (var i = 0; i < pagesTotal; i++) {
+                    pages.push( i + 1 );
+                }
+                this.pages = pages;
+                this.$forceUpdate()
+            },
+            checkOpen (a) {
+                console.log('checkOpen', a);
+            }
         }
 
 
